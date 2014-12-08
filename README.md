@@ -1,4 +1,4 @@
-# Start
+# osx
 
 *Turn your new Mac into a great development machine*
 
@@ -6,124 +6,174 @@ by Ty-Lucas Kelley
 
 ---
 
-DO NOT USE THIS YET!!! STILL IN EARLY DEVELOPMENT
+This is a list of resources for getting started with a new Apple computer.
+I eventually want to automate the whole process, but don't have the time right
+now.
 
-Start is a collection of scripts that set up your Mac so you can get to work.
-Disclaimer: it's based on my development setup, so while I think it's pretty great,
-you may not.
+### Getting started
 
-Start is *safe*, meaning that if you already have something installed, it won't
-overwrite it.
+Before we begin, note that this tutorial assumes that you're using a computer with
+OS X 10.10.
 
-### Dependencies
+The first thing you should do is install the Xcode command line tools; without
+them, not much else is possible. Open up the Terminal application and type this:
 
-* OS X Yosemite (10.10)
-* [XCode Command Line Tools](http://railsapps.github.io/xcode-command-line-tools.html)
+    $ xcode-select --install
 
-While these scripts will probably work on an older Mac, don't blame me if anything
-breaks; I've only tested it on my computer, which runs 10.10. If anyone
-does get it working on 10.9 or 10.8, please let me know!
+Follow the instructions in the prompt to continue the installation.
 
-### Installation
+### Zsh
 
-**"The works"**
+There's nothing wrong with Bash, but Zsh adds a lot of nice features, such as:
 
-    $ curl -s https://raw.githubusercontent.com/tylucaskelley/start/master/start | sh | tee ~/start-debug.log
+* Plugins
+* Themes
+* Smarter tab-based autocompletion
+* Lots of helpful functions
 
-**Just the Homebrew stuff (no cask)**
+You can install it like this:
 
-    $ curl -s https://raw.githubusercontent.com/tylucaskelley/start/master/brew | sh | tee ~/start-debug.log
+    $ curl -L http://install.ohmyz.sh | sh
 
-**Just the dotfiles**
+The next time you open your shell, you'll be greeted with the Zsh prompt. We'll
+configure Zsh with nice themes and plugins as well.
 
-    $ curl -s https://raw.githubusercontent.com/tylucaskelley/start/master/dotfiles | sh | tee ~/start-debug.log
+### Homebrew
 
-All you'll have to do is add in your custom environment variables and
-aliases after the install process is complete. The installation process can be
-broken down into even smaller bits if you want; take a look at the other scripts
-I have and feel free to use those in place of the three I mentioned.
+Homebrew bills itself as the "missing package manager" for OS X, but it should
+really be called the "necessary" package manager. Were it not for Homebrew, I
+would probably leave OS X for Linux. Install it:
 
-### Just in case...
+    $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
-If an error occurs, it'll show up in `~/start-debug.log`.
-Read through that and try to:
+Then run the `brew doctor` command and address any issues that it brings up.
 
-* Fix what went wrong
-* [Open an issue](https://github.com/tylucaskelley/start/issues/new) so I can look into it
+Once that's all set, you can start installing a bunch of packages. Install each
+package listed here with the `brew install <pkg>` command:
 
-### What happened?
+* node
+* python
+* python3
+* go
+    * After installation: `mkdir -p ~/.go`
+* mongodb
+    * After installation: `sudo mkdir -p /data/db && sudo chmod 777 /data/db`
+* postgresql
+* mysql
+* rbenv
+* ruby-build
+* ack
+* jq
+* wget
+* tree
+* lynx
+* emacs
+* heroku-toolbelt
+* sl (this one's super important)
+* google-app-engine
+* app-engine-java-sdk
+* caskroom/cask/brew-cask
+* vim
+    * Install with the `--override-system-vi` flag
 
-A lot! Start takes your Mac from zero to hero by doing the following:
+### Vim
 
-**Zsh**
+I like the Pathogen package manager for Vim, so I'm going to show you how to set that up:
 
-Zsh will be set as your default shell! It's nicer than Bash for many reasons that
-I won't list here.
+    $ mkdir -p ~/.vim/autoload ~/.vim/bundle
+    $ curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
-**Homebrew**
+Install some stuff to make Vim more awesome after that:
 
-Homebrew is a great package manager for Mac OS, and I use it here to install:
+* [Vim Airline](https://github.com/bling/vim-airline)
+    * `git clone https://github.com/bling/vim-airline ~/.vim/bundle/vim-airline`
+* [Solarized Theme](http://ethanschoonover.com/solarized/vim-colors-solarized)
+    * `git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized`
+* [Jedi Completion](https://github.com/davidhalter/jedi-vim)
+    * `git clone --recursive https://github.com/davidhalter/jedi-vim.git ~/.vim/bundle/jedi-vim`
+* [Neocomplete](https://github.com/Shougo/neocomplete.vim)
+    * `git clone https://github.com/Shougo/neocomplete.vim.git ~/.vim/bundle/neocomplete`
+* [Supertab](https://github.com/ervandew/supertab)
+    * `git clone https://github.com/ervandew/supertab ~/.vim/bundle/supertab`
 
-* git
-* Homebrew Cask (see below)
-* Programming languages
-    * Node.js (and npm)
-    * Python 2 and 3 (with pip and pip3)
-    * Go
-    * Ruby (and rbenv)
-* Databases
-    * MongoDB
-    * PostgreSQL
-* Command line tools
-    * ack
-    * jq
-    * wget
-    * lynx
-    * tree
-* Text editors
-    * vim (with Pathogen and a few plugins; see "Dotfiles" section)
-    * emacs
-* Hosting tools
-    * Heroku toolbelt
-    * Google App Engine (Python SDK)
+### Dotfiles
 
-**Homebrew Cask**
+Grab the files from [here](https://github.com/tylucaskelley/start/tree/master/dotfiles)
+and put them in your home directory (be sure to add a . before the name):
 
-Cask extends Homebrew by allowing the installation of Mac apps and
-large binaries like Google Chrome, Evernote, etc. I use it here to install:
+* aliases: useful commands
+* vimrc: My Vim config file
+* zshrc: My Zsh config file
 
-* Google Chrome
-* Evernote
-* Open SCAD
-* App Cleaner
-* OpenEMU
-* Google Drive
-* Atom
-* uTorrent
-* Firefox
-* iTerm2
+Note that the Vim and Zsh config files assume that you have downloaded Go and properly
+set up the Pathogen package manager for Vim (see above)
 
-**Dotfiles**
+### Brew Cask
 
-A bunch of dotfiles and folders will get thrown in your `~` directory:
+Brew Cask extends Homebrew to allow the installation of large binaries and other Mac applications.
+If you ran `caskroom/cask/brew-cask` earlier, you already have it installed. Install
+some apps with `brew cask install <pkg>`:
 
-* .zshrc
-* .vimrc
-* .vim/
-    * autoload/
-        * pathogen.vim
-    * bundle/
-        * vim-airline
-        * vim-colors-solarized
-* .atom/
-    * config.cson
-* .go/ (this is my $GOPATH)
-* .hushlogin
-* .aliases (some useful commands)
+* google-chrome
+* atom
+* evernote
+* appcleaner
+* google-drive
+* utorrent
+* openscad
+* openemu
+* iterm2
+* firefox
 
-**GitHub Atom**
+Much nicer than dragging icons into your Applications folder, eh?
 
-Atom is my text editor of choice these days, so I set it up with a bunch of packages:
+### Node Modules
+
+If you installed node.js via Homebrew, use `npm install <pkg>` to install these
+cool modules:
+
+* yo
+* bower
+* jshint
+* http-server
+* csslint
+* htmlhint
+* grunt-cli
+* mocha
+
+### Ruby
+
+If you installed rbenv via Homebrew, install the version you want to use and
+replace the system Ruby with it:
+
+    $ rbenv install 2.1.3 # or some other version
+    $ rbenv global 2.1.3 # or some other version
+
+Then grab some great gems using `gem install <pkg>`:
+
+* sass
+* rails
+* sinatra
+
+### Pip Packages
+
+If you installed Python 2 with Homebrew, run `pip install <pkg>` to grab some cool stuff:
+
+* ipython
+* licenser
+* pep8
+* requests
+* virtualenv
+* pillow
+* scrapy
+* numpy
+* closure-linter
+
+### GitHub Atom
+
+While Vim is great, I find that Atom is about as good as a non-command line editor
+gets, and I use it often. Copy my `atom/config.cson` file and install these
+packages using `apm install <pkg>`:
 
 * autocomplete-paths
 * autocomplete-plus
@@ -142,41 +192,22 @@ Atom is my text editor of choice these days, so I set it up with a bunch of pack
 * seti-ui
 * travis-ci-status
 
-**Python**
+### Misc.
 
-I'll install a bunch of Python 2 packages with pip:
+To silence annoying "Last Login" prompts when you open a shell, do this:
 
-* ipython
-* licenser
-* pep8
-* requests
-* virtualenv
-* pillow
-* scrapy
-* numpy
+```bash
+    $ touch ~/.hushlogin
+```
 
-**Node.js**
+Create an SSH key to use with services like GitHub:
 
-Lots of npm packages will be installed globally:
+```bash
+    $ ssh-keygen -t rsa -C "your_email@example.com"
+    $ eval "$(ssh-agent -s)"
+    $ ssh-add ~/.ssh/id_rsa
+    $ pbcopy < ~/.ssh/id_rsa.pub # paste the key when you need to
+```
 
-* yo
-* bower
-* jshint
-* http-server
-* csslint
-* htmlhint
-* grunt-cli
-* mocha
-
-**Ruby**
-
-Here's a list of gems that will be installed:
-
-* sass
-* rails
-* sinatra
-
-**Misc.**
-
-* Reasonable Mac settings changed
-* Solarized theme for Terminal and iTerm2
+You should also grab the Solarizd theme for Mac terminal from the `themes` folder
+and use it!

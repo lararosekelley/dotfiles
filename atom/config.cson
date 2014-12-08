@@ -1,0 +1,26 @@
+'global':
+  'editor':
+    'fontFamily': '\'Inconsolata\', monospace;'
+    'fontSize': 14
+    'tabLength': 4
+    'softWrap': true
+    'invisibles': {}
+  'core':
+    'themes': [
+      'atom-dark-ui'
+      'monokai'
+    ]
+    'audioBeep': false
+  'linter-pep8':
+    'pep8ExecutablePath': '/usr/local/bin/pep8'
+    'maxLineLength': 80
+  'linter-jshint':
+    'jshintExecutablePath': '/usr/local/bin/jshint'
+  'linter-csslint':
+    'csslintExecutablePath': '/usr/local/bin/csslint'
+  'linter-htmlhint':
+    'htmlhintExecutablePath': '/usr/local/bin/htmlhint'
+  'welcome':
+    'showOnStartup': false
+  'linter':
+    'lintOnChange': false
