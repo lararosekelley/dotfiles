@@ -91,17 +91,22 @@ Install some stuff to make Vim more awesome after that:
     * `git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized`
 * [Jedi Completion](https://github.com/davidhalter/jedi-vim)
     * `git clone --recursive https://github.com/davidhalter/jedi-vim.git ~/.vim/bundle/jedi-vim`
+    * Note that you need to run `pip install jedi` for this plugin to work
 * [Neocomplete](https://github.com/Shougo/neocomplete.vim)
     * `git clone https://github.com/Shougo/neocomplete.vim.git ~/.vim/bundle/neocomplete`
 * [Supertab](https://github.com/ervandew/supertab)
     * `git clone https://github.com/ervandew/supertab ~/.vim/bundle/supertab`
+* [Nerdtree](https://github.com/scrooloose/nerdtree.git)
+    * `git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree`
+* [Syntastic](https://github.com/scrooloose/syntastic)
+    * `git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic`
 
 ### Dotfiles
 
 Grab the files from [here](https://github.com/tylucaskelley/start/tree/master/dotfiles)
 and put them in your home directory (be sure to add a . before the name):
 
-* aliases: useful commands
+* aliases: some useful commands
 * vimrc: My Vim config file
 * zshrc: My Zsh config file
 
@@ -164,6 +169,7 @@ If you installed Python 2 with Homebrew, run `pip install <pkg>` to grab some co
 * pep8
 * requests
 * virtualenv
+* jedi
 * pillow
 * scrapy
 * numpy
