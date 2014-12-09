@@ -8,4 +8,4 @@ by Ty-Lucas Kelley
 
 ### To-Do
 
-* Automate setup process with shell scripts
+* Automate setup process with shell scripts (maybe)
