@@ -52,6 +52,7 @@ Once that's all set, you can start installing a bunch of packages. Install each
 package listed here with the `brew install <pkg>` command:
 
 * node
+* tmux
 * python
 * python3
 * go
@@ -109,6 +110,7 @@ and put them in your home directory (be sure to add a . before the name):
 * aliases: some useful commands
 * vimrc: My Vim config file
 * zshrc: My Zsh config file
+* tmux.conf: Tmux config file
 
 Note that the Vim and Zsh config files assume that you have downloaded Go and properly
 set up the Pathogen package manager for Vim (see above)
