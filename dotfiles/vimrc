@@ -40,9 +40,18 @@ set background=dark
 " Loads all the plugins specified in ~/.vim/bundle.
 if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     execute pathogen#infect()
-    colorscheme solarized
+    colorscheme Tomorrow-Night
     let g:neocomplete#enable_at_startup=1
     autocmd FileType python NeoCompleteLock "using jedi for python instead
+
+    " ================ NerdTree =========================
+    " Remap Crtl-/ to toggle
+    map <C-n> :NERDTreeToggle<CR>
+    " Close vim if NerdTree is only open window
+    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+    " Open NerdTree if no file is specified
+    autocmd StdinReadPre * let s:std_in=1
+    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 endif
 
 " quickly source vimrc from within editor
@@ -53,16 +62,6 @@ nnoremap ss :so ~/.vimrc<CR>
 set noswapfile
 set nobackup
 set nowb
-
-"
-" ================ NerdTree =========================
-" Remap Crtl-/ to toggle
-map <C-n> :NERDTreeToggle<CR>
-" Close vim if NerdTree is only open window
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-" Open NerdTree if no file is specified
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
