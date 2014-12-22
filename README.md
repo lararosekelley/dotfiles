@@ -132,21 +132,25 @@ some apps with `brew cask install <pkg>`:
 * iterm2
 * firefox
 
-Much nicer than dragging icons into your Applications folder, eh?
+This is a lot nicer than having to deal with disk images and dragging icons to
+the Applications folder.
 
 ### Node Modules
 
-If you installed node.js via Homebrew, use `npm install <pkg>` to install these
+If you installed node.js via Homebrew, use `npm install -g <pkg>` to install these
 cool modules:
 
 * yo
 * bower
 * jshint
 * http-server
+* generator-express
+* generator-angular
 * csslint
 * htmlhint
 * grunt-cli
 * mocha
+* npm-check-updates
 
 ### Ruby
 

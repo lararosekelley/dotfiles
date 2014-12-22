@@ -4,7 +4,6 @@
     'fontSize': 14
     'tabLength': 4
     'softWrap': true
-    'invisibles': {}
   'core':
     'themes': [
       'atom-dark-ui'
