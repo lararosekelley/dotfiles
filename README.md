@@ -68,6 +68,9 @@ package listed here with the `brew install <pkg>` command:
 * wget
 * tree
 * lynx
+* pkg-config
+* libxml2
+* libffi
 * emacs
 * heroku-toolbelt
 * sl (this one's super important)
@@ -86,6 +89,8 @@ I like the Pathogen package manager for Vim, so I'm going to show you how to set
 
 Install some stuff to make Vim more awesome after that:
 
+* [Badwolf Theme](https://github.com/sjl/badwolf)
+    * `git clone https://github.com/sjl/badwolf ~/.vim/bundle/badwolf`
 * [Vim Airline](https://github.com/bling/vim-airline)
     * `git clone https://github.com/bling/vim-airline ~/.vim/bundle/vim-airline`
 * [Solarized Theme](http://ethanschoonover.com/solarized/vim-colors-solarized)
@@ -113,7 +118,7 @@ and put them in your home directory (be sure to add a . before the name):
 * tmux.conf: Tmux config file
 
 Note that the Vim and Zsh config files assume that you have downloaded Go and properly
-set up the Pathogen package manager for Vim (see above)
+set up the Pathogen package manager for Vim (see above).
 
 ### Brew Cask
 
@@ -157,8 +162,8 @@ cool modules:
 If you installed rbenv via Homebrew, install the version you want to use and
 replace the system Ruby with it:
 
-    $ rbenv install 2.1.3 # or some other version
-    $ rbenv global 2.1.3 # or some other version
+    $ rbenv install <version>
+    $ rbenv global <version>
 
 Then grab some great gems using `gem install <pkg>`:
 
