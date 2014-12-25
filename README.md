@@ -106,6 +106,8 @@ Install some stuff to make Vim more awesome after that:
     * `git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree`
 * [Syntastic](https://github.com/scrooloose/syntastic)
     * `git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic`
+* [Tomorrow Theme](https://github.com/d11wtq/tomorrow-theme-vim)
+    * `git clone https://github.com/d11wtq/tomorrow-theme-vim ~/.vim/bundle/tomorrow-theme-vim`
 
 ### Dotfiles
 
