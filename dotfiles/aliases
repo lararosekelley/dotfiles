@@ -1,8 +1,14 @@
 # aliases
 # ----------
 
+# misc. tools
 alias ip="ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'"
-alias fix_dialog="defaults delete com.google.Chrome NSNavPanelExpandedSizeForOpenMode"
 alias up="cd .."
+
+# edit important files
 alias zshrc="vim ~/.zshrc"
 alias vimrc="vim ~/.vimrc"
+
+# pip
+alias pipreg="python setup.py register -r pypi"
+alias pipup="python setup.py sdist upload -r pypi"
