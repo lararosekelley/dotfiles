@@ -64,6 +64,7 @@ package listed here with the `brew install <pkg>` command:
 * rbenv
 * ruby-build
 * ack
+* j
 * jq
 * wget
 * tree
@@ -138,6 +139,9 @@ some apps with `brew cask install <pkg>`:
 * openemu
 * iterm2
 * firefox
+* java
+* vagrant
+* virtualbox
 
 This is a lot nicer than having to deal with disk images and dragging icons to
 the Applications folder.
