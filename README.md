@@ -181,6 +181,7 @@ Then grab some great gems using `gem install <pkg>`:
 
 If you installed Python 2 with Homebrew, run `pip install <pkg>` to grab some cool stuff:
 
+* uncommitted
 * ipython
 * licenser
 * pep8
