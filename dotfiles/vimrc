@@ -40,11 +40,25 @@ set background=dark
 " Loads all the plugins specified in ~/.vim/bundle.
 if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     execute pathogen#infect()
+    
+    " Theme
     colorscheme Tomorrow-Night
-    let g:neocomplete#enable_at_startup=1
-    autocmd FileType python NeoCompleteLock "using jedi for python instead
+    
+    " CtrlP
+    let g:ctrlp_map = '<c-p>'
+    let g:ctrlp_cmd = 'CtrlP'
 
-    " ================ NerdTree =========================
+    " Syntastic
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+
+    let g:syntastic_always_populate_loc_list = 1
+    let g:syntastic_auto_loc_list = 1
+    let g:syntastic_check_on_open = 1
+    let g:syntastic_check_on_wq = 0
+
+    " NERDTree
     " Remap Crtl-/ to toggle
     map <C-n> :NERDTreeToggle<CR>
     " Close vim if NerdTree is only open window
