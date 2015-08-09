@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# utility functions
+
+# converts quicktime screen recording to a gif
+mov2gif() {
+    usage="usage: mov2gif input output"
+
+    if [ -z "$1" ] || [ -z "$2" ]; then
+        echo $usage
+        return 1
+    else
+        in=$1
+        out=$2
+
+        if [ -f "$in" ]; then
+            ffmpeg -hide_banner -loglevel quiet -i $in -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > $out
+        else
+            echo "error: input is not a file"
+            return 1
+        fi
+    fi
+}

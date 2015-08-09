@@ -1,0 +1,25 @@
+"*":
+  "exception-reporting":
+    userId: "11b68268-7d8f-3152-bfc7-df1340ecaac7"
+  welcome:
+    showOnStartup: false
+  editor:
+    fontSize: 11
+    invisibles: {}
+    softWrap: true
+    tabLength: 4
+  core:
+    themes: [
+      "one-dark-ui"
+      "solarized-dark-syntax"
+    ]
+  "atom-ternjs": {}
+  "spell-check":
+    grammars: [
+      "text.plain"
+      "source.gfm"
+      "source.md"
+    ]
+  "autoclose-html": {}
+  "git-plus": {}
+  "linter-csslint": {}
