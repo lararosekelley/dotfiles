@@ -1,17 +1,34 @@
 # osx
 
-*Turn your new Mac into a great development machine*
+*Turn your Mac into a great development machine*
 
 by Ty-Lucas Kelley
 
 ---
 
-This is a list of resources for setting up a new Apple computer.
+This repository should serve as a good way to set up a Mac for development.
 
-### 0. Getting started
+### Prerequisites
 
-Before we begin, note that this tutorial assumes that you're using a computer with
-OS X 10.10 (Yosemite).
+* Computer running Mac OS X 10.10 (Yosemite)
+  * Most things will probably work fine on earlier versions,
+    but I'm not making any promises
+* NOTE: Be sure to read any file before you download or run it! Safety first :)
+
+### Table of Contents
+
+1. [Xcode Command Line Tools](#1-xcode-command-line-tools)
+2. [Zsh](#2-zsh)
+3. [Homebrew](#3-homebrew)
+4. [Atom](#4-atom)
+5. [Vim](#5-vim)
+6. [Node](#6-node)
+7. [Ruby](#7-ruby)
+8. [Python](#8-python)
+9. [Dotfiles](#9-dotfiles)
+10. [Misc.](#10-misc)
+
+### 1. Xcode Command Line Tools
 
 The first thing you should do is install the Xcode command line tools; without
 them, not much else is possible. Open up the Terminal application and type this:
@@ -20,25 +37,23 @@ them, not much else is possible. Open up the Terminal application and type this:
 
 Follow the instructions in the prompt to continue the installation.
 
-### 1. Zsh
+### 2. Zsh
 
 There's nothing wrong with Bash, but Zsh adds a lot of nice features, such as:
 
 * Plugins
 * Themes
 * Smarter tab-based autocompletion
-* Lots of helpful functions
+* Lots of helpful convenience functions
 
 You can install it like this:
 
     $ curl -L http://install.ohmyz.sh | sh
 
-The next time you open your shell, you'll be greeted with the Zsh prompt. Download
-my theme for it:
+The next time you open your shell, you'll be greeted with the Zsh prompt.
+We'll customize it later!
 
-`curl -o ~/.oh-my-zsh/themes/tlk.zsh-theme https://raw.githubusercontent.com/tylucaskelley/osx/master/themes/tlk.zsh-theme`
-
-### 2. Homebrew and Brew Cask
+### 3. Homebrew
 
 Homebrew bills itself as the "missing" package manager for OS X, but it should
 really be called the "necessary" package manager. Install it:
@@ -46,80 +61,34 @@ really be called the "necessary" package manager. Install it:
     $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 Then run the `brew doctor` command and address any issues that it brings up.
+Once that's all set, read the contents of my
+[brew.sh](https://github.com/tylucaskelley/osx/blob/master/scripts/brew.sh)
+installation script; if you like what you see, run it:
 
-Once that's all set, you can start installing a bunch of packages. Install each
-package listed here with the `brew install <pkg>` command:
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/brew.sh | sh
 
-* ack
-* android-platform-tools
-* autojump
-* caskroom/cask/brew-cask
-* curl
-* elasticsearch
-* emacs
-* git
-* go (after install: 'mkdir -p ~/.go')
-* go-app-engine-64
-* gradle
-* heroku-toolbelt
-* hugo
-* jq
-* libffi
-* libxml2
-* lua
-* lynx
-* mercurial
-* mongodb (after install: 'sudo mkdir -p /data/db && sudo chmod 777 /data/db')
-* mysql
-* n
-* ngrok
-* node
-* openssl
-* postgresql
-* python
-* python3
-* rbenv
-* ruby-build
-* sbt
-* scala
-* sl
-* sqlite
-* tmux
-* tree
-* vim --with-lua --override-system-vi
-* wget
-* xz
+Otherwise, install what you want from it! Do the same for my
+[brew-cask](https://github.com/tylucaskelley/osx/blob/master/scripts/brew.sh) script;
+brew cask is like brew but for Mac programs. Here's the install script:
 
-Brew Cask extends Homebrew to allow the installation of large binaries and other Mac applications.
-If you ran `caskroom/cask/brew-cask` earlier, you already have it installed. Install
-some apps with `brew cask install <pkg>`:
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/brew-cask.sh | sh
 
-* android-studio
-* appcleaner
-* arduino
-* atom
-* firefox
-* font-lato
-* font-roboto
-* font-inconsolata
-* gimp
-* github
-* google-chrome
-* google-drive
-* intellij-idea-ce
-* iterm2
-* java
-* openemu
-* openscad
-* sketch
-* slack
-* steam
-* unity
-* utorrent
-* vagrant
-* virtualbox
+### 4. Atom
 
-### 3. Vim
+Atom is a great text editor; it's very similar to Sublime, and seems to have more
+momentum going forward. If you installed it via brew cask, copy
+[this file](https://github.com/tylucaskelley/osx/blob/master/config.cson) to
+your `.atom` folder:
+
+    $ curl -o ~/.atom/config.cson https://raw.githubusercontent.com/tylucaskelley/osx/master/config.cson
+
+And install packages for it with my
+[atom.sh](https://github.com/tylucaskelley/osx/blob/master/scripts/atom.sh) script
+(after you read it):
+
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/atom.sh | sh
+
+### 5. Vim
 
 Vim is a nice, extensible command line text editor. I like the Pathogen package
 manager for managing extensions, so I'm going to show you how to set that up:
@@ -127,61 +96,31 @@ manager for managing extensions, so I'm going to show you how to set that up:
     $ mkdir -p ~/.vim/autoload ~/.vim/bundle
     $ curl -LSso ~/.vim/autoload/pathogen.vim https://tpo.pe/pathogen.vim
 
-Install some stuff to make Vim more awesome after that:
+Install some stuff to make Vim more awesome after that; check out my
+[vim.sh](https://github.com/tylucaskelley/osx/blob/master/scripts/vim.sh)
+script and run it if you like what you see:
 
-* [Badwolf Theme](https://github.com/sjl/badwolf)
-    * `git clone https://github.com/sjl/badwolf ~/.vim/bundle/badwolf`
-* [Vim Airline](https://github.com/bling/vim-airline)
-    * `git clone https://github.com/bling/vim-airline ~/.vim/bundle/vim-airline`
-* [Solarized Theme](http://ethanschoonover.com/solarized/vim-colors-solarized)
-    * `git clone git://github.com/altercation/vim-colors-solarized.git ~/.vim/bundle/vim-colors-solarized`
-* [Jedi Completion](https://github.com/davidhalter/jedi-vim)
-    * `git clone --recursive https://github.com/davidhalter/jedi-vim.git ~/.vim/bundle/jedi-vim`
-    * Note that you need to run `pip install jedi` for this plugin to work
-* [Neocomplete](https://github.com/Shougo/neocomplete.vim)
-    * `git clone https://github.com/Shougo/neocomplete.vim.git ~/.vim/bundle/neocomplete`
-* [Supertab](https://github.com/ervandew/supertab)
-    * `git clone https://github.com/ervandew/supertab ~/.vim/bundle/supertab`
-* [Nerdtree](https://github.com/scrooloose/nerdtree.git)
-    * `git clone https://github.com/scrooloose/nerdtree.git ~/.vim/bundle/nerdtree`
-* [Syntastic](https://github.com/scrooloose/syntastic)
-    * `git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/syntastic`
-* [Tomorrow Theme](https://github.com/d11wtq/tomorrow-theme-vim)
-    * `git clone https://github.com/d11wtq/tomorrow-theme-vim ~/.vim/bundle/tomorrow-theme-vim`
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/vim.sh | sh
 
-### 4. Node
+We'll configure vim with a `.vimrc` file later!
 
-If you installed node.js via Homebrew, use `npm install -g <pkg>` to install these
-cool modules:
+### 6. Node
 
-* bower
-* csslint
-* generator-angular
-* generator-express
-* generator-chrome-extension
-* grunt-cli
-* htmlhint
-* http-server
-* jquery-seed
-* jshint
-* mocha
-* nodemon
-* npm-check-updates
-* yo
+If you installed node.js via Homebrew, use my
+[shell script](https://github.com/tylucaskelley/osx/blob/master/scripts/node.sh)
+to install some nice packages:
 
-### 5. Python
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/node.sh | sh
 
-If you installed Python 2 with Homebrew, run `pip install <pkg>` to grab a few
-cool tools:
+### 7. Python
 
-* closure-linter
-* ipython
-* jedi
-* licenser
-* pep8
-* uncommitted
+If you installed Python via Homebrew, use my
+[shell script](https://github.com/tylucaskelley/osx/blob/master/scripts/python.sh)
+to install some nice packages:
 
-### 6. Ruby
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/python.sh | sh
+
+### 8. Ruby
 
 If you installed rbenv via Homebrew, install the version you want to use and
 replace the system Ruby with it:
@@ -189,31 +128,26 @@ replace the system Ruby with it:
     $ rbenv install <version>
     $ rbenv global <version>
 
-Then grab some great gems using `gem install <pkg>`:
+Once you do that, use my
+[shell script](https://github.com/tylucaskelley/osx/blob/master/scripts/ruby.sh)
+to install some nice packages:
 
-* jekyll
-* rails
-* sass
-* sinatra
+    $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/ruby.sh | sh
 
-### 7. Dotfiles
+### 9. Dotfiles
 
-Grab the files from [here](https://github.com/tylucaskelley/start/tree/master/dotfiles)
-and put them in your home directory (be sure to add a . before the name):
+To make things like Zsh and Vim work nicely, install my dotfiles one at a time:
 
-* aliases: some useful commands
-* vimrc: My Vim config file
-* zshrc: My Zsh config file
-* tmux.conf: Tmux config file
+```bash
+$ curl -o ~/.aliases https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.aliases
+$ curl -o ~/.env https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.env
+$ curl -o ~/.functions https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.functions
+$ curl -o ~/.tmux.conf https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.tmux.conf
+$ curl -o ~/.vimrc https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.vimrc
+$ curl -o ~/.zshrc https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.zshrc
+```
 
-Note that the Vim and Zsh config files assume that you have:
-
-* Downloaded Go and set up the `~/.go` directory
-* Installed my Zsh theme from the `themes` folder
-* Properly set up Vim with the Pathogen package manager
-* Installed rbenv and ruby-build
-
-### 8. Misc.
+### 10. Misc
 
 To silence annoying "Last Login" prompts when you open a shell, do this:
 

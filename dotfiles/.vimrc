@@ -40,10 +40,10 @@ set background=dark
 " Loads all the plugins specified in ~/.vim/bundle.
 if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     execute pathogen#infect()
-    
+
     " Theme
-    colorscheme Tomorrow-Night
-    
+    colorscheme solarized
+
     " CtrlP
     let g:ctrlp_map = '<c-p>'
     let g:ctrlp_cmd = 'CtrlP'
@@ -58,14 +58,20 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:syntastic_check_on_open = 1
     let g:syntastic_check_on_wq = 0
 
+    " Airline
+    let g:airline#extensions#tabline#enabled = 1
+    let g:airline#extensions#tabline#left_sep = ' '
+    let g:airline#extensions#tabline#left_alt_sep = '|'
+
     " NERDTree
-    " Remap Crtl-/ to toggle
-    map <C-n> :NERDTreeToggle<CR>
+    map <C-n> :NERDTreeToggle<CR> " Remap Crtl-/ to toggle
     " Close vim if NerdTree is only open window
     autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
     " Open NerdTree if no file is specified
     autocmd StdinReadPre * let s:std_in=1
     autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+    " Open in new tab by default
+    let NERDTreeMapOpenInTab='<ENTER>'
 endif
 
 " quickly source vimrc from within editor
