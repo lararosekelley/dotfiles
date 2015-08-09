@@ -23,8 +23,8 @@ This repository should serve as a good way to set up a Mac for development.
 4. [Atom](#4-atom)
 5. [Vim](#5-vim)
 6. [Node](#6-node)
-7. [Ruby](#7-ruby)
-8. [Python](#8-python)
+7. [Python](#7-python)
+8. [Ruby](#8-ruby)
 9. [Dotfiles](#9-dotfiles)
 10. [Misc.](#10-misc)
 
@@ -82,7 +82,7 @@ After installation, do the following to make sure packages like `go` and `mongod
     $ mkdir -p ~/.go
 
 Do the same for my
-[brew-cask](https://github.com/tylucaskelley/osx/blob/master/scripts/brew.sh) script;
+[brew-cask](https://github.com/tylucaskelley/osx/blob/master/scripts/brew-cask.sh) script;
 brew cask is like brew but for Mac programs. Here's the install script:
 
     $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/brew-cask.sh | sh
