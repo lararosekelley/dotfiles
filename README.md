@@ -13,7 +13,8 @@ This repository should serve as a good way to set up a Mac for development.
 * Computer running Mac OS X 10.10 (Yosemite)
   * Most things will probably work fine on earlier versions,
     but I'm not making any promises
-* NOTE: Be sure to read any file before you download or run it! Safety first :)
+* Be sure to read any file before you download or run it! Safety first :)
+* Some of the install scripts will prompt you for permission when running
 
 ### Table of Contents
 
