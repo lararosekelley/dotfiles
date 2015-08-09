@@ -37,6 +37,11 @@ them, not much else is possible. Open up the Terminal application and type this:
 
 Follow the instructions in the prompt to continue the installation.
 
+Then, tell Git who you are:
+
+    $ git config --global user.email "you@example.com"
+    $ git config --global user.name "Your Name"
+
 ### 2. Zsh
 
 There's nothing wrong with Bash, but Zsh adds a lot of nice features, such as:
@@ -61,13 +66,21 @@ really be called the "necessary" package manager. Install it:
     $ ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 Then run the `brew doctor` command and address any issues that it brings up.
+
 Once that's all set, read the contents of my
 [brew.sh](https://github.com/tylucaskelley/osx/blob/master/scripts/brew.sh)
 installation script; if you like what you see, run it:
 
     $ curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/brew.sh | sh
 
-Otherwise, install what you want from it! Do the same for my
+Otherwise, install what you want from it!
+
+After installation, do the following to make sure packages like `go` and `mongodb` work right:
+
+    $ sudo mkdir -p /data/db && sudo chmod 777 /data/db # mongodb
+    $ mkdir -p ~/.go
+
+Do the same for my
 [brew-cask](https://github.com/tylucaskelley/osx/blob/master/scripts/brew.sh) script;
 brew cask is like brew but for Mac programs. Here's the install script:
 
