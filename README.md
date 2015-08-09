@@ -41,6 +41,7 @@ Then, tell Git who you are:
 
     $ git config --global user.email "you@example.com"
     $ git config --global user.name "Your Name"
+    $ git config --global push.default simple
 
 ### 2. Zsh
 
