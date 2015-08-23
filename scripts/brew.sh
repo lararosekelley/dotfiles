@@ -7,7 +7,6 @@ packages=(
     autojump
     caskroom/cask/brew-cask
     curl
-    elasticsearch
     emacs
     ffmpeg
     gdbm

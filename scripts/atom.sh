@@ -19,6 +19,7 @@ packages=(
     linter-pep8
     merge-conflicts
     minimap
+    pdf-view
     pigments
     travis-ci-status
 )
