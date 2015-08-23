@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# installs brew cask packages
+# installs vim packages
 
 packages=(
-    git@github.com:kien/ctrlp.vim.git
-    git@github.com:ervandew/supertab.git
-    git@github.com:scrooloose/syntastic.git
-    git@github.com:altercation/vim-colors-solarized.git
-    git@github.com:bling/vim-airline.git
-    git@github.com:scrooloose/nerdtree.git
+    https://github.com/kien/ctrlp.vim.git
+    https://github.com/ervandew/supertab.git
+    https://github.com/scrooloose/syntastic.git
+    https://github.com/altercation/vim-colors-solarized.git
+    https://github.com/bling/vim-airline.git
+    https://github.com/scrooloose/nerdtree.git
 )
 
 if [ -x /usr/local/bin/git ] && [ -d ~/.vim/bundle ]; then
