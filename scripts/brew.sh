@@ -36,8 +36,6 @@ packages=(
     rbenv
     readline
     ruby-build
-    sbt
-    scala
     sl
     sqlite
     tmux
