@@ -25,8 +25,8 @@ This repository should serve as a good way to set up a Mac for development.
 5. [Vim](#5-vim)
 6. [Node](#6-node)
 7. [Python](#7-python)
-8. [Ruby](#8-ruby)
-9. [Dotfiles](#9-dotfiles)
+8. [Dotfiles](#8-dotfiles)
+9. [Ruby](#9-ruby)
 10. [Misc.](#10-misc)
 
 ### 1. Xcode Command Line Tools
@@ -142,7 +142,18 @@ to install some nice packages:
 
     curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/python.sh | sh
 
-### 8. Ruby
+### 8. Dotfiles
+
+To make things like Zsh and Vim work nicely, install my dotfiles one at a time:
+
+    curl -o ~/.aliases https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.aliases
+    curl -o ~/.env https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.env
+    curl -o ~/.functions https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.functions
+    curl -o ~/.tmux.conf https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.tmux.conf
+    curl -o ~/.vimrc https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.vimrc
+    curl -o ~/.zshrc https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.zshrc
+
+### 9. Ruby
 
 If you installed rbenv via Homebrew, install the version you want to use and
 replace the system Ruby with it:
@@ -155,17 +166,6 @@ Once you do that, use my
 to install some nice packages:
 
     curl -L https://raw.githubusercontent.com/tylucaskelley/osx/master/scripts/ruby.sh | sh
-
-### 9. Dotfiles
-
-To make things like Zsh and Vim work nicely, install my dotfiles one at a time:
-
-    curl -o ~/.aliases https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.aliases
-    curl -o ~/.env https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.env
-    curl -o ~/.functions https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.functions
-    curl -o ~/.tmux.conf https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.tmux.conf
-    curl -o ~/.vimrc https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.vimrc
-    curl -o ~/.zshrc https://raw.githubusercontent.com/tylucaskelley/osx/master/dotfiles/.zshrc
 
 ### 10. Misc
 
