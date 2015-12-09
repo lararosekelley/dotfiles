@@ -18,7 +18,7 @@ if [ -x /usr/local/bin/git ] && [ -d ~/.vim/bundle ]; then
         git clone $repo
     done
 
-    cd dir
+    cd $dir
 else
     echo "git not installed to /usr/local/bin or ~/.vim/bundle does not exist... aborting";
 fi
