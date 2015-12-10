@@ -10,7 +10,7 @@ This repository should serve as a good way to set up a Mac for development.
 
 ### Prerequisites
 
-* Computer running Mac OS X 10.10 (Yosemite)
+* Computer running Mac OS X 10.11, 10.10, or 10.9
   * Most things will probably work fine on earlier versions,
     but I'm not making any promises
 * Be sure to read any file before you download or run it! Safety first :)
