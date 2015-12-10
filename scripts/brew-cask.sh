@@ -16,8 +16,8 @@ packages=(
     xquartz
 )
 
-if [ -x /usr/local/bin/brew-cask ]; then
+if brew info brew-cask &>/dev/null; then
     brew cask install ${packages[@]};
 else
-    echo "brew cask not installed to /usr/local/bin... aborting";
+    echo "brew cask not installed... aborting";
 fi
