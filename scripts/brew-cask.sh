@@ -1,23 +1,28 @@
 #!/usr/bin/env bash
-# installs brew cask packages
 
-packages=(
-    appcleaner
-    atom
-    firefox
-    google-chrome
-    java
-    paw
-    sketch
-    slack
-    utorrent
-    vagrant
-    virtualbox
-    xquartz
-)
+# update everything
 
-if brew info brew-cask &>/dev/null; then
-    brew cask install ${packages[@]};
-else
-    echo "brew cask not installed... aborting";
-fi
+brew update
+brew upgrade --all
+
+# install programs
+
+brew cask install appcleaner
+brew cask install atom
+brew cask install firefox
+brew cask install google-chrome
+brew cask install java
+brew cask install paw
+brew cask install sketch
+brew cask install slack
+brew cask install steam
+brew cask install the-unarchiver
+brew cask install utorrent
+brew cask install vagrant
+brew cask install virtualbox
+brew cask install xquartz
+
+# done
+
+brew cleanup
+brew cask cleanup

@@ -1,52 +1,150 @@
-" Ty's vimrc
-" Adapted from skwp/dotfiles/vimrc on GitHub
+" vimrc
+" ----------
 
-" Use Vim settings, rather then Vi settings (much better!).
-" This must be first, because it changes other options as a side effect.
+" vim, not vi
 set nocompatible
 
-" ================ General Config ====================
-
-set number                      "Line numbers are good
-set backspace=indent,eol,start  "Allow backspace in insert mode
-set history=1000                "Store lots of :cmdline history
-set showcmd                     "Show incomplete cmds down the bottom
-set showmode                    "Show current mode down the bottom
-set gcr=a:blinkon0              "Disable cursor blink
-set visualbell                  "No sounds
-set autoread                    "Reload files changed outside vim
-
-" This makes vim act like all other editors, buffers can
-" exist in the background without being in a window.
-" http://items.sjbach.com/319/configuring-vim-right
-set hidden
-
-"turn on syntax highlighting
-syntax on
-
-" show statusline
-set laststatus=2
-
-" Change leader to a comma because the backslash is too far away
-" That means all \x commands turn into ,x
-" The mapleader has to be set before vundle starts loading all
-" the plugins.
+" custom leader
 let mapleader=","
 
-" dark bg
+" ======== table of contents ========
+" 1. colors & fonts
+" 2. ui & status line
+" 3. folding, text, indents
+" 4. navigation, tabs, buffers, behavior
+" 5. search
+" 6. helper functions
+" 7. plugins
+" 8. backups
+
+" ======== 1. colors & fonts ========
+
+" dark background color
 set background=dark
 
-" =============== Pathogen Initialization ===============
-" Loads all the plugins specified in ~/.vim/bundle.
+" tomorrow theme
+colorscheme Tomorrow-Night
+
+" syntax highlighting
+syntax on
+
+" ======== 2. ui & statusline ========
+
+" line numbers
+set number
+
+" show command in bottom right
+set showcmd
+
+" highlight current line
+set cursorline
+
+" only redraw when needed
+set lazyredraw
+
+" show status line
+set laststatus=2
+
+" no sounds
+set visualbell
+
+" show trailing spaces
+set list listchars=trail:•
+
+" view file tree
+map <leader>; :Explore<CR>
+
+" disable file tree history file
+let g:netrw_dirhistmax=0
+
+" ======== 3. folding, text, indents ========
+
+" unicode
+set encoding=utf-8
+
+" allow backspace
+set backspace=indent,eol,start
+
+" spaces per tab
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+
+" tabs are spaces
+set expandtab
+
+" auto indent
+filetype indent plugin on
+set autoindent
+set smartindent
+
+" enable folding
+set foldenable
+
+" fold based on indent
+set foldmethod=indent
+
+" show most folds
+set foldlevelstart=10
+set foldnestmax=10
+
+" space toggles folds
+nnoremap <space> za
+
+" spellcheck
+setlocal spell spelllang=en_us
+
+" ======== 4. navigation, tabs, buffers, behavior ========
+
+" enable mouse in all modes
+set mouse=a
+
+" buffers don't need to be in window
+set hidden
+
+" reload files changed outside of vim
+set autoread
+
+" store more command history
+set history=1000
+
+" source vimrc from vim
+nnoremap ss :so ~/.vimrc<CR>
+
+" markdown .md files
+autocmd BufNewFile,BufRead *.md set filetype=markdown
+
+" start scrolling 4 lines before window border
+set scrolloff=4
+
+" cycle through buffers
+nnoremap <C-n> :bnext<CR>
+nnoremap <C-m> :bprevious<CR>
+
+" ======== 5. search ========
+
+" search while typing
+set incsearch
+
+" highlight matches
+set hlsearch
+
+" ignore case when searching
+set ignorecase
+
+" ,. turns off highlights when done
+nnoremap <leader>. :nohlsearch<CR>
+
+" ======== 6. helper functions ========
+
+" ======== 7. plugins ========
+
 if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     execute pathogen#infect()
 
-    " Theme
-    colorscheme solarized
-
     " CtrlP
-    let g:ctrlp_map = '<c-p>'
-    let g:ctrlp_cmd = 'CtrlP'
+    let g:ctrlp_map='<c-p>'
+    let g:ctrlp_cmd='CtrlP'
 
     " Syntastic
     set statusline+=%#warningmsg#
@@ -60,97 +158,15 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
 
     " Airline
     let g:airline#extensions#tabline#enabled = 1
-    let g:airline#extensions#tabline#left_sep = ' '
-    let g:airline#extensions#tabline#left_alt_sep = '|'
-
-    " NERDTree
-    map <C-n> :NERDTreeToggle<CR> " Remap Crtl-/ to toggle
-    " Close vim if NerdTree is only open window
-    autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-    " Open NerdTree if no file is specified
-    autocmd StdinReadPre * let s:std_in=1
-    autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-    " Open in new tab by default
-    let NERDTreeMapOpenInTab='<ENTER>'
 endif
 
-" quickly source vimrc from within editor
-nnoremap ss :so ~/.vimrc<CR>
+" ======== 8. backups ========
 
-" ================ Turn Off Swap Files ==============
+" turn backup on except for certain files
+set backup
+set writebackup
+set backupskip=/tmp/*,/private/tmp/*
 
-set noswapfile
-set nobackup
-set nowb
-
-" ================ Persistent Undo ==================
-" Keep undo history across sessions, by storing in file.
-" Only works all the time.
-if has('persistent_undo')
-    silent !mkdir ~/.vim/backups > /dev/null 2>&1
-    set undodir=~/.vim/backups
-    set undofile
-endif
-
-" ================ Indentation ======================
-
-set autoindent
-set smartindent
-set smarttab
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
-set expandtab
-
-filetype plugin on
-filetype indent on
-
-" Display tabs and trailing spaces visually
-set list listchars=tab:\ \ ,trail:·
-
-set nowrap       "Don't wrap lines
-set linebreak    "Wrap lines at convenient points
-
-" ================ Folds ============================
-
-set foldlevelstart=10 "open most folds by default
-set foldmethod=indent   "fold based on indent
-set foldnestmax=3       "deepest fold is 3 levels
-set foldenable        "dont fold by default
-nnoremap <space> za "open/close folds with space key
-
-" ================ Completion =======================
-
-set wildmode=list:longest
-set wildmenu                "enable ctrl-n and ctrl-p to scroll thru matches
-set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
-set wildignore+=*vim/backups*
-set wildignore+=*sass-cache*
-set wildignore+=*DS_Store*
-set wildignore+=vendor/rails/**
-set wildignore+=vendor/cache/**
-set wildignore+=*.gem
-set wildignore+=log/**
-set wildignore+=tmp/**
-set wildignore+=*.png,*.jpg,*.gif
-
-"
-" ================ Scrolling ========================
-
-set scrolloff=8         "Start scrolling when we're 8 lines away from margins
-set sidescrolloff=15
-set sidescroll=1
-
-"
-" =============== Spellcheck ========================
-setlocal spell spelllang=en_us
-
-"
-" =============== Markdown ==========================
-autocmd BufNewFile,BufReadPost *.md set filetype=markdown
-
-"
-" =============== Search ============================
-set incsearch "search while typing
-set hlsearch "highlight matches
-nnoremap <leader>. :nohlsearch<CR> "type ,. to turn of highlighting after done
+" centralize location of swap and backup files
+set backupdir=~/.vim/backups
+set directory=~/.vim/swaps

@@ -1,0 +1,34 @@
+# bash_prompt
+# ----------
+
+# colors
+
+reset=$(tput sgr0)
+bold=$(tput bold)
+black=$(tput setaf 0)
+blue=$(tput setaf 33)
+cyan=$(tput setaf 37)
+green=$(tput setaf 64)
+orange=$(tput setaf 166)
+purple=$(tput setaf 125)
+red=$(tput setaf 124)
+violet=$(tput setaf 61)
+white=$(tput setaf 15)
+yellow=$(tput setaf 136)
+
+# variables
+
+user_color="${red}"
+host_color="${orange}"
+dir_color="${yellow}"
+branch_color="${green}"
+
+# set prompt
+
+PS1="\[${bold}${user_color}\]\u" # user
+PS1+="\[${white}\] at \[${host_color}\]\h" # host
+PS1+="\[${white}\] in \[${dir_color}\]\w" # directory
+PS1+="\[${branch_color}\]\$(__git_ps1)" # git
+PS1+="\n\[${violet}\](\$(date +'%I:%M %p')) \[${blue}\]\$\[${reset}\] " # date & prompt
+
+export PS1

@@ -1,0 +1,28 @@
+# exports
+# ----------
+
+# english & utf-8
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# set vim to default editor
+export EDITOR="vim"
+
+# increase history size & ignore duplicates
+export HISTSIZE="10000"
+export HISTFILESIZE="${HISTSIZE}"
+export HISTCONTROL="ignoreboth"
+
+# postgres
+export PGDATA="/usr/local/var/postgres"
+export PGHOST=localhost
+
+# rbenv
+export RBENV_ROOT="/usr/local/var/rbenv"
+
+# go
+export GOPATH="$HOME/.go"
+
+# path
+export PATH="/usr/local/bin:/usr/local/opt/coreutils/libexec/gnubin:/bin:/usr/sbin:/sbin:/usr/bin:$GOPATH/bin:$PATH"
+export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"

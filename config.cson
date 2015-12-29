@@ -9,7 +9,7 @@
   core:
     themes: [
       "one-dark-ui"
-      "solarized-dark-syntax"
+      "base16-tomorrow-dark-theme"
     ]
   "atom-ternjs": {}
   "spell-check":
@@ -21,3 +21,11 @@
   "autoclose-html": {}
   "git-plus": {}
   "linter-csslint": {}
+  "one-dark-ui": {}
+  pigments:
+    supportedFiletypes: [
+      ".css"
+      ".scss"
+      ".sass"
+      ".less"
+    ]

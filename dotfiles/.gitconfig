@@ -1,0 +1,46 @@
+# gitconfig
+# ----------
+
+[alias]
+	# formatted view of last 25 commits
+	lg = log --all --graph --abbrev-commit --date=relative --format=format:'%C(red)%h%C(reset) %C(blue)(%ar)%C(reset) - %C(white)%s%C(reset)'
+
+	# commit all changes to current branch
+	ca = !git add -A && git commit -am $1
+
+	# switch to branch, create if it doesn't exist
+	br = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+
+	# sort contributors by number of commits
+	rank = shortlog -sn --no-merges
+[apply]
+	# find whitespace errors
+	whitespace = fix
+[color]
+	# use colors in git commands
+	ui = auto
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+[color "diff"]
+	meta = yellow bold
+	frag = magenta bold
+	old = red
+	new = green
+[color "status"]
+	added = yellow
+	changed = green
+	untracked = cyan
+[core]
+	# custom .gitignore
+	excludesfile = ~/.gitignore
+
+	# catch trailing whitespace & spaces before tabs
+	whitespace = space-before-tab,trailing-space
+[help]
+	# fix & execute misspelled commands
+	autocorrect = 1
+[push]
+	# use new git push behavior
+	default = simple
