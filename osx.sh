@@ -79,7 +79,7 @@ if [ "$?" != "0" ]; then
 
     if [ "$?" == "0" ]; then
         echo "installing homebrew..."
-        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" >&-
+        ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     else
         echo "error: setup cannot continue without homebrew"
         exit 1
