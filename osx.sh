@@ -23,12 +23,26 @@ INSTALL_DIR="${HOME}/.osx"
 # 2. setup
 # --------
 
+# check os version
+
 if [ "$OS_VERSION" != "$MIN_VERSION" ]; then
     echo "error: osx ${MIN_VERSION} required; current version is ${OS_VERSION}"
     exit 1
 fi
 
 echo "setting up osx development environment..."
+
+# get sudo priveleges for whole script
+
+echo "please enter your password: "
+
+sudo -v
+
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2>/dev/null &
 
 # save git repo to ~/.osx
 
