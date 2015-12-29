@@ -9,6 +9,7 @@
 # 2. setup
 # 3. xcode
 # 4. homebrew
+# 5. brew cask
 # ------------------------
 
 # 1. global variables
@@ -103,6 +104,8 @@ fi
 prompt_user "install and upgrade homebrew packages? (y/n)"
 
 if [ "$?" == "0" ]; then
+    echo "installing homebrew packages..."
+
     brew update
     brew upgrade --all
 
@@ -118,15 +121,20 @@ if [ "$?" == "0" ]; then
 
     # mongodb
     sudo mkdir -p /data/db && sudo chmod 777 /data/db
-
-    # mysql
-    ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents
-    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
-
-    # postgresql
-    ln -sfv /usr/local/opt/postgresql/*.plist ~/Library/LaunchAgents
-    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
 else
     echo "error: setup cannot continue without homebrew packages"
     exit 1
+fi
+
+# 5. brew cask
+# --------
+
+prompt_user "install mac apps with brew cask? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "installing mac apps with brew cask..."
+
+    brew cask install ${BREW_CASK_PACKAGES[@]}
+
+    brew cask cleanup
 fi
