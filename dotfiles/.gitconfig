@@ -6,7 +6,7 @@
 	lg = log --all --graph --abbrev-commit --date=relative --format=format:'%C(red)%h%C(reset) %C(blue)(%ar)%C(reset) - %C(white)%s%C(reset)'
 
 	# commit all changes to current branch
-	ca = !git add -A && git commit -am $1
+	ca = "!f() { git add -A && git commit -m \"$1\"; }; f"
 
 	# switch to branch, create if it doesn't exist
 	br = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"

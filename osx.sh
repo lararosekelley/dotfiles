@@ -52,7 +52,7 @@ source ${INSTALL_DIR}/scripts/packages.sh
 # 3. xcode
 # --------
 
-xcode-select -p >&-
+xcode-select -p &> /dev/null
 
 if [ "$?" != "0" ]; then
     prompt_user "install xcode command line tools? (y/n)"
@@ -63,13 +63,16 @@ if [ "$?" != "0" ]; then
         XCODE=$(softwareupdate -l | grep "\*.*Command Line" | head -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
         softwareupdate -i "$XCODE"
         rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+    else
+        echo "error: setup cannot continue without xcode command line tools"
+        exit 1
     fi
 fi
 
 # 4. homebrew
 # --------
 
-brew help >&-
+brew help &> /dev/null
 
 if [ "$?" != "0" ]; then
     prompt_user "install homebrew? (y/n)"
@@ -78,7 +81,7 @@ if [ "$?" != "0" ]; then
         echo "installing homebrew..."
         ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" >&-
     else
-        echo "error: setup cannot continue without homebrew packages"
+        echo "error: setup cannot continue without homebrew"
         exit 1
     fi
 fi
