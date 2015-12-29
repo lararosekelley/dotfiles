@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
-# utility functions
+# functions
+# ----------
 
 # converts quicktime screen recording to a gif
-mov2gif() {
+function mov2gif() {
     usage="usage: mov2gif input output"
 
     if [ -z "$1" ] || [ -z "$2" ]; then
@@ -19,4 +19,9 @@ mov2gif() {
             return 1
         fi
     fi
+}
+
+# starts a python server, with optional port argument
+function server() {
+    python -m SimpleHTTPServer "${1:-8080}"
 }
