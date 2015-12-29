@@ -58,3 +58,20 @@ BREW_PACKAGES=(
     tree
     xz
 )
+
+BREW_CASK_PACKAGES=(
+    appcleaner
+    atom
+    firefox
+    google-chrome
+    java
+    paw
+    sketch
+    slack
+    steam
+    the-unarchiver
+    utorrent
+    vagrant
+    virtualbox
+    xquartz
+)
