@@ -1,5 +1,5 @@
 " vimrc
-" ----------
+" --------
 
 " vim, not vi
 set nocompatible

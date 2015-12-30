@@ -1,5 +1,5 @@
 # aliases
-# ----------
+# --------
 
 # allow sudo for aliases
 alias sudo='sudo '

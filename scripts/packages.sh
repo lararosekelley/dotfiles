@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# package lists
+# --------
+
 ATOM_PACKAGES=(
     atom-ternjs
     autoclose-html

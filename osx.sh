@@ -12,6 +12,10 @@
 # 5. brew cask
 # 6. dotfiles & terminal theme
 # 7. vim
+# 8. python
+# 9. node
+# 10. ruby
+# 11. atom
 # --------
 
 # 1. global variables
@@ -216,7 +220,7 @@ if [ "$?" == "0" ]; then
     # get pathogen
 
     mkdir -p ~/.vim/autoload && mkdir -p ~/.vim/bundle
-    cp ~/osx/pathogen.vim ~/.vim/autoload
+    cp ~/.osx/pathogen.vim ~/.vim/autoload
 
     # download packages
 
@@ -248,7 +252,7 @@ prompt_user "install node.js packages with npm? (y/n)"
 if [ "$?" == "0" ]; then
     echo "installing node.js packages..."
 
-    npm install ${NODE_PACKAGES[@]}
+    npm install -g ${NODE_PACKAGES[@]}
 fi
 
 # 10. ruby
