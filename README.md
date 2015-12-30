@@ -17,7 +17,7 @@ This repository should serve as a good way to set up a Mac for development.
 Simply copy and paste this line into your terminal:
 
 ```sh
-
+curl https://raw.githubusercontent.com/tylucaskelley/osx/master/osx.sh -o osx.sh && sh osx.sh
 ```
 
 Note that you will be prompted for input several times as the script runs. Also,
