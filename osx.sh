@@ -190,14 +190,27 @@ prompt_user "change your terminal theme? (y/n)"
 if [ "$?" == "0" ]; then
     echo "changing terminal theme..."
 
-    curl -o ~/Library/Preferences/com.apple.Terminal.plist https://github.com/tylucaskelley/osx/blob/master/themes/com.apple.Terminal.plist.`sw_vers \ 
-    | grep 'ProductVersion:' \
-    | grep -o '10\.[0-9]*'` \
-    && defaults read com.apple.Terminal
+    curl -o ~/Library/Preferences/com.apple.Terminal.plist https://github.com/tylucaskelley/osx/blob/master/themes/com.apple.Terminal.plist && defaults read com.apple.Terminal
 fi
 
 # 7. vim
 # --------
+
+prompt_user "set up vim? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "setting up vim..."
+
+    
+fi
+
+# download theme
+
+# get pathogen
+
+# download packages
+
+
 
 # 8. python
 # --------

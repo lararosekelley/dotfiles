@@ -75,3 +75,9 @@ BREW_CASK_PACKAGES=(
     virtualbox
     xquartz
 )
+
+VIM_PACKAGES=(
+    https://github.com/kien/ctrlp.vim.git
+    https://github.com/scrooloose/syntastic.git
+    https://github.com/bling/vim-airline.git
+)
