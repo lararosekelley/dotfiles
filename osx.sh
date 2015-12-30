@@ -122,8 +122,12 @@ if [ "$?" == "0" ]; then
     brew cleanup
 
     # bash
-    echo "/usr/local/bin/bash" | sudo tee -a /etc/shells
     chsh -s /usr/local/bin/bash
+
+    if [ "$?" != "0" ]; then
+        echo "/usr/local/bin/bash" | sudo tee -a /etc/shells
+        chsh -s /usr/local/bin/bash
+    fi
 
     # node.js
     n stable
