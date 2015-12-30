@@ -1,16 +1,18 @@
 # osx
-# ------------------------
+# --------
 
 # bootstraps an apple computer for development work
 
 # table of contents
-# ------------------------
+# --------
 # 1. global variables
 # 2. setup
 # 3. xcode
 # 4. homebrew
 # 5. brew cask
-# ------------------------
+# 6. dotfiles & terminal theme
+# 7. vim
+# --------
 
 # 1. global variables
 # --------
@@ -139,7 +141,7 @@ if [ "$?" == "0" ]; then
     brew cask cleanup
 fi
 
-# 6. dotfiles
+# 6. dotfiles & terminal theme
 # --------
 
 prompt_user "create dotfiles? (y/n)"
@@ -152,3 +154,56 @@ else
     echo "error: setup cannot continue without dotfiles"
     exit 1
 fi
+
+# create user-specific environment file
+
+prompt_user "configure ~/.env environment file (git username, etc.)? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "creating ~/.env file..."
+
+    rm ~/.env && touch ~/.env
+
+    echo -n "Enter your name and press [ENTER]: "
+    read user_name
+
+    echo -n "Enter your email address and press [ENTER]: "
+    read user_email
+
+    # copy to file
+
+    echo "# env" >> ~/.env
+    echo "# --------" >> ~/.env
+    echo "\n# git credentials\n" >> ~/.env
+    echo "GIT_AUTHOR_NAME=\"${user_name}\"" >> ~/.env
+    echo "GIT_AUTHOR_EMAIL=\"${user_email}\"" >> ~/.env
+    echo "GIT_COMMITTER_NAME=\"${user_name}\"" >> ~/.env
+    echo "GIT_COMMITTER_EMAIL=\"${user_email}\"" >> ~/.env
+    echo "git config --global user.name \"${user_name}\"" >> ~/.env
+    echo "git config --global user.email \"${user_email}\"" >> ~/.env
+fi
+
+# terminal theme
+
+prompt_user "change your terminal theme? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "changing terminal theme..."
+
+    curl -o ~/Library/Preferences/com.apple.Terminal.plist https://github.com/tylucaskelley/osx/blob/master/themes/com.apple.Terminal.plist.`sw_vers \ 
+    | grep 'ProductVersion:' \
+    | grep -o '10\.[0-9]*'` \
+    && defaults read com.apple.Terminal
+fi
+
+# 7. vim
+# --------
+
+# 8. python
+# --------
+
+# 9. ruby
+# --------
+
+# 10. node
+# --------
