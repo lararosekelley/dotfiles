@@ -8,6 +8,8 @@ by Ty-Lucas Kelley
 
 This repository should serve as a good way to set up a Mac for development.
 
+![osx](https://github.com/tylucaskelley/osx/blob/master/osx.png)
+
 ### Prerequisites
 
 * Apple computer running OS X 10.11 (El Capitan)
@@ -22,7 +24,8 @@ curl https://raw.githubusercontent.com/tylucaskelley/osx/master/osx.sh -o osx.sh
 
 Note that you will be prompted for input several times as the script runs. Also,
 be sure to read [osx.sh](https://github.com/tylucaskelley/osx/blob/master/osx.sh)
-before running it!
+before running it! It's broken up into sections and commented, so it's not too
+tough to scan through quickly.
 
 ### ~/.env
 
