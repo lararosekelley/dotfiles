@@ -19,9 +19,8 @@
 
 OS_VERSION=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 MIN_VERSION="10.11"
-
 REPO_URL="https://github.com/tylucaskelley/osx/tarball/master"
-INSTALL_DIR="${HOME}/.osx"
+RUBY_VERSION="2.2.4"
 
 # 2. setup
 # --------
@@ -63,8 +62,8 @@ fi
 
 # source helper & package list files
 
-source ${INSTALL_DIR}/scripts/helpers.sh
-source ${INSTALL_DIR}/scripts/packages.sh
+source ~/.osx/scripts/helpers.sh
+source ~/.osx/scripts/packages.sh
 
 # 3. xcode
 # --------
@@ -118,6 +117,13 @@ if [ "$?" == "0" ]; then
 
     brew cleanup
 
+    # node.js
+    n stable
+
+    # ruby
+    rbenv install ${RUBY_VERSION}
+    rbenv global ${RUBY_VERSION}
+
     # go
     mkdir -p ~/.go
 
@@ -162,7 +168,7 @@ prompt_user "configure ~/.env environment file (git username, etc.)? (y/n)"
 if [ "$?" == "0" ]; then
     echo "creating ~/.env file..."
 
-    rm ~/.env && touch ~/.env
+    touch ~/.env
 
     echo -n "Enter your name and press [ENTER]: "
     read user_name
@@ -190,7 +196,8 @@ prompt_user "change your terminal theme? (y/n)"
 if [ "$?" == "0" ]; then
     echo "changing terminal theme..."
 
-    curl -o ~/Library/Preferences/com.apple.Terminal.plist https://github.com/tylucaskelley/osx/blob/master/themes/com.apple.Terminal.plist && defaults read com.apple.Terminal
+    cp ~/.osx/themes/com.apple.Terminal.plist ~/Library/Preferences/com.apple.Terminal.plist
+    defaults read com.apple.Terminal
 fi
 
 # 7. vim
@@ -201,22 +208,84 @@ prompt_user "set up vim? (y/n)"
 if [ "$?" == "0" ]; then
     echo "setting up vim..."
 
-    
+    # download theme
+
+    mkdir -p ~/.vim/colors
+    cp ~/.osx/themes/Tomorrow-Night.vim ~/.vim/colors
+
+    # get pathogen
+
+    mkdir -p ~/.vim/autoload && mkdir -p ~/.vim/bundle
+    cp ~/osx/pathogen.vim ~/.vim/autoload
+
+    # download packages
+
+    cd ~/.vim/bundle
+    git clone ${VIM_PACKAGES[@]}
+    cd ~
+
+    # backup & swap directories
+
+    mkdir -p ~/.vim/swaps ~/.vim/backups
 fi
-
-# download theme
-
-# get pathogen
-
-# download packages
-
-
 
 # 8. python
 # --------
 
-# 9. ruby
+prompt_user "install python 2 packages with pip? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "installing python 2 packages..."
+
+    pip install ${PIP_PACKAGES[@]}
+fi
+
+# 9. node
 # --------
 
-# 10. node
+prompt_user "install node.js packages with npm? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "installing node.js packages..."
+
+    npm install ${NODE_PACKAGES[@]}
+fi
+
+# 10. ruby
 # --------
+
+prompt_user "install ruby gems? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "installing ruby gems..."
+
+    gem install ${RUBY_PACKAGES[@]}
+fi
+
+# 11. atom
+# --------
+
+prompt_user "set up github's atom text editor? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "setting up atom..."
+
+    mkdir -p ~/.atom
+
+    apm install ${ATOM_PACKAGES[@]}
+
+    cp ~/.osx/config.cson ~/.atom/config.cson
+fi
+
+# done
+
+read -d '' exit_msg << EOF
+***********************************************
+**    all done!                              **
+**                                           **
+**    please leave feedback:                 **
+**    github.com/tylucaskelley/osx/issues    **
+***********************************************
+EOF
+
+echo "\n\n$exit_msg\n\n"

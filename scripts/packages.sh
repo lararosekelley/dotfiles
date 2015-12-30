@@ -1,5 +1,29 @@
 #!/usr/bin/env bash
 
+ATOM_PACKAGES=(
+    atom-ternjs
+    autoclose-html
+    autocomplete-paths
+    color-picker
+    file-icons
+    git-plus
+    language-batch
+    language-gradle
+    language-jade
+    language-tmux
+    language-viml
+    linter
+    linter-csslint
+    linter-htmlhint
+    linter-jshint
+    linter-pep8
+    merge-conflicts
+    minimap
+    pdf-view
+    pigments
+    travis-ci-status
+)
+
 BREW_PACKAGES=(
     coreutils # gnu stuff
     binutils
@@ -74,6 +98,33 @@ BREW_CASK_PACKAGES=(
     vagrant
     virtualbox
     xquartz
+)
+
+NODE_PACKAGES=(
+    bower
+    csslint
+    gulp
+    htmlhint
+    http-server
+    jshint
+    npm-check-updates
+    yo
+)
+
+PIP_PACKAGES=(
+    closure-linter
+    ipython
+    licenser
+    pep8
+    uncommitted
+    virtualenv
+)
+
+RUBY_PACKAGES=(
+    jekyll
+    rails
+    sass
+    sinatra
 )
 
 VIM_PACKAGES=(
