@@ -1,5 +1,5 @@
 # functions
-# ----------
+# --------
 
 # converts quicktime screen recording to a gif
 function mov2gif() {

@@ -1,14 +1,14 @@
 # bashrc
-# ----------
+# --------
 
 # load dotfiles
 files=(
     ~/.aliases
     ~/.bash_prompt
-    ~/.env
     ~/.exports
     ~/.functions
     ~/.git-prompt.sh
+    ~/.env
 )
 
 for file in ${files[@]}; do
