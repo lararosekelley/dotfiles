@@ -225,7 +225,11 @@ if [ "$?" == "0" ]; then
     # download packages
 
     cd ~/.vim/bundle
-    git clone ${VIM_PACKAGES[@]}
+
+    for repo in ${VIM_PACKAGES[@]}; do
+        git clone $repo
+    done
+
     cd ~
 
     # backup & swap directories
