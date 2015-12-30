@@ -133,6 +133,7 @@ if [ "$?" == "0" ]; then
     n stable
 
     # ruby
+    eval "$(rbenv init -)"
     rbenv install ${RUBY_VERSION}
     rbenv global ${RUBY_VERSION}
 

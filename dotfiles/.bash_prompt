@@ -26,11 +26,53 @@ diff_color="${cyan}"
 
 # git diff
 
-function git_diff() {
+function git_untracked() {
+    num="$(git status --porcelain 2> /dev/null | grep "^??" | wc -l)"
+
+    if [[ $num != "0" ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
+function git_changed() {
     git diff --no-ext-diff --quiet --exit-code &> /dev/null
+}
+
+function git_staged() {
+    num="$(git diff --name-only --cached 2> /dev/null | wc -l)"
+
+    if [[ $num != "0" ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
+function git_diff() {
+    diff_prompt=""
+
+    git_changed
 
     if [ "$?" == "1" ]; then
-        echo "[+]"
+        diff_prompt+="*"
+    fi
+
+    git_untracked
+
+    if [ "$?" == "1" ]; then
+        diff_prompt+="+"
+    fi
+
+    git_staged
+
+    if [ "$?" == "1" ]; then
+        diff_prompt+="^"
+    fi
+
+    if [[ ! ${#diff_prompt} -eq 0 ]]; then
+        echo "[${diff_prompt}]"
     fi
 }
 
