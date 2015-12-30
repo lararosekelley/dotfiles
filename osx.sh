@@ -138,3 +138,17 @@ if [ "$?" == "0" ]; then
 
     brew cask cleanup
 fi
+
+# 6. dotfiles
+# --------
+
+prompt_user "create dotfiles? (y/n)"
+
+if [ "$?" == "0" ]; then
+    echo "copying over dotfiles..."
+
+    cp -a ~/.osx/dotfiles/. ~
+else
+    echo "error: setup cannot continue without dotfiles"
+    exit 1
+fi
