@@ -24,7 +24,7 @@
 OS_VERSION=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 MIN_VERSION="10.11"
 REPO_URL="https://github.com/tylucaskelley/osx/tarball/master"
-RUBY_VERSION="2.2.4"
+RUBY_VERSION="$(rbenv install -l | grep -v - | tail -1)"
 
 # 2. setup
 # --------
