@@ -100,6 +100,7 @@ BREW_CASK_PACKAGES=(
     utorrent
     vagrant
     virtualbox
+    vlc
     xquartz
 )
 

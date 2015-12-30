@@ -22,13 +22,25 @@ user_color="${red}"
 host_color="${orange}"
 dir_color="${yellow}"
 branch_color="${green}"
+diff_color="${cyan}"
+
+# git diff
+
+function git_diff() {
+    git diff --no-ext-diff --quiet --exit-code &> /dev/null
+
+    if [ "$?" == "1" ]; then
+        echo "[+]"
+    fi
+}
 
 # set prompt
 
 PS1="\[${bold}${user_color}\]\u" # user
 PS1+="\[${white}\] at \[${host_color}\]\h" # host
 PS1+="\[${white}\] in \[${dir_color}\]\w" # directory
-PS1+="\[${branch_color}\]\$(__git_ps1)" # git
-PS1+="\n\[${violet}\](\$(date +'%I:%M %p')) \[${blue}\]\$\[${reset}\] " # date & prompt
+PS1+="\[${branch_color}\]\$(__git_ps1)" # git branch
+PS1+=" \[${diff_color}\]\$(git_diff)" # git diff
+PS1+="\n\[${blue}\](\$(date +'%I:%M %p')) \[${violet}\]\$\[${reset}\] " # date & prompt
 
 export PS1
