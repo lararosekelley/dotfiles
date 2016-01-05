@@ -129,9 +129,6 @@ if [ "$?" == "0" ]; then
         chsh -s /usr/local/bin/bash
     fi
 
-    # node.js
-    n stable
-
     # ruby
     eval "$(rbenv init -)"
     rbenv install ${RUBY_VERSION}

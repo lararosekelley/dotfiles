@@ -63,7 +63,7 @@ BREW_PACKAGES=(
     go # languages and frameworks
     python
     python3
-    n
+    node
     rbenv
     ruby-build
     gradle
