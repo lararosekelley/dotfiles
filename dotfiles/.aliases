@@ -19,7 +19,7 @@ alias notify="tput bel"
 alias finder="open -a Finder ."
 
 # edit important files
-alias zshrc="vim ~/.zshrc"
+alias bashrc="vim ~/.bashrc"
 alias vimrc="vim ~/.vimrc"
 
 # pip
