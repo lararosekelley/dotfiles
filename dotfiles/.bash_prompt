@@ -36,6 +36,16 @@ function git_untracked() {
     return 0
 }
 
+function git_pushable() {
+    num="$(git log @{u}.. 2> /dev/null | wc -l)"
+
+    if [[ $num != "0" ]]; then
+        return 1
+    fi
+
+    return 0
+}
+
 function git_changed() {
     git diff --no-ext-diff --quiet --exit-code &> /dev/null
 }
@@ -71,6 +81,12 @@ function git_diff() {
         diff_prompt+="^"
     fi
 
+    git_pushable
+
+    if [ "$?" == "1" ]; then
+        diff_prompt+="~"
+    fi
+
     if [[ ! ${#diff_prompt} -eq 0 ]]; then
         echo "[${diff_prompt}]"
     fi
@@ -83,6 +99,7 @@ PS1+="\[${white}\] at \[${host_color}\]\h" # host
 PS1+="\[${white}\] in \[${dir_color}\]\w" # directory
 PS1+="\[${branch_color}\]\$(__git_ps1)" # git branch
 PS1+=" \[${diff_color}\]\$(git_diff)" # git diff
+PS1+="\[${pushable_color}\]\$(git_pushable)" # git pushable commits
 PS1+="\n\[${blue}\](\$(date +'%I:%M %p')) \[${violet}\]\$\[${reset}\] " # date & prompt
 
 export PS1
