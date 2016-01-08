@@ -18,6 +18,9 @@ alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash"
 alias notify="tput bel"
 alias finder="open -a Finder ."
 
+# brew
+alias bubu="brew update && brew upgrade"
+
 # edit important files
 alias bashrc="vim ~/.bashrc"
 alias vimrc="vim ~/.vimrc"
