@@ -28,6 +28,8 @@ ATOM_PACKAGES=(
 )
 
 BREW_PACKAGES=(
+    cmake
+    memcached
     coreutils # gnu stuff
     binutils
     diffutils
