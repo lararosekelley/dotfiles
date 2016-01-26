@@ -134,6 +134,15 @@ if [ "$?" == "0" ]; then
     rbenv install ${RUBY_VERSION}
     rbenv global ${RUBY_VERSION}
 
+    # node
+    mkdir -p ~/.nvm
+
+    export NVM_DIR=~/.nvm
+    source $(brew --prefix nvm)/nvm.sh
+
+    nvm install stable
+    nvm alias default stable
+
     # go
     mkdir -p ~/.go
 

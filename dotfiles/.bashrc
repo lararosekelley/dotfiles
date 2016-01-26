@@ -42,5 +42,9 @@ if which rbenv > /dev/null; then
     eval "$(rbenv init -)";
 fi
 
+# nvm
+source $(brew --prefix nvm)/nvm.sh
+nvm alias default stable > /dev/null
+
 # autojump
 [[ -s $(brew --prefix)/etc/autojump.sh ]] && . $(brew --prefix)/etc/autojump.sh
