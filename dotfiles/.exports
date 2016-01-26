@@ -20,6 +20,9 @@ export PGHOST=localhost
 # rbenv
 export RBENV_ROOT="/usr/local/var/rbenv"
 
+# nvm
+export NVM_DIR="$HOME/.nvm"
+
 # go
 export GOPATH="$HOME/.go"
 
