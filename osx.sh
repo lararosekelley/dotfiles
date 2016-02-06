@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # osx
 # --------
 
@@ -117,7 +119,7 @@ if [ "$?" == "0" ]; then
     brew tap homebrew/dupes
     brew tap caskroom/cask
 
-    brew install ${BREW_PACKAGES[@]}
+    brew install "${BREW_PACKAGES[@]}"
 
     brew cleanup
 
@@ -138,7 +140,7 @@ if [ "$?" == "0" ]; then
     mkdir -p ~/.nvm
 
     export NVM_DIR=~/.nvm
-    source $(brew --prefix nvm)/nvm.sh
+    source "$(brew --prefix nvm)/nvm.sh"
 
     nvm install stable
     nvm alias default stable
@@ -161,7 +163,7 @@ prompt_user "install mac apps with brew cask? (y/n)"
 if [ "$?" == "0" ]; then
     echo "installing mac apps with brew cask..."
 
-    brew cask install ${BREW_CASK_PACKAGES[@]}
+    brew cask install "${BREW_CASK_PACKAGES[@]}"
 
     brew cask cleanup
 fi
@@ -239,13 +241,13 @@ if [ "$?" == "0" ]; then
 
     # download packages
 
-    cd ~/.vim/bundle
+    cd ~/.vim/bundle || exit
 
-    for repo in ${VIM_PACKAGES[@]}; do
+    for repo in "${VIM_PACKAGES[@]}"; do
         git clone $repo
     done
 
-    cd ~
+    cd ~ || exit
 
     # backup & swap directories
 
@@ -260,7 +262,7 @@ prompt_user "install python 2 packages with pip? (y/n)"
 if [ "$?" == "0" ]; then
     echo "installing python 2 packages..."
 
-    pip install ${PIP_PACKAGES[@]}
+    pip install "${PIP_PACKAGES[@]}"
 fi
 
 # 9. node
@@ -271,7 +273,7 @@ prompt_user "install node.js packages with npm? (y/n)"
 if [ "$?" == "0" ]; then
     echo "installing node.js packages..."
 
-    npm install -g ${NODE_PACKAGES[@]}
+    npm install -g "${NODE_PACKAGES[@]}"
 fi
 
 # 10. ruby
@@ -282,7 +284,7 @@ prompt_user "install ruby gems? (y/n)"
 if [ "$?" == "0" ]; then
     echo "installing ruby gems..."
 
-    gem install ${RUBY_PACKAGES[@]}
+    gem install "${RUBY_PACKAGES[@]}"
 fi
 
 # 11. atom
@@ -295,7 +297,7 @@ if [ "$?" == "0" ]; then
 
     mkdir -p ~/.atom
 
-    apm install ${ATOM_PACKAGES[@]}
+    apm install "${ATOM_PACKAGES[@]}"
 
     cp ~/.osx/config.cson ~/.atom/config.cson
 fi

@@ -13,6 +13,9 @@
 
 	# sort contributors by number of commits
 	rank = shortlog -sn --no-merges
+
+	# list all user-defined aliases
+	a = config --get-regexp '^alias.'
 [apply]
 	# find whitespace errors
 	whitespace = fix

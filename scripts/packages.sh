@@ -6,10 +6,12 @@
 ATOM_PACKAGES=(
     atom-ternjs
     autoclose-html
-    autocomplete-paths
+    autocomplete-python
     color-picker
+    editorconfig
     file-icons
     git-plus
+    highlight-line
     language-batch
     language-gradle
     language-jade
@@ -18,12 +20,16 @@ ATOM_PACKAGES=(
     linter
     linter-csslint
     linter-htmlhint
+    linter-javac
     linter-jshint
     linter-pep8
+    linter-shellcheck
     merge-conflicts
     minimap
     pdf-view
     pigments
+    terminal-plus
+    todo-show
     travis-ci-status
 )
 
@@ -83,6 +89,7 @@ BREW_PACKAGES=(
     libxml2
     lynx
     ngrok
+    shellcheck
     sl
     tree
     xz
@@ -97,7 +104,6 @@ BREW_CASK_PACKAGES=(
     paw
     sketch
     slack
-    steam
     the-unarchiver
     utorrent
     vagrant
@@ -109,11 +115,13 @@ BREW_CASK_PACKAGES=(
 NODE_PACKAGES=(
     bower
     csslint
+    grunt-cli
     gulp
     htmlhint
     http-server
     jshint
     npm-check-updates
+    pm2
     yo
 )
 

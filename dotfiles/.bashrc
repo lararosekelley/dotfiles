@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # bashrc
 # --------
 
@@ -11,7 +13,7 @@ files=(
     ~/.env
 )
 
-for file in ${files[@]}; do
+for file in "${files[@]}"; do
     if [ -f "$file" ]; then
         source $file
     fi
@@ -25,13 +27,13 @@ options=(
     dotglob
 )
 
-for option in ${options[@]}; do
+for option in "${options[@]}"; do
     shopt -s "$option"
 done
 
 # tab completion
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
+if [ -f "$(brew --prefix)/etc/bash_completion" ]; then
+    source "$(brew --prefix)/etc/bash_completion"
 fi
 
 # only have to hit tab once to show suggestions
@@ -43,8 +45,8 @@ if which rbenv > /dev/null; then
 fi
 
 # nvm
-source $(brew --prefix nvm)/nvm.sh
+source "$(brew --prefix nvm)/nvm.sh"
 nvm alias default stable > /dev/null
 
 # autojump
-[[ -s $(brew --prefix)/etc/autojump.sh ]] && . $(brew --prefix)/etc/autojump.sh
+[[ -s $(brew --prefix)/etc/autojump.sh ]] && source "$(brew --prefix)/etc/autojump.sh"

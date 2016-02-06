@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # aliases
 # --------
 
@@ -5,33 +7,32 @@
 alias sudo='sudo '
 
 # colored output
-alias ls="ls -GF"
-alias grep="grep --color=auto"
-alias fgrep="fgrep --color=auto"
-alias egrep="egrep --color=auto"
+alias ls='ls -GF'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
 
 # misc. tools
-alias ip="ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p'"
-alias up="cd .."
-alias timer="echo \"timer running since $(date +'%H:%M %p')...\" && time cat"
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash"
-alias notify="tput bel"
-alias finder="open -a Finder ."
+alias ip='ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"'
+alias up='cd ..'
+alias emptytrash='sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash'
+alias notify='tput bel'
+alias finder='open -a Finder .'
 
 # brew
-alias bubu="brew update && brew upgrade"
+alias bubu='brew update && brew upgrade'
 
 # edit important files
-alias bashrc="vim ~/.bashrc"
-alias vimrc="vim ~/.vimrc"
+alias bashrc='vim ~/.bashrc'
+alias vimrc='vim ~/.vimrc'
 
 # pip
-alias pip_update="pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U"
-alias pip_reg="python setup.py register -r pypi"
-alias pip_up="python setup.py sdist upload -r pypi"
+alias pip_update='pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U'
+alias pip_reg='python setup.py register -r pypi'
+alias pip_up='python setup.py sdist upload -r pypi'
 
 # postgres
-alias start-pg="pg_ctl -l $PGDATA/server.log start"
-alias stop-pg="pg_ctl stop -m fast"
-alias show-pg-status="pg_ctl status"
-alias restart-pg="pg_ctl reload"
+alias start-pg='pg_ctl -l $PGDATA/server.log start'
+alias stop-pg='pg_ctl stop -m fast'
+alias show-pg-status='pg_ctl status'
+alias restart-pg='pg_ctl reload'
