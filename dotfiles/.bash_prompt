@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # bash_prompt
 # --------
 
@@ -5,18 +7,16 @@
 
 reset=$(tput sgr0)
 bold=$(tput bold)
-black=$(tput setaf 0)
 blue=$(tput setaf 33)
 cyan=$(tput setaf 37)
 green=$(tput setaf 64)
 orange=$(tput setaf 166)
-purple=$(tput setaf 125)
 red=$(tput setaf 124)
 violet=$(tput setaf 61)
 white=$(tput setaf 15)
 yellow=$(tput setaf 136)
 
-# variables
+# other variables
 
 user_color="${red}"
 host_color="${orange}"
@@ -37,7 +37,7 @@ function git_untracked() {
 }
 
 function git_pushable() {
-    num="$(git log @{u}.. 2> /dev/null | wc -l)"
+    num="$(git log @\{u\}.. 2> /dev/null | wc -l)"
 
     if [[ $num != "0" ]]; then
         return 1
@@ -98,8 +98,7 @@ PS1="\[${bold}${user_color}\]\u" # user
 PS1+="\[${white}\] at \[${host_color}\]\h" # host
 PS1+="\[${white}\] in \[${dir_color}\]\w" # directory
 PS1+="\[${branch_color}\]\$(__git_ps1)" # git branch
-PS1+=" \[${diff_color}\]\$(git_diff)" # git diff
-PS1+="\[${pushable_color}\]\$(git_pushable)" # git pushable commits
+PS1+=" \[${diff_color}\]\$(git_diff)" # git diff & pushable commits
 PS1+="\n\[${blue}\](\$(date +'%I:%M %p')) \[${violet}\]\$\[${reset}\] " # date & prompt
 
 export PS1

@@ -1,27 +1,28 @@
 "*":
-  welcome:
-    showOnStartup: false
+  "atom-ternjs":
+    useSnippets: true
+  "autoclose-html": {}
+  "autocomplete-python": {}
+  core: {}
   editor:
+    backUpBeforeSaving: true
+    fontFamily: "Monaco"
     fontSize: 11
     invisibles: {}
     softWrap: true
     tabLength: 4
-  core:
-    themes: [
-      "one-dark-ui"
-      "base16-tomorrow-dark-theme"
-    ]
-  "atom-ternjs": {}
-  "spell-check":
-    grammars: [
-      "text.plain"
-      "source.gfm"
-      "source.md"
-    ]
-  "autoclose-html": {}
   "git-plus": {}
+  linter:
+    showErrorPanel: false
   "linter-csslint": {}
+  "linter-htmlhint": {}
+  "linter-jshint":
+    disableWhenNoJshintrcFileInPath: true
+  "linter-shellcheck": {}
+  "merge-conflicts": {}
+  minimap: {}
   "one-dark-ui": {}
+  "pdf-view": {}
   pigments:
     supportedFiletypes: [
       ".css"
@@ -29,3 +30,20 @@
       ".sass"
       ".less"
     ]
+  "spell-check":
+    grammars: [
+      "text.plain"
+      "source.gfm"
+      "source.md"
+    ]
+  "terminal-plus":
+    core: {}
+    style:
+      fontFamily: "Monaco"
+      fontSize: "11"
+    toggles:
+      autoClose: true
+  "todo-show": {}
+  "travis-ci-status": {}
+  welcome:
+    showOnStartup: false
