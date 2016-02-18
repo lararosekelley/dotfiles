@@ -18,6 +18,7 @@ alias up='cd ..'
 alias emptytrash='sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash'
 alias notify='tput bel'
 alias finder='open -a Finder .'
+alias flac2mp3='for f in *.flac; do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"; done'
 
 # brew
 alias bubu='brew update && brew upgrade'
