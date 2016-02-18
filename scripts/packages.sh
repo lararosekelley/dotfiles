@@ -59,6 +59,8 @@ BREW_PACKAGES=(
     vim --override-system-vi --with-lua
     make
     nano
+    lame
+    flac
     git
     less
     mercurial
