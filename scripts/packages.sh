@@ -55,6 +55,7 @@ BREW_PACKAGES=(
     wdiff --with-gettext
     wget --with-iri
     bash # upgrade osx stuff
+    bash-completion
     emacs
     vim --override-system-vi --with-lua
     make
@@ -100,8 +101,10 @@ BREW_PACKAGES=(
 BREW_CASK_PACKAGES=(
     appcleaner
     atom
+    blender
     firefox
     google-chrome
+    googleappengine
     java
     paw
     sketch
@@ -117,11 +120,11 @@ BREW_CASK_PACKAGES=(
 NODE_PACKAGES=(
     bower
     csslint
-    grunt-cli
     gulp
     htmlhint
     http-server
     jshint
+    nodemon
     npm-check-updates
     pm2
     yo

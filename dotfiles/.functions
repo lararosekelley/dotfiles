@@ -3,6 +3,25 @@
 # functions
 # --------
 
+# upgrade everything on computer
+function update() {
+    # homebrew
+    command -v brew && brew update && brew upgrade && brew prune && brew cleanup
+
+    # node.js
+    command -v npm && npm update -g
+
+    # ruby
+    command -v gem && gem update "$(gem outdated | cut -d ' ' -f 1)"
+
+    # python
+    command -v pip && pip freeze --local | grep -v ^-e | cut -d = -f 1  | xargs pip install -U
+    command -v pip && pip install --upgrade pip
+
+    # atom
+    command -v apm && apm update
+}
+
 # set up default tmux layout: one session, one window, three panes
 function mux() {
     usage="usage: mux <session-name>"
