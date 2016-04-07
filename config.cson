@@ -2,8 +2,13 @@
   "atom-ternjs":
     useSnippets: true
   "autoclose-html": {}
+  "autocomplete-go": {}
   "autocomplete-python": {}
-  core: {}
+  core:
+    themes: [
+      "one-dark-ui"
+      "base16-tomorrow-dark-theme"
+    ]
   editor:
     backUpBeforeSaving: true
     fontFamily: "Monaco"
@@ -12,18 +17,22 @@
     softWrap: true
     tabLength: 4
   "git-plus": {}
-  linter:
-    showErrorPanel: false
+  linter: {}
   "linter-csslint": {}
+  "linter-golinter": {}
   "linter-htmlhint": {}
+  "linter-javac": {}
   "linter-jshint":
     disableWhenNoJshintrcFileInPath: true
+  "linter-scss-lint":
+    disableWhenNoConfigFileInPath: true
   "linter-shellcheck": {}
   "merge-conflicts": {}
   minimap: {}
   "one-dark-ui": {}
   "pdf-view": {}
   pigments:
+    sortPaletteColors: "by name"
     supportedFiletypes: [
       ".css"
       ".scss"

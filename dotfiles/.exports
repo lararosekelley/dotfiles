@@ -29,5 +29,19 @@ export NVM_DIR="$HOME/.nvm"
 export GOPATH="$HOME/.go"
 
 # path
-export PATH="/usr/local/bin:/usr/local/sbin:/usr/local/opt/coreutils/libexec/gnubin:/bin:/usr/sbin:/sbin:/usr/bin:$GOPATH/bin:$PATH"
+path=(
+    "$GOPATH/bin"
+    "/usr/local/bin"
+    "/usr/local/sbin"
+    "/usr/local/opt/coreutils/libexec/gnubin"
+    "/usr/bin"
+    "/usr/sbin"
+    "/bin"
+    "/sbin"
+    "/opt/X11/bin"
+)
+
+path=$(printf ":%s" "${path[@]}")
+
+export PATH="${path:1}"
 export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
