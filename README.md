@@ -31,3 +31,7 @@ tough to scan through quickly.
 
 Use the provided `~/.env` file for any sensitive information, such as passwords,
 API keys, etc. This file can also be used to override anything I've written.
+
+### Contributing
+
+See [CONTRIBUTING.md](https://github.com/tylucaskelley/osx/blob/master/.github/CONTRIBUTING.md) for details.
