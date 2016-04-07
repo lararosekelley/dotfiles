@@ -2,6 +2,9 @@
 # --------
 
 [alias]
+	# grab .github folder from tylucaskelley/github-templates
+	tpl = "!f() { bash <(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh) && rm .github/generate.sh }; f"
+
 	# formatted view of last 25 commits
 	lg = log --all --graph --abbrev-commit --date=relative --format=format:'%C(red)%h%C(reset) %C(blue)(%ar)%C(reset) - %C(white)%s%C(reset)'
 
@@ -47,3 +50,8 @@
 [push]
 	# use new git push behavior
 	default = simple
+[filter "lfs"]
+	# for github desktop app
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true

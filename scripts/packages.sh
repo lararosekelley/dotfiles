@@ -10,21 +10,23 @@ ATOM_PACKAGES=(
     color-picker
     editorconfig
     file-icons
-    git-plus
     highlight-line
     language-batch
     language-gradle
     language-jade
+    language-javascript-jsx
     language-tmux
     language-viml
     linter
     linter-csslint
+    linter-golinter
+    linter-handlebars
     linter-htmlhint
-    linter-javac
     linter-jshint
     linter-pep8
+    linter-ruby
+    linter-sass-lint
     linter-shellcheck
-    merge-conflicts
     minimap
     pdf-view
     pigments
@@ -34,9 +36,8 @@ ATOM_PACKAGES=(
 )
 
 BREW_PACKAGES=(
-    cmake
-    memcached
     coreutils # gnu stuff
+    cmake
     binutils
     diffutils
     ed --with-default-names
@@ -50,7 +51,6 @@ BREW_PACKAGES=(
     gnutls
     grep --with-default-names
     gzip
-    screen
     watch
     wdiff --with-gettext
     wget --with-iri
@@ -79,8 +79,10 @@ BREW_PACKAGES=(
     ruby-build
     gradle
     mongodb # databases
+    memcached
     mysql
     postgresql
+    redis
     sqlite
     ack # other tools
     autojump
@@ -101,8 +103,8 @@ BREW_PACKAGES=(
 BREW_CASK_PACKAGES=(
     appcleaner
     atom
-    blender
     firefox
+    github-desktop
     google-chrome
     googleappengine
     java
@@ -127,7 +129,6 @@ NODE_PACKAGES=(
     nodemon
     npm-check-updates
     pm2
-    yo
 )
 
 PIP_PACKAGES=(
