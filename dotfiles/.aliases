@@ -39,4 +39,4 @@ alias show-pg-status='pg_ctl status'
 alias restart-pg='pg_ctl reload'
 
 # misc.
-alias quote='fortune | cowsay | lolcat'
+alias quote='fortune -a | cowsay | lolcat'
