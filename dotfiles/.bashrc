@@ -50,3 +50,6 @@ nvm alias default stable > /dev/null
 
 # autojump
 [[ -s $(brew --prefix)/etc/autojump.sh ]] && source "$(brew --prefix)/etc/autojump.sh"
+
+# print a quote
+quote
