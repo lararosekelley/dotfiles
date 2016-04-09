@@ -86,6 +86,8 @@ BREW_PACKAGES=(
     sqlite
     ack # other tools
     autojump
+    cowsay
+    fortune
     curl
     ffmpeg
     gifsicle
@@ -142,6 +144,7 @@ PIP_PACKAGES=(
 
 RUBY_PACKAGES=(
     jekyll
+    lolcat
     rails
     sass
     sinatra
