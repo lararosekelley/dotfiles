@@ -3,6 +3,17 @@
 # functions
 # --------
 
+# go list packages
+function golist() {
+    pkgs=$(go list ... | sed 's#.*/##')
+    
+    if [[ -z "$1" ]]; then
+        echo "${pkgs[@]}"
+    else
+        echo "${pkgs[@]}" | /usr/bin/env grep "$1"
+    fi
+}
+
 # upgrade everything on computer
 function update() {
     # homebrew
