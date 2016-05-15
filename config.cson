@@ -1,9 +1,7 @@
 "*":
-  "atom-ternjs":
-    useSnippets: true
-  "autoclose-html": {}
-  "autocomplete-go": {}
-  "autocomplete-python": {}
+  "color-picker":
+    abbreviateValues: true
+    preferredFormat: "HEX"
   core:
     themes: [
       "one-dark-ui"
@@ -16,43 +14,29 @@
     invisibles: {}
     softWrap: true
     tabLength: 4
-  "git-plus": {}
-  linter: {}
-  "linter-csslint": {}
-  "linter-golinter": {}
-  "linter-htmlhint": {}
-  "linter-javac": {}
-  "linter-jshint":
-    disableWhenNoJshintrcFileInPath: true
-  "linter-scss-lint":
-    disableWhenNoConfigFileInPath: true
-  "linter-shellcheck": {}
-  "merge-conflicts": {}
-  minimap: {}
+  "file-icons": {}
   "one-dark-ui": {}
-  "pdf-view": {}
+  "pdf-view":
+    fitToWidthOnOpen: true
   pigments:
-    sortPaletteColors: "by name"
     supportedFiletypes: [
       ".css"
-      ".scss"
-      ".sass"
       ".less"
+      ".sass"
+      ".scss"
     ]
   "spell-check":
     grammars: [
       "text.plain"
       "source.gfm"
       "source.md"
+      "source.html"
     ]
-  "terminal-plus":
-    core: {}
-    style:
-      fontFamily: "Monaco"
-      fontSize: "11"
-    toggles:
-      autoClose: true
-  "todo-show": {}
-  "travis-ci-status": {}
   welcome:
     showOnStartup: false
+".ini.source":
+  editor:
+    tabLength: 4
+".source.tmux":
+  editor:
+    tabLength: 4
