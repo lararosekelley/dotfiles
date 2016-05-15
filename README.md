@@ -8,8 +8,6 @@ by Ty-Lucas Kelley
 
 This repository should serve as a good way to set up a Mac for development.
 
-![osx](https://github.com/tylucaskelley/osx/blob/master/osx.png)
-
 ### Prerequisites
 
 * Apple computer running OS X 10.11 (El Capitan)
@@ -19,7 +17,7 @@ This repository should serve as a good way to set up a Mac for development.
 Simply copy and paste this line into your terminal:
 
 ```sh
-curl https://raw.githubusercontent.com/tylucaskelley/osx/master/osx.sh -o osx.sh && caffeinate -i bash osx.sh
+curl https://raw.githubusercontent.com/tylucaskelley/osx/master/osx.bash -o osx.bash && caffeinate -i bash osx.bash
 ```
 
 Note that you will be prompted for input several times as the script runs. Also,
