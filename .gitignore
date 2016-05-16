@@ -4,3 +4,6 @@
 .Trash*
 Desktop.ini
 Thumbs.db
+
+# other
+.osx.log
