@@ -40,9 +40,9 @@ function brew_install() {
     fi
 
     if [[ $(brew ls --versions "$1") ]]; then
-        brew upgrade "$1" &> /dev/null
+        brew upgrade "$1"
     else
-        brew install "$1" &> /dev/null
+        brew install "$1"
     fi
 }
 

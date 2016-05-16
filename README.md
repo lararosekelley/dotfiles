@@ -2,8 +2,6 @@
 
 *bootstraps an apple computer for development work*
 
-by Ty-Lucas Kelley
-
 ---
 
 This repository should serve as a good way to set up a Mac for development.

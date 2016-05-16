@@ -9,10 +9,10 @@
 files=(
     ~/.aliases
     ~/.bash_prompt
-    ~/.env
     ~/.exports
     ~/.functions
     ~/.git-prompt.sh
+    ~/.env # goes last to override any default settings
 )
 
 for file in "${files[@]}"; do

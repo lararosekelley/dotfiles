@@ -8,7 +8,7 @@
 # table of contents
 # --------
 # 1. global variables
-# 2. setup
+# 2. setup & mac settings
 # 3. command line tools
 # 4. homebrew
 # 5. programming languages
@@ -25,7 +25,7 @@
 OSX_DIR=~/.osx
 REPO_URL="https://github.com/tylucaskelley/osx/tarball/v2"
 
-# 2. setup
+# 2. setup & mac settings
 # --------
 
 if [ -d "$OSX_DIR" ]; then
@@ -36,13 +36,20 @@ mkdir -p "$OSX_DIR"
 curl -sL "$REPO_URL" | tar zx -C "$OSX_DIR" --strip-components 1
 
 # shellcheck disable=SC1090
-source $OSX_DIR/bin/utils/helpers.bash
+source "$OSX_DIR"/bin/utils/helpers.bash
 
 os_eligible
 
 if [ "$?" != "0" ]; then
     log -vl ERROR "os version too old to continue"
     exit 1
+fi
+
+prompt_user "change mac settings to reasonable defaults?"
+
+if [ "$?" == "0" ]; then
+    # shellcheck disable=SC1090
+    source "$OSX_DIR"/bin/scripts/settings.bash
 fi
 
 # 3. command line tools
@@ -84,7 +91,7 @@ log -v "installing programming languages..."
 
 prompt_user "install go?"
 
-if [ "$?" != "0" ]; then
+if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/go.bash
 fi
@@ -93,7 +100,7 @@ fi
 
 prompt_user "install java?"
 
-if [ "$?" != "0" ]; then
+if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/java.bash
 fi
@@ -102,34 +109,16 @@ fi
 
 prompt_user "install node?"
 
-if [ "$?" != "0" ]; then
+if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/node.bash
-fi
-
-# perl
-
-prompt_user "install perl?"
-
-if [ "$?" != "0" ]; then
-    # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/perl.bash
-fi
-
-# php
-
-prompt_user "install php?"
-
-if [ "$?" != "0" ]; then
-    # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/php.bash
 fi
 
 # python
 
 prompt_user "install python?"
 
-if [ "$?" != "0" ]; then
+if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/python.bash
 fi
@@ -138,7 +127,68 @@ fi
 
 prompt_user "install ruby?"
 
-if [ "$?" != "0" ]; then
+if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/ruby.bash
 fi
+
+# 6. mac apps
+# --------
+
+prompt_user "install mac apps via brew cask?"
+
+if [ "$?" == "0" ]; then
+    # shellcheck disable=SC1090
+    source "$OSX_DIR"/bin/scripts/brew-cask.bash
+fi
+
+# 7. dotfiles
+# --------
+
+log -v "copying dotfiles to $(echo ~)..."
+
+cp -a "$OSX_DIR"/bin/dotfiles/. ~
+rm ~/.vimrc # wait until vim setup
+
+# 8. terminal
+# --------
+
+prompt_user "change terminal theme?"
+
+if [ "$?" == "0" ]; then
+    # shellcheck disable=SC1090
+    source "$OSX_DIR"/bin/scripts/terminal.bash
+fi
+
+# 9. vim
+# --------
+
+prompt_user "set up vim editor?"
+
+if [ "$?" == "0" ]; then
+    # shellcheck disable=SC1090
+    source "$OSX_DIR"/bin/scripts/vim.bash
+fi
+
+# 10. atom
+# --------
+
+prompt_user "set up atom editor?"
+
+if [ "$?" == "0" ]; then
+    # shellcheck disable=SC1090
+    source "$OSX_DIR"/bin/scripts/atom.bash
+fi
+
+# done
+
+read -d '' exit_msg << EOF
+***********************************************
+**    all done!                              **
+**                                           **
+**    please leave feedback:                 **
+**    github.com/tylucaskelley/osx/issues    **
+***********************************************
+EOF
+
+echo "\n\n$exit_msg\n\n"
