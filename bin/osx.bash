@@ -167,7 +167,7 @@ prompt_user "change terminal theme?"
 
 if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/terminal.bash
+    source "$OSX_DIR"/bin/scripts/terminal.bash "$OSX_DIR"
 fi
 
 # 9. vim
@@ -177,7 +177,7 @@ prompt_user "set up vim editor?"
 
 if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/vim.bash
+    source "$OSX_DIR"/bin/scripts/vim.bash "$OSX_DIR"
 fi
 
 # 10. atom
@@ -187,7 +187,7 @@ prompt_user "set up atom editor?"
 
 if [ "$?" == "0" ]; then
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/atom.bash
+    source "$OSX_DIR"/bin/scripts/atom.bash "$OSX_DIR"
 fi
 
 # done
@@ -201,4 +201,4 @@ read -d '' exit_msg << EOF
 ***********************************************
 EOF
 
-echo "\n\n$exit_msg\n\n"
+echo "$exit_msg"
