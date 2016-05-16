@@ -17,11 +17,12 @@ This repository should serve as a good way to set up a Mac for development.
 Simply copy and paste this line into your terminal:
 
 ```sh
-curl https://raw.githubusercontent.com/tylucaskelley/osx/master/osx.bash -o osx.bash && caffeinate -i bash osx.bash
+curl https://raw.githubusercontent.com/tylucaskelley/osx/master/bin/osx.bash -o osx.bash && caffeinate -i sudo bash osx.bash
 ```
 
-Note that you will be prompted for input several times as the script runs. Also,
-be sure to read [osx.sh](https://github.com/tylucaskelley/osx/blob/master/osx.sh)
+Note that you will be prompted for input several times as the script runs.
+
+Also, be sure to read [osx.bash](https://github.com/tylucaskelley/osx/blob/master/bin/osx.bash)
 before running it! It's broken up into sections and commented, so it's not too
 tough to scan through quickly.
 
