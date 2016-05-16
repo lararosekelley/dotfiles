@@ -7,5 +7,7 @@
 
 log -v "setting up terminal..."
 
-cp "$1"/themes/com.apple.Terminal.plist ~/Library/Preferences/com.apple.Terminal.plist
+cp "$1"/bin/themes/com.apple.Terminal.plist ~/Library/Preferences/com.apple.Terminal.plist
 defaults read com.apple.Terminal &> /dev/null
+
+touch ~/.hushlogin
