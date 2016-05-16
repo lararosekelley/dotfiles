@@ -23,7 +23,7 @@
 # --------
 
 OSX_DIR=~/.osx
-REPO_URL="https://github.com/tylucaskelley/osx/tarball/master"
+REPO_URL="https://github.com/tylucaskelley/osx/tarball/v2"
 
 # 2. setup
 # --------
