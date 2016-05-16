@@ -27,6 +27,8 @@ pyenv install $PYTHON2_VERSION
 pyenv install $PYTHON3_VERSION
 pyenv global $PYTHON2_VERSION $PYTHON3_VERSION
 
+pip install --upgrade pip
+
 for p in "${PACKAGES[@]}"; do
     pip install "$p"
 done
