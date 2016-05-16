@@ -41,8 +41,8 @@ TOOLS=(
     tmux
     tree
     watch
-    "wdiff --with-gettext"
-    "wget --with-iri"
+    wdiff
+    wget
     xz
 )
 
