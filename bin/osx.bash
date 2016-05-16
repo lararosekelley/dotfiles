@@ -162,6 +162,28 @@ rm ~/.vimrc # wait until vim setup
 
 # set up .env
 
+log -v "setting up ~/.env file..."
+
+touch ~/.env
+
+echo -n "Enter your name: "
+read user_name
+
+echo -n "Enter your email address: "
+read user_email
+
+# copy to file
+
+echo "# env" >> ~/.env
+echo "# --------" >> ~/.env
+echo "\n# git credentials\n" >> ~/.env
+echo "GIT_AUTHOR_NAME=\"${user_name}\"" >> ~/.env
+echo "GIT_AUTHOR_EMAIL=\"${user_email}\"" >> ~/.env
+echo "GIT_COMMITTER_NAME=\"${user_name}\"" >> ~/.env
+echo "GIT_COMMITTER_EMAIL=\"${user_email}\"" >> ~/.env
+echo "git config --global user.name \"${user_name}\"" >> ~/.env
+echo "git config --global user.email \"${user_email}\"" >> ~/.env
+
 # 8. terminal
 # --------
 
@@ -195,12 +217,16 @@ fi
 # done
 
 read -d '' exit_msg << EOF
+
+
 ***********************************************
 **    all done!                              **
 **                                           **
 **    please leave feedback:                 **
 **    github.com/tylucaskelley/osx/issues    **
 ***********************************************
+
+
 EOF
 
 echo "$exit_msg"

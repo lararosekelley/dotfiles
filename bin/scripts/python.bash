@@ -18,6 +18,8 @@ log -v "setting up python..."
 brew_install pyenv
 eval "$(pyenv init -)"
 
+pyenv update
+
 PYTHON2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v - | tail -1)"
 PYTHON3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v - | tail -1)"
 

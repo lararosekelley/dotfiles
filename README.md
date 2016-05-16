@@ -18,6 +18,8 @@ Simply copy and paste this line into your terminal:
 curl https://raw.githubusercontent.com/tylucaskelley/osx/master/bin/osx.bash -o osx.bash && caffeinate -i bash osx.bash
 ```
 
+And then restart Terminal.app to see all changes.
+
 Note that you will be prompted for input several times as the script runs.
 
 Also, be sure to read [osx.bash](https://github.com/tylucaskelley/osx/blob/master/bin/osx.bash)
