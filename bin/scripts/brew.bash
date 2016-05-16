@@ -13,6 +13,7 @@ TOOLS=(
     binutils
     cmake
     diffutils
+    emacs
     findutils
     flac
     ffmpeg
@@ -35,22 +36,17 @@ TOOLS=(
     libxml2
     make
     mercurial
+    nano
     openssh
     shellcheck
     sl
     tmux
     tree
+    "vim --with-lua --override-system-vi"
     watch
     wdiff
     wget
     xz
-)
-
-TEXT_EDITORS=(
-    ed
-    emacs
-    'vim --with-lua --override-system-vi'
-    nano
 )
 
 DATABASES=(
@@ -83,20 +79,6 @@ for t in "${TOOLS[@]}"; do
     brew_install "$t"
 done
 
-# handle caveats for each tool installed
-
-
-
-log -v "installing text editors..."
-
-for e in "${TEXT_EDITORS[@]}"; do
-    prompt_user "install $e?"
-
-    if [ $? == "0" ]; then
-        brew_install "$e"
-    fi
-done
-
 log -v "installing databases..."
 
 for d in "${DATABASES[@]}"; do
@@ -107,4 +89,17 @@ for d in "${DATABASES[@]}"; do
     fi
 done
 
+log -v "brew prune & cleanup..."
+
 brew cleanup &> /dev/null
+brew prune &> /dev/null
+
+log -v "changing shell..."
+
+# bash setup
+chsh -s /usr/local/bin/bash
+
+if [ "$?" != "0" ]; then
+    echo "/usr/local/bin/bash" | sudo tee -a /etc/shells
+    chsh -s /usr/local/bin/bash
+fi
