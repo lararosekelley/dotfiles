@@ -76,7 +76,7 @@ brew tap homebrew/versions &> /dev/null
 log -v "installing command line tools & utilities..."
 
 for t in "${TOOLS[@]}"; do
-    brew_install "$t"
+    brew_install $t
 done
 
 log -v "installing databases..."
