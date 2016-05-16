@@ -160,6 +160,8 @@ log -v "copying dotfiles to $(echo ~)..."
 cp -a "$OSX_DIR"/bin/dotfiles/. ~
 rm ~/.vimrc # wait until vim setup
 
+# set up .env
+
 # 8. terminal
 # --------
 
