@@ -28,6 +28,16 @@ REPO_URL="https://github.com/tylucaskelley/osx/tarball/master"
 # 2. setup & mac settings
 # --------
 
+echo "please enter your password: "
+
+sudo -v
+
+while true; do
+    sudo -n true
+    sleep 60
+    kill -0 "$$" || exit
+done 2>/dev/null &
+
 if [ -d "$OSX_DIR" ]; then
     rm -rf "$OSX_DIR"
 fi
