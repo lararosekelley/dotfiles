@@ -49,7 +49,7 @@ TOOLS=(
 TEXT_EDITORS=(
     ed
     emacs
-    "vim --with-lua --override-system-vi"
+    'vim --with-lua --override-system-vi'
     nano
 )
 
@@ -80,7 +80,7 @@ homebrew/versions &> /dev/null
 log -v "installing command line tools & utilities..."
 
 for t in "${TOOLS[@]}"; do
-    brew_install $t
+    brew_install "$t"
 done
 
 # handle caveats for each tool installed
@@ -93,7 +93,7 @@ for e in "${TEXT_EDITORS[@]}"; do
     prompt_user "install $e?"
 
     if [ $? == "0" ]; then
-        brew_install $e
+        brew_install "$e"
     fi
 done
 
@@ -103,7 +103,7 @@ for d in "${DATABASES[@]}"; do
     prompt_user "install $d?"
 
     if [ $? == "0" ]; then
-        brew_install $d
+        brew_install "$d"
     fi
 done
 

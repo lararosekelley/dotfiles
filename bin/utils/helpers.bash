@@ -14,7 +14,7 @@
 #   1 - otherwise
 #
 function prompt_user() {
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
         echo "Usage: ${FUNCNAME[0]} prompt"
         return 1
     fi
@@ -22,7 +22,7 @@ function prompt_user() {
     read -e -p "$1 "
     echo ""
 
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
         return 0
     fi
 
@@ -34,15 +34,15 @@ function prompt_user() {
 # usage: brew_install package
 #
 function brew_install() {
-    if [ -z $1 ]; then
+    if [ -z "$1" ]; then
         echo "Usage: ${FUNCNAME[0]} package"
         return 1
     fi
 
-    if [[ $(brew ls --versions $1) ]]; then
-        brew upgrade $1 &> /dev/null
+    if [[ $(brew ls --versions "$1") ]]; then
+        brew upgrade "$1" &> /dev/null
     else
-        brew install $1 &> /dev/null
+        brew install "$1" &> /dev/null
     fi
 }
 
@@ -56,7 +56,7 @@ function os_eligible() {
     VERSION="10.11"
     OS=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
-    if [ $OS != $VERSION ]; then
+    if [ "$OS" != "$VERSION" ]; then
         return 1
     fi
 
@@ -78,15 +78,15 @@ function log() {
 
     local OPTIND
     while getopts "vl:" opt; do
-        case $opt in
+        case "$opt" in
             v) verbose=1 ;;
-            l) level=$OPTARG ;;
+            l) level="$OPTARG" ;;
         esac
     done
 
     shift "$((OPTIND-1))"
 
-    if [[ $verbose -eq 1 ]]; then
+    if [[ "$verbose" -eq 1 ]]; then
         echo "[$level]: $(date '+%m-%d-%Y %r') - $1"
     fi
 

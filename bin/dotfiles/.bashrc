@@ -16,9 +16,9 @@ files=(
 )
 
 for file in "${files[@]}"; do
-    if [ -f $file ]; then
+    if [ -f "$file" ]; then
         # shellcheck disable=SC1090
-        source $file
+        source "$file"
     fi
 done
 
@@ -31,7 +31,7 @@ options=(
 )
 
 for option in "${options[@]}"; do
-    shopt -s $option
+    shopt -s "$option"
 done
 
 # autojump
@@ -52,7 +52,7 @@ if [[ -s "$(brew --prefix nvm)" ]]; then
     # shellcheck disable=SC1090
     source "$(brew --prefix nvm)/nvm.sh"
     NODE_VERSION=$(nvm current)
-    nvm alias default $NODE_VERSION > /dev/null
+    nvm alias default "$NODE_VERSION" > /dev/null
 fi
 
 # rbenv

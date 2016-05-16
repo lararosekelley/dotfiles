@@ -29,7 +29,7 @@ diff_color="${cyan}"
 function git_untracked() {
     num="$(git status --porcelain 2> /dev/null | grep "^??" | wc -l)"
 
-    if [[ $num != "0" ]]; then
+    if [[ "$num" != "0" ]]; then
         return 1
     fi
 
@@ -39,7 +39,7 @@ function git_untracked() {
 function git_pushable() {
     num="$(git log @\{u\}.. 2> /dev/null | wc -l)"
 
-    if [[ $num != "0" ]]; then
+    if [[ "$num" != "0" ]]; then
         return 1
     fi
 
@@ -53,7 +53,7 @@ function git_changed() {
 function git_staged() {
     num="$(git diff --name-only --cached 2> /dev/null | wc -l)"
 
-    if [[ $num != "0" ]]; then
+    if [[ "$num" != "0" ]]; then
         return 1
     fi
 
@@ -65,25 +65,25 @@ function git_diff() {
 
     git_changed
 
-    if [ $? == "1" ]; then
+    if [ "$?" == "1" ]; then
         diff_prompt+="*"
     fi
 
     git_untracked
 
-    if [ $? == "1" ]; then
+    if [ "$?" == "1" ]; then
         diff_prompt+="+"
     fi
 
     git_staged
 
-    if [ $? == "1" ]; then
+    if [ "$?" == "1" ]; then
         diff_prompt+="^"
     fi
 
     git_pushable
 
-    if [ $? == "1" ]; then
+    if [ "$?" == "1" ]; then
         diff_prompt+="~"
     fi
 
