@@ -55,7 +55,7 @@ DATABASES=(
     mysql
     postgresql
     redis
-    sqllite
+    sqlite
 )
 
 log -v "setting up homebrew..."

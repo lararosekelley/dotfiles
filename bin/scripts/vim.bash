@@ -13,6 +13,10 @@ PACKAGES=(
 
 log -v "configuring vim..."
 
+if [ -d ~/.vim ]; then
+    rm -rf ~/.vim
+fi
+
 mkdir -p ~/.vim/colors
 cp "$1"/bin/themes/Tomorrow-Night.vim ~/.vim/colors
 

@@ -41,7 +41,7 @@ fi
 
 mkdir -p ~/.atom
 
-cp $1/bin/themes/config.cson ~/.atom/config.cson
+cp "$1"/bin/themes/config.cson ~/.atom/config.cson
 
 for p in "${PACKAGES[@]}"; do
     apm install "$p"
