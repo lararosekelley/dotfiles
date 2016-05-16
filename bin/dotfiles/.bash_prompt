@@ -39,7 +39,7 @@ function git_untracked() {
 function git_pushable() {
     num="$(git log @\{u\}.. 2> /dev/null | wc -l)"
 
-    if [[ "$num" != "0" ]]; then
+    if [[ $num != "0" ]]; then
         return 1
     fi
 
@@ -61,6 +61,12 @@ function git_staged() {
 }
 
 function git_diff() {
+    git rev-parse --git-dir &> /dev/null
+
+    if [ "$?" != "0" ]; then
+        return 1
+    fi
+
     diff_prompt=""
 
     git_changed
