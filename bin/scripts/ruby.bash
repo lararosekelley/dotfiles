@@ -22,8 +22,8 @@ rbenv rehash
 
 RUBY_VERSION="$(rbenv install -l | grep -v - | tail -1)"
 
-rbenv install "$RUBY_VERSION"
-rbenv global "$RUBY_VERSION"
+rbenv install $RUBY_VERSION
+rbenv global $RUBY_VERSION
 
 for p in "${PACKAGES[@]}"; do
     gem install "$p"
