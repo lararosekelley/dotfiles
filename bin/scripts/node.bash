@@ -19,7 +19,7 @@ log -v "setting up node..."
 
 brew_install nvm
 mkdir -p ~/.nvm
-export NVM_DIR=~/.nvm
+export NVM_DIR="$HOME/.nvm"
 
 # shellcheck disable=SC1090
 source "$(brew --prefix nvm)/nvm.sh"
