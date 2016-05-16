@@ -15,7 +15,7 @@ This repository should serve as a good way to set up a Mac for development.
 Simply copy and paste this line into your terminal:
 
 ```sh
-curl https://raw.githubusercontent.com/tylucaskelley/osx/master/bin/osx.bash -o osx.bash && caffeinate -i sudo bash osx.bash
+curl https://raw.githubusercontent.com/tylucaskelley/osx/master/bin/osx.bash -o osx.bash && caffeinate -i bash osx.bash
 ```
 
 Note that you will be prompted for input several times as the script runs.
