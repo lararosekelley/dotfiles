@@ -176,7 +176,6 @@ read user_email
 
 echo "# env" >> ~/.env
 echo "# --------" >> ~/.env
-echo "\n# git credentials\n" >> ~/.env
 echo "GIT_AUTHOR_NAME=\"${user_name}\"" >> ~/.env
 echo "GIT_AUTHOR_EMAIL=\"${user_email}\"" >> ~/.env
 echo "GIT_COMMITTER_NAME=\"${user_name}\"" >> ~/.env
