@@ -30,7 +30,6 @@ TOOLS=(
     grep
     gzip
     jq
-    lame
     less
     libffi
     libxml2
