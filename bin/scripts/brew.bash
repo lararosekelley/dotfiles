@@ -37,7 +37,7 @@ TOOLS=(
     make
     mercurial
     nano
-    openssh
+    openssl
     shellcheck
     sl
     tmux
@@ -63,15 +63,15 @@ log -v "setting up homebrew..."
 brew update &> /dev/null
 brew upgrade --all &> /dev/null
 
-caskroom/cask &> /dev/null
-caskroom/versions &> /dev/null
-homebrew/binary &> /dev/null
-homebrew/boneyard &> /dev/null
-homebrew/bundle &> /dev/null
-homebrew/core &> /dev/null
-homebrew/dupes &> /dev/null
-homebrew/services &> /dev/null
-homebrew/versions &> /dev/null
+brew tap caskroom/cask &> /dev/null
+brew tap caskroom/versions &> /dev/null
+brew tap homebrew/binary &> /dev/null
+brew tap homebrew/boneyard &> /dev/null
+brew tap homebrew/bundle &> /dev/null
+brew tap homebrew/core &> /dev/null
+brew tap homebrew/dupes &> /dev/null
+brew tap homebrew/services &> /dev/null
+brew tap homebrew/versions &> /dev/null
 
 log -v "installing command line tools & utilities..."
 

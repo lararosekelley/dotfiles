@@ -18,6 +18,8 @@ brew_install rbenv
 brew_install ruby-build
 eval "$(rbenv init -)"
 
+rbenv rehash
+
 RUBY_VERSION="$(rbenv install -l | grep -v - | tail -1)"
 
 rbenv install "$RUBY_VERSION"
