@@ -4,7 +4,7 @@
 
 ---
 
-This repository should serve as a good way to set up a Mac for development.
+![osx](https://raw.githubusercontent.com/tylucaskelley/osx/785fc8c360eb7aad0ecc7cb1b1d72032960a2d6d/osx.png)
 
 ### Prerequisites
 
@@ -12,13 +12,13 @@ This repository should serve as a good way to set up a Mac for development.
 
 ### Installation
 
-Simply copy and paste this line into your terminal:
+Copy and paste this line into your terminal:
 
 ```sh
 curl https://raw.githubusercontent.com/tylucaskelley/osx/master/bin/osx.bash -o osx.bash && caffeinate -i bash osx.bash
 ```
 
-And then restart Terminal.app to see all changes.
+Then, restart `Terminal.app` to see all changes.
 
 Note that you will be prompted for input several times as the script runs.
 
