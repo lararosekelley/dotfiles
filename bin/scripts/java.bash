@@ -8,3 +8,4 @@
 log -v "setting up java..."
 
 brew cask install java
+brew_install maven

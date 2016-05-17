@@ -15,6 +15,10 @@ export HISTSIZE="10000"
 export HISTFILESIZE="${HISTSIZE}"
 export HISTCONTROL="ignoreboth"
 
+# java
+export JAVA_HOME
+JAVA_HOME="$(/usr/libexec/java_home)"
+
 # nvm
 export NVM_DIR="$HOME/.nvm"
 
@@ -26,7 +30,6 @@ path=(
     "$GOPATH/bin"
     "/usr/local/bin"
     "/usr/local/sbin"
-    "/usr/local/opt/coreutils/libexec/gnubin"
     "/usr/bin"
     "/usr/sbin"
     "/bin"
