@@ -11,6 +11,7 @@ PACKAGES=(
     firefox
     github-desktop
     google-chrome
+    openemu
     openscad
     paw
     sketch
