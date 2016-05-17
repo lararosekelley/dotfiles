@@ -35,16 +35,16 @@ function update() {
 
 # set up default tmux layout: one session, one window, three panes
 function mux() {
-    s="work"
-
-    if [ -z "$1" ]; then
-        s="$1"
+    if [[ -z "$1" ]]; then
+        TMUX_SESSION="work"
+    else
+        TMUX_SESSION="$1"
     fi
 
-    tmux new-session -s "$s" -d
+    tmux new-session -s "$TMUX_SESSION" -d
     tmux split-window -h
     tmux split-window -v
-    tmux attach-session -t "$s"
+    tmux attach-session -t "$TMUX_SESSION"
 }
 
 # converts quicktime screen recording to a gif

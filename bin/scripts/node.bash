@@ -24,6 +24,7 @@ export NVM_DIR="$HOME/.nvm"
 # shellcheck disable=SC1090
 source "$(brew --prefix nvm)/nvm.sh"
 
+# "node" == latest version of node.js
 nvm install node
 nvm alias default node
 

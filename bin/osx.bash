@@ -7,16 +7,17 @@
 
 # table of contents
 # --------
-# 1. global variables
-# 2. setup & mac settings
-# 3. command line tools
-# 4. homebrew
-# 5. programming languages
-# 6. mac apps
-# 7. dotfiles
-# 8. terminal
-# 9. vim
+# 1.  global variables
+# 2.  setup & mac settings
+# 3.  command line tools
+# 4.  homebrew
+# 5.  programming languages
+# 6.  mac apps
+# 7.  dotfiles
+# 8.  terminal
+# 9.  vim
 # 10. atom
+# 11. cleanup
 # --------
 
 # 1. global variables
@@ -51,13 +52,15 @@ source "$OSX_DIR"/bin/utils/helpers.bash
 os_eligible
 
 if [ "$?" != "0" ]; then
-    log -vl ERROR "os version too old to continue"
+    log -vl ERROR "aborting; os version must be 10.11 to continue"
     exit 1
 fi
 
 prompt_user "change mac settings to reasonable defaults?"
 
 if [ "$?" == "0" ]; then
+    SETTINGS_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/settings.bash
 fi
@@ -102,6 +105,8 @@ log -v "installing programming languages..."
 prompt_user "install go?"
 
 if [ "$?" == "0" ]; then
+    GO_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/go.bash
 fi
@@ -111,6 +116,8 @@ fi
 prompt_user "install java?"
 
 if [ "$?" == "0" ]; then
+    JAVA_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/java.bash
 fi
@@ -120,6 +127,8 @@ fi
 prompt_user "install node?"
 
 if [ "$?" == "0" ]; then
+    NODE_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/node.bash
 fi
@@ -129,6 +138,8 @@ fi
 prompt_user "install python?"
 
 if [ "$?" == "0" ]; then
+    PYTHON_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/python.bash
 fi
@@ -138,6 +149,8 @@ fi
 prompt_user "install ruby?"
 
 if [ "$?" == "0" ]; then
+    RUBY_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/ruby.bash
 fi
@@ -148,6 +161,8 @@ fi
 prompt_user "install mac apps via brew cask?"
 
 if [ "$?" == "0" ]; then
+    BREW_CASK_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/brew-cask.bash
 fi
@@ -189,6 +204,8 @@ echo "git config --global user.email \"${user_email}\"" >> ~/.env
 prompt_user "change terminal theme?"
 
 if [ "$?" == "0" ]; then
+    TERMINAL_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/terminal.bash "$OSX_DIR"
 fi
@@ -199,6 +216,8 @@ fi
 prompt_user "set up vim editor?"
 
 if [ "$?" == "0" ]; then
+    VIM_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/vim.bash "$OSX_DIR"
 fi
@@ -209,23 +228,70 @@ fi
 prompt_user "set up atom editor?"
 
 if [ "$?" == "0" ]; then
+    ATOM_ACCEPTED=1
+
     # shellcheck disable=SC1090
     source "$OSX_DIR"/bin/scripts/atom.bash "$OSX_DIR"
 fi
 
-# done
+# 11. cleanup
+# --------
 
-read -d '' exit_msg << EOF
+echo "summary of changes:"
 
+echo "-- xcode command line tools installed --"
 
-***********************************************
-**    all done!                              **
-**                                           **
-**    please leave feedback:                 **
-**    github.com/tylucaskelley/osx/issues    **
-***********************************************
+echo "-- dotfiles copied to home directory --"
 
+if [ "$SETTINGS_ACCEPTED" == "1" ]; then
+    echo "-- mac settings changed to reasonable defaults --"
+fi
 
-EOF
+BREW_PACKAGES="$(brew list)"
+echo "-- brew packages installed --" && echo $BREW_PACKAGES
 
-echo "$exit_msg"
+if [ "$BREW_CASK_ACCEPTED" == "1" ]; then
+    BREW_CASK_PACKAGES="$(brew cask list)"
+    echo "-- mac apps installed --" && echo $BREW_CASK_PACKAGES
+fi
+
+if [ "$TERMINAL_ACCEPTED" == "$1" ]; then
+    echo "-- terminal theme changed --"
+fi
+
+if [ "$ATOM_ACCEPTED" == "1" ]; then
+    ATOM_PACKAGES="$(apm ls --installed --bare)"
+    echo "-- atom installed with packages --" && echo $ATOM_PACKAGES
+fi
+
+if [ "$VIM_ACCEPTED" == "1" ]; then
+    echo "-- vim installed & configured in ~/.vim --"
+fi
+
+if [ "$PYTHON_ACCEPTED" == "1" ]; then
+    PY2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v - | tail -1)"
+    PY3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v - | tail -1)"
+    echo "-- python $PY2_VERSION, $PY3_VERSION installed & configured in ~/.pyenv --"
+fi
+
+if [ "$RUBY_ACCEPTED" == "1" ]; then
+    RB_VERSION="$(ruby --version | cut -d ' ' -f 2 | cut -d p -f 1)"
+    echo "-- ruby $RB_VERSION installed & configured in ~/.rbenv --"
+fi
+
+if [ "$JAVA_ACCEPTED" == "1" ]; then
+    JAVA_VERSION="$(javac -version 2>&1 | cut -d ' ' -f 2)"
+    echo "-- java $JAVA_VERSION installed & maven installed --"
+fi
+
+if [ "$GO_ACCEPTED" == "1" ]; then
+    GO_VERSION="$(go version | cut -d ' ' -f 3 | cut -d o -f 2)"
+    echo "-- go $GO_VERSION installed & configured in ~/.go --"
+fi
+
+if [ "$NODE_ACCEPTED" == "1" ]; then
+    NODE_VERSION="$(node -v)"
+    echo "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
+fi
+
+echo -e "\n\nall done! \nplease leave feedback: \n$REPO_URL"
