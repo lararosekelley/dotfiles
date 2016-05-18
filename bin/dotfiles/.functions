@@ -17,20 +17,68 @@ function golist() {
 # upgrade everything on computer
 function update() {
     # homebrew
-    command -v brew && brew update && brew upgrade && brew prune && brew cleanup
+    command -v brew &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        brew update
+        brew upgrade --all
+        brew prune
+        brew cleanup
+    fi
+
+    # go
+    command -v go &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        go get -u all
+    fi
 
     # node.js
-    command -v npm && npm update -g
+    command -v npm &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        for pkg in $(npm outdated -g --parseable --depth=0 | cut -d : -f 2); do
+            npm install -g "$pkg"
+        done
+    fi
 
     # ruby
-    command -v gem && gem update "$(gem outdated | cut -d ' ' -f 1)"
+    command -v gem &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        gem update "$(gem outdated | cut -d ' ' -f 1)"
+    fi
 
     # python
-    command -v pip && pip freeze --local | grep -v ^-e | cut -d = -f 1  | xargs pip install -U
-    command -v pip && pip install --upgrade pip
+    command -v pip &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        pip install -U pip
+
+        # shellcheck disable=SC2046
+        pip install -U $(pip freeze --local | grep -v ^-e | cut -d = -f 1)
+    fi
 
     # atom
-    command -v apm && apm update
+    command -v apm &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        apm update
+    fi
+
+    # vim
+    if [ -d ~/.vim/bundle ]; then
+        cd ~/.vim/bundle || exit
+
+        for d in *; do
+            cd "$d" || exit
+            git pull
+            cd .. || exit
+        done
+    fi
+
+    # mac os
+    softwareupdate --install --all
 }
 
 # set up default tmux layout: one session, one window, three panes
