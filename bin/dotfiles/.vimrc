@@ -135,6 +135,25 @@ set ignorecase
 " ,. turns off highlights when done
 nnoremap <leader>. :nohlsearch<CR>
 
+" wildmenu
+if has("wildmenu")
+    " compiled files
+    set wildignore+=*.a,*.o,*.pyc
+    " hidden files
+    set wildignore+=.DS_Store
+    " images
+    set wildignore+=*.bmp,*.gif,*.ico,*.jpeg,*.jpg,*.png
+    " folders
+    set wildignore+=.git,node_modules,.svn,.hg
+
+    " enable it
+    set wildmenu
+    set wildmode=longest,list
+
+    " use it
+    inoremap <Tab> <C-X><C-F>
+endif
+
 " ======== 6. helper functions ========
 
 " ======== 7. plugins ========
