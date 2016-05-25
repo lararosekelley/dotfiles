@@ -16,6 +16,8 @@ function golist() {
 
 # upgrade everything on computer
 function update() {
+    cd
+
     # homebrew
     command -v brew &> /dev/null
 
@@ -75,6 +77,8 @@ function update() {
             git pull
             cd .. || exit
         done
+
+        cd
     fi
 
     # mac os
