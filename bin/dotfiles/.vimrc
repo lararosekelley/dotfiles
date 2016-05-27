@@ -151,7 +151,7 @@ if has("wildmenu")
     set wildmode=longest,list
 
     " use it
-    inoremap <Tab> <C-X><C-F>
+    inoremap <leader><Tab> <C-X><C-F>
 endif
 
 " ======== 6. helper functions ========
