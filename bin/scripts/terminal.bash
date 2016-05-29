@@ -9,7 +9,7 @@ log -v "setting up terminal..."
 
 touch ~/.hushlogin
 
-# Use a modified version of the Solarized Dark theme by default in Terminal.app
+# use the tomorrow night theme in terminal.app
 osascript <<EOD
 tell application "Terminal"
 
