@@ -65,4 +65,8 @@ fi
 
 if [[ -s "$(brew --prefix pyenv)" ]]; then
     eval "$(pyenv init -)"
+
+    if which pyenv-virtualenv-init > /dev/null; then
+        eval "$(pyenv virtualenv-init -)";
+    fi
 fi

@@ -16,7 +16,10 @@ PACKAGES=(
 log -v "setting up python..."
 
 brew_install pyenv
+brew install pyenv-virtualenv
+
 eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 pyenv rehash
 
