@@ -16,7 +16,7 @@ function golist() {
 
 # upgrade everything on computer
 function update() {
-    cd
+    cd || exit
 
     # homebrew
     command -v brew &> /dev/null
@@ -78,7 +78,7 @@ function update() {
             cd .. || exit
         done
 
-        cd
+        cd || exit
     fi
 
     # mac os
@@ -93,7 +93,8 @@ function mux() {
         TMUX_SESSION="$1"
     fi
 
-    tmux new-session -s "$TMUX_SESSION" -d
+    tmux start-server
+    tmux new-session -s "$TMUX_SESSION" -d 'vim'
     tmux split-window -h
     tmux split-window -v
     tmux attach-session -t "$TMUX_SESSION"
