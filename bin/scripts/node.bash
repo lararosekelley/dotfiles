@@ -7,9 +7,9 @@
 
 PACKAGES=(
     csslint
+    eslint
     gulp
     htmlhint
-    jshint
     nodemon
     pm2
     typescript
