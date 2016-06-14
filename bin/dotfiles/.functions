@@ -94,7 +94,7 @@ function mux() {
     fi
 
     tmux start-server
-    tmux new-session -s "$TMUX_SESSION" -d 'vim'
+    tmux new-session -s "$TMUX_SESSION" -d
     tmux split-window -h
     tmux split-window -v
     tmux attach-session -t "$TMUX_SESSION"

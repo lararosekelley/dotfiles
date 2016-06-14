@@ -7,9 +7,12 @@
 
 PACKAGES=(
     autoclose-html
+    atom-ternjs
+    autocomplete-python
     color-picker
     editorconfig
     file-icons
+    git-time-machine
     highlight-line
     language-batch
     language-gradle
@@ -17,15 +20,16 @@ PACKAGES=(
     language-viml
     linter
     linter-csslint
+    linter-eslint
     linter-golinter
     linter-handlebars
     linter-htmlhint
-    linter-jshint
     linter-pep8
     linter-ruby
     linter-sass-lint
     linter-shellcheck
     minimap
+    node-debugger
     pdf-view
     pigments
     travis-ci-status
