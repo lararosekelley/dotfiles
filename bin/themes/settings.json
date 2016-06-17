@@ -1,0 +1,5 @@
+{
+    "go.formatTool": "gofmt",
+    "python.linting.pylintEnabled": false,
+    "python.linting.pep8Enabled": true
+}
