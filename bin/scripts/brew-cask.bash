@@ -18,7 +18,7 @@ PACKAGES=(
     slack
     steam
     the-unarchiver
-    utorrent
+    transmission
     vagrant
     virtualbox
 )

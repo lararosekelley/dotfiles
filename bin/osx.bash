@@ -16,7 +16,7 @@
 # 7.  dotfiles
 # 8.  terminal
 # 9.  vim
-# 10. atom
+# 10. vscode
 # 11. cleanup
 # --------
 
@@ -222,16 +222,16 @@ if [ "$?" == "0" ]; then
     source "$OSX_DIR"/bin/scripts/vim.bash "$OSX_DIR"
 fi
 
-# 10. atom
+# 10. vscode
 # --------
 
-prompt_user "set up atom editor?"
+prompt_user "set up visual studio code editor?"
 
 if [ "$?" == "0" ]; then
-    ATOM_ACCEPTED=1
+    VSCODE_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/atom.bash "$OSX_DIR"
+    source "$OSX_DIR"/bin/scripts/vscode.bash "$OSX_DIR"
 fi
 
 # 11. cleanup
@@ -259,9 +259,9 @@ if [ "$TERMINAL_ACCEPTED" == "$1" ]; then
     echo "-- terminal theme changed --"
 fi
 
-if [ "$ATOM_ACCEPTED" == "1" ]; then
-    ATOM_PACKAGES="$(apm ls --installed --bare)"
-    echo "-- atom installed with packages --" && echo $ATOM_PACKAGES
+if [ "$VSCODE_ACCEPTED" == "1" ]; then
+    VSCODE_PACKAGES="$(code --list-extensions)"
+    echo "-- visual studio code installed with packages --" && echo $VSCODE_PACKAGES
 fi
 
 if [ "$VIM_ACCEPTED" == "1" ]; then
