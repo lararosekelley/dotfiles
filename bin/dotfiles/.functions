@@ -61,13 +61,6 @@ function update() {
         pip install -U $(pip freeze --local | grep -v ^-e | cut -d = -f 1)
     fi
 
-    # atom
-    command -v apm &> /dev/null
-
-    if [ "$?" == "0" ]; then
-        apm update
-    fi
-
     # vim
     if [ -d ~/.vim/bundle ]; then
         cd ~/.vim/bundle || exit
