@@ -20,6 +20,7 @@ PACKAGES=(
     ms-vscode.csharp
     msjsdiag.debugger-for-chrome
     rebornix.Ruby
+    seanmcbreen.Spell
     robertohuertasm.vscode-icons
     xabikos.JavaScriptSnippets
 )
