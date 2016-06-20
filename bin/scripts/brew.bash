@@ -63,6 +63,7 @@ brew update &> /dev/null
 brew upgrade --all &> /dev/null
 
 brew tap caskroom/cask &> /dev/null
+brew tap caskroom/fonts &> /dev/null
 brew tap caskroom/versions &> /dev/null
 brew tap homebrew/binary &> /dev/null
 brew tap homebrew/boneyard &> /dev/null
