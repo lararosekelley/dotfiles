@@ -1,0 +1,30 @@
+"*":
+  "autoclose-html":
+    makeNeverCloseSelfClosing: false
+  "autocomplete-python":
+    useSnippets: "all"
+  "color-picker":
+    abbreviateValues: true
+    preferredFormat: "HEX"
+  core:
+    themes: [
+      "one-dark-ui"
+      "base16-tomorrow-dark-theme"
+    ]
+  editor:
+    backUpBeforeSaving: true
+    fontSize: 12
+    softWrap: true
+    softWrapAtPreferredLineLength: true
+    tabLength: 4
+  "linter-pep8": {}
+  "pdf-view":
+    fitToWidthOnOpen: true
+  welcome:
+    showOnStartup: false
+".bat.source":
+  editor:
+    tabLength: 24
+".ini.source":
+  editor:
+    tabLength: 4

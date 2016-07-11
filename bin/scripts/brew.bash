@@ -7,6 +7,7 @@
 
 TOOLS=(
     ack
+    app-engine-python
     autojump
     bash
     bash-completion

@@ -25,6 +25,10 @@ export NVM_DIR="$HOME/.nvm"
 # go
 export GOPATH="$HOME/.go"
 
+# postgresql
+export PGDATA="/usr/local/var/postgres"
+export PGHOST=localhost
+
 # path
 path=(
     "$GOPATH/bin"

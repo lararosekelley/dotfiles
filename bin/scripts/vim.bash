@@ -7,8 +7,10 @@
 
 PACKAGES=(
     https://github.com/kien/ctrlp.vim.git
+    https://github.com/Raimondi/delimitMate
     https://github.com/scrooloose/syntastic.git
     https://github.com/bling/vim-airline.git
+    https://github.com/pangloss/vim-javascript.git
 )
 
 log -v "configuring vim..."

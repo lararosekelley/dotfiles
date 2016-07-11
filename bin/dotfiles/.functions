@@ -18,6 +18,13 @@ function golist() {
 function update() {
     cd || exit
 
+    # atom
+    command -v apm &> /dev/null
+
+    if [ "$?" == "0" ]; then
+        apm update
+    fi
+
     # homebrew
     command -v brew &> /dev/null
 
