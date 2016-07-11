@@ -6,6 +6,7 @@
 # sets up ruby environment
 
 PACKAGES=(
+    bundler
     jekyll
     rails
     sass

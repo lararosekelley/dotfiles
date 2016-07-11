@@ -12,6 +12,8 @@ PACKAGES=(
     htmlhint
     nodemon
     pm2
+    stylelint
+    tslint
     typescript
 )
 

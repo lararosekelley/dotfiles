@@ -7,6 +7,7 @@
 
 PACKAGES=(
     ipython
+    jedi
     licenser
     pep8
     uncommitted
