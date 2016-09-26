@@ -51,7 +51,7 @@ source "$OSX_DIR"/bin/utils/helpers.bash
 os_eligible
 
 if [ "$?" != "0" ]; then
-    log -vl ERROR "aborting; os version must be 10.11 to continue"
+    log -vl ERROR "aborting; os version must be 10.12 to continue"
     exit 1
 fi
 
@@ -171,14 +171,8 @@ rm ~/.vimrc # wait until vim setup
 log -v "setting up ~/.env file..."
 
 touch ~/.env
-
-echo -n "Enter your name: "
-read -r user_name
-
-echo -n "Enter your email address: "
-read -r user_email
-
-# copy to file
+echo -n "Enter your name: " && read -r user_name
+echo -n "Enter your email address: " && read -r user_email
 
 # shellcheck disable=SC2129
 echo "# env" >> ~/.env
