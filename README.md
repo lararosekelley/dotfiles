@@ -8,7 +8,7 @@
 
 ### Prerequisites
 
-* Apple computer running OS X 10.11 (El Capitan)
+* Apple computer running macOS Sierra (10.12)
 
 ### Installation
 

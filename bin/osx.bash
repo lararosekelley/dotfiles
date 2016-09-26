@@ -8,7 +8,7 @@
 # table of contents
 # --------
 # 1.  global variables
-# 2.  setup & mac settings
+# 2.  setup
 # 3.  command line tools
 # 4.  homebrew
 # 5.  programming languages
@@ -16,8 +16,7 @@
 # 7.  dotfiles
 # 8.  terminal
 # 9.  vim
-# 10. atom
-# 11. cleanup
+# 10. cleanup
 # --------
 
 # 1. global variables
@@ -54,15 +53,6 @@ os_eligible
 if [ "$?" != "0" ]; then
     log -vl ERROR "aborting; os version must be 10.11 to continue"
     exit 1
-fi
-
-prompt_user "change mac settings to reasonable defaults?"
-
-if [ "$?" == "0" ]; then
-    SETTINGS_ACCEPTED=1
-
-    # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/settings.bash
 fi
 
 # 3. command line tools
@@ -170,7 +160,8 @@ fi
 # 7. dotfiles
 # --------
 
-log -v "copying dotfiles to $(echo ~)..."
+
+log -v "copying dotfiles to home directory..."
 
 cp -a "$OSX_DIR"/bin/dotfiles/. ~
 rm ~/.vimrc # wait until vim setup
@@ -182,13 +173,14 @@ log -v "setting up ~/.env file..."
 touch ~/.env
 
 echo -n "Enter your name: "
-read user_name
+read -r user_name
 
 echo -n "Enter your email address: "
-read user_email
+read -r user_email
 
 # copy to file
 
+# shellcheck disable=SC2129
 echo "# env" >> ~/.env
 echo "# --------" >> ~/.env
 echo "GIT_AUTHOR_NAME=\"${user_name}\"" >> ~/.env
@@ -222,19 +214,7 @@ if [ "$?" == "0" ]; then
     source "$OSX_DIR"/bin/scripts/vim.bash "$OSX_DIR"
 fi
 
-# 10. atom
-# --------
-
-prompt_user "set up atom editor?"
-
-if [ "$?" == "0" ]; then
-    ATOM_ACCEPTED=1
-
-    # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/atom.bash "$OSX_DIR"
-fi
-
-# 11. cleanup
+# 10. cleanup
 # --------
 
 echo "summary of changes:"
@@ -243,25 +223,16 @@ echo "-- xcode command line tools installed --"
 
 echo "-- dotfiles copied to home directory --"
 
-if [ "$SETTINGS_ACCEPTED" == "1" ]; then
-    echo "-- mac settings changed to reasonable defaults --"
-fi
-
 BREW_PACKAGES="$(brew list)"
-echo "-- brew packages installed --" && echo $BREW_PACKAGES
+echo "-- brew packages installed --" && echo "$BREW_PACKAGES"
 
 if [ "$BREW_CASK_ACCEPTED" == "1" ]; then
     BREW_CASK_PACKAGES="$(brew cask list)"
-    echo "-- mac apps installed --" && echo $BREW_CASK_PACKAGES
+    echo "-- mac apps installed --" && echo "$BREW_CASK_PACKAGES"
 fi
 
 if [ "$TERMINAL_ACCEPTED" == "$1" ]; then
     echo "-- terminal theme changed --"
-fi
-
-if [ "$ATOM_ACCEPTED" == "1" ]; then
-    ATOM_PACKAGES="$(apm ls --installed --bare)"
-    echo "-- atom editor installed with packages --" && echo $ATOM_PACKAGES
 fi
 
 if [ "$VIM_ACCEPTED" == "1" ]; then
@@ -269,8 +240,8 @@ if [ "$VIM_ACCEPTED" == "1" ]; then
 fi
 
 if [ "$PYTHON_ACCEPTED" == "1" ]; then
-    PY2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v - | tail -1)"
-    PY3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v - | tail -1)"
+    PY2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
+    PY3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
     echo "-- python $PY2_VERSION, $PY3_VERSION installed & configured in ~/.pyenv --"
 fi
 

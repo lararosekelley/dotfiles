@@ -6,10 +6,16 @@
 # sets up the vim editor for development work
 
 PACKAGES=(
-    https://github.com/kien/ctrlp.vim.git
-    https://github.com/Raimondi/delimitMate
+    https://github.com/Valloric/YouCompleteMe.git
+    https://github.com/Raimondi/delimitMate.git
     https://github.com/scrooloose/syntastic.git
-    https://github.com/bling/vim-airline.git
+    https://github.com/vim-airline/vim-airline-themes.git
+    https://github.com/vim-airline/vim-airline.git
+    https://github.com/airblade/vim-gitgutter.git
+    https://github.com/jistr/vim-nerdtree-tabs.git
+    https://github.com/ctrlpvim/ctrlp.vim.git
+    https://github.com/scrooloose/nerdtree.git
+    https://github.com/tpope/vim-fugitive.git
     https://github.com/pangloss/vim-javascript.git
 )
 

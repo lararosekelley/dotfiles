@@ -6,30 +6,30 @@
 # sets up python environment
 
 PACKAGES=(
+    csvkit
+    flake8
     ipython
     jedi
     licenser
-    pep8
     uncommitted
-    virtualenv
 )
 
-log -v "setting up python..."
+log -v "configuring python..."
 
 brew_install pyenv
-brew install pyenv-virtualenv
+brew_install pyenv-virtualenv
 
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
 pyenv rehash
 
-PYTHON2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v - | tail -1)"
-PYTHON3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v - | tail -1)"
+PYTHON2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
+PYTHON3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
 
-pyenv install $PYTHON2_VERSION
-pyenv install $PYTHON3_VERSION
-pyenv global $PYTHON2_VERSION $PYTHON3_VERSION
+pyenv install "$PYTHON2_VERSION"
+pyenv install "$PYTHON3_VERSION"
+pyenv global "$PYTHON2_VERSION" "$PYTHON3_VERSION"
 
 # python 2
 

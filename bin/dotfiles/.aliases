@@ -12,6 +12,10 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+# usage info
+alias cpu='top -o cpu'
+alias mem='top -o mem'
+
 # misc. tools
 alias ip='ifconfig | sed -En "s/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p"'
 alias up='cd ..'
@@ -28,6 +32,6 @@ alias bashrc='vim ~/.bashrc'
 alias vimrc='vim ~/.vimrc'
 
 # pip
-alias pip_update='pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs pip install -U'
+alias pip_update='pip freeze --local | grep -v '^-e' | cut -d = -f 1  | xargs pip install -U'
 alias pip_reg='python setup.py register -r pypi'
 alias pip_up='python setup.py sdist upload -r pypi'

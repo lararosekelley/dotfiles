@@ -14,6 +14,8 @@ TOOLS=(
     binutils
     cmake
     diffutils
+    docker
+    docker-machine
     emacs
     findutils
     flac
@@ -30,7 +32,10 @@ TOOLS=(
     gradle
     grep
     gzip
+    httpie
+    icdiff
     jq
+    lame
     less
     libffi
     libxml2
@@ -38,10 +43,12 @@ TOOLS=(
     mercurial
     nano
     openssl
+    reattach-to-user-namespace
     shellcheck
     sl
     tmux
     tree
+    valgrind
     "vim --with-lua --override-system-vi"
     watch
     wdiff
@@ -77,7 +84,7 @@ brew tap homebrew/versions &> /dev/null
 log -v "installing command line tools & utilities..."
 
 for t in "${TOOLS[@]}"; do
-    brew_install $t
+    brew_install "$t"
 done
 
 log -v "installing databases..."
@@ -98,6 +105,7 @@ brew prune &> /dev/null
 log -v "changing shell..."
 
 # bash setup
+
 chsh -s /usr/local/bin/bash
 
 if [ "$?" != "0" ]; then

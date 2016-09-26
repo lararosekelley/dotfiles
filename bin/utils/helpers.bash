@@ -19,7 +19,7 @@ function prompt_user() {
         return 1
     fi
 
-    read -e -p "$1 "
+    read -r -e -p "$1 "
     echo ""
 
     if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -53,7 +53,7 @@ function brew_install() {
 #   1 - otherwise
 #
 function os_eligible() {
-    VERSION="10.11"
+    VERSION="10.12"
     OS=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
     if [ "$OS" != "$VERSION" ]; then
@@ -90,5 +90,5 @@ function log() {
         echo "[$level]: $(date '+%m-%d-%Y %r') - $1"
     fi
 
-    echo "[$level]: $(date '+%m-%d-%Y %r') - $1" >> $logfile
+    echo "[$level]: $(date '+%m-%d-%Y %r') - $1" >> "$logfile"
 }

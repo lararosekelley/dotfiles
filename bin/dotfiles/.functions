@@ -18,13 +18,6 @@ function golist() {
 function update() {
     cd || exit
 
-    # atom
-    command -v apm &> /dev/null
-
-    if [ "$?" == "0" ]; then
-        apm update
-    fi
-
     # homebrew
     command -v brew &> /dev/null
 
@@ -97,7 +90,9 @@ function mux() {
     tmux new-session -s "$TMUX_SESSION" -d
     tmux split-window -h
     tmux split-window -v
-    tmux attach-session -t "$TMUX_SESSION"
+    tmux new-window -t "$TMUX_SESSION:1" vim
+    tmux new-window -t "$TMUX_SESSION:2"
+    tmux attach-session -t "$TMUX_SESSION:0"
 }
 
 # converts quicktime screen recording to a gif
