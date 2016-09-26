@@ -27,7 +27,7 @@ diff_color="${cyan}"
 # git diff
 
 function git_untracked() {
-    num="$(git status --porcelain 2> /dev/null | grep "^??" | wc -l)"
+    num="$(git status --porcelain 2> /dev/null | grep -c "^??")"
 
     if [ "$num" -eq 0 ]; then
         return 0

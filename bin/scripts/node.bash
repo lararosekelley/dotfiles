@@ -10,6 +10,7 @@ PACKAGES=(
     eslint
     gulp
     htmlhint
+    mocha
     nodemon
     pm2
     stylelint
@@ -26,9 +27,9 @@ export NVM_DIR="$HOME/.nvm"
 # shellcheck disable=SC1090
 source "$(brew --prefix nvm)/nvm.sh"
 
-# "node" == latest version of node.js
-nvm install node
-nvm alias default node
+# install latest LTS version
+nvm install --lts
+nvm alias default lts/*
 
 for p in "${PACKAGES[@]}"; do
     npm install -g "$p"

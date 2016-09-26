@@ -3,7 +3,7 @@
 
 [alias]
 	# grab .github folder from tylucaskelley/github-templates
-	tpl = "!f() { curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh | bash; }; f"
+	tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
 
 	# formatted view of last 25 commits
 	lg = log --all --graph --abbrev-commit --date=relative --format=format:'%C(red)%h%C(reset) %C(blue)(%ar)%C(reset) - %C(white)%s%C(reset)'
