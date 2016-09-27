@@ -254,6 +254,7 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:nerdtree_tabs_open_on_console_startup=1
     let g:nerdtree_tabs_smart_startup_focus=2
     map <leader>/ :NERDTreeTabsToggle<CR>
+    map <leader>f :NERDTreeFind<CR>
 
     " Javascript
     let g:javascript_plugin_jsdoc=1
