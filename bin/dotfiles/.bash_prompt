@@ -37,7 +37,7 @@ function git_untracked() {
 }
 
 function git_pushable() {
-    num="$(git log @\{u\}.. 2> /dev/null | wc -l)"
+    num="$(git log origin/$(git name-rev --name-only HEAD)..$(git name-rev --name-only HEAD) --oneline | wc -l)"
 
     if [ "$num" -eq 0 ]; then
         return 0
