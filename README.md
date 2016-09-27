@@ -10,6 +10,9 @@
 
 * Apple computer running macOS Sierra (10.12)
 
+Note that these scripts have previously been tested on OS X 10.10 and 10.11, but are
+no longer guaranteed to work on those operating systems.
+
 ### Installation
 
 Copy and paste this line into your terminal:
