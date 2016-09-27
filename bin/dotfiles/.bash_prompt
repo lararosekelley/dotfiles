@@ -36,18 +36,30 @@ function git_untracked() {
     return 1
 }
 
-function git_pushable() {
-    num="$(git log origin/$(git name-rev --name-only HEAD)..$(git name-rev --name-only HEAD) --oneline | wc -l)"
-    return "$num"
+function git_ahead() {
+    branch="$(git name-rev --name-only HEAD)"
+    num=$(git log origin/"$branch".."$branch" --oneline | wc -l)
+    echo "$num"
 }
 
 function git_behind() {
-    num="$(git log $(git name-rev --name-only HEAD)..origin/$(git name-rev --name-only HEAD) --oneline | wc -l)"
-    return "$num"
+    branch="$(git name-rev --name-only HEAD)"
+    num=$(git log "$branch"..origin/"$branch" --oneline | wc -l)
+    echo "$num"
 }
 
 function git_changed() {
     git diff --no-ext-diff --quiet --exit-code &> /dev/null
+}
+
+function git_clean() {
+    num="$(git status --porcelain 2> /dev/null | wc -l)"
+
+    if [ "$num" -eq 0 ]; then
+        return 0
+    fi
+
+    return 1
 }
 
 function git_staged() {
@@ -69,38 +81,53 @@ function git_diff() {
 
     diff_prompt=""
 
+    local_prompt=""
+    branch_prompt=""
+
+    git_clean
+
+    if [ "$?" == "0" ]; then
+        local_prompt+="\xE2\x9C\x93"
+    fi
+
     git_changed
 
     if [ "$?" == "1" ]; then
-        diff_prompt+="*"
+        local_prompt+="*"
     fi
 
     git_untracked
 
     if [ "$?" == "1" ]; then
-        diff_prompt+="+"
+        local_prompt+="+"
     fi
 
     git_staged
 
     if [ "$?" == "1" ]; then
-        diff_prompt+="^"
+        local_prompt+="\xE2\x97\x8F"
     fi
 
-    git_pushable
+    ahead="$(git_ahead | tr -d '[:space:]')"
 
-    if [ "$?" != "0" ]; then
-        diff_prompt+="↑$?"
+    if [ "$ahead" != "0" ]; then
+        branch_prompt+="↑$ahead"
     fi
 
-    git_behind
+    behind="$(git_behind | tr -d '[:space:]')"
 
-    if [ "$?" != "0" ]; then
-        diff_prompt+="↓$?"
+    if [ "$behind" != "0" ]; then
+        branch_prompt+="↓$behind"
+    fi
+
+    if [[ ! ${#branch_prompt} -eq 0 ]]; then
+        diff_prompt+="$branch_prompt|$local_prompt"
+    else
+        diff_prompt+="$local_prompt"
     fi
 
     if [[ ! ${#diff_prompt} -eq 0 ]]; then
-        echo "[${diff_prompt}]"
+        echo -e "[${diff_prompt}]"
     fi
 }
 
