@@ -181,10 +181,10 @@ cat > ~/.env << EOL
 # env
 # --------
 
-GIT_AUTHOR_NAME=${user_name}
-GIT_AUTHOR_EMAIL=${user_email}
-GIT_COMMITTER_NAME=${user_name}
-GIT_COMMITTER_EMAIL=${user_email}
+GIT_AUTHOR_NAME=\"${user_name}\"
+GIT_AUTHOR_EMAIL=\"${user_email}\"
+GIT_COMMITTER_NAME=\"${user_name}\"
+GIT_COMMITTER_EMAIL=\"${user_email}\"
 EOL
 
 log -v "setting git name and email..."
