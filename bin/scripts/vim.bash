@@ -21,6 +21,8 @@ PACKAGES=(
 
 log -v "configuring vim..."
 
+brew install vim --with-lua --with-override-system-vi
+
 if [ -d ~/.vim ]; then
     rm -rf ~/.vim
 fi
