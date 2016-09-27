@@ -49,7 +49,6 @@ TOOLS=(
     tmux
     tree
     valgrind
-    "vim --with-lua --override-system-vi"
     watch
     wdiff
     wget
