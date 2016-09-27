@@ -24,8 +24,8 @@ eval "$(pyenv virtualenv-init -)"
 
 pyenv rehash
 
-PYTHON2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
-PYTHON3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
+PYTHON2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v '[a-z]' | tail -1 | tr -d '[:space:]')"
+PYTHON3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v '[a-z]' | tail -1 | tr -d '[:space:]')"
 
 pyenv install "$PYTHON2_VERSION"
 pyenv install "$PYTHON3_VERSION"

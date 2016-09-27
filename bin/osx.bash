@@ -219,52 +219,52 @@ fi
 # 10. cleanup
 # --------
 
-log -v "summary of changes:"
+echo "summary of changes:"
 
-log -v "-- xcode command line tools installed --"
+echo "-- xcode command line tools installed --"
 
-log -v "-- dotfiles copied to home directory --"
+echo "-- dotfiles copied to home directory --"
 
 BREW_PACKAGES="$(brew list)"
-log -v "-- brew packages installed --" && echo "$BREW_PACKAGES"
+echo "-- brew packages installed --" && echo "$BREW_PACKAGES"
 
 if [ "$BREW_CASK_ACCEPTED" == "1" ]; then
     BREW_CASK_PACKAGES="$(brew cask list)"
-    log -v "-- mac apps installed --" && echo "$BREW_CASK_PACKAGES"
+    echo "-- mac apps installed --" && echo "$BREW_CASK_PACKAGES"
 fi
 
 if [ "$TERMINAL_ACCEPTED" == "$1" ]; then
-    log -v "-- terminal theme changed --"
+    echo "-- terminal theme changed --"
 fi
 
 if [ "$VIM_ACCEPTED" == "1" ]; then
-    log -v "-- vim installed & configured in ~/.vim --"
+    echo "-- vim installed & configured in ~/.vim --"
 fi
 
 if [ "$PYTHON_ACCEPTED" == "1" ]; then
     PY2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
     PY3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
-    log -v "-- python $PY2_VERSION, $PY3_VERSION installed & configured in ~/.pyenv --"
+    echo "-- python $PY2_VERSION, $PY3_VERSION installed & configured in ~/.pyenv --"
 fi
 
 if [ "$RUBY_ACCEPTED" == "1" ]; then
     RB_VERSION="$(ruby --version | cut -d ' ' -f 2 | cut -d p -f 1)"
-    log -v "-- ruby $RB_VERSION installed & configured in ~/.rbenv --"
+    echo "-- ruby $RB_VERSION installed & configured in ~/.rbenv --"
 fi
 
 if [ "$JAVA_ACCEPTED" == "1" ]; then
     JAVA_VERSION="$(javac -version 2>&1 | cut -d ' ' -f 2)"
-    log -v "-- java $JAVA_VERSION installed & maven installed --"
+    echo "-- java $JAVA_VERSION installed & maven installed --"
 fi
 
 if [ "$GO_ACCEPTED" == "1" ]; then
     GO_VERSION="$(go version | cut -d ' ' -f 3 | cut -d o -f 2)"
-    log -v "-- go $GO_VERSION installed & configured in ~/.go --"
+    echo "-- go $GO_VERSION installed & configured in ~/.go --"
 fi
 
 if [ "$NODE_ACCEPTED" == "1" ]; then
     NODE_VERSION="$(node -v)"
-    log -v "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
+    echo "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
 fi
 
 echo -e "\n\nall done! \nplease leave feedback: \n$ISSUES_URL"
