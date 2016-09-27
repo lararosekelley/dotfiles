@@ -7,6 +7,7 @@
 
 # table of contents
 # --------
+#
 # 1.  global variables
 # 2.  setup
 # 3.  command line tools
@@ -17,6 +18,7 @@
 # 8.  terminal
 # 9.  vim
 # 10. cleanup
+#
 # --------
 
 # 1. global variables
@@ -24,8 +26,9 @@
 
 OSX_DIR=~/.osx
 REPO_URL="https://github.com/tylucaskelley/osx/tarball/master"
+ISSUES_URL="https://github.com/tylucaskelley/osx/issues/new"
 
-# 2. setup & mac settings
+# 2. setup
 # --------
 
 echo "please enter your password: "
@@ -51,7 +54,7 @@ source "$OSX_DIR"/bin/utils/helpers.bash
 os_eligible
 
 if [ "$?" != "0" ]; then
-    log -vl ERROR "aborting; os version must be 10.12 to continue"
+    log -vl ERROR "fatal: os version must be 10.12 to continue"
     exit 1
 fi
 
@@ -148,7 +151,7 @@ fi
 # 6. mac apps
 # --------
 
-prompt_user "install mac apps via brew cask?"
+prompt_user "install mac apps (uses homebrew cask)?"
 
 if [ "$?" == "0" ]; then
     BREW_CASK_ACCEPTED=1
@@ -174,15 +177,20 @@ touch ~/.env
 echo -n "Enter your name: " && read -r user_name
 echo -n "Enter your email address: " && read -r user_email
 
-# shellcheck disable=SC2129
-echo "# env" >> ~/.env
-echo "# --------" >> ~/.env
-echo "GIT_AUTHOR_NAME=\"${user_name}\"" >> ~/.env
-echo "GIT_AUTHOR_EMAIL=\"${user_email}\"" >> ~/.env
-echo "GIT_COMMITTER_NAME=\"${user_name}\"" >> ~/.env
-echo "GIT_COMMITTER_EMAIL=\"${user_email}\"" >> ~/.env
-echo "git config --global user.name \"${user_name}\"" >> ~/.env
-echo "git config --global user.email \"${user_email}\"" >> ~/.env
+cat > ~/.env << EOL
+# env
+# --------
+
+GIT_AUTHOR_NAME=${user_name}
+GIT_AUTHOR_EMAIL=${user_email}
+GIT_COMMITTER_NAME=${user_name}
+GIT_COMMITTER_EMAIL=${user_email}
+EOL
+
+log -v "setting git name and email..."
+
+git config --global user.name "${user_name}"
+git config --global user.email "${user_email}"
 
 # 8. terminal
 # --------
@@ -211,52 +219,52 @@ fi
 # 10. cleanup
 # --------
 
-echo "summary of changes:"
+log -v "summary of changes:"
 
-echo "-- xcode command line tools installed --"
+log -v "-- xcode command line tools installed --"
 
-echo "-- dotfiles copied to home directory --"
+log -v "-- dotfiles copied to home directory --"
 
 BREW_PACKAGES="$(brew list)"
-echo "-- brew packages installed --" && echo "$BREW_PACKAGES"
+log -v "-- brew packages installed --" && echo "$BREW_PACKAGES"
 
 if [ "$BREW_CASK_ACCEPTED" == "1" ]; then
     BREW_CASK_PACKAGES="$(brew cask list)"
-    echo "-- mac apps installed --" && echo "$BREW_CASK_PACKAGES"
+    log -v "-- mac apps installed --" && echo "$BREW_CASK_PACKAGES"
 fi
 
 if [ "$TERMINAL_ACCEPTED" == "$1" ]; then
-    echo "-- terminal theme changed --"
+    log -v "-- terminal theme changed --"
 fi
 
 if [ "$VIM_ACCEPTED" == "1" ]; then
-    echo "-- vim installed & configured in ~/.vim --"
+    log -v "-- vim installed & configured in ~/.vim --"
 fi
 
 if [ "$PYTHON_ACCEPTED" == "1" ]; then
     PY2_VERSION="$(pyenv install -l | grep -e '2.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
     PY3_VERSION="$(pyenv install -l | grep -e '3.[0-9].[0-9]' | grep -v '[a-z]' | tail -1)"
-    echo "-- python $PY2_VERSION, $PY3_VERSION installed & configured in ~/.pyenv --"
+    log -v "-- python $PY2_VERSION, $PY3_VERSION installed & configured in ~/.pyenv --"
 fi
 
 if [ "$RUBY_ACCEPTED" == "1" ]; then
     RB_VERSION="$(ruby --version | cut -d ' ' -f 2 | cut -d p -f 1)"
-    echo "-- ruby $RB_VERSION installed & configured in ~/.rbenv --"
+    log -v "-- ruby $RB_VERSION installed & configured in ~/.rbenv --"
 fi
 
 if [ "$JAVA_ACCEPTED" == "1" ]; then
     JAVA_VERSION="$(javac -version 2>&1 | cut -d ' ' -f 2)"
-    echo "-- java $JAVA_VERSION installed & maven installed --"
+    log -v "-- java $JAVA_VERSION installed & maven installed --"
 fi
 
 if [ "$GO_ACCEPTED" == "1" ]; then
     GO_VERSION="$(go version | cut -d ' ' -f 3 | cut -d o -f 2)"
-    echo "-- go $GO_VERSION installed & configured in ~/.go --"
+    log -v "-- go $GO_VERSION installed & configured in ~/.go --"
 fi
 
 if [ "$NODE_ACCEPTED" == "1" ]; then
     NODE_VERSION="$(node -v)"
-    echo "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
+    log -v "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
 fi
 
-echo -e "\n\nall done! \nplease leave feedback: \n$REPO_URL"
+echo -e "\n\nall done! \nplease leave feedback: \n$ISSUES_URL"
