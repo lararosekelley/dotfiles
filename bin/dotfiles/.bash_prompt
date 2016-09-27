@@ -38,12 +38,12 @@ function git_untracked() {
 
 function git_pushable() {
     num="$(git log origin/$(git name-rev --name-only HEAD)..$(git name-rev --name-only HEAD) --oneline | wc -l)"
+    return "$num"
+}
 
-    if [ "$num" -eq 0 ]; then
-        return 0
-    fi
-
-    return 1
+function git_behind() {
+    num="$(git log $(git name-rev --name-only HEAD)..origin/$(git name-rev --name-only HEAD) --oneline | wc -l)"
+    return "$num"
 }
 
 function git_changed() {
@@ -89,8 +89,14 @@ function git_diff() {
 
     git_pushable
 
-    if [ "$?" == "1" ]; then
-        diff_prompt+="~"
+    if [ "$?" != "0" ]; then
+        diff_prompt+="↑$?"
+    fi
+
+    git_behind
+
+    if [ "$?" != "0" ]; then
+        diff_prompt+="↓$?"
     fi
 
     if [[ ! ${#diff_prompt} -eq 0 ]]; then
