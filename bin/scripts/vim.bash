@@ -17,6 +17,9 @@ PACKAGES=(
     https://github.com/scrooloose/nerdtree.git
     https://github.com/tpope/vim-fugitive.git
     https://github.com/pangloss/vim-javascript.git
+    https://github.com/lilydjwg/colorizer.git
+    https://github.com/yggdroot/indentline.git
+    https://github.com/editorconfig/editorconfig-vim.git
 )
 
 log -v "configuring vim..."
