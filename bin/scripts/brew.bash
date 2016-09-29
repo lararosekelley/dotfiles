@@ -43,6 +43,8 @@ TOOLS=(
     mercurial
     nano
     openssl
+    python
+    python3
     reattach-to-user-namespace
     shellcheck
     sl

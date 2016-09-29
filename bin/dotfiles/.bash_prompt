@@ -38,14 +38,26 @@ function git_untracked() {
 
 function git_ahead() {
     branch="$(git name-rev --name-only HEAD)"
-    num=$(git log origin/"$branch".."$branch" --oneline | wc -l)
-    echo "$num"
+    remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
+
+    if [ "$remote_exists" == "0" ]; then
+        num=$(git log origin/"$branch".."$branch" --oneline | wc -l)
+        echo "$num"
+    fi
+
+    echo 0
 }
 
 function git_behind() {
     branch="$(git name-rev --name-only HEAD)"
-    num=$(git log "$branch"..origin/"$branch" --oneline | wc -l)
-    echo "$num"
+    remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
+
+    if [ "$remote_exists" == "0" ]; then
+        num=$(git log "$branch"..origin/"$branch" --oneline | wc -l)
+        echo "$num"
+    fi
+
+    echo 0
 }
 
 function git_changed() {
