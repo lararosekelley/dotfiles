@@ -42,6 +42,11 @@ for repo in "${PACKAGES[@]}"; do
     git clone "$repo"
 done
 
+# set up YouCompleteMe
+cd YouCompleteMe || exit
+git submodule update --init --recursive
+/usr/bin/python install.py --clang-completer
+
 cd ~ || exit
 
 mkdir -p ~/.vim/swaps ~/.vim/backups
