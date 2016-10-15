@@ -37,7 +37,7 @@ function git_untracked() {
 }
 
 function git_ahead() {
-    branch="$(git name-rev --name-only HEAD)"
+    branch="$(git name-rev --name-only HEAD 2> /dev/null)"
     # shellcheck disable=SC2034
     remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
 
@@ -50,7 +50,7 @@ function git_ahead() {
 }
 
 function git_behind() {
-    branch="$(git name-rev --name-only HEAD)"
+    branch="$(git name-rev --name-only HEAD 2> /dev/null)"
     # shellcheck disable=SC2034
     remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
 
