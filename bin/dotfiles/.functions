@@ -23,7 +23,7 @@ function update() {
 
     if [ "$?" == "0" ]; then
         brew update
-        brew upgrade --all
+        brew upgrade
         brew prune
         brew cleanup
     fi

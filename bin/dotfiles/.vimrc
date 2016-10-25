@@ -24,6 +24,9 @@ set nocompatible
 " turn on line numbers
 set number
 
+" highlight line for text wrap
+set colorcolumn=80
+
 " show current command in bottom right of editor
 set showcmd
 
@@ -108,6 +111,10 @@ let g:markdown_fenced_languages = ['html', 'python', 'py=python', 'bash=sh', 'ja
 " recognize certain rc files
 autocmd BufRead,BufNewFile .{eslint,babel}rc set filetype=json
 
+" no concealing characters
+set conceallevel=0
+autocmd FileType * setlocal conceallevel=0
+
 " turn backup on
 set backup
 set writebackup
@@ -160,6 +167,9 @@ map <leader>s :so ~/.vimrc<CR>
 set scrolloff=4
 
 " -------- 6. text, indent, folding --------
+
+" remove all trailing whitespace
+nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 " use unicode
 set encoding=utf8
@@ -273,7 +283,12 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:syntastic_check_on_open=1
     let g:syntastic_check_on_wq=0
 
+    let g:syntastic_javascript_checkers=['eslint']
+
     " YouCompleteMe
     let g:ycm_autoclose_preview_window_after_completion=1
     set shortmess+=c
+
+    " indentLine
+    let g:indentLine_setConceal=0
 endif
