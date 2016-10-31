@@ -1,3 +1,5 @@
+![logo](img/osx.png)
+
 # osx
 
 *bootstraps an apple computer for development work*
