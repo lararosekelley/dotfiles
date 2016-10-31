@@ -4,8 +4,6 @@
 
 ---
 
-![osx](https://raw.githubusercontent.com/tylucaskelley/osx/785fc8c360eb7aad0ecc7cb1b1d72032960a2d6d/osx.png)
-
 ### Prerequisites
 
 * Apple computer running macOS Sierra (10.12)
@@ -37,3 +35,7 @@ API keys, etc. This file can also be used to override anything I've written.
 ### Contributing
 
 See [CONTRIBUTING.md](https://github.com/tylucaskelley/osx/blob/master/.github/CONTRIBUTING.md) for details.
+
+### Screenshot
+
+![osx](https://raw.githubusercontent.com/tylucaskelley/osx/785fc8c360eb7aad0ecc7cb1b1d72032960a2d6d/osx.png)
