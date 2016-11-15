@@ -124,11 +124,11 @@ function update() {
 
         if [ ! -z "$PYTHON_PACKAGES" ]; then
             if prompt_user "update all packages? (y/n)"; then
-                for pkg in "${PYTHON_PACKAGES[@]}"; do
+                for pkg in $PYTHON_PACKAGES; do
                     pip install --upgrade "$pkg"
                 done
             elif prompt_user "approve package updates individually? (y/n)"; then
-                for pkg in "${PYTHON_PACKAGES[@]}"; do
+                for pkg in $PYTHON_PACKAGES; do
                     if prompt_user "update $pkg? (y/n)"; then
                         pip install --upgrade "$pkg"
                     fi
