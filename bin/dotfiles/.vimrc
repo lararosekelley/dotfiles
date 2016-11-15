@@ -1,4 +1,6 @@
 " vimrc
+"
+" vim config (pathogen for plugin management)
 " --------
 
 " -------- sections --------
@@ -284,10 +286,6 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:syntastic_check_on_wq=0
 
     let g:syntastic_javascript_checkers=['eslint']
-
-    " YouCompleteMe
-    let g:ycm_autoclose_preview_window_after_completion=1
-    set shortmess+=c
 
     " indentLine
     let g:indentLine_setConceal=0

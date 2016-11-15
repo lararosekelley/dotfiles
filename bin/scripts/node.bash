@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
 
 # node
-# --------
-
+#
 # sets up node environment
+# --------
 
 PACKAGES=(
     csslint
     eslint
+    eslint-config-airbnb
+    eslint-plugin-import
+    eslint-plugin-jsx-a11y
+    eslint-plugin-react
+    firebase-tools
     gulp
     htmlhint
     mocha
+    node-gyp
     nodemon
+    nsp
     pm2
     stylelint
     tslint

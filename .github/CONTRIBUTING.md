@@ -57,13 +57,11 @@ this process again until the changes are merged.
 
 Please follow the coding style conventions detailed below:
 
-* Variable names (other than environment variables) should be lowercase
-* Always double-quote strings where applicable
-* Use Bash as the shell for testing; no others are supported
+1. Variable names (except environment variables) should be lowercase
+2. Always double-quote strings where applicable
+3. Use bash as the only shell for testing; no others are supported
 
-Before submitting your pull request, make sure you run the
-[shellcheck](https://github.com/koalaman/shellcheck) tool! The only warning you
-can ignore is [SC1090](https://github.com/koalaman/shellcheck/wiki/SC1090).
+Make sure you run the [shellcheck](https://github.com/koalaman/shellcheck) tool before submitting!
 
 [1]: mailto:tylucaskelley@gmail.com
 [2]: https://github.com/tylucaskelley/osx/issues/new

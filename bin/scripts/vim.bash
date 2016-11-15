@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 # vim
-# --------
-
+#
 # sets up the vim editor for development work
+# --------
 
 PACKAGES=(
     https://github.com/Valloric/YouCompleteMe.git
@@ -45,6 +45,8 @@ done
 # set up YouCompleteMe
 cd YouCompleteMe || exit
 git submodule update --init --recursive
+
+# must use python with framework enabled
 /usr/bin/python install.py --clang-completer
 
 cd ~ || exit
