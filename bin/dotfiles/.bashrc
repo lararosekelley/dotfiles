@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 # bashrc
+#
+# bash settings
 # --------
 
-# bash settings
-
 # load dotfiles
+
 files=(
     ~/.aliases
     ~/.bash_prompt
@@ -23,6 +24,7 @@ for file in "${files[@]}"; do
 done
 
 # bash options
+
 options=(
     histappend
     cdspell
@@ -35,10 +37,12 @@ for option in "${options[@]}"; do
 done
 
 # autojump
+
 # shellcheck disable=SC1090
 [[ -s "$(brew --prefix)/etc/profile.d/autojump.sh" ]] && source "$(brew --prefix)/etc/profile.d/autojump.sh"
 
 # bash completion
+
 if [ -f "$(brew --prefix)/etc/bash_completion" ]; then
     # shellcheck disable=SC1090
     source "$(brew --prefix)/etc/bash_completion"
@@ -69,4 +73,14 @@ if [[ -s "$(brew --prefix pyenv)" ]]; then
     if which pyenv-virtualenv-init > /dev/null; then
         eval "$(pyenv virtualenv-init -)";
     fi
+
+    # pip completion
+
+    _pip_completion() {
+        COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+                   COMP_CWORD=$COMP_CWORD \
+                   PIP_AUTO_COMPLETE=1 $1 ) )
+    }
+
+    complete -o default -F _pip_completion pip
 fi

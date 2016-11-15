@@ -1,9 +1,44 @@
 #!/usr/bin/env bash
 
 # functions
+#
+# useful utility functions
 # --------
 
-# go list packages
+# asks the user to approve or deny something
+#
+# params:
+#   prompt - what to ask the user to approve
+#
+# usage: prompt_user prompt
+#
+# returns:
+#   0 - if reply is Y or y
+#   1 - if reply is anything else
+#
+function prompt_user() {
+    if [ -z "$1" ]; then
+        echo "usage: ${FUNCNAME[0]} prompt"
+        return 1
+    fi
+
+    read -r -e -p "$1 "
+    echo ""
+
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+        return 0
+    fi
+
+    return 1
+}
+
+# list go packages
+#
+# params:
+#   package - package name to search for
+#
+# usage: golist [package]
+#
 function golist() {
     pkgs=$(go list ... | sed 's#.*/##')
 
@@ -15,70 +50,151 @@ function golist() {
 }
 
 # upgrade everything on computer
+#   1. macOS
+#   2. homebrew
+#   3. vim
+#   4. python
+#   5. ruby
+#   6. node.js
+#
+# usage: update
+#
 function update() {
     cd || exit
 
-    # homebrew
-    command -v brew &> /dev/null
+    # macOS
 
-    if [ "$?" == "0" ]; then
+    if prompt_user "update macOS? (y/n)"; then
+        softwareupdate --install --all
+    fi
+
+    # homebrew
+
+    if command -v brew &> /dev/null; then
+        echo "updating brew packages..."
         brew update
-        brew upgrade
+
+        if prompt_user "update all packages? (y/n)"; then
+            brew upgrade
+        elif prompt_user "approve package updates individually? (y/n)"; then
+            for pkg in $(brew outdated --quiet); do
+                if prompt_user "update $pkg? (y/n)"; then
+                    brew upgrade "$pkg"
+                fi
+            done
+        fi
+
+        echo "pruning dead symlinks..."
         brew prune
+
+        echo "cleaning up..."
         brew cleanup
     fi
 
-    # go
-    command -v go &> /dev/null
+    # vim
 
-    if [ "$?" == "0" ]; then
-        go get -u all
-    fi
+    if command -v vim &> /dev/null; then
+        echo "updating vim packages..."
 
-    # node.js
-    command -v npm &> /dev/null
+        if prompt_user "update vim packages? (y/n)"; then
+            if [ -d ~/.vim/bundle ]; then
+                cd ~/.vim/bundle || exit
 
-    if [ "$?" == "0" ]; then
-        for pkg in $(npm outdated -g --parseable --depth=0 | cut -d : -f 2); do
-            npm install -g "$pkg"
-        done
-    fi
+                for d in *; do
+                    cd "$d" || exit
+                    git pull
+                    cd .. || exit
+                done
 
-    # ruby
-    command -v gem &> /dev/null
-
-    if [ "$?" == "0" ]; then
-        gem update "$(gem outdated | cut -d ' ' -f 1)"
+                cd || exit
+            fi
+        fi
     fi
 
     # python
-    command -v pip &> /dev/null
 
-    if [ "$?" == "0" ]; then
-        pip install -U pip
+    if command -v pip &> /dev/null; then
+        echo "updating python packages..."
 
-        # shellcheck disable=SC2046
-        pip install -U $(pip freeze --local | grep -v ^-e | cut -d = -f 1)
+        if prompt_user "update pip? (y/n)"; then
+            pip install --upgrade pip
+        fi
+
+        PYTHON_PACKAGES="$(pip freeze --local | grep -v ^-e | cut -d = -f 1)"
+
+        if [ ! -z "$PYTHON_PACKAGES" ]; then
+            if prompt_user "update all packages? (y/n)"; then
+                for pkg in "${PYTHON_PACKAGES[@]}"; do
+                    pip install --upgrade "$pkg"
+                done
+            elif prompt_user "approve package updates individually? (y/n)"; then
+                for pkg in "${PYTHON_PACKAGES[@]}"; do
+                    if prompt_user "update $pkg? (y/n)"; then
+                        pip install --upgrade "$pkg"
+                    fi
+                done
+            fi
+        else
+            echo "nothing to update"
+        fi
     fi
 
-    # vim
-    if [ -d ~/.vim/bundle ]; then
-        cd ~/.vim/bundle || exit
+    # ruby
 
-        for d in *; do
-            cd "$d" || exit
-            git pull
-            cd .. || exit
-        done
+    if command -v gem &> /dev/null; then
+        echo "updating ruby gems..."
 
-        cd || exit
+        RUBY_GEMS="$(gem outdated | cut -d ' ' -f 1)"
+
+        if [ ! -z "$RUBY_GEMS" ]; then
+            if prompt_user "update all packages? (y/n)"; then
+                for pkg in $RUBY_GEMS; do
+                    gem update "$pkg"
+                done
+            elif prompt_user "approve package updates individually? (y/n)" ; then
+                for pkg in $RUBY_GEMS; do
+                    if prompt_user "update $pkg? (y/n)"; then
+                        gem update "$pkg"
+                    fi
+                done
+            fi
+        else
+            echo "nothing to update"
+        fi
     fi
 
-    # mac os
-    softwareupdate --install --all
+    # node.js
+
+    if command -v npm &> /dev/null; then
+        echo "updating npm packages..."
+
+        NPM_PACKAGES="$(npm outdated -g --parseable --depth 0 | cut -d : -f 4)"
+
+        if [ ! -z "$NPM_PACKAGES" ]; then
+            if prompt_user "update all packages? (y/n)"; then
+                for pkg in $NPM_PACKAGES; do
+                    npm install -g "$pkg"
+                done
+            elif prompt_user "approve package updates individually? (y/n)"; then
+                for pkg in $NPM_PACKAGES; do
+                    if prompt_user "update $pkg? (y/n)"; then
+                        npm install -g "$pkg"
+                    fi
+                done
+            fi
+        else
+            echo "nothing to update"
+        fi
+    fi
 }
 
-# set up default tmux layout: one session, one window, three panes
+# set up default tmux layout
+#
+# params:
+#   name - session name
+#
+# usage: mux [name]
+#
 function mux() {
     if [[ -z "$1" ]]; then
         TMUX_SESSION="work"
@@ -96,13 +212,20 @@ function mux() {
 }
 
 # converts quicktime screen recording to a gif
+#
+# params:
+#   infile - input file (.mov)
+#   outfile - output file (.gif)
+#
+# usage: mov2gif infile outfile
+#
 function mov2gif() {
     usage="usage: mov2gif input output"
 
     if [ -z "$1" ] || [ -z "$2" ]; then
         echo "$usage"
         return 1
-    else
+    elif command -v ffmpeg &> /dev/null && command -v gifsicle &> /dev/null; then
         infile="$1"
         outfile="$2"
 
@@ -112,10 +235,19 @@ function mov2gif() {
             echo "error: input is not a file"
             return 1
         fi
+    else
+        echo "error: ffmpeg and gifsicle not installed"
+        return 1
     fi
 }
 
 # starts a python server, with optional port argument
+#
+# params:
+#   port - valid port to run server from
+#
+# usage: server [port]
+#
 function server() {
     python -m SimpleHTTPServer "${1:-8080}"
 }

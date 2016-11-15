@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 # bash_prompt
+#
+# creates a more useful bash prompt with git support
 # --------
 
 # colors
@@ -38,9 +40,11 @@ function git_untracked() {
 
 function git_ahead() {
     branch="$(git name-rev --name-only HEAD 2> /dev/null)"
+
     # shellcheck disable=SC2034
     remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
 
+    # shellcheck disable=SC2181
     if [ "$?" == "0" ]; then
         num=$(git log origin/"$branch".."$branch" --oneline | wc -l)
         echo "$num"
@@ -51,9 +55,11 @@ function git_ahead() {
 
 function git_behind() {
     branch="$(git name-rev --name-only HEAD 2> /dev/null)"
+
     # shellcheck disable=SC2034
     remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
 
+    # shellcheck disable=SC2181
     if [ "$?" == "0" ]; then
         num=$(git log "$branch"..origin/"$branch" --oneline | wc -l)
         echo "$num"
@@ -89,6 +95,7 @@ function git_staged() {
 function git_diff() {
     git rev-parse --git-dir &> /dev/null
 
+    # shellcheck disable=SC2181
     if [ "$?" != "0" ]; then
         return 1
     fi
@@ -100,6 +107,7 @@ function git_diff() {
 
     git_clean
 
+    # shellcheck disable=SC2181
     if [ "$?" == "0" ]; then
         local_prompt+="\xE2\x9C\x93"
     fi

@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 
 # helpers
+#
+# useful utility functions for osx.bash
 # --------
 
-# useful utility functions for osx.bash
-
-# asks the user for input
+# asks the user to approve or deny something
+#
+# params:
+#   prompt - what to ask the user to approve
 #
 # usage: prompt_user prompt
 #
 # returns:
 #   0 - if reply is Y or y
-#   1 - otherwise
+#   1 - if reply is anything else
 #
 function prompt_user() {
     if [ -z "$1" ]; then
@@ -31,6 +34,9 @@ function prompt_user() {
 
 # installs or upgrades a brew package
 #
+# params:
+#   package: brew package to install
+#
 # usage: brew_install package
 #
 function brew_install() {
@@ -46,7 +52,7 @@ function brew_install() {
     fi
 }
 
-# checks if computer can run the osx.sh script
+# checks if computer can run the osx.bash script
 #
 # returns:
 #   0 - if $OS == $VERSION
@@ -64,6 +70,10 @@ function os_eligible() {
 }
 
 # logs info to stdout & a debug file
+#
+# params:
+#   level - log level
+#   text - text to log
 #
 # usage: log [-v] [-l level] text
 #

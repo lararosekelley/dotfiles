@@ -1,4 +1,8 @@
+#!/usr/bin/env bash
+
 # inputrc
+#
+# lets you scroll through command history with the up and down arrow keys
 # --------
 
 "\e[A": history-search-backward

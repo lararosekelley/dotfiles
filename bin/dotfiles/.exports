@@ -1,35 +1,45 @@
 #!/usr/bin/env bash
 
 # exports
+#
+# global variables
 # --------
 
 # english & utf-8
+
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
 # set vim to default editor
+
 export EDITOR="vim"
 
 # increase history size & ignore duplicates
+
 export HISTSIZE="10000"
 export HISTFILESIZE="${HISTSIZE}"
 export HISTCONTROL="ignoreboth"
 
 # java
+
 export JAVA_HOME
 JAVA_HOME="$(/usr/libexec/java_home)"
 
 # nvm
+
 export NVM_DIR="$HOME/.nvm"
 
 # go
+
 export GOPATH="$HOME/.go"
 
 # postgresql
+
 export PGDATA="/usr/local/var/postgres"
 export PGHOST=localhost
 
 # path
+
 path=(
     "$GOPATH/bin"
     "/usr/local/bin"

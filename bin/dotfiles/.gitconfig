@@ -1,4 +1,6 @@
 # gitconfig
+#
+# defines aliases and settings for git
 # --------
 
 [alias]

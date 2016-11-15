@@ -51,9 +51,7 @@ curl -sL "$REPO_URL" | tar zx -C "$OSX_DIR" --strip-components 1
 # shellcheck disable=SC1090
 source "$OSX_DIR"/bin/utils/helpers.bash
 
-os_eligible
-
-if [ "$?" != "0" ]; then
+if ! os_eligible; then
     log -vl ERROR "fatal: os version must be 10.12 to continue"
     exit 1
 fi
@@ -61,12 +59,13 @@ fi
 # 3. command line tools
 # --------
 
-xcode-select -p &> /dev/null
-
-if [ "$?" != "0" ]; then
+if xcode-select -p &> /dev/null; then
     log -v "installing xcode command line tools..."
+
     touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
+
     XCODE=$(softwareupdate -l | grep "\*.*Command Line" | head -n 1 | awk -F"*" '{print $2}' | sed -e 's/^ *//' | tr -d '\n')
+
     softwareupdate -i "$XCODE" &> /dev/null
     rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
 else
@@ -76,9 +75,7 @@ fi
 # 4. homebrew
 # --------
 
-brew help &> /dev/null
-
-if [ "$?" != "0" ]; then
+if brew help &> /dev/null; then
     log -v "installing homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 else
@@ -95,9 +92,7 @@ log -v "installing programming languages..."
 
 # go
 
-prompt_user "install go?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "install go? (y/n)"; then
     GO_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -106,9 +101,7 @@ fi
 
 # java
 
-prompt_user "install java?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "install java? (y/n)"; then
     JAVA_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -117,9 +110,7 @@ fi
 
 # node
 
-prompt_user "install node?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "install node? (y/n)"; then
     NODE_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -128,9 +119,7 @@ fi
 
 # python
 
-prompt_user "install python?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "install python? (y/n)"; then
     PYTHON_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -139,9 +128,7 @@ fi
 
 # ruby
 
-prompt_user "install ruby?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "install ruby? (y/n)"; then
     RUBY_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -151,9 +138,7 @@ fi
 # 6. mac apps
 # --------
 
-prompt_user "install mac apps (uses homebrew cask)?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "install mac apps with homebrew cask? (y/n)"; then
     BREW_CASK_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -195,9 +180,7 @@ git config --global user.email "${user_email}"
 # 8. terminal
 # --------
 
-prompt_user "change terminal theme?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "change terminal theme?"; then
     TERMINAL_ACCEPTED=1
 
     # shellcheck disable=SC1090
@@ -207,9 +190,7 @@ fi
 # 9. vim
 # --------
 
-prompt_user "set up vim editor?"
-
-if [ "$?" == "0" ]; then
+if prompt_user "set up vim editor?"; then
     VIM_ACCEPTED=1
 
     # shellcheck disable=SC1090
