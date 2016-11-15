@@ -8,6 +8,7 @@
 TOOLS=(
     ack
     app-engine-python
+    aspell
     autojump
     bash
     bash-completion
