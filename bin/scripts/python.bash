@@ -10,7 +10,14 @@ PACKAGES=(
     flake8
     ipython
     jedi
+    jupyter
     licenser
+    matplotlib
+    nose
+    numpy
+    pandas
+    scipy
+    sympy
     uncommitted
 )
 
@@ -37,4 +44,12 @@ pip install --upgrade pip
 
 for p in "${PACKAGES[@]}"; do
     pip install "$p"
+done
+
+# python 3
+
+pip3 install --upgrade pip
+
+for p in "${PACKAGES[@]}"; do
+    pip3 install "$p"
 done

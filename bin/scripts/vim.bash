@@ -20,6 +20,7 @@ PACKAGES=(
     https://github.com/lilydjwg/colorizer.git
     https://github.com/yggdroot/indentline.git
     https://github.com/editorconfig/editorconfig-vim.git
+    https://github.com/lervag/vimtex.git
 )
 
 log -v "configuring vim..."
@@ -43,10 +44,12 @@ for repo in "${PACKAGES[@]}"; do
 done
 
 # set up YouCompleteMe
+
 cd YouCompleteMe || exit
 git submodule update --init --recursive
 
 # must use python with framework enabled
+
 /usr/bin/python install.py --clang-completer
 
 cd ~ || exit
