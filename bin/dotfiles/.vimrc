@@ -150,6 +150,10 @@ nnoremap <Space> :
 nnoremap <S-l> gt
 nnoremap <S-h> gT
 
+" enable shift-tab to delete a tab in normal and insert mode
+nnoremap <S-Tab> <<
+inoremap <S-Tab> <C-d>
+
 " cd to current file's directory
 set autochdir
 

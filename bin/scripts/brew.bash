@@ -7,21 +7,22 @@
 
 TOOLS=(
     ack
-    app-engine-python
     aspell
     autojump
     bash
     bash-completion
     binutils
+    binwalk
     cmake
+    coreutils
     diffutils
     docker
     docker-machine
+    doxygen
     emacs
     findutils
     flac
     ffmpeg
-    gawk
     gdb
     gifsicle
     git
@@ -30,21 +31,21 @@ TOOLS=(
     gnu-tar
     gnu-which
     gnutls
-    gradle
     grep
     gzip
     httpie
+    hydra
     icdiff
     jq
     lame
     less
-    libffi
-    libxml2
+    lynx
     make
     mercurial
     nano
     openssl
     pandoc
+    php56
     python
     python3
     reattach-to-user-namespace
@@ -54,7 +55,6 @@ TOOLS=(
     tree
     valgrind
     watch
-    wdiff
     wget
     xz
 )
@@ -79,9 +79,9 @@ brew tap caskroom/versions
 brew tap homebrew/binary
 brew tap homebrew/boneyard
 brew tap homebrew/bundle
-brew tap homebrew/core
 brew tap homebrew/dupes
 brew tap homebrew/services
+brew tap homebrew/php
 brew tap homebrew/versions
 
 log -v "installing command line tools & utilities..."

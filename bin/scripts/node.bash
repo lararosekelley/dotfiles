@@ -32,10 +32,13 @@ mkdir -p ~/.nvm
 export NVM_DIR="$HOME/.nvm"
 
 # shellcheck disable=SC1090
+
 source "$(brew --prefix nvm)/nvm.sh"
 
-# install latest LTS version
+# install and use latest LTS version
+
 nvm install --lts
+nvm use --delete-prefix lts/*
 nvm alias default lts/*
 
 for p in "${PACKAGES[@]}"; do

@@ -6,19 +6,20 @@
 # --------
 
 PACKAGES=(
+    1password
     appcleaner
     blender
+    dash
     dolphin
     firefox
     github-desktop
     google-chrome
-    lastpass
+    mactex
     openemu
     openscad
     paw
     sketch
     slack
-    steam
     the-unarchiver
     transmission
     vagrant

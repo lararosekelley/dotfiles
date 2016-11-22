@@ -111,10 +111,10 @@ function update() {
         fi
     fi
 
-    # python
+    # python 2
 
     if command -v pip &> /dev/null; then
-        echo "updating python packages..."
+        echo "updating python 2 packages..."
 
         if prompt_user "update pip? (y/n)"; then
             pip install --upgrade pip
@@ -131,6 +131,34 @@ function update() {
                 for pkg in $PYTHON_PACKAGES; do
                     if prompt_user "update $pkg? (y/n)"; then
                         pip install --upgrade "$pkg"
+                    fi
+                done
+            fi
+        else
+            echo "nothing to update"
+        fi
+    fi
+
+    # python 3
+
+    if command -v pip3 &> /dev/null; then
+        echo "updating python 3 packages..."
+
+        if prompt_user "update pip? (y/n)"; then
+            pip3 install --upgrade pip
+        fi
+
+        PYTHON3_PACKAGES="$(pip3 freeze --local | grep -v ^-e | cut -d = -f 1)"
+
+        if [ ! -z "$PYTHON3_PACKAGES" ]; then
+            if prompt_user "update all packages? (y/n)"; then
+                for pkg in $PYTHON3_PACKAGES; do
+                    pip3 install --upgrade "$pkg"
+                done
+            elif prompt_user "approve package updates individually? (y/n)"; then
+                for pkg in $PYTHON3_PACKAGES; do
+                    if prompt_user "update $pkg? (y/n)"; then
+                        pip3 install --upgrade "$pkg"
                     fi
                 done
             fi
