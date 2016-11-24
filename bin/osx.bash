@@ -59,7 +59,7 @@ fi
 # 3. command line tools
 # --------
 
-if xcode-select -p &> /dev/null; then
+if ! xcode-select -p &> /dev/null; then
     log -v "installing xcode command line tools..."
 
     touch /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
@@ -75,7 +75,7 @@ fi
 # 4. homebrew
 # --------
 
-if brew help &> /dev/null; then
+if ! brew help &> /dev/null; then
     log -v "installing homebrew..."
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 else
