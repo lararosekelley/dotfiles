@@ -16,8 +16,8 @@ Read through these guidelines before you get started:
 
 ### Questions & Concerns
 
-If you have any questions about using or developing for this project, shoot me
-an [email][1]!
+If you have any questions about using or developing for this project, reach out
+to @tylucaskelley or send an [email][1].
 
 ### Issues & Bugs
 
@@ -28,7 +28,7 @@ fifrst!
 
 When submitting an issue or pull request, make sure you're as detailed as possible
 and fill in all answers to questions asked in the templates. For example, an issue
-that simply states "X/Y/Z isn't working!" will be ignored.
+that simply states "X/Y/Z isn't working!" will be closed.
 
 ### Feature Requests
 
@@ -44,24 +44,24 @@ always open to suggestions and will get back to you as soon as I can!
 Before you do anything, make sure you check the current list of [pull requests][4]
 to ensure you aren't duplicating anyone's work. Then, do the following:
 
-1. Fork the repository and make your changes in a git branch: `git checkout -b my-branch master`
-2. Read and follow the [code style guidelines][#code-style].
+1. Fork the repository and make your changes in a git branch: `git checkout -b my-branch base-branch`
+2. Read and follow the [code style guidelines](#code-style).
 3. Make sure your feature or fix doesn't break the project! Test thoroughly.
 4. Commit your changes, and be sure to leave a detailed commit message.
 5. Push your branch to your forked repo on GitHub: `git push origin my-branch`
 6. [Submit a pull request][3] and hold tight!
 7. If any changes are requested by the project maintainers, make them and follow
-this process again until the changes are merged.
+this process again until the changes are merged in.
 
 ### Code Style
 
 Please follow the coding style conventions detailed below:
 
-1. Variable names (except environment variables) should be lowercase
-2. Always double-quote strings where applicable
-3. Use bash as the only shell for testing; no others are supported
-
-Make sure you run the [shellcheck](https://github.com/koalaman/shellcheck) tool before submitting!
+1. Variable names should be lowercase, words separated with underscores (e.g. temp_string)
+2. Values being exported should be all uppercase (e.g. NODE_ENV)
+3. Always double-quote strings where you can
+4. Bash 4.x is the only shell that this repository supports; use it for testing
+5. Make sure you run the `shellcheck` tool on any scripts you create or edit
 
 [1]: mailto:tylucaskelley@gmail.com
 [2]: https://github.com/tylucaskelley/osx/issues/new
