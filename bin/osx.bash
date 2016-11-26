@@ -145,6 +145,15 @@ if prompt_user "install ruby? (y/n)"; then
     source "$OSX_DIR"/bin/scripts/ruby.bash
 fi
 
+# rust
+
+if prompt_user "install rust? (y/n)"; then
+    RUST_ACCEPTED=1
+
+    # shellcheck disable=SC1090
+    source "$OSX_DIR"/bin/scripts/rust.bash
+fi
+
 # 6. mac apps
 # --------
 
@@ -256,6 +265,11 @@ fi
 if [ "$NODE_ACCEPTED" == "1" ]; then
     NODE_VERSION="$(node -v)"
     echo "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
+fi
+
+if [ "$RUST_ACCEPTED" == "1" ]; then
+    RUST_VERSION="$(rustc -V | cut -d ' ' -f 2 | tr -d '[:space:]')"
+    echo "-- rust $RUST_VERSION & and cargo package manager installed --"
 fi
 
 echo -e "\n\nall done! \nplease leave feedback: \n$ISSUES_URL"
