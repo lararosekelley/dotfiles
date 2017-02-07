@@ -28,6 +28,7 @@ PACKAGES=(
     transmission
     vagrant
     virtualbox
+    xquartz
 )
 
 log -v "installing mac apps..."
