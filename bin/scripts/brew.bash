@@ -16,6 +16,7 @@ TOOLS=(
     cmake
     coreutils
     diffutils
+    djvu2pdf
     docker
     docker-machine
     doxygen
@@ -23,6 +24,7 @@ TOOLS=(
     findutils
     flac
     ffmpeg
+    fswatch
     gdb
     gifsicle
     git
@@ -37,6 +39,7 @@ TOOLS=(
     hydra
     icdiff
     jq
+    keychain
     lame
     less
     lynx

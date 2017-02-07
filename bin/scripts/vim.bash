@@ -18,6 +18,8 @@ PACKAGES=(
     https://github.com/tpope/vim-fugitive.git
     https://github.com/pangloss/vim-javascript.git
     https://github.com/lilydjwg/colorizer.git
+    https://github.com/mustache/vim-mustache-handlebars.git
+    https://github.com/posva/vim-vue.git
     https://github.com/yggdroot/indentline.git
     https://github.com/editorconfig/editorconfig-vim.git
     https://github.com/lervag/vimtex.git
@@ -25,7 +27,7 @@ PACKAGES=(
 
 log -v "configuring vim..."
 
-brew install vim --with-lua --with-override-system-vi
+brew install vim --with-lua --with-client-server --with-override-system-vi
 
 if [ -d ~/.vim ]; then
     rm -rf ~/.vim

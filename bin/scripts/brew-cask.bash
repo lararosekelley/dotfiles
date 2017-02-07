@@ -13,11 +13,15 @@ PACKAGES=(
     dolphin
     firefox
     github-desktop
+    google-cloud-sdk
     google-chrome
     mactex
+    ngrok
     openemu
     openscad
+    origami-studio
     paw
+    postico
     sketch
     slack
     the-unarchiver

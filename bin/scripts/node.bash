@@ -6,14 +6,14 @@
 # --------
 
 PACKAGES=(
-    csslint
     eslint
     eslint-config-airbnb
     eslint-plugin-import
     eslint-plugin-jsx-a11y
     eslint-plugin-react
+    eslint-plugin-vue
     firebase-tools
-    gulp
+    gulp-cli
     htmlhint
     mocha
     node-gyp
