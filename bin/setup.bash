@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# osx
+# setup.sh
 # --------
 
-# bootstraps an apple computer for development work
+# My automated development setup
 
 # table of contents
 # --------
@@ -24,9 +24,9 @@
 # 1. global variables
 # --------
 
-OSX_DIR=~/.osx
-REPO_URL="https://github.com/tylucaskelley/osx/tarball/master"
-ISSUES_URL="https://github.com/tylucaskelley/osx/issues/new"
+OSX_DIR=~/.setup
+REPO_URL="https://github.com/tylucaskelley/setup.sh/tarball/master"
+ISSUES_URL="https://github.com/tylucaskelley/setup.sh/issues/new"
 
 # 2. setup
 # --------
