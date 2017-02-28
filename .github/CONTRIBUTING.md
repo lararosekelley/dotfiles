@@ -64,6 +64,6 @@ Please follow the coding style conventions detailed below:
 5. Make sure you run the `shellcheck` tool on any scripts you create or edit
 
 [1]: mailto:tylucaskelley@gmail.com
-[2]: https://github.com/tylucaskelley/osx/issues/new
-[3]: https://github.com/tylucaskelley/osx/compare
-[4]: https://github.com/tylucaskelley/osx/pulls
+[2]: https://github.com/tylucaskelley/setup.sh/issues/new
+[3]: https://github.com/tylucaskelley/setup.sh/compare
+[4]: https://github.com/tylucaskelley/setup.sh/pulls
