@@ -12,9 +12,7 @@ PACKAGES=(
     https://github.com/vim-airline/vim-airline-themes.git
     https://github.com/vim-airline/vim-airline.git
     https://github.com/airblade/vim-gitgutter.git
-    https://github.com/jistr/vim-nerdtree-tabs.git
     https://github.com/ctrlpvim/ctrlp.vim.git
-    https://github.com/scrooloose/nerdtree.git
     https://github.com/tpope/vim-fugitive.git
     https://github.com/pangloss/vim-javascript.git
     https://github.com/lilydjwg/colorizer.git
@@ -56,6 +54,15 @@ git submodule update --init --recursive
 
 cd ~ || exit
 
-mkdir -p ~/.vim/swaps ~/.vim/backups
+mkdir -p ~/.vim/swaps ~/.vim/backups ~/.vim/after/ftplugin
 
 cp "$1"/bin/dotfiles/.vimrc ~/.vimrc
+
+# add file to ~/.vim/after to allow use of locally installed eslint over global
+
+touch ~/.vim/after/ftplugin/javascript.vim
+
+cat > ~/.vim/after/ftplugin/javascript.vim << EOL
+let s:eslint_path = system('PATH=$(npm bin --silent):$PATH && which eslint')
+let b:syntastic_javascript_eslint_exec = StrTrim(s:eslint_path)
+EOL

@@ -8,6 +8,7 @@
 PACKAGES=(
     eslint
     eslint-config-airbnb
+    eslint-plugin-html
     eslint-plugin-import
     eslint-plugin-jsx-a11y
     eslint-plugin-react
@@ -23,6 +24,7 @@ PACKAGES=(
     stylelint
     tslint
     typescript
+    vue-cli
 )
 
 log -v "setting up node..."

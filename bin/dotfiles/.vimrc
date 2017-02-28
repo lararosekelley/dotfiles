@@ -67,6 +67,15 @@ if has("wildmenu")
     inoremap <leader><Tab> <C-X><C-F>
 endif
 
+" use system clipboard
+if has("clipboard")
+    set clipboard=unnamed " System clipboard
+
+    if has("unnamedplus") " X11 support
+        set clipboard+=unnamedplus
+    endif
+endif
+
 " show ruler
 set ruler
 
@@ -240,6 +249,11 @@ nnoremap <leader>. :nohlsearch<CR>
 
 " -------- 8. helpers, plugins --------
 
+" helper functions
+function! StrTrim(text)
+    return substitute(a:text, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
+endfunction
+
 " plugins (via pathogen)
 if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     execute pathogen#infect()
@@ -264,14 +278,6 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:airline_symbols.readonly=''
     let g:airline_symbols.linenr=''
 
-    " NERDTree and NERDTreeTabs
-    let NERDTreeShowHidden=1
-
-    let g:nerdtree_tabs_open_on_console_startup=1
-    let g:nerdtree_tabs_smart_startup_focus=2
-    map <leader>/ :NERDTreeTabsToggle<CR>
-    map <leader>f :NERDTreeFind<CR>
-
     " Javascript
     let g:javascript_plugin_jsdoc=1
 
@@ -293,4 +299,10 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
 
     " indentLine
     let g:indentLine_setConceal=0
+
+    " Mustache / Handlebars templates
+    let g:mustache_abbreviations=1
+
+    " vimtex
+    let g:tex_flavor = 'latex'
 endif
