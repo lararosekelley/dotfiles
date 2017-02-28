@@ -49,6 +49,7 @@ path=(
     "/bin"
     "/sbin"
     "/opt/X11/bin"
+    "/Library/TeX/texbin"
 )
 
 # shellcheck disable=SC2178

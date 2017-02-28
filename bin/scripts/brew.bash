@@ -46,6 +46,7 @@ TOOLS=(
     make
     mercurial
     nano
+    nmap
     openssl
     pandoc
     php56
