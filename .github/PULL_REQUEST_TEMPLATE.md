@@ -30,5 +30,5 @@ X
 
 X
 
-[1]: https://github.com/tylucaskelley/osx/pulls
-[2]: https://github.com/tylucaskelley/osx/blob/master/.github/CONTRIBUTING.md#code-style
+[1]: https://github.com/tylucaskelley/setup.sh/pulls
+[2]: https://github.com/tylucaskelley/setup.sh/blob/master/.github/CONTRIBUTING.md#code-style

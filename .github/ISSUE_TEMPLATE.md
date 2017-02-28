@@ -35,4 +35,4 @@ X
 
 X
 
-[1]: https://github.com/tylucaskelley/osx/issues
+[1]: https://github.com/tylucaskelley/setup.sh/issues
