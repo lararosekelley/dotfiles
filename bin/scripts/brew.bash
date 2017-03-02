@@ -39,7 +39,6 @@ TOOLS=(
     hydra
     icdiff
     jq
-    keychain
     lame
     less
     lynx
