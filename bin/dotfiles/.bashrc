@@ -36,12 +36,6 @@ for option in "${options[@]}"; do
     shopt -s "$option"
 done
 
-# keychain
-
-if [[ -s "$(brew --prefix keychain)" ]]; then
-    eval "$(keychain --quiet --eval --agents ssh --inherit any id_rsa)"
-fi
-
 # autojump
 
 # shellcheck disable=SC1090
