@@ -15,16 +15,17 @@
 # 5.  programming languages
 # 6.  mac apps
 # 7.  dotfiles
-# 8.  terminal
-# 9.  vim
-# 10. cleanup
+# 8.  ssh
+# 9.  terminal
+# 10.  vim
+# 11. cleanup
 #
 # --------
 
 # 1. global variables
 # --------
 
-OSX_DIR=~/.setup
+SETUP_DIR=~/.setup
 REPO_URL="https://github.com/tylucaskelley/setup.sh/tarball/master"
 ISSUES_URL="https://github.com/tylucaskelley/setup.sh/issues/new"
 
@@ -41,15 +42,15 @@ while true; do
     kill -0 "$$" || exit
 done 2>/dev/null &
 
-if [ -d "$OSX_DIR" ]; then
-    rm -rf "$OSX_DIR"
+if [ -d "$SETUP_DIR" ]; then
+    rm -rf "$SETUP_DIR"
 fi
 
-mkdir -p "$OSX_DIR"
-curl -sL "$REPO_URL" | tar zx -C "$OSX_DIR" --strip-components 1
+mkdir -p "$SETUP_DIR"
+curl -sL "$REPO_URL" | tar zx -C "$SETUP_DIR" --strip-components 1
 
 # shellcheck disable=SC1090
-source "$OSX_DIR"/bin/utils/helpers.bash
+source "$SETUP_DIR"/bin/utils/helpers.bash
 
 if ! os_eligible; then
     log -vl ERROR "fatal: os version must be 10.12 to continue"
@@ -93,7 +94,7 @@ else
 fi
 
 # shellcheck disable=SC1090
-source "$OSX_DIR"/bin/scripts/brew.bash
+source "$SETUP_DIR"/bin/scripts/brew.bash
 
 # 5. programming languages
 # --------
@@ -106,7 +107,7 @@ if prompt_user "install go? (y/n)"; then
     GO_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/go.bash
+    source "$SETUP_DIR"/bin/scripts/go.bash
 fi
 
 # java
@@ -115,7 +116,7 @@ if prompt_user "install java? (y/n)"; then
     JAVA_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/java.bash
+    source "$SETUP_DIR"/bin/scripts/java.bash
 fi
 
 # node
@@ -124,7 +125,7 @@ if prompt_user "install node? (y/n)"; then
     NODE_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/node.bash
+    source "$SETUP_DIR"/bin/scripts/node.bash
 fi
 
 # python
@@ -133,7 +134,7 @@ if prompt_user "install python? (y/n)"; then
     PYTHON_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/python.bash
+    source "$SETUP_DIR"/bin/scripts/python.bash
 fi
 
 # ruby
@@ -142,7 +143,7 @@ if prompt_user "install ruby? (y/n)"; then
     RUBY_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/ruby.bash
+    source "$SETUP_DIR"/bin/scripts/ruby.bash
 fi
 
 # rust
@@ -151,7 +152,7 @@ if prompt_user "install rust? (y/n)"; then
     RUST_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/rust.bash
+    source "$SETUP_DIR"/bin/scripts/rust.bash
 fi
 
 # 6. mac apps
@@ -161,16 +162,15 @@ if prompt_user "install mac apps with homebrew cask? (y/n)"; then
     BREW_CASK_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/brew-cask.bash
+    source "$SETUP_DIR"/bin/scripts/brew-cask.bash
 fi
 
 # 7. dotfiles
 # --------
 
-
 log -v "copying dotfiles to home directory..."
 
-cp -a "$OSX_DIR"/bin/dotfiles/. ~
+cp -a "$SETUP_DIR"/bin/dotfiles/. ~
 rm ~/.vimrc # wait until vim setup
 
 # set up .env
@@ -196,27 +196,37 @@ log -v "setting git name and email..."
 git config --global user.name "${user_name}"
 git config --global user.email "${user_email}"
 
-# 8. terminal
+# 8. ssh
+# --------
+
+if prompt_user "create an ssh key and add it to your keychain? this will delete the contents of ~/.ssh. (y/n)"; then
+    SSH_ACCEPTED=1
+
+    # shellcheck disable=SC1090
+    source "$SETUP_DIR"/bin/scripts/ssh.bash
+fi
+
+# 9. terminal
 # --------
 
 if prompt_user "change terminal theme?"; then
     TERMINAL_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/terminal.bash "$OSX_DIR"
+    source "$SETUP_DIR"/bin/scripts/terminal.bash "$SETUP_DIR"
 fi
 
-# 9. vim
+# 10. vim
 # --------
 
 if prompt_user "set up vim editor?"; then
     VIM_ACCEPTED=1
 
     # shellcheck disable=SC1090
-    source "$OSX_DIR"/bin/scripts/vim.bash "$OSX_DIR"
+    source "$SETUP_DIR"/bin/scripts/vim.bash "$SETUP_DIR"
 fi
 
-# 10. cleanup
+# 11. cleanup
 # --------
 
 echo "summary of changes:"
@@ -231,6 +241,10 @@ echo "-- brew packages installed --" && echo "$BREW_PACKAGES"
 if [ "$BREW_CASK_ACCEPTED" == "1" ]; then
     BREW_CASK_PACKAGES="$(brew cask list)"
     echo "-- mac apps installed --" && echo "$BREW_CASK_PACKAGES"
+fi
+
+if [ "$SSH_ACCEPTED" == "$1" ]; then
+    echo "-- ssh key created --"
 fi
 
 if [ "$TERMINAL_ACCEPTED" == "$1" ]; then
