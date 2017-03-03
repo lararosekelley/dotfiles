@@ -32,10 +32,34 @@ quickly.
 Use the provided `~/.env` file for any sensitive information, such as passwords,
 API keys, etc. This file can also be used to override anything I've written.
 
+### Features
+
+Here's an overview of everything the setup scripts do:
+
+1. Installs the Xcode command line tools and [Homebrew](bin/scripts/brew.bash)
+to manage packages
+2. Configures dev environments for the latest versions of some languages (optional):
+    * [Go](bin/scripts/go.bash)
+    * [Java](bin/scripts/java.bash)
+    * [Node.js](bin/scripts/node.bash)
+    * [Python 2 & 3](bin/scripts/python.bash)
+    * [Ruby](bin/scripts/ruby.bash)
+    * [Rust](bin/scripts/rust.bash)
+3. Uses [Homebrew Cask](bin/scripts/brew-cask.bash) to install Mac applications (optional)
+4. Copies my [dotfiles](bin/dotfiles) to the home directory
+5. Creates an SSH key and adds it to the macOS Keychain (optional)
+6. Sets up the [Vim](bin/scripts/vim.bash) editor for development (optional)
+7. Changes the `Terminal.app` [theme](bin/scripts/terminal.bash) (optional)
+
 ### Contributing
 
-See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for details.
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md) if you'd like to add to the project,
+and file an issue if something goes wrong when you try to run the script.
 
-### Screenshot
+### Screenshots
 
-![screenshot](https://raw.githubusercontent.com/tylucaskelley/setup.sh/785fc8c360eb7aad0ecc7cb1b1d72032960a2d6d/osx.png)
+Here's a gallery of a few screenshots:
+
+![Terminal](img/screenshots/terminal.png)
+
+![Vim](img/screenshots/vim.png)
