@@ -25,6 +25,10 @@ PACKAGES=(
 
 log -v "configuring vim..."
 
+if [ ! -d /usr/local/Caskroom/xquartz ]; then
+    brew cask install xquartz
+fi
+
 brew install vim --with-lua --with-client-server --with-override-system-vi
 
 if [ -d ~/.vim ]; then
