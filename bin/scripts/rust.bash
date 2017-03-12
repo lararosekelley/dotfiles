@@ -6,5 +6,3 @@
 # --------
 
 brew_install rust
-
-brew cask install cargo

@@ -82,7 +82,7 @@ function os_eligible() {
 #   -l level    log level: INFO, WARN, ERROR
 #
 function log() {
-    logfile=$(pwd)/.osx.log
+    logfile=$(pwd)/.setup.log
     verbose=0
     level="INFO"
 
