@@ -46,7 +46,7 @@ to manage packages
     * [Ruby](bin/scripts/ruby.bash)
     * [Rust](bin/scripts/rust.bash)
 3. Uses [Homebrew Cask](bin/scripts/brew-cask.bash) to install Mac applications (optional)
-4. Copies my [dotfiles](bin/dotfiles) to the home directory
+4. Copies my [dotfiles](bin/dotfiles) to the home directory and creates a `.env` file for sensitive info
 5. Creates an SSH key and adds it to the macOS Keychain (optional)
 6. Sets up the [Vim](bin/scripts/vim.bash) editor for development (optional)
 7. Changes the `Terminal.app` [theme](bin/scripts/terminal.bash) (optional)
