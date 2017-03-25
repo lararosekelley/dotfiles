@@ -16,5 +16,7 @@ mkdir -p ~/.go
 export GOPATH="$HOME/.go"
 
 for p in "${PACKAGES[@]}"; do
-    go get "$p"
+    if prompt_user "install $p? (y/n)"; then
+        go get "$p"
+    fi
 done

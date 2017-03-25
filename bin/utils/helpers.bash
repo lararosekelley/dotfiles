@@ -32,7 +32,7 @@ function prompt_user() {
     return 1
 }
 
-# installs or upgrades a brew package
+# installs or upgrades a brew package if needed
 #
 # params:
 #   package: brew package to install
@@ -45,10 +45,32 @@ function brew_install() {
         return 1
     fi
 
-    if [[ $(brew ls --versions "$1") ]]; then
-        brew upgrade "$1"
+    if brew ls --versions "$1" &> /dev/null; then
+        if brew outdated | grep "$1" &> /dev/null; then
+            brew upgrade "$1"
+        fi
     else
         brew install "$1"
+    fi
+}
+
+# installs or upgrades a brew cask app
+#
+# params:
+#   package: mac app to install
+#
+# usage: brew_cask_install package
+#
+function brew_cask_install() {
+    if [ -z "$1" ]; then
+        echo "Usage: ${FUNCNAME[0]} package"
+        return 1
+    fi
+
+    if brew cask ls --versions "$1" &> /dev/null; then
+        brew cask reinstall "$1"
+    else
+        brew cask install "$1"
     fi
 }
 

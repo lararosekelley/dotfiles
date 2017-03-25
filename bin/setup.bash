@@ -8,17 +8,17 @@
 # table of contents
 # --------
 #
-# 1.  global variables
-# 2.  setup
-# 3.  command line tools
-# 4.  homebrew
-# 5.  programming languages
-# 6.  mac apps
-# 7.  dotfiles
-# 8.  ssh
-# 9.  terminal
-# 10.  vim
-# 11. cleanup
+# 1.    global variables
+# 2.    setup
+# 3.    command line tools
+# 4.    homebrew
+# 5.    programming languages
+# 6.    mac apps
+# 7.    dotfiles
+# 8.    ssh
+# 9.    terminal
+# 10.   vim
+# 11.   cleanup
 #
 # --------
 
