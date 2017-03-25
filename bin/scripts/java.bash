@@ -7,7 +7,7 @@
 
 log -v "setting up java..."
 
-brew cask install java
+brew_cask_install java
 
 brew_install maven
 brew_install gradle

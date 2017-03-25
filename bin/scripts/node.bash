@@ -6,6 +6,8 @@
 # --------
 
 PACKAGES=(
+    artillery
+    bower
     eslint
     eslint-config-airbnb
     eslint-plugin-html
@@ -44,5 +46,7 @@ nvm use --delete-prefix lts/*
 nvm alias default lts/*
 
 for p in "${PACKAGES[@]}"; do
-    npm install -g "$p"
+    if prompt_user "install $p? (y/n)"; then
+        npm install -g "$p"
+    fi
 done

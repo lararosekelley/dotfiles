@@ -7,7 +7,8 @@
 
 log -v "setting up terminal..."
 
-touch ~/.hushlogin
+touch ~/.hushlogin # gets rid of login output
+touch ~/.bash_sessions_disable # fixes conflict with tmux
 
 # use the tomorrow night theme in terminal.app
 

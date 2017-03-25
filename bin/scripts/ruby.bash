@@ -31,5 +31,7 @@ rbenv global "$RUBY_VERSION"
 eval "$(rbenv init -)"
 
 for p in "${PACKAGES[@]}"; do
-    gem install "$p"
+    if prompt_user "install $p? (y/n)"; then
+        gem install "$p"
+    fi
 done

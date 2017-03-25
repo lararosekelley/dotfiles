@@ -73,8 +73,7 @@ DATABASES=(
 
 log -v "setting up homebrew..."
 
-brew update
-brew upgrade
+brew update && brew upgrade
 
 brew tap caskroom/cask
 brew tap caskroom/fonts
@@ -106,7 +105,7 @@ log -v "brew prune & cleanup..."
 brew cleanup
 brew prune
 
-log -v "changing shell..."
+log -v "changing shell... you will be prompted for your password"
 
 # bash setup
 

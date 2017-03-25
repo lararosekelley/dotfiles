@@ -38,18 +38,14 @@ pyenv install "$PYTHON2_VERSION"
 pyenv install "$PYTHON3_VERSION"
 pyenv global "$PYTHON2_VERSION" "$PYTHON3_VERSION"
 
-# python 2
+# python 2 and 3
 
 pip install --upgrade pip
-
-for p in "${PACKAGES[@]}"; do
-    pip install "$p"
-done
-
-# python 3
-
 pip3 install --upgrade pip
 
 for p in "${PACKAGES[@]}"; do
-    pip3 install "$p"
+    if prompt_user "install $p? (y/n)"; then
+        pip install "$p"
+        pip3 install "$p"
+    fi
 done
