@@ -30,7 +30,7 @@ log -v "installing mac apps..."
 
 for p in "${PACKAGES[@]}"; do
     if prompt_user "install $p? (y/n)"; then
-        brew cask install "$p"
+        brew_cask_install "$p"
     fi
 done
 
