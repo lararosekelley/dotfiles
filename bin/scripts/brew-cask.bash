@@ -7,20 +7,13 @@
 
 PACKAGES=(
     1password
-    adobe-acrobat-reader
     appcleaner
     dash
-    discord
-    dolphin
-    evernote
     firefox
     google-cloud-sdk
     google-chrome
     mactex
-    medis
-    mono-mdk
     ngrok
-    omnifocus
     origami-studio
     paw
     postico
@@ -30,8 +23,6 @@ PACKAGES=(
     transmission
     vagrant
     virtualbox
-    xamarin-ios
-    xamarin-studio
     xquartz
 )
 

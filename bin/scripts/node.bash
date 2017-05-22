@@ -7,7 +7,6 @@
 
 PACKAGES=(
     artillery
-    ava
     bower
     eslint
     eslint-config-airbnb
@@ -19,15 +18,12 @@ PACKAGES=(
     firebase-tools
     gulp-cli
     htmlhint
-    jsonlint
     mocha
     node-gyp
     nodemon
     nsp
-    nyc
     pm2
     stylelint
-    stylelint-scss
     tslint
     typescript
     vue-cli
@@ -43,11 +39,11 @@ export NVM_DIR="$HOME/.nvm"
 
 source "$(brew --prefix nvm)/nvm.sh"
 
-# install and use latest stable version of node
+# install and use latest LTS version
 
-nvm install node
-nvm use node
-nvm alias default node
+nvm install --lts
+nvm use --delete-prefix lts/*
+nvm alias default lts/*
 
 for p in "${PACKAGES[@]}"; do
     if prompt_user "install $p? (y/n)"; then

@@ -8,11 +8,9 @@
 PACKAGES=(
     bundler
     jekyll
-    mdl
     rails
     sass
     sinatra
-    sqlint
 )
 
 log -v "setting up ruby..."

@@ -14,12 +14,11 @@ export LC_ALL="en_US.UTF-8"
 
 export EDITOR="vim"
 
-# increase history size & ignore duplicates, make sure history is shared
+# increase history size & ignore duplicates
 
-export HISTSIZE="100000"
+export HISTSIZE="10000"
 export HISTFILESIZE="${HISTSIZE}"
-export HISTCONTROL="ignoredups:erasedups"
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
+export HISTCONTROL="ignoreboth"
 
 # java
 
@@ -38,9 +37,6 @@ export GOPATH="$HOME/.go"
 
 export PGDATA="/usr/local/var/postgres"
 export PGHOST=localhost
-
-# fix for mutt colors
-export COLORFGBG="default;default"
 
 # path
 
