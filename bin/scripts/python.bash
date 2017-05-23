@@ -16,9 +16,11 @@ PACKAGES=(
     nose
     numpy
     pandas
+    requests
     scipy
     sympy
     uncommitted
+    vim-vint
 )
 
 log -v "configuring python..."
