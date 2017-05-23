@@ -9,7 +9,6 @@
 
 files=(
     ~/.aliases
-    ~/.bash_prompt
     ~/.exports
     ~/.functions
     ~/.git-prompt.sh
@@ -75,7 +74,6 @@ if [[ -s "$(brew --prefix pyenv)" ]]; then
     fi
 
     # pip completion
-
     _pip_completion() {
         COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
                    COMP_CWORD=$COMP_CWORD \
@@ -84,3 +82,8 @@ if [[ -s "$(brew --prefix pyenv)" ]]; then
 
     complete -o default -F _pip_completion pip
 fi
+
+# bash prompt
+
+# shellcheck disable=SC1090
+source ~/.bash_prompt
