@@ -155,12 +155,20 @@ function git_diff() {
     fi
 }
 
-function node_env() {
-    if [ -z "${NODE_ENV+x}" ]; then
-        echo " "
+function node_info() {
+    if node --version &> /dev/null; then
+        output=" [node $(node --version)"
+
+        if [ ! -z "${NODE_ENV+x}" ]; then
+            output+=", NODE_ENV: ${NODE_ENV}] "
+        else
+            output+="] "
+        fi
     else
-        echo " [NODE_ENV: ${NODE_ENV}] "
+        output=" "
     fi
+
+    echo "$output"
 }
 
 # set prompt
@@ -180,5 +188,5 @@ function set_prompt() {
     PS1+="\[${branch_color}\]\$(__git_ps1)" # git branch
     PS1+=" \[${diff_color}\]\$(git_diff)" # git diff & pushable commits
     PS1+="\n${reset}${white}Battery: \[${bold}${pink}\]${BATTERY} (${BATTERY_STATUS})\[${reset}${white}\], CPU Usage: \[${bold}${pink}\]${CPU}%\[${reset}${bold}\]" # system status
-    PS1+="\n\[${blue}\](\$(date +'%I:%M %p'))\[${bold}${dim_blue}\]$(node_env)\[${reset}${violet}\]$\[${reset}\] " # time, NODE_ENV (if set) & prompt
+    PS1+="\n\[${blue}\](\$(date +'%I:%M %p'))\[${bold}${dim_blue}\]$(node_info)\[${reset}${violet}\]$\[${reset}\] " # time, NODE_ENV (if set) & prompt
 }

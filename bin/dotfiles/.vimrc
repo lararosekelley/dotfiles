@@ -27,7 +27,7 @@ set nocompatible
 set number
 
 " highlight line for text wrap
-set colorcolumn=80
+set colorcolumn=120
 
 " show current command in bottom right of editor
 set showcmd
@@ -37,9 +37,6 @@ set cursorline
 
 " only redraw when needed
 set lazyredraw
-
-" always show status line
-set laststatus=2
 
 " no sounds or flashes on error
 set novisualbell
@@ -90,7 +87,14 @@ set mat=2
 set foldcolumn=1
 
 " enable mouse
+set ttymouse=xterm2
 set mouse=a
+
+" enable filetype plugins
+filetype plugin on
+
+" omnicompletion
+set omnifunc=syntaxcomplete#Complete
 
 " -------- 3. colors, fonts --------
 
@@ -102,9 +106,20 @@ set background=dark
 
 " color scheme
 try
-    colorscheme Tomorrow-Night
+    colorscheme triplejelly
+
+    highlight Normal ctermbg=234
+    highlight LineNr ctermbg=234
+    highlight ColorColumn ctermbg=233
+    highlight CursorLine ctermbg=233
+
+    highlight Control ctermfg=186
+    highlight String ctermfg=168
+
+    highlight jsFuncArgs ctermfg=214
+    highlight jsReturn ctermfg=161 cterm=bold
 catch
-    colorscheme desert
+    colorscheme Tomorrow-Night
 endtry
 
 " encoding
@@ -117,10 +132,10 @@ set autoread
 
 " recognize markdown files with .md extension
 autocmd BufRead,BufNewFile *.md set filetype=markdown
-let g:markdown_fenced_languages = ['html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'sass', 'xml', 'java']
+let g:markdown_fenced_languages=[ 'html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'rb=ruby', 'css', 'sql', 'sass', 'scss', 'xml', 'java' ]
 
 " recognize certain rc files
-autocmd BufRead,BufNewFile .{eslint,babel}rc set filetype=json
+autocmd BufRead,BufNewFile .{artillery,babel,eslint,nyc,stylelint}rc set filetype=json
 
 " no concealing characters
 set conceallevel=0
@@ -136,6 +151,9 @@ set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 
 " -------- 5. navigation, tabs, buffers --------
+
+" kill all buffers
+nnoremap <leader>k :bufdo bd<CR>
 
 " force use of h,j,k,l for navigation
 nnoremap <Left> :echoe "use h"<CR>
@@ -256,9 +274,10 @@ endfunction
 
 " plugins (via pathogen)
 if filereadable(expand("~/.vim/autoload/pathogen.vim"))
+    " load pathogen
     execute pathogen#infect()
 
-    " Airline
+    " airline
     let g:airline#extensions#tabline#enabled=1
     let g:airline#extensions#tabline#show_tabs=1
     let g:airline#extensions#tabline#show_tab_nr=1
@@ -267,7 +286,7 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:airline#extensions#tabline#show_buffers=0
 
     if !exists('g:airline_symbols')
-        let g:airline_symbols = {}
+        let g:airline_symbols={}
     endif
 
     let g:airline_left_sep=''
@@ -278,31 +297,100 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:airline_symbols.readonly=''
     let g:airline_symbols.linenr=''
 
-    " Javascript
-    let g:javascript_plugin_jsdoc=1
+    " airline theme
+    let g:airline_theme='jellybeans'
 
-    " CtrlP
-    let g:ctrlp_map='<C-p>'
+    " close tags
+    let g:closetag_filenames="*.html,*.xhtml,*.phtml,*.xml"
+
+    " csv
+    let g:csv_delim=','
+    let g:csv_nomap_cr=1
+    let g:csv_nomap_space=1
+    let g:csv_nomap_bs=1
+
+    " ctrl-p
+    let g:ctrlp_map='<c-p>'
     let g:ctrlp_cmd='CtrlP'
 
-    " Syntastic
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
+    " editorconfig
+    let g:EditorConfig_exclude_patterns=[ 'fugitive://.*' ]
 
+    " indentLine
+    let g:indentLine_color_term=237
+
+    " javascript libraries
+    let g:used_javascript_libs='d3,jquery,vue,react,flux,backbone'
+
+    " javascript
+    let g:javascript_plugin_jsdoc=1
+
+    " json
+    let g:vim_json_syntax_conceal=0
+
+    " latex
+    let g:tex_flavor='latex'
+
+    " markdown
+    let g:markdown_syntax_conceal=0
+
+    " neocomplete
+    let g:neocomplete#enable_at_startup=1
+    let g:neocomplete#enable_smart_case=1
+
+    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+
+    function! s:my_cr_function()
+        return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
+    endfunction
+
+    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+
+    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+    if !exists('g:neocomplete#sources#omni#input_patterns')
+        let g:neocomplete#sources#omni#input_patterns = {}
+    endif
+
+    " syntastic
     let g:syntastic_always_populate_loc_list=1
     let g:syntastic_auto_loc_list=1
     let g:syntastic_check_on_open=1
     let g:syntastic_check_on_wq=0
 
-    let g:syntastic_javascript_checkers=['eslint']
+    let g:syntastic_javascript_checkers=[ 'eslint' ]
+    let g:syntastic_json_checkers=[ 'jsonlint' ]
+    let g:syntastic_python_checkers=[ 'flake8' ]
+    let g:syntastic_markdown_checkers=[ 'mdl' ]
+    let g:syntastic_scss_checkers=[ 'stylelint' ]
+    let g:syntastic_java_checkers=[ 'javac' ]
+    let g:syntastic_sql_checkers=[ 'sqlint' ]
+    let g:syntastic_tex_checkers=[ 'chktex' ]
+    let g:syntastic_vim_checkers=[ 'vint' ]
 
-    " indentLine
-    let g:indentLine_setConceal=0
+    " set the statusline
+    set statusline+=%{fugitive#statusline()}
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
 
-    " Mustache / Handlebars templates
-    let g:mustache_abbreviations=1
-
-    " vimtex
-    let g:tex_flavor = 'latex'
+    if has('statusline')
+        set laststatus=2
+        set statusline=%<%f\
+        set statusline+=%w%h%m%r
+        set statusline+=%{fugitive#statusline()}
+        set statusline+=\ [%{&ff}/%Y]
+        set statusline+=\ [%{getcwd()}]
+        set statusline+=%#warningmsg#
+        set statusline+=%{SyntasticStatuslineFlag()}
+        set statusline+=%*
+        let g:syntastic_enable_signs=1
+        set statusline+=%=%-14.(%l,%c%V%)\ %p%%
+    endif
 endif

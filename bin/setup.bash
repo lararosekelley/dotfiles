@@ -53,7 +53,7 @@ curl -sL "$REPO_URL" | tar zx -C "$SETUP_DIR" --strip-components 1
 source "$SETUP_DIR"/bin/utils/helpers.bash
 
 if ! os_eligible; then
-    log -vl ERROR "fatal: os version must be 10.12 to continue"
+    log -vl ERROR "fatal: os version must be 10.11 or higher to continue"
     exit 1
 fi
 

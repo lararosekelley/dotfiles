@@ -46,20 +46,15 @@ TOOLS=(
     mercurial
     nano
     nmap
-    openssl
     pandoc
     php56
-    python
-    python3
     reattach-to-user-namespace
     shellcheck
     sl
     tmux
-    tree
     valgrind
     watch
     wget
-    xz
 )
 
 DATABASES=(
