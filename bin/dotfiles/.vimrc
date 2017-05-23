@@ -1,3 +1,6 @@
+set encoding=utf-8
+scriptencoding utf-8
+
 " vimrc
 "
 " vim config (pathogen for plugin management)
@@ -18,8 +21,9 @@
 
 " -------- 1. general --------
 
-" vim, not vi
-set nocompatible
+augroup vimrc
+    autocmd!
+augroup END
 
 " -------- 2. ui, status line --------
 
@@ -49,7 +53,7 @@ set list
 set listchars=trail:•
 
 " filename completion
-if has("wildmenu")
+if has('wildmenu')
     " ignore compiled files
     set wildignore+=*.a,*.o,*.pyc,*.class,*.jar
     set wildignore+=.DS_Store,.Trashes,.Spotlight-V100
@@ -65,10 +69,10 @@ if has("wildmenu")
 endif
 
 " use system clipboard
-if has("clipboard")
+if has('clipboard')
     set clipboard=unnamed " System clipboard
 
-    if has("unnamedplus") " X11 support
+    if has('unnamedplus') " X11 support
         set clipboard+=unnamedplus
     endif
 endif
@@ -122,9 +126,6 @@ catch
     colorscheme Tomorrow-Night
 endtry
 
-" encoding
-set encoding=utf8
-
 " -------- 4. files, backups --------
 
 " reload files edited outside of vim
@@ -139,7 +140,7 @@ autocmd BufRead,BufNewFile .{artillery,babel,eslint,nyc,stylelint}rc set filetyp
 
 " no concealing characters
 set conceallevel=0
-autocmd FileType * setlocal conceallevel=0
+autocmd vimrc FileType * setlocal conceallevel=0
 
 " turn backup on
 set backup
@@ -153,7 +154,7 @@ set directory=~/.vim/swaps
 " -------- 5. navigation, tabs, buffers --------
 
 " kill all buffers
-nnoremap <leader>k :bufdo bd<CR>
+nnoremap <leader>q :bufdo bd<CR>
 
 " force use of h,j,k,l for navigation
 nnoremap <Left> :echoe "use h"<CR>
@@ -162,7 +163,7 @@ nnoremap <Up> :echoe "use k"<CR>
 nnoremap <Down> :echoe "use j"<CR>
 
 " custom leader
-let mapleader=","
+let mapleader=','
 
 " navigate between window splits using Ctrl key
 nnoremap <C-J> <C-W><C-J>
@@ -185,7 +186,7 @@ inoremap <S-Tab> <C-d>
 set autochdir
 
 " return to last edit position when opening a file
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+autocmd vimrc BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
 " keep buffers out of window
 set hidden
@@ -203,9 +204,6 @@ set scrolloff=4
 
 " remove all trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
-
-" use unicode
-set encoding=utf8
 
 " allow backspace
 set backspace=indent,eol,start
@@ -242,7 +240,7 @@ set lbr
 set tw=500
 
 " spell checking
-autocmd BufRead,BufNewFile *.md,*.txt setlocal spell spelllang=en_us
+autocmd vimrc BufRead,BufNewFile *.md,*.txt setlocal spell spelllang=en_us
 nnoremap ss :setlocal spell! spelllang=en_us<CR>
 highlight clear SpellRare
 highlight clear SpellCap
@@ -273,7 +271,7 @@ function! StrTrim(text)
 endfunction
 
 " plugins (via pathogen)
-if filereadable(expand("~/.vim/autoload/pathogen.vim"))
+if filereadable(expand('~/.vim/autoload/pathogen.vim'))
     " load pathogen
     execute pathogen#infect()
 
@@ -301,7 +299,7 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     let g:airline_theme='jellybeans'
 
     " close tags
-    let g:closetag_filenames="*.html,*.xhtml,*.phtml,*.xml"
+    let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml'
 
     " csv
     let g:csv_delim=','
@@ -318,6 +316,7 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
 
     " indentLine
     let g:indentLine_color_term=237
+    let g:indentLine_setConceal=0
 
     " javascript libraries
     let g:used_javascript_libs='d3,jquery,vue,react,flux,backbone'
@@ -348,11 +347,11 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
     inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
     inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 
-    autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-    autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+    autocmd vimrc FileType css setlocal omnifunc=csscomplete#CompleteCSS
+    autocmd vimrc FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+    autocmd vimrc FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+    autocmd vimrc FileType python setlocal omnifunc=pythoncomplete#Complete
+    autocmd vimrc FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 
     if !exists('g:neocomplete#sources#omni#input_patterns')
         let g:neocomplete#sources#omni#input_patterns = {}
@@ -393,4 +392,5 @@ if filereadable(expand("~/.vim/autoload/pathogen.vim"))
         let g:syntastic_enable_signs=1
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%
     endif
+
 endif
