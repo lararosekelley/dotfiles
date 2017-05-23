@@ -82,13 +82,14 @@ function brew_cask_install() {
 #
 function os_eligible() {
     VERSION="10.12"
+    PREV_VERSION="10.11"
     OS=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
-    if [ "$OS" != "$VERSION" ]; then
-        return 1
+    if [[ "$OS" =~ ^(${VERSION}|${PREV_VERSION})$ ]]; then
+        return 0
     fi
 
-    return 0
+    return 1
 }
 
 # logs info to stdout & a debug file

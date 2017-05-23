@@ -6,24 +6,38 @@
 # --------
 
 PACKAGES=(
-    https://github.com/Valloric/YouCompleteMe.git
-    https://github.com/Raimondi/delimitMate.git
-    https://github.com/scrooloose/syntastic.git
-    https://github.com/vim-airline/vim-airline-themes.git
-    https://github.com/vim-airline/vim-airline.git
-    https://github.com/airblade/vim-gitgutter.git
-    https://github.com/ctrlpvim/ctrlp.vim.git
-    https://github.com/tpope/vim-fugitive.git
-    https://github.com/pangloss/vim-javascript.git
-    https://github.com/lilydjwg/colorizer.git
-    https://github.com/mustache/vim-mustache-handlebars.git
-    https://github.com/posva/vim-vue.git
-    https://github.com/yggdroot/indentline.git
-    https://github.com/editorconfig/editorconfig-vim.git
-    https://github.com/lervag/vimtex.git
+    https://github.com/valloric/MatchTagAlways
+    https://github.com/lilydjwg/colorizer
+    https://github.com/chrisbra/csv.vim
+    https://github.com/ctrlpvim/ctrlp.vim
+    https://github.com/rizzatti/dash.vim
+    https://github.com/vim-scripts/dbext.vim
+    https://github.com/Raimondi/delimitMate
+    https://github.com/editorconfig/editorconfig-vim
+    https://github.com/powerline/fonts.git
+    https://github.com/Yggdroot/indentLine
+    https://github.com/othree/javascript-libraries-syntax.vim
+    https://github.com/Shougo/neocomplete.vim
+    https://github.com/vim-syntastic/syntastic
+    https://github.com/vim-scripts/taglist.vim
+    https://github.com/leafgarland/typescript-vim
+    https://github.com/vim-airline/vim-airline
+    https://github.com/vim-airline/vim-airline-themes
+    https://github.com/alvan/vim-closetag
+    https://github.com/flazz/vim-colorschemes
+    https://github.com/tpope/vim-fugitive
+    https://github.com/airblade/vim-gitgutter
+    https://github.com/pangloss/vim-javascript
+    https://github.com/heavenshell/vim-jsdoc
+    https://github.com/elzr/vim-json
+    https://github.com/mxw/vim-jsx
+    https://github.com/posva/vim-vue
+    https://github.com/lervag/vimtex
 )
 
 log -v "configuring vim..."
+
+# xquartz needed for client-server mode
 
 if [ ! -d /usr/local/Caskroom/xquartz ]; then
     brew cask install xquartz
@@ -35,9 +49,6 @@ if [ -d ~/.vim ]; then
     rm -rf ~/.vim
 fi
 
-mkdir -p ~/.vim/colors
-cp "$1"/bin/themes/Tomorrow-Night.vim ~/.vim/colors
-
 mkdir -p ~/.vim/autoload && mkdir -p ~/.vim/bundle
 curl -LSso ~/.vim/autoload/pathogen.vim https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim
 
@@ -47,14 +58,10 @@ for repo in "${PACKAGES[@]}"; do
     git clone "$repo"
 done
 
-# set up YouCompleteMe
+# move all vim themes to colors directory
 
-cd YouCompleteMe || exit
-git submodule update --init --recursive
-
-# must use python with framework enabled
-
-/usr/bin/python install.py --clang-completer
+mkdir -p ~/.vim/colors
+cp -R ~/.vim/bundle/vim-colorschemes/colors/ ~/.vim/bundle/colors/
 
 cd ~ || exit
 

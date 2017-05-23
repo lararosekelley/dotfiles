@@ -1,17 +1,20 @@
+# Setup
+
 ![logo](img/logo.png)
 
-*My automated development setup*
+My automated development setup for Mac
 
 ---
 
-### Prerequisites
+## Prerequisites
 
 * Apple computer running macOS Sierra (10.12)
 
 Note that these scripts have previously been tested on OS X 10.10 and 10.11, but
-are no longer guaranteed to work on those operating systems.
+are no longer guaranteed to work on those operating systems. Run on 10.11 at your
+own risk!
 
-### Installation
+## Installation
 
 Copy and paste this line into your terminal:
 
@@ -27,17 +30,17 @@ Also, be sure to read [setup.bash](bin/setup.bash) before running it! It's
 broken up into sections and commented, so it's not too tough to scan through
 quickly.
 
-### ~/.env
+## ~/.env
 
 Use the provided `~/.env` file for any sensitive information, such as passwords,
 API keys, etc. This file can also be used to override anything I've written.
 
-### Features
+## Features
 
 Here's an overview of everything the setup scripts do:
 
 1. Installs the Xcode command line tools and [Homebrew](bin/scripts/brew.bash)
-to manage packages
+   to manage packages
 2. Configures dev environments for the latest versions of some languages (optional):
     * [Go](bin/scripts/go.bash)
     * [Java](bin/scripts/java.bash)
@@ -51,12 +54,12 @@ to manage packages
 6. Sets up the [Vim](bin/scripts/vim.bash) editor for development (optional)
 7. Changes the `Terminal.app` [theme](bin/scripts/terminal.bash) (optional)
 
-### Contributing
+## Contributing
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) if you'd like to add to the project,
 and file an issue if something goes wrong when you try to run the script.
 
-### Screenshots
+## Screenshots
 
 Here's a gallery of a few screenshots:
 
