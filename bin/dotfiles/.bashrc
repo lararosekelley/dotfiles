@@ -9,7 +9,6 @@
 
 files=(
     ~/.aliases
-    ~/.bash_prompt
     ~/.exports
     ~/.functions
     ~/.git-prompt.sh
@@ -30,6 +29,9 @@ options=(
     cdspell
     globstar
     dotglob
+    cmdhist
+    dirspell
+    nocaseglob
 )
 
 for option in "${options[@]}"; do
@@ -57,6 +59,11 @@ if [[ -s "$(brew --prefix nvm)" ]]; then
     source "$(brew --prefix nvm)/nvm.sh"
     NODE_VERSION=$(nvm current)
     nvm alias default "$NODE_VERSION" > /dev/null
+
+    npm completion >> ~/.npm_completion
+
+    # shellcheck disable=SC1090
+    source ~/.npm_completion
 fi
 
 # rbenv
@@ -75,7 +82,6 @@ if [[ -s "$(brew --prefix pyenv)" ]]; then
     fi
 
     # pip completion
-
     _pip_completion() {
         COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
                    COMP_CWORD=$COMP_CWORD \
@@ -84,3 +90,8 @@ if [[ -s "$(brew --prefix pyenv)" ]]; then
 
     complete -o default -F _pip_completion pip
 fi
+
+# bash prompt
+
+# shellcheck disable=SC1090
+source ~/.bash_prompt

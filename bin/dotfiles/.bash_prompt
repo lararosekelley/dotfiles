@@ -5,6 +5,11 @@
 # creates a more useful bash prompt with git support
 # --------
 
+# command success / failure indicators
+
+checkmark="\xe2\x9c\x94"
+crossmark="\xe2\xa8\xaf"
+
 # colors
 
 reset=$(tput sgr0)
@@ -27,6 +32,19 @@ host_color="${orange}"
 dir_color="${yellow}"
 branch_color="${green}"
 diff_color="${cyan}"
+
+# exit status of last command
+
+function exit_status() {
+    status="$?"
+    prompt="${bold}(${red}$crossmark${reset}${bold})${reset}"
+
+    if [ "${status}" -eq 0 ]; then
+        prompt="${bold}(${green}$checkmark${reset}${bold})${reset}"
+    fi
+
+    echo -e "$prompt"
+}
 
 # git diff
 
@@ -155,6 +173,8 @@ function git_diff() {
     fi
 }
 
+# language and environment information
+
 function node_info() {
     if node --version &> /dev/null; then
         output=" [node $(node --version)"
@@ -176,17 +196,23 @@ function node_info() {
 export PROMPT_COMMAND=set_prompt
 
 function set_prompt() {
+    EXIT_ICON="$(exit_status)"
+
     BATTERY="$(pmset -g batt | grep -E "([0-9]+\%).*" -o | cut -f1 -d ';')"
     BATTERY_STATUS="$(pmset -g batt | grep -E "([0-9]+\%).*" -o | cut -f2 -d ';' | tr -d ' ')"
+
     CPU_USAGE="$(ps -A -o %cpu | awk '{s+=$1} END {print s}')"
     CPUS="$(sysctl -n hw.ncpu)"
     CPU=$(echo "scale=2; $CPU_USAGE/$CPUS" | bc)
 
-    PS1="\[${bold}${user_color}\]\u" # user
-    PS1+="\[${white}\] at \[${host_color}\]\h" # host
-    PS1+="\[${white}\] in \[${dir_color}\]\w" # directory
-    PS1+="\[${branch_color}\]\$(__git_ps1)" # git branch
-    PS1+=" \[${diff_color}\]\$(git_diff)" # git diff & pushable commits
-    PS1+="\n${reset}${white}Battery: \[${bold}${pink}\]${BATTERY} (${BATTERY_STATUS})\[${reset}${white}\], CPU Usage: \[${bold}${pink}\]${CPU}%\[${reset}${bold}\]" # system status
-    PS1+="\n\[${blue}\](\$(date +'%I:%M %p'))\[${bold}${dim_blue}\]$(node_info)\[${reset}${violet}\]$\[${reset}\] " # time, NODE_ENV (if set) & prompt
+    PS1="${EXIT_ICON} ${bold}${user_color}\u${reset}" # user
+    PS1+="${white} at ${bold}${host_color}\h${reset}" # host
+    PS1+="${white} in ${bold}${dir_color}\w${reset}" # directory
+
+    PS1+="${bold}${branch_color}\$(__git_ps1)" # git branch
+    PS1+=" ${diff_color}\$(git_diff)" # git diff & pushable commits
+
+    PS1+="\n${reset}${white}Battery: ${bold}${pink}${BATTERY} (${BATTERY_STATUS})${reset}${white}, CPU Usage: ${bold}${pink}${CPU}%${reset}${bold}" # system status
+
+    PS1+="\n${blue}(\$(date +'%I:%M %p'))${bold}${dim_blue}$(node_info)${reset}${violet}$ ${reset}" # time, NODE_ENV (if set) & prompt
 }

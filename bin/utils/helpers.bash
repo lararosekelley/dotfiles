@@ -105,7 +105,7 @@ function os_eligible() {
 #   -l level    log level: INFO, WARN, ERROR
 #
 function log() {
-    logfile=$(pwd)/.setup.log
+    logfile="$HOME/.setup.log"
     verbose=0
     level="INFO"
 
