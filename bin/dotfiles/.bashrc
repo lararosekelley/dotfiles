@@ -29,6 +29,9 @@ options=(
     cdspell
     globstar
     dotglob
+    cmdhist
+    dirspell
+    nocaseglob
 )
 
 for option in "${options[@]}"; do
@@ -56,6 +59,11 @@ if [[ -s "$(brew --prefix nvm)" ]]; then
     source "$(brew --prefix nvm)/nvm.sh"
     NODE_VERSION=$(nvm current)
     nvm alias default "$NODE_VERSION" > /dev/null
+
+    npm completion >> ~/.npm_completion
+
+    # shellcheck disable=SC1090
+    source ~/.npm_completion
 fi
 
 # rbenv
