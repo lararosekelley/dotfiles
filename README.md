@@ -54,6 +54,21 @@ Here's an overview of everything the setup scripts do:
 6. Sets up the [Vim](bin/scripts/vim.bash) editor for development (optional)
 7. Changes the `Terminal.app` [theme](bin/scripts/terminal.bash) (optional)
 
+## Testing
+
+To run the test suite (which is minimal at this time), simply make sure you've downloaded
+[bats](https://github.com/sstephenson/bats) and then run:
+
+```bash
+$ bats test
+```
+
+The testing tool can be downloaded via Homebrew if you're on a Mac:
+
+```bash
+$ brew install bats
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](.github/CONTRIBUTING.md) if you'd like to add to the project,

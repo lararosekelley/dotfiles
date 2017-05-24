@@ -69,19 +69,15 @@ if ! xcode-select -p &> /dev/null; then
 
     softwareupdate -i "$XCODE" &> /dev/null
     rm /tmp/.com.apple.dt.CommandLineTools.installondemand.in-progress
-
-    # update all software to be safe
-
-    softwareupdate --install --all
 else
     log -v "xcode command line tools already installed"
-
-    log -v "updating system..."
-
-    # update all software to be safe
-
-    softwareupdate --install --all
 fi
+
+# update all software
+
+log -v "updating system..."
+
+softwareupdate --install --all
 
 # 4. homebrew
 # --------
