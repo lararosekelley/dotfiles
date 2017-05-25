@@ -15,11 +15,6 @@ TAB: menu-complete
 "\e[A": history-search-backward
 "\e[B": history-search-forward
 
-# move forward and backward through words
-
-"": forward-word
-"": backward-word
-
 # settings
 
 # utf-8 input and output instead of escape sequences
@@ -36,8 +31,8 @@ set show-all-if-ambiguous on
 # autocompletion for symlinks
 set mark-symlinked-directories on
 
-# prompt when more than 100 completion options available
-set completion-query-items 100
+# prompt when more than 200 completion options available
+set completion-query-items 200
 
 # ignore case when completing
 set completion-ignore-case on

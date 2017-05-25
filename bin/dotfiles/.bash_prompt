@@ -205,14 +205,14 @@ function set_prompt() {
     CPUS="$(sysctl -n hw.ncpu)"
     CPU=$(echo "scale=2; $CPU_USAGE/$CPUS" | bc)
 
-    PS1="${EXIT_ICON} ${bold}${user_color}\u${reset}" # user
-    PS1+="${white} at ${bold}${host_color}\h${reset}" # host
-    PS1+="${white} in ${bold}${dir_color}\w${reset}" # directory
+    PS1="\[${EXIT_ICON}\] \[${bold}${user_color}\]\u\[${reset}\]" # user
+    PS1+="\[${white}\] at \[${bold}${host_color}\]\h\[${reset}\]" # host
+    PS1+="\[${white}\] in \[${bold}${dir_color}\]\w\[${reset}\]" # directory
 
-    PS1+="${bold}${branch_color}\$(__git_ps1)" # git branch
-    PS1+=" ${diff_color}\$(git_diff)" # git diff & pushable commits
+    PS1+="\[${bold}${branch_color}\]\$(__git_ps1)" # git branch
+    PS1+=" \[${diff_color}\]\$(git_diff)" # git diff & pushable commits
 
-    PS1+="\n${reset}${white}Battery: ${bold}${pink}${BATTERY} (${BATTERY_STATUS})${reset}${white}, CPU Usage: ${bold}${pink}${CPU}%${reset}${bold}" # system status
+    PS1+="\n\[${reset}${white}\]Battery: \[${bold}${pink}\]${BATTERY} (${BATTERY_STATUS})\[${reset}${white}\], CPU Usage: ${bold}${pink}${CPU}%${reset}${bold}" # system status
 
-    PS1+="\n${blue}(\$(date +'%I:%M %p'))${bold}${dim_blue}$(node_info)${reset}${violet}$ ${reset}" # time, NODE_ENV (if set) & prompt
+    PS1+="\n\[${blue}\](\$(date +'%I:%M %p'))\[${bold}${dim_blue}\]$(node_info)\[${reset}${violet}\]$ \[${reset}\]" # time, NODE_ENV (if set) & prompt
 }
