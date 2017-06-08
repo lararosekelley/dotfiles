@@ -10,6 +10,7 @@ PACKAGES=(
     jekyll
     mdl
     rails
+    rubocop
     sass
     sinatra
     sqlint

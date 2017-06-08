@@ -11,6 +11,7 @@ TOOLS=(
     autojump
     bash
     bash-completion
+    bats
     binutils
     binwalk
     cmake
@@ -45,12 +46,14 @@ TOOLS=(
     make
     mercurial
     nano
+    ngrep
     nmap
     pandoc
     php56
     reattach-to-user-namespace
     shellcheck
     sl
+    tidy-html5
     tmux
     valgrind
     watch
