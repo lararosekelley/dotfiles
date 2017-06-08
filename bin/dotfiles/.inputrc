@@ -46,8 +46,8 @@ set completion-map-case on
 # behind the cursor
 set skip-completed-text on
 
-# turn "~" into full path
-set expand-tilde on
+# keep tilde as tilde
+set expand-tilde off
 
 # show more file info, "ls -F" style
 set visible-stats on
