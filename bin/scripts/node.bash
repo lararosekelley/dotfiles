@@ -8,21 +8,19 @@
 PACKAGES=(
     artillery
     ava
+    babel-cli
     bower
+    csslint
     eslint
-    eslint-config-airbnb
-    eslint-plugin-html
-    eslint-plugin-import
-    eslint-plugin-jsx-a11y
-    eslint-plugin-react
-    eslint-plugin-vue
     firebase-tools
+    flow
+    flow-bin
     gulp-cli
     htmlhint
     jsonlint
-    mocha
     node-gyp
     nodemon
+    npm-check-updates
     nsp
     nyc
     pm2
@@ -48,6 +46,10 @@ source "$(brew --prefix nvm)/nvm.sh"
 nvm install node
 nvm use node
 nvm alias default node
+
+# update npm to latest version
+
+npm install -g npm@latest
 
 for p in "${PACKAGES[@]}"; do
     if prompt_user "install $p? (y/n)"; then

@@ -25,6 +25,9 @@ augroup vimrc
     autocmd!
 augroup END
 
+" custom map leader
+let mapleader=','
+
 " -------- 2. ui, status line --------
 
 " turn on line numbers
@@ -112,15 +115,13 @@ set background=dark
 try
     colorscheme triplejelly
 
+    " my custom options
+
     highlight Normal ctermbg=234
     highlight LineNr ctermbg=234
     highlight ColorColumn ctermbg=233
     highlight CursorLine ctermbg=233
-
-    highlight Control ctermfg=186
     highlight String ctermfg=168
-
-    highlight jsFuncArgs ctermfg=214
     highlight jsReturn ctermfg=161 cterm=bold
 catch
     colorscheme Tomorrow-Night
@@ -154,16 +155,13 @@ set directory=~/.vim/swaps
 " -------- 5. navigation, tabs, buffers --------
 
 " kill all buffers
-nnoremap <leader>q :bufdo bd<CR>
+nnoremap <leader>x :bufdo bd<CR>
 
 " force use of h,j,k,l for navigation
 nnoremap <Left> :echoe "use h"<CR>
 nnoremap <Right> :echoe "use l"<CR>
 nnoremap <Up> :echoe "use k"<CR>
 nnoremap <Down> :echoe "use j"<CR>
-
-" custom leader
-let mapleader=','
 
 " navigate between window splits using Ctrl key
 nnoremap <C-J> <C-W><C-J>
@@ -178,7 +176,7 @@ nnoremap <Space> :
 nnoremap <S-l> gt
 nnoremap <S-h> gT
 
-" enable shift-tab to delete a tab in normal and insert mode
+" shift-tab for removing a tab indent
 nnoremap <S-Tab> <<
 inoremap <S-Tab> <C-d>
 
@@ -248,7 +246,7 @@ highlight clear SpellLocal
 
 " -------- 7. search --------
 
-" initiate a search with <Tab>
+" initiate a search with <Tab> in normal mode
 nnoremap <Tab> /
 
 " search as you type
@@ -323,6 +321,10 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
 
     " javascript
     let g:javascript_plugin_jsdoc=1
+    let g:javascript_plugin_flow=1
+
+    " flow - close when there are no errors
+    let g:flow#autoclose=1
 
     " json
     let g:vim_json_syntax_conceal=0
@@ -333,29 +335,15 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
     " markdown
     let g:markdown_syntax_conceal=0
 
-    " neocomplete
-    let g:neocomplete#enable_at_startup=1
-    let g:neocomplete#enable_smart_case=1
+    " ycm settings
+    let g:ycm_key_list_select_completion=[ '<C-n>', '<Down>' ]
+    let g:ycm_key_list_previous_completion=[ '<C-p>', '<Up>' ]
+    let g:SuperTabDefaultCompletionType='<C-n>'
 
-    inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-
-    function! s:my_cr_function()
-        return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
-    endfunction
-
-    inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-    inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-    inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-
-    autocmd vimrc FileType css setlocal omnifunc=csscomplete#CompleteCSS
-    autocmd vimrc FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-    autocmd vimrc FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-    autocmd vimrc FileType python setlocal omnifunc=pythoncomplete#Complete
-    autocmd vimrc FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-    if !exists('g:neocomplete#sources#omni#input_patterns')
-        let g:neocomplete#sources#omni#input_patterns = {}
-    endif
+    " snippets - cycle through suggestions
+    let g:UltiSnipsExpandTrigger='<Tab>'
+    let g:UltiSnipsJumpForwardTrigger='<Tab>'
+    let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
 
     " syntastic
     let g:syntastic_always_populate_loc_list=1
@@ -363,14 +351,22 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
     let g:syntastic_check_on_open=1
     let g:syntastic_check_on_wq=0
 
+    " syntastic language checkers (only works if each checker binary is installed)
     let g:syntastic_javascript_checkers=[ 'eslint' ]
+    let g:syntastic_ruby_checkers=[ 'rubocop' ]
     let g:syntastic_json_checkers=[ 'jsonlint' ]
     let g:syntastic_python_checkers=[ 'flake8' ]
     let g:syntastic_markdown_checkers=[ 'mdl' ]
+    let g:syntastic_html_checkers=[ 'tidy' ]
+    let g:syntastic_html_tidy_exec='tidy5'
+    let g:syntastic_css_checkers=[ 'csslint' ]
     let g:syntastic_scss_checkers=[ 'stylelint' ]
     let g:syntastic_java_checkers=[ 'javac' ]
     let g:syntastic_sql_checkers=[ 'sqlint' ]
     let g:syntastic_tex_checkers=[ 'chktex' ]
+    let g:syntastic_bash_checkers=[ 'shellcheck' ]
+    let g:syntastic_sh_checkers=[ 'shellcheck' ]
+    let g:syntastic_typescript_checkers=[ 'tslint' ]
     let g:syntastic_vim_checkers=[ 'vint' ]
 
     " set the statusline
@@ -392,5 +388,4 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
         let g:syntastic_enable_signs=1
         set statusline+=%=%-14.(%l,%c%V%)\ %p%%
     endif
-
 endif
