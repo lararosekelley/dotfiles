@@ -6,7 +6,39 @@
 # --------
 
 PACKAGES=(
-
+    https://github.com/valloric/MatchTagAlways
+    https://github.com/Valloric/YouCompleteMe
+    https://github.com/vim-scripts/bats.vim
+    https://github.com/kawaz/batscheck.vim
+    https://github.com/lilydjwg/colorizer
+    https://github.com/chrisbra/csv.vim
+    https://github.com/ctrlpvim/ctrlp.vim
+    https://github.com/rizzatti/dash.vim
+    https://github.com/vim-scripts/dbext.vim
+    https://github.com/Raimondi/delimitMate
+    https://github.com/editorconfig/editorconfig-vim
+    https://github.com/powerline/fonts.git
+    https://github.com/Yggdroot/indentLine
+    https://github.com/othree/javascript-libraries-syntax.vim
+    https://github.com/scrooloose/nerdcommenter
+    https://github.com/vim-syntastic/syntastic
+    https://github.com/vim-scripts/taglist.vim
+    https://github.com/leafgarland/typescript-vim
+    https://github.com/SirVer/ultisnips
+    https://github.com/vim-airline/vim-airline
+    https://github.com/vim-airline/vim-airline-themes
+    https://github.com/alvan/vim-closetag
+    https://github.com/flazz/vim-colorschemes
+    https://github.com/flowtype/vim-flow.git
+    https://github.com/tpope/vim-fugitive
+    https://github.com/airblade/vim-gitgutter
+    https://github.com/pangloss/vim-javascript
+    https://github.com/heavenshell/vim-jsdoc
+    https://github.com/elzr/vim-json
+    https://github.com/mxw/vim-jsx
+    git://github.com/honza/vim-snippets.git
+    https://github.com/posva/vim-vue
+    https://github.com/lervag/vimtex
 )
 
 log -v "configuring vim..."

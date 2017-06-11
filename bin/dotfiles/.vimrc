@@ -121,10 +121,8 @@ try
     highlight LineNr ctermbg=234
     highlight ColorColumn ctermbg=233
     highlight CursorLine ctermbg=233
-    highlight String ctermfg=168
-    highlight jsReturn ctermfg=161 cterm=bold
 catch
-    colorscheme Tomorrow-Night
+    colorscheme ron
 endtry
 
 " -------- 4. files, backups --------
@@ -137,7 +135,7 @@ autocmd BufRead,BufNewFile *.md set filetype=markdown
 let g:markdown_fenced_languages=[ 'html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'rb=ruby', 'css', 'sql', 'sass', 'scss', 'xml', 'java' ]
 
 " recognize certain rc files
-autocmd BufRead,BufNewFile .{artillery,babel,eslint,nyc,stylelint}rc set filetype=json
+autocmd BufRead,BufNewFile .{artillery,babel,eslint,nyc,stylelint,tern-project}rc set filetype=json
 
 " no concealing characters
 set conceallevel=0
@@ -153,6 +151,9 @@ set backupdir=~/.vim/backups
 set directory=~/.vim/swaps
 
 " -------- 5. navigation, tabs, buffers --------
+
+" wrap to previous / next lines with left and right arrow keys
+set whichwrap+=<,>,h,l,[,]
 
 " kill all buffers
 nnoremap <leader>x :bufdo bd<CR>
@@ -344,6 +345,8 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
     let g:UltiSnipsExpandTrigger='<Tab>'
     let g:UltiSnipsJumpForwardTrigger='<Tab>'
     let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
+
+    let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'custom-snippets' ]
 
     " syntastic
     let g:syntastic_always_populate_loc_list=1
