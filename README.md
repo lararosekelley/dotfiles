@@ -81,3 +81,5 @@ Here's a gallery of a few screenshots:
 ![Terminal](img/screenshots/terminal.png)
 
 ![Vim](img/screenshots/vim.png)
+
+![Autocomplete in Vim](img/screenshots/autocomplete.png)
