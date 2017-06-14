@@ -36,7 +36,8 @@ PACKAGES=(
     https://github.com/heavenshell/vim-jsdoc
     https://github.com/elzr/vim-json
     https://github.com/mxw/vim-jsx
-    git://github.com/honza/vim-snippets.git
+    https://github.com/plasticboy/vim-markdown.git
+    https://github.com/honza/vim-snippets.git
     https://github.com/posva/vim-vue
     https://github.com/lervag/vimtex
 )

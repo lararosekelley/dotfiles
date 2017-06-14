@@ -7,6 +7,9 @@
     # grab .github folder from tylucaskelley/github-templates
     tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
 
+    # get remote url for repo
+    url = "!f() { git remote show origin | grep Fetch | cut -f 5 -d ' '; }; f"
+
     # formatted view of last 25 commits
     lg = log --all --graph --abbrev-commit --date=relative --format=format:'%C(red)%h%C(reset) %C(blue)(%ar)%C(reset) - %C(white)%s%C(reset)'
 
