@@ -19,6 +19,7 @@ PACKAGES=(
     https://github.com/editorconfig/editorconfig-vim
     https://github.com/powerline/fonts.git
     https://github.com/Yggdroot/indentLine
+    https://github.com/keith/investigate.vim
     https://github.com/othree/javascript-libraries-syntax.vim
     https://github.com/scrooloose/nerdcommenter
     https://github.com/vim-syntastic/syntastic
@@ -37,7 +38,7 @@ PACKAGES=(
     https://github.com/elzr/vim-json
     https://github.com/mxw/vim-jsx
     https://github.com/plasticboy/vim-markdown.git
-    https://github.com/honza/vim-snippets.git
+    git://github.com/honza/vim-snippets.git
     https://github.com/posva/vim-vue
     https://github.com/lervag/vimtex
 )

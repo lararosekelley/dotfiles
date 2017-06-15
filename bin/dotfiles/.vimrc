@@ -55,7 +55,7 @@ set tm=500
 set list
 set listchars=trail:•
 
-" filename completion
+" tab completion for vim commands
 if has('wildmenu')
     " ignore compiled files
     set wildignore+=*.a,*.o,*.pyc,*.class,*.jar
@@ -65,10 +65,7 @@ if has('wildmenu')
 
     " enable it
     set wildmenu
-    set wildmode=longest,list
-
-    " use it
-    inoremap <leader><Tab> <C-X><C-F>
+    set wildmode=longest:full,full
 endif
 
 " use system clipboard
@@ -329,6 +326,9 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
 
     " json
     let g:vim_json_syntax_conceal=0
+
+    " vim investigate
+    let g:investigate_use_dash=1
 
     " latex
     let g:tex_flavor='latex'
