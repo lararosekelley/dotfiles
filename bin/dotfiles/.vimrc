@@ -130,6 +130,8 @@ set autoread
 " recognize markdown files with .md extension
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 let g:markdown_fenced_languages=[ 'html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'rb=ruby', 'css', 'sql', 'sass', 'scss', 'xml', 'java' ]
+let g:markdown_syntax_conceal=0
+
 
 " recognize certain rc files
 autocmd BufRead,BufNewFile .{artillery,babel,eslint,nyc,stylelint,tern-project}rc set filetype=json
@@ -334,7 +336,7 @@ if filereadable(expand('~/.vim/autoload/pathogen.vim'))
     let g:tex_flavor='latex'
 
     " markdown
-    let g:markdown_syntax_conceal=0
+    let g:vim_markdown_fenced_languages=[ 'html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'rb=ruby', 'css', 'sql', 'sass', 'scss', 'xml', 'java' ]
 
     " ycm settings
     let g:ycm_key_list_select_completion=[ '<C-n>', '<Down>' ]

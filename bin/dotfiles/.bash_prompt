@@ -193,7 +193,7 @@ function node_info() {
 
 # set prompt
 
-export PROMPT_COMMAND=set_prompt
+export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND}; set_prompt"
 
 function set_prompt() {
     EXIT_ICON="$(exit_status)"
