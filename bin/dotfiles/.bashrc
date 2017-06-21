@@ -40,8 +40,10 @@ done
 
 # autojump
 
-# shellcheck disable=SC1090
-[[ -s "$(brew --prefix)/etc/profile.d/autojump.sh" ]] && source "$(brew --prefix)/etc/profile.d/autojump.sh"
+if [ -f "$(brew --prefix)/etc/profile.d/autojump.sh" ]; then
+    # shellcheck disable=SC1090
+    source "$(brew --prefix)/etc/profile.d/autojump.sh"
+fi
 
 # bash completion
 
