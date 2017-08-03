@@ -14,7 +14,11 @@ if [ -d ~/.vim ]; then
     rm -rf ~/.vim
 fi
 
-mkdir -p ~/.vim/autoload
+# install vim-plug
+
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+# copy .vimrc
 
 cp "$1"/bin/dotfiles/.vimrc ~/.vimrc
 
