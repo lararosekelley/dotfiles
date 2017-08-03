@@ -8,26 +8,30 @@
 PACKAGES=(
     1password
     appcleaner
+    atom
+    authy-desktop
     dash
     discord
-    dolphin
-    evernote
     firefox
     google-chrome
+    google-chrome-canary
+    google-cloud-sdk
+    java
+    keycastr
     mactex
     medis
     ngrok
-    omnifocus
     origami-studio
     paw
     postico
+    safari-technology-preview
     sketch
     slack
     the-unarchiver
     transmission
     vagrant
     virtualbox
-    xquartz
+    vlc
 )
 
 log -v "installing mac apps..."

@@ -1,0 +1,260 @@
+# javascript.snippets
+#
+# snippets for .js files
+#
+# assumptions: using es7 and Facebook's Flow type checking
+# --------
+
+# general
+# --------
+
+snippet ac "Arrow callback function"
+($1) => {
+    $2
+}
+endsnippet
+
+snippet cf "const x = function x" w
+const $1 = function $1($2) {
+    $3
+};
+endsnippet
+
+# jsdoc
+# --------
+
+snippet /**f "Function JSDoc comment" w
+/**
+ * @function ${1:Name}
+ * @description ${2:Description}
+ * ${3:@public}
+ *
+ * @returns ${4:type} ${5:Description}
+ */
+endsnippet
+
+snippet /**file "File-level JSDoc comments" w
+/**
+ * @file ${1:Describe the file here}
+ *
+ * @author ${2:Your Name} <${3:email@example.com}>
+ * @copyright ${4:All rights reserved.}
+ */
+endsnippet
+
+snippet /**c "Constant JSDoc comment" w
+/**
+ * @constant ${1:name}
+ * @description ${2:Description}
+ * @type {${3:type}}
+ */
+endsnippet
+
+snippet @c "@constant JSDoc tag"
+@constant ${1:name}
+endsnippet
+
+snippet @p "@param JSDoc tag"
+@param {${1:type}} ${2:name} - ${3:Description}
+endsnippet
+
+snippet @pr "@private JSDoc tag"
+@private
+endsnippet
+
+snippet @pu "@public JSDoc tag"
+@public
+endsnippet
+
+snippet @f "@function JSDoc tag"
+@function ${1:name}
+endsnippet
+
+snippet @d "@description JSDoc tag"
+@description ${1:Description}
+endsnippet
+
+snippet @r "@returns JSDoc tag"
+@returns {${1:type}} ${2:Description}
+endsnippet
+
+snippet @t "@throws JSDoc tag"
+@throws {${1:Error}} ${2:Description}
+endsnippet
+
+snippet @ty "@type JSDoc tag"
+@type {${1:type}}
+endsnippet
+
+# testing with ava
+# --------
+
+# ava - import
+
+snippet ava "Import Ava" b
+import test from 'ava';
+endsnippet
+
+# ava - tests
+
+snippet test "Test" b
+test('${1:Title}', (t) => {
+    $2
+});
+endsnippet
+
+snippet test-async "Test (async)" b
+test('${1:Title}', async (t) => {
+    $2
+});
+endsnippet
+
+snippet test-serial "Test - serial" b
+test.serial('${1:Title}', (t) => {
+    $2
+});
+endsnippet
+
+snippet test-serial-async "Test - serial (async)" b
+test.serial('${1:Title}', async (t) => {
+    $2
+});
+endsnippet
+
+snippet test-cb "Test - cb" b
+test.cb('${1:Title}', (t) => {
+    t.end();
+});
+endsnippet
+
+snippet test-only "Test - only" b
+test.only('${1:Title}', (t) => {
+    $2
+});
+endsnippet
+
+snippet test-only-async "Test - only (async)" b
+test.only('${1:Title}', async (t) => {
+    $2
+});
+endsnippet
+
+snippet test-skip "Test - skip" b
+test.skip('${1:Title}', (t) => {
+    $2
+});
+endsnippet
+
+snippet test-skip-async "Test - skip (async)" b
+test.skip('${1:Title}', async (t) => {
+    $2
+});
+endsnippet
+
+snippet test-todo "Test - todo" b
+test.todo('${1:Description}');
+endsnippet
+
+snippet test-failing "Test - failing" b
+test.failing('${1:Bug}', (t) => {
+    $2
+});
+endsnippet
+
+snippet test-failing-async "Test - failing (async)" b
+test.failing('${1:Bug}', async (t) => {
+    $2
+});
+endsnippet
+
+# ava - hooks
+
+snippet test-before "Test - before hook" b
+test.before((t) => {
+    $1
+});
+endsnippet
+
+snippet test-beforeeach "Test - beforeEach hook" b
+test.beforeEach((t) => {
+    $1
+});
+endsnippet
+
+snippet test-after "Test - after hook" b
+test.after((t) => {
+    $1
+});
+endsnippet
+
+snippet test-aftereach "Test - afterEach hook" b
+test.afterEach((t) => {
+    $1
+});
+endsnippet
+
+# ava - assertions
+
+snippet test-pass "Test - pass" w
+t.pass();
+endsnippet
+
+snippet test-fail "Test - fail" w
+t.fail();
+endsnippet
+
+snippet test-truthy "Test - truthy" w
+t.truthy(${1:true});
+endsnippet
+
+snippet test-falsy "Test - falsy" w
+t.falsy(${1:false});
+endsnippet
+
+snippet test-true "Test - true" w
+t.true(${1:true});
+endsnippet
+
+snippet test-false "Test - false" w
+t.false(${1:false});
+endsnippet
+
+snippet test-is "Test - is" w
+t.is($1, $2);
+endsnippet
+
+snippet test-not "Test - not" w
+t.not($1, $2);
+endsnippet
+
+snippet test-deepeq "Test - deepEqual" w
+t.deepEqual($1, $2);
+endsnippet
+
+snippet test-not-deepeq "Test - notDeepEqual" w
+t.notDeepEqual($1, $2);
+endsnippet
+
+snippet test-throws "Test - throws" w
+t.throws($1, ${2:Error});
+endsnippet
+
+snippet test-not-throws "Test - notThrows" w
+t.notThrows($1);
+endsnippet
+
+snippet test-regex "Test - regex" w
+t.regex($1, ${2:/pattern/});
+endsnippet
+
+snippet test-not-regex "Test - notRegex" w
+t.notRegex($1, ${2:/pattern/});
+endsnippet
+
+snippet test-iferror "Test - ifError" w
+t.ifError(${1:Error});
+endsnippet
+
+snippet test-snapshot "Test - snapshot" w
+t.snapshot($1);
+endsnippet

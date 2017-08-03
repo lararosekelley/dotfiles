@@ -8,27 +8,17 @@
 PACKAGES=(
     artillery
     ava
-    babel-cli
-    bower
-    csslint
     eslint
     firebase-tools
-    flow
-    flow-bin
-    gulp-cli
     htmlhint
     jsonlint
-    node-gyp
     nodemon
+    npm
     npm-check-updates
     nsp
-    nyc
     pm2
     stylelint
     stylelint-scss
-    tslint
-    typescript
-    vue-cli
 )
 
 log -v "setting up node..."

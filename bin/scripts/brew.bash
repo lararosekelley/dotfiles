@@ -15,12 +15,15 @@ TOOLS=(
     binutils
     binwalk
     cmake
+    composer
     coreutils
+    dialog
     diffutils
     djvu2pdf
     docker
     docker-machine
     doxygen
+    elasticsearch
     emacs
     findutils
     flac
@@ -36,25 +39,32 @@ TOOLS=(
     gnutls
     grep
     gzip
+    heroku
     httpie
-    hydra
     icdiff
+    irssi
+    jpeg
     jq
+    kibana
     lame
     less
     lynx
     make
     mercurial
+    mono
+    mutt
     nano
     ngrep
     nmap
     pandoc
     php56
+    readline
     reattach-to-user-namespace
     shellcheck
     sl
     tidy-html5
     tmux
+    tree
     valgrind
     watch
     wget
@@ -65,6 +75,7 @@ DATABASES=(
     mongodb
     mysql
     postgresql
+    postgis
     redis
     sqlite
 )
