@@ -3,37 +3,47 @@ scriptencoding utf-8
 
 " vimrc
 "
-" vim config (pathogen for plugin management)
-" --------
+" vim config w/ vim-plug for plugin management
+" --------------------------------------------
 
 " -------- sections --------
 "
 " 1. general
-" 2. ui, status line
-" 3. colors, fonts
-" 4. files, backups
-" 5. navigation, tabs, buffers
-" 6. text, indent, folding
-" 7. search
-" 8. helpers, plugins
+" 2. ui, colors, fonts
+" 3. files
+" 4. navigation, tabs, buffers
+" 5. text, indent, folding
+" 6. search
+" 7. helper functions
+" 8. plugins
 "
 " --------------------------
 
-" -------- 1. general --------
+" ----------
+" 1. general
+" ----------
 
 augroup vimrc
     autocmd!
 augroup END
 
-" custom map leader
+" change leader key
 let mapleader=','
 
-" -------- 2. ui, status line --------
+" --------------------
+" 2. ui, colors, fonts
+" --------------------
 
-" turn on line numbers
+" syntax highlighting
+syntax enable
+
+" darker background
+set background=dark
+
+" line numbering
 set number
 
-" highlight line for text wrap
+" highlight line length limit
 set colorcolumn=120
 
 " show current command in bottom right of editor
@@ -45,7 +55,7 @@ set cursorline
 " only redraw when needed
 set lazyredraw
 
-" no sounds or flashes on error
+" no sounds and flashing on error
 set novisualbell
 set noerrorbells
 set t_vb=
@@ -54,28 +64,6 @@ set tm=500
 " show trailing spaces
 set list
 set listchars=trail:•
-
-" tab completion for vim commands
-if has('wildmenu')
-    " ignore compiled files
-    set wildignore+=*.a,*.o,*.pyc,*.class,*.jar
-    set wildignore+=.DS_Store,.Trashes,.Spotlight-V100
-    set wildignore+=*.bmp,*.gif,*.ico,*.jpeg,*.jpg,*.png
-    set wildignore+=.git,node_modules,.svn,.hg
-
-    " enable it
-    set wildmenu
-    set wildmode=longest:full,full
-endif
-
-" use system clipboard
-if has('clipboard')
-    set clipboard=unnamed " System clipboard
-
-    if has('unnamedplus') " X11 support
-        set clipboard+=unnamedplus
-    endif
-endif
 
 " show ruler
 set ruler
@@ -87,77 +75,72 @@ set hid
 set showmatch
 set mat=2
 
-" add extra margin to left
+" larger margin on the left
 set foldcolumn=1
 
-" enable mouse
-set ttymouse=xterm2
-set mouse=a
+" filename completion
+if has('wildmenu')
+    " ignore compiled files
+    set wildignore+=*.a,*.o
+    set wildignore+=*.pyc,*.egg
+    set wildignore+=*.class,*.jar
+    set wildignore+=.DS_Store,.Trashes,.Spotlight-V100
+    set wildignore+=*.bmp,*.gif,*.ico,*.jpeg,*.jpg,*.png
+    set wildignore+=.git,.svn,.hg
 
-" enable filetype plugins
-filetype plugin on
+    " enable wildmenu
+    set wildmenu
+    set wildmode=longest:list,full
+endif
 
-" omnicompletion
-set omnifunc=syntaxcomplete#Complete
-
-" -------- 3. colors, fonts --------
-
-" syntax highlighting
-syntax enable
-
-" dark background
-set background=dark
-
-" color scheme
-try
-    colorscheme triplejelly
-
-    " my custom options
-
-    highlight Normal ctermbg=234
-    highlight LineNr ctermbg=234
-    highlight ColorColumn ctermbg=233
-    highlight CursorLine ctermbg=233
-catch
-    colorscheme ron
-endtry
-
-" -------- 4. files, backups --------
+" --------
+" 3. files
+" --------
 
 " reload files edited outside of vim
 set autoread
 
-" recognize markdown files with .md extension
-autocmd BufRead,BufNewFile *.md set filetype=markdown
-let g:markdown_fenced_languages=[ 'html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'rb=ruby', 'css', 'sql', 'sass', 'scss', 'xml', 'java' ]
-let g:markdown_syntax_conceal=0
+augroup autoread
+    autocmd!
+    autocmd FocusGained,BufEnter * :silent! !
+    autocmd FocusLost,WinLeave * :silent! noautocmd w
+augroup END
 
-
-" recognize certain rc files
-autocmd BufRead,BufNewFile .{artillery,babel,eslint,nyc,stylelint,tern-project}rc set filetype=json
+" recognize certain .rc files as json
+autocmd BufRead,BufNewFile,BufFilePre .{artillery,babel,eslint,nyc,stylelint}rc set filetype=json
 
 " no concealing characters
 set conceallevel=0
-autocmd vimrc FileType * setlocal conceallevel=0
 
-" turn backup on
-set backup
-set writebackup
-set backupskip=/tmp/*,/private/tmp/*
+" no swaps or backups
+set nobackup
+set nowritebackup
+set noswapfile
 
-" centralize swap/backup locations
-set backupdir=~/.vim/backups
-set directory=~/.vim/swaps
+" persistent undo
+set undofile
 
-" -------- 5. navigation, tabs, buffers --------
+" ----------------------------
+" 4. navigation, tabs, buffers
+" ----------------------------
 
-" wrap to previous / next lines with left and right arrow keys
+" send more chars at once
+set ttyfast
+
+" enable mouse mode
+set ttymouse=xterm2
+set mouse=a
+
+" make backspace work like any other editor
+set backspace=indent,eol,start
+
+" wrap to prev / next lines with arrow keys
 set whichwrap+=<,>,h,l,[,]
 
-" kill all buffers
+" kill all active buffers
 nnoremap <leader>x :bufdo bd<CR>
 
-" force use of h,j,k,l for navigation
+" force use of h,j,k,l for navigation with error message
 nnoremap <Left> :echoe "use h"<CR>
 nnoremap <Right> :echoe "use l"<CR>
 nnoremap <Up> :echoe "use k"<CR>
@@ -184,7 +167,9 @@ inoremap <S-Tab> <C-d>
 set autochdir
 
 " return to last edit position when opening a file
-autocmd vimrc BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup last_position
+    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
 
 " keep buffers out of window
 set hidden
@@ -192,25 +177,34 @@ set hidden
 " more history
 set history=1000
 
-" source vimrc from vim
-map <leader>s :so ~/.vimrc<CR>
-
-" scroll 4 lines before window border
+" pad scrolling 4 lines from window border
 set scrolloff=4
 
-" -------- 6. text, indent, folding --------
+" always show status and tab bars
+set laststatus=2
+set showtabline=2
+
+" ------------------------
+" 5. text, indent, folding
+" ------------------------
+
+" enable filetype plugins
+filetype plugin on
+
+" omnicomplete
+set omnifunc=syntaxcomplete#Complete
+
+" use system clipboard
+if has('clipboard')
+    set clipboard=unnamed
+endif
 
 " remove all trailing whitespace
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
-" allow backspace
-set backspace=indent,eol,start
-
 " use spaces for tabs
 set expandtab
 set smarttab
-
-" spaces per tab
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
@@ -220,36 +214,34 @@ filetype indent plugin on
 set autoindent
 set smartindent
 
-" enable folding
+" text folding
 set foldenable
-
-" fold based on indent
 set foldmethod=indent
-
-" show most folds
 set foldlevelstart=10
 set foldnestmax=10
 
-" use f to toggle folding
+" use f to fold in normal mode
 nnoremap f za
 
 " line breaks
 set lbr
 set tw=500
 
-" spell checking
+" spell check
 autocmd vimrc BufRead,BufNewFile *.md,*.txt setlocal spell spelllang=en_us
 nnoremap ss :setlocal spell! spelllang=en_us<CR>
 highlight clear SpellRare
 highlight clear SpellCap
 highlight clear SpellLocal
 
-" -------- 7. search --------
+" ---------
+" 6. search
+" ---------
 
-" initiate a search with <Tab> in normal mode
+" use <Tab> in normal mode to start search
 nnoremap <Tab> /
 
-" search as you type
+" realtime search
 set incsearch
 
 " highlight matches
@@ -258,139 +250,202 @@ set hlsearch
 " ignore case when searching
 set ignorecase
 
-" turn off highlighting when done
-nnoremap <leader>. :nohlsearch<CR>
+" turn off search highlight
+nnoremap <leader>. :noh<CR>
 
-" -------- 8. helpers, plugins --------
+" -------------------
+" 7. helper functions
+" -------------------
 
 " helper functions
 function! StrTrim(text)
     return substitute(a:text, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
 
-" plugins (via pathogen)
-if filereadable(expand('~/.vim/autoload/pathogen.vim'))
-    " load pathogen
-    execute pathogen#infect()
+" ----------
+" 8. plugins
+" ----------
 
-    " airline
-    let g:airline#extensions#tabline#enabled=1
-    let g:airline#extensions#tabline#show_tabs=1
-    let g:airline#extensions#tabline#show_tab_nr=1
-    let g:airline#extensions#tabline#tab_nr_type=1
-    let g:airline#extensions#tabline#fnamemod=':t'
-    let g:airline#extensions#tabline#show_buffers=0
+call plug#begin('~/.vim/packages')
 
-    if !exists('g:airline_symbols')
-        let g:airline_symbols={}
-    endif
+" color scheme
+Plug 'morhetz/gruvbox'
 
-    let g:airline_left_sep=''
-    let g:airline_left_alt_sep=''
-    let g:airline_right_sep=''
-    let g:airline_right_alt_sep=''
-    let g:airline_symbols.branch=''
-    let g:airline_symbols.readonly=''
-    let g:airline_symbols.linenr=''
+" automatically close brackets, quotes, etc.
+Plug 'jiangmiao/auto-pairs'
 
-    " airline theme
-    let g:airline_theme='jellybeans'
+" close html tags
+Plug 'alvan/vim-closetag'
 
-    " close tags
-    let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml'
+let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue'
 
-    " csv
-    let g:csv_delim=','
-    let g:csv_nomap_cr=1
-    let g:csv_nomap_space=1
-    let g:csv_nomap_bs=1
+" highlight colors
+Plug 'ap/vim-css-color'
 
-    " ctrl-p
-    let g:ctrlp_map='<c-p>'
-    let g:ctrlp_cmd='CtrlP'
+" csv files
+Plug 'chrisbra/csv.vim'
 
-    " editorconfig
-    let g:EditorConfig_exclude_patterns=[ 'fugitive://.*' ]
+let g:csv_delim=','
+let g:csv_nomap_cr=1
+let g:csv_nomap_space=1
+let g:csv_nomap_bs=1
 
-    " indentLine
-    let g:indentLine_color_term=237
-    let g:indentLine_setConceal=0
+" look up documentation
+Plug 'keith/investigate.vim'
 
-    " javascript libraries
-    let g:used_javascript_libs='d3,jquery,vue,react,flux,backbone'
+let g:investigate_use_dash=1
 
-    " javascript
-    let g:javascript_plugin_jsdoc=1
-    let g:javascript_plugin_flow=1
+" editorconfig
+Plug 'editorconfig/editorconfig-vim'
 
-    " flow - close when there are no errors
-    let g:flow#autoclose=1
+let g:EditorConfig_exclude_patterns=[ 'fugitive://.*', 'scp://.*' ]
 
-    " json
-    let g:vim_json_syntax_conceal=0
+" git
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
-    " vim investigate
-    let g:investigate_use_dash=1
+" database access
+Plug 'vim-scripts/dbext.vim'
 
-    " latex
-    let g:tex_flavor='latex'
+" show indentation levels next to line numbers
+Plug 'Yggdroot/indentLine'
 
-    " markdown
-    let g:vim_markdown_fenced_languages=[ 'html', 'python', 'py=python', 'bash=sh', 'javascript', 'js=javascript', 'ruby', 'rb=ruby', 'css', 'sql', 'sass', 'scss', 'xml', 'java' ]
+" javascript config
+Plug 'pangloss/vim-javascript'
 
-    " ycm settings
-    let g:ycm_key_list_select_completion=[ '<C-n>', '<Down>' ]
-    let g:ycm_key_list_previous_completion=[ '<C-p>', '<Up>' ]
-    let g:SuperTabDefaultCompletionType='<C-n>'
+let g:javascript_plugin_jsdoc=1
 
-    " snippets - cycle through suggestions
-    let g:UltiSnipsExpandTrigger='<Tab>'
-    let g:UltiSnipsJumpForwardTrigger='<Tab>'
-    let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
+Plug 'othree/javascript-libraries-syntax.vim'
 
-    let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'custom-snippets' ]
+let g:used_javascript_libs='jquery,underscore,backbone,react,flux,handlebars,vue,d3'
 
-    " syntastic
-    let g:syntastic_always_populate_loc_list=1
-    let g:syntastic_auto_loc_list=1
-    let g:syntastic_check_on_open=1
-    let g:syntastic_check_on_wq=0
+" better json highlighting
+Plug 'elzr/vim-json'
 
-    " syntastic language checkers (only works if each checker binary is installed)
-    let g:syntastic_javascript_checkers=[ 'eslint' ]
-    let g:syntastic_ruby_checkers=[ 'rubocop' ]
-    let g:syntastic_json_checkers=[ 'jsonlint' ]
-    let g:syntastic_python_checkers=[ 'flake8' ]
-    let g:syntastic_markdown_checkers=[ 'mdl' ]
-    let g:syntastic_html_checkers=[ 'tidy' ]
-    let g:syntastic_html_tidy_exec='tidy5'
-    let g:syntastic_css_checkers=[ 'csslint' ]
-    let g:syntastic_scss_checkers=[ 'stylelint' ]
-    let g:syntastic_java_checkers=[ 'javac' ]
-    let g:syntastic_sql_checkers=[ 'sqlint' ]
-    let g:syntastic_tex_checkers=[ 'chktex' ]
-    let g:syntastic_bash_checkers=[ 'shellcheck' ]
-    let g:syntastic_sh_checkers=[ 'shellcheck' ]
-    let g:syntastic_typescript_checkers=[ 'tslint' ]
-    let g:syntastic_vim_checkers=[ 'vint' ]
+let g:vim_json_syntax_conceal=0
 
-    " set the statusline
-    set statusline+=%{fugitive#statusline()}
-    set statusline+=%#warningmsg#
-    set statusline+=%{SyntasticStatuslineFlag()}
-    set statusline+=%*
+" latex
+Plug 'lervag/vimtex'
 
-    if has('statusline')
-        set laststatus=2
-        set statusline=%<%f\
-        set statusline+=%w%h%m%r
-        set statusline+=%{fugitive#statusline()}
-        set statusline+=\ [%{&ff}/%Y]
-        set statusline+=\ [%{getcwd()}]
-        set statusline+=%#warningmsg#
-        set statusline+=%{SyntasticStatuslineFlag()}
-        set statusline+=%*
-        let g:syntastic_enable_signs=1
-        set statusline+=%=%-14.(%l,%c%V%)\ %p%%
-    endif
+let g:tex_flavor='latex'
+
+" better markdown
+Plug 'plasticboy/vim-markdown'
+
+let g:vim_markdown_fenced_languages=[ 'csharp=cs', 'js=javascript', 'rb=ruby', 'c++=cpp' ]
+let g:vim_markdown_conceal=0
+
+" supertab
+Plug 'ervandew/supertab'
+
+let g:SuperTabDefaultCompletionType='<C-n>'
+let g:SuperTabCrMapping=0
+
+" code completion via ycm
+Plug 'Valloric/YouCompleteMe', { 'do': '/usr/bin/python ./install.py' }
+
+let g:ycm_key_list_select_completion=[ '<C-j>', '<C-n>', '<Down>' ]
+let g:ycm_key_list_previous_completion=[ '<C-k>', '<C-p>', '<Up>' ]
+
+" snippets
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+let g:UltiSnipsExpandTrigger='<Tab>'
+let g:UltiSnipsJumpForwardTrigger='<Tab>'
+let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
+let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'snips' ]
+
+" syntax errors and warnings
+Plug 'vim-syntastic/syntastic'
+Plug 'posva/vim-vue'
+Plug 'sekel/vim-vue-syntastic'
+
+let g:syntastic_always_populate_loc_list=1
+let g:syntastic_auto_loc_list=1
+let g:syntastic_check_on_open=1
+let g:syntastic_check_on_wq=0
+let g:syntastic_enable_highlighting=1
+
+" syntastic checkers
+
+let g:syntastic_javascript_checkers=[ 'eslint' ]
+let g:syntastic_ruby_checkers=[ 'rubocop' ]
+let g:syntastic_json_checkers=[ 'jsonlint' ]
+let g:syntastic_python_checkers=[ 'flake8' ]
+let g:syntastic_markdown_checkers=[ 'mdl' ]
+let g:syntastic_html_checkers=[ 'tidy' ]
+let g:syntastic_html_tidy_exec='tidy5'
+let g:syntastic_css_checkers=[ 'csslint' ]
+let g:syntastic_scss_checkers=[ 'stylelint' ]
+let g:syntastic_java_checkers=[ 'javac' ]
+let g:syntastic_sql_checkers=[ 'sqlint' ]
+let g:syntastic_tex_checkers=[ 'chktex' ]
+let g:syntastic_bash_checkers=[ 'shellcheck' ]
+let g:syntastic_sh_checkers=[ 'shellcheck' ]
+let g:syntastic_typescript_checkers=[ 'tslint' ]
+let g:syntastic_vim_checkers=[ 'vint' ]
+let g:syntastic_vue_checkers=[ 'eslint' ]
+
+" make syntastic work for js and vue files with locally installed eslint
+
+let local_eslint = finddir('node_modules', '.;') . '/.bin/eslint'
+
+if matchstr(local_eslint, "^\/\\w") == ''
+    let local_eslint = getcwd() . "/" . local_eslint
 endif
+
+if executable(local_eslint)
+    let g:syntastic_javascript_eslint_exec = local_eslint
+    let g:syntastic_vue_eslint_exec = local_eslint
+endif
+
+" configure status and tab lines
+Plug 'itchyny/lightline.vim'
+
+let g:lightline = {
+        \ 'colorscheme': 'gruvbox',
+        \ 'enable': { 'tabline': 1 },
+        \ 'active': {
+        \     'left': [
+        \         [ 'mode', 'paste', 'spell' ],
+        \         [ 'gitbranch', 'readonly', 'filename', 'modified' ]
+        \     ],
+        \     'right': [
+        \         [ 'syntastic', 'lineinfo' ],
+        \         [ 'percent' ],
+        \         [ 'fileformat', 'fileencoding', 'filetype' ]
+        \     ]
+        \ },
+        \ 'component_function': {
+        \     'gitbranch': 'fugitive#head'
+        \ },
+        \ 'component_expand': {
+        \     'syntastic': 'SyntasticStatuslineFlag'
+        \ },
+        \ 'component_type': {
+        \     'syntastic': 'error'
+        \ }
+    \ }
+
+augroup AutoSyntastic
+    autocmd!
+    autocmd BufWritePost * call s:syntastic()
+augroup END
+
+function! s:syntastic()
+    SyntasticCheck
+    call lightline#update()
+endfunction
+
+" custom start screen
+Plug 'mhinz/vim-startify'
+
+call plug#end()
+
+" set colorscheme
+try
+    colorscheme gruvbox
+catch
+    colorscheme ron
+endtry

@@ -166,26 +166,6 @@ function update() {
         brew cleanup
     fi
 
-    # vim
-
-    if command -v vim &> /dev/null; then
-        echo "updating vim packages..."
-
-        if prompt_user "update vim packages? (y/n)"; then
-            if [ -d ~/.vim/bundle ]; then
-                cd ~/.vim/bundle || exit
-
-                for d in *; do
-                    cd "$d" || exit
-                    git pull
-                    cd .. || exit
-                done
-
-                cd || exit
-            fi
-        fi
-    fi
-
     # python 2
 
     if command -v pip &> /dev/null; then
