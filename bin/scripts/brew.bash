@@ -66,6 +66,7 @@ TOOLS=(
     tmux
     tree
     valgrind
+    vapor
     watch
     wget
 )

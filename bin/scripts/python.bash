@@ -27,6 +27,7 @@ log -v "configuring python..."
 
 brew_install pyenv
 brew_install pyenv-virtualenv
+brew_install pyenv-pip-migrate
 
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
