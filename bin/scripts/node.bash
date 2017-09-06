@@ -8,7 +8,13 @@
 PACKAGES=(
     artillery
     ava
+    babel-eslint
+    bower
     eslint
+    eslint-plugin-ava
+    eslint-plugin-import
+    eslint-plugin-promise
+    eslint-plugin-vue
     firebase-tools
     htmlhint
     jsonlint

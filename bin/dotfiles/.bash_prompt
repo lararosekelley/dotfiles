@@ -173,19 +173,19 @@ function git_diff() {
     fi
 }
 
-# language and environment information
+# programming language and environment information
 
 function node_info() {
+    output=" "
+
     if node --version &> /dev/null; then
-        output=" [node $(node --version)"
+        output=" [Node: $(node --version | cut -c 2-)"
 
         if [ ! -z "${NODE_ENV+x}" ]; then
             output+=", NODE_ENV: ${NODE_ENV}] "
         else
             output+="] "
         fi
-    else
-        output=" "
     fi
 
     echo "$output"

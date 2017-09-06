@@ -5,7 +5,6 @@
 # sets up the vim editor for development work
 # --------
 
-
 log -v "configuring vim..."
 
 brew install vim --with-lua --with-override-system-vi

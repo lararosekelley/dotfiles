@@ -10,9 +10,13 @@ PACKAGES=(
     appcleaner
     atom
     authy-desktop
+    cleanmymac
     dash
     discord
+    dolphin
+    expressions
     firefox
+    firefoxnightly
     google-chrome
     google-chrome-canary
     google-cloud-sdk
@@ -20,12 +24,17 @@ PACKAGES=(
     keycastr
     mactex
     medis
+    mongodb-compass
     ngrok
+    numi
+    opera
     origami-studio
     paw
     postico
     safari-technology-preview
+    sip
     sketch
+    sketchpacks
     slack
     the-unarchiver
     transmission
