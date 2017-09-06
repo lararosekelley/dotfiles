@@ -146,6 +146,15 @@ function update() {
     # homebrew
 
     if command -v brew &> /dev/null; then
+        # make sure using system python
+
+        if command -v pyenv &> /dev/null; then
+            PY3=$(pyenv global | sed -n 1p)
+            PY2=$(pyenv global | sed -n 2p)
+
+            pyenv global system
+        fi
+
         echo "updating brew packages..."
         brew update
 
@@ -164,6 +173,12 @@ function update() {
 
         echo "cleaning up..."
         brew cleanup
+
+        # switch back to old python
+
+        if command -v pyenv &> /dev/null; then
+            pyenv global "$PY3" "$PY2"
+        fi
     fi
 
     # python 2

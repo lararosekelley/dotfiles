@@ -119,6 +119,7 @@ set noswapfile
 
 " persistent undo
 set undofile
+set undodir=~/.vim/undo
 
 " ----------------------------
 " 4. navigation, tabs, buffers
@@ -360,6 +361,7 @@ let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'snips' ]
 Plug 'vim-syntastic/syntastic'
 Plug 'posva/vim-vue'
 Plug 'sekel/vim-vue-syntastic'
+Plug 'mtscout6/syntastic-local-eslint.vim'
 
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
@@ -386,19 +388,6 @@ let g:syntastic_sh_checkers=[ 'shellcheck' ]
 let g:syntastic_typescript_checkers=[ 'tslint' ]
 let g:syntastic_vim_checkers=[ 'vint' ]
 let g:syntastic_vue_checkers=[ 'eslint' ]
-
-" make syntastic work for js and vue files with locally installed eslint
-
-let local_eslint = finddir('node_modules', '.;') . '/.bin/eslint'
-
-if matchstr(local_eslint, "^\/\\w") == ''
-    let local_eslint = getcwd() . "/" . local_eslint
-endif
-
-if executable(local_eslint)
-    let g:syntastic_javascript_eslint_exec = local_eslint
-    let g:syntastic_vue_eslint_exec = local_eslint
-endif
 
 " configure status and tab lines
 Plug 'itchyny/lightline.vim'
