@@ -66,7 +66,6 @@ TOOLS=(
     tmux
     tree
     valgrind
-    vapor
     watch
     wget
 )
@@ -88,13 +87,11 @@ brew update && brew upgrade
 brew tap caskroom/cask
 brew tap caskroom/fonts
 brew tap caskroom/versions
-brew tap homebrew/binary
 brew tap homebrew/boneyard
 brew tap homebrew/bundle
 brew tap homebrew/dupes
 brew tap homebrew/services
 brew tap homebrew/php
-brew tap homebrew/versions
 
 log -v "installing command line tools & utilities..."
 
