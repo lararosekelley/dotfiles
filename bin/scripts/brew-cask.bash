@@ -10,6 +10,7 @@ PACKAGES=(
     appcleaner
     atom
     authy-desktop
+    blender
     cleanmymac
     dash
     discord
@@ -23,7 +24,6 @@ PACKAGES=(
     java
     keycastr
     mactex
-    medis
     mongodb-compass
     ngrok
     numi
