@@ -15,7 +15,6 @@ TOOLS=(
     binutils
     binwalk
     cmake
-    composer
     coreutils
     dialog
     diffutils
@@ -40,6 +39,7 @@ TOOLS=(
     grep
     gzip
     heroku
+    httpd
     httpie
     icdiff
     irssi
@@ -57,7 +57,6 @@ TOOLS=(
     ngrep
     nmap
     pandoc
-    php56
     readline
     reattach-to-user-namespace
     shellcheck
@@ -68,6 +67,7 @@ TOOLS=(
     valgrind
     watch
     wget
+    wp-cli
 )
 
 DATABASES=(
@@ -87,6 +87,7 @@ brew update && brew upgrade
 brew tap caskroom/cask
 brew tap caskroom/fonts
 brew tap caskroom/versions
+brew tap homebrew/apache
 brew tap homebrew/boneyard
 brew tap homebrew/bundle
 brew tap homebrew/dupes

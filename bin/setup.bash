@@ -124,6 +124,13 @@ if prompt_user "install node? (y/n)"; then
     source "$SETUP_DIR"/bin/scripts/node.bash
 fi
 
+if prompt_user "install php? (y/n)"; then
+    PHP_ACCEPTED=1
+
+    # shellcheck disable=SC1090
+    source "$SETUP_DIR"/bin/scripts/php.bash
+fi
+
 # python
 
 if prompt_user "install python? (y/n)"; then
@@ -263,8 +270,9 @@ if [ "$RUBY_ACCEPTED" == "1" ]; then
 fi
 
 if [ "$JAVA_ACCEPTED" == "1" ]; then
-    JAVA_VERSION="$(javac -version 2>&1 | cut -d ' ' -f 2)"
-    echo "-- java $JAVA_VERSION installed & maven installed --"
+    JAVA_VERSION="$(javac -version | cut -d ' ' -f 2)"
+    SCALA_VERSION="$(scalac -version | cut -d ' ' -f 4)"
+    echo "-- java $JAVA_VERSION installed, scala $SCALA_VERSION installed, maven installed --"
 fi
 
 if [ "$GO_ACCEPTED" == "1" ]; then
@@ -275,6 +283,11 @@ fi
 if [ "$NODE_ACCEPTED" == "1" ]; then
     NODE_VERSION="$(node -v)"
     echo "-- node.js $NODE_VERSION installed & configured in ~/.nvm --"
+fi
+
+if [ "$PHP_ACCEPTED" == "1" ]; then
+    PHP_VERSION="$(php -v | sed -n 1p | cut -d ' ' -f 2)"
+    echo "-- php $PHP_VERSION installed & composer installed"
 fi
 
 if [ "$RUST_ACCEPTED" == "1" ]; then

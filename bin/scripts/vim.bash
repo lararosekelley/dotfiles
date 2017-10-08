@@ -24,4 +24,4 @@ cp "$1"/bin/dotfiles/.vimrc ~/.vimrc
 # copy vim snippets
 
 mkdir -p ~/.vim/snips
-cp -R "$1"/bin/lib/vim/snippets ~/.vim/snips
+cp -R "$1"/bin/lib/vim/snips ~/.vim
