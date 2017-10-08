@@ -38,6 +38,7 @@ PACKAGES=(
     slack
     the-unarchiver
     transmission
+    transmit
     vagrant
     virtualbox
     vlc

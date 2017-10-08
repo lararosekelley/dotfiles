@@ -11,3 +11,4 @@ brew_cask_install java
 
 brew_install maven
 brew_install gradle
+brew_install scala
