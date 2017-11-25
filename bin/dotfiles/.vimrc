@@ -107,7 +107,7 @@ augroup autoread
 augroup END
 
 " recognize certain .rc files as json
-autocmd BufRead,BufNewFile,BufFilePre .{artillery,babel,eslint,nyc,stylelint}rc set filetype=json
+autocmd BufRead,BufNewFile,BufFilePre .{artillery,babel,eslint,jsdoc,nyc,stylelint}rc set filetype=json
 
 " no concealing characters
 set conceallevel=0
@@ -251,8 +251,8 @@ set hlsearch
 " ignore case when searching
 set ignorecase
 
-" turn off search highlight
-nnoremap <leader>. :noh<CR>
+" turn off search highlight in all buffers
+nnoremap <leader>. :bufdo nohlsearch<CR>
 
 " -------------------
 " 7. helper functions
@@ -269,7 +269,10 @@ endfunction
 
 call plug#begin('~/.vim/packages')
 
-" color scheme
+" syntax highlighting for .bats files (Bash Automated Testing System)
+Plug 'vim-scripts/bats.vim', { 'for': [ 'sh' ] }
+
+" color schemes
 Plug 'morhetz/gruvbox'
 
 " automatically close brackets, quotes, etc.
@@ -278,13 +281,13 @@ Plug 'jiangmiao/auto-pairs'
 " close html tags
 Plug 'alvan/vim-closetag'
 
-let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue'
+let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx'
 
 " highlight colors
 Plug 'ap/vim-css-color'
 
 " csv files
-Plug 'chrisbra/csv.vim'
+Plug 'chrisbra/csv.vim', { 'for': [ 'csv' ] }
 
 let g:csv_delim=','
 let g:csv_nomap_cr=1
@@ -301,6 +304,12 @@ Plug 'editorconfig/editorconfig-vim'
 
 let g:EditorConfig_exclude_patterns=[ 'fugitive://.*', 'scp://.*' ]
 
+" flow
+Plug 'flowtype/vim-flow', { 'for': [ 'javascript', 'jsx', 'vue' ] }
+
+let g:flow#autoclose=1
+let g:flow#timeout=5
+
 " git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
@@ -312,26 +321,23 @@ Plug 'vim-scripts/dbext.vim'
 Plug 'Yggdroot/indentLine'
 
 " javascript config
-Plug 'pangloss/vim-javascript'
+Plug 'pangloss/vim-javascript', { 'for': [ 'javascript', 'jsx', 'vue' ] }
 
 let g:javascript_plugin_jsdoc=1
-
-Plug 'othree/javascript-libraries-syntax.vim'
-
-let g:used_javascript_libs='jquery,underscore,backbone,react,flux,handlebars,vue,d3'
+let g:javascript_plugin_flow=1
 
 " better json highlighting
-Plug 'elzr/vim-json'
+Plug 'elzr/vim-json', { 'for': [ 'json' ] }
 
 let g:vim_json_syntax_conceal=0
 
 " latex
-Plug 'lervag/vimtex'
+Plug 'lervag/vimtex', { 'for': [ 'tex' ] }
 
 let g:tex_flavor='latex'
 
 " better markdown
-Plug 'plasticboy/vim-markdown'
+Plug 'plasticboy/vim-markdown', { 'for': [ 'markdown' ] }
 
 let g:vim_markdown_fenced_languages=[ 'csharp=cs', 'js=javascript', 'rb=ruby', 'c++=cpp' ]
 let g:vim_markdown_conceal=0
@@ -347,6 +353,7 @@ Plug 'Valloric/YouCompleteMe', { 'do': '/usr/bin/python ./install.py' }
 
 let g:ycm_key_list_select_completion=[ '<C-j>', '<C-n>', '<Down>' ]
 let g:ycm_key_list_previous_completion=[ '<C-k>', '<C-p>', '<Up>' ]
+let g:ycm_autoclose_preview_window_after_completion=1 " close window after completion accepted
 
 " snippets
 Plug 'SirVer/ultisnips'
@@ -359,9 +366,11 @@ let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'snips' ]
 
 " syntax errors and warnings
 Plug 'vim-syntastic/syntastic'
-Plug 'posva/vim-vue'
-Plug 'sekel/vim-vue-syntastic'
-Plug 'mtscout6/syntastic-local-eslint.vim'
+
+Plug 'posva/vim-vue', { 'for': [ 'vue' ] }
+Plug 'sekel/vim-vue-syntastic', { 'for': [ 'vue' ] }
+
+Plug 'mtscout6/syntastic-local-eslint.vim', { 'for': [ 'javascript', 'jsx', 'vue' ] }
 
 let g:syntastic_always_populate_loc_list=1
 let g:syntastic_auto_loc_list=1
@@ -389,10 +398,13 @@ let g:syntastic_typescript_checkers=[ 'tslint' ]
 let g:syntastic_vim_checkers=[ 'vint' ]
 let g:syntastic_vue_checkers=[ 'eslint' ]
 
+" custom start screen
+Plug 'mhinz/vim-startify'
+
 " configure status and tab lines
 Plug 'itchyny/lightline.vim'
 
-let g:lightline = {
+let g:lightline={
         \ 'colorscheme': 'gruvbox',
         \ 'enable': { 'tabline': 1 },
         \ 'active': {
@@ -426,9 +438,6 @@ function! s:syntastic()
     SyntasticCheck
     call lightline#update()
 endfunction
-
-" custom start screen
-Plug 'mhinz/vim-startify'
 
 call plug#end()
 
