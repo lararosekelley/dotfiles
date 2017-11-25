@@ -40,6 +40,17 @@ export GOPATH="$HOME/.go"
 export PGDATA="/usr/local/var/postgres"
 export PGHOST=localhost
 
+# openssl via homebrew
+
+export CFLAGS
+CFLAGS="-I$(brew --prefix openssl)/include"
+
+export CPPFLAGS
+CPPFLAGS="-I$(brew --prefix openssl)/include"
+
+export LDFLAGS
+LDFLAGS="-L$(brew --prefix openssl)/lib"
+
 # fix for mutt colors
 export COLORFGBG="default;default"
 
