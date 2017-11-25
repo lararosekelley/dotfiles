@@ -62,10 +62,16 @@ if [[ -s "$(brew --prefix nvm)" ]]; then
     NODE_VERSION=$(nvm current)
     nvm alias default "$NODE_VERSION" > /dev/null
 
-    npm completion >> ~/.npm_completion
+    # fix for homebrew nvm
 
-    # shellcheck disable=SC1090
-    source ~/.npm_completion
+    if [ -f "$(brew --prefix nvm)/etc/bash_completion.d/nvm" ]; then
+        # shellcheck disable=SC1090
+        source "$(brew --prefix nvm)/etc/bash_completion.d/nvm"
+    fi
+
+    # npm completion
+
+    npm completion > /dev/null
 fi
 
 # rbenv
