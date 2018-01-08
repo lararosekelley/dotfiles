@@ -7,38 +7,41 @@
 
 PACKAGES=(
     1password
-    authy
+    appcleaner
+    atom
+    authy-desktop
+    blender
     cleanmymac
     dash
     discord
-    docker
-    eclipse-java
+    dolphin
     expressions
     firefox
-    firefox-beta
-    firefox-nightly
+    firefoxnightly
     google-chrome
     google-chrome-canary
     google-cloud-sdk
-    iconjar
     java
-    mongotron
+    keycastr
+    mactex
+    mongodb-compass
     ngrok
+    numi
     opera
-    opera-beta
-    opera-developer
     origami-studio
     paw
     postico
     safari-technology-preview
     sip
     sketch
+    sketchpacks
     slack
     the-unarchiver
     transmission
     transmit
     vagrant
     virtualbox
+    vlc
 )
 
 log -v "installing mac apps..."

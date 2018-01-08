@@ -62,16 +62,10 @@ if [[ -s "$(brew --prefix nvm)" ]]; then
     NODE_VERSION=$(nvm current)
     nvm alias default "$NODE_VERSION" > /dev/null
 
-    # fix for homebrew nvm
+    npm completion >> ~/.npm_completion
 
-    if [ -f "$(brew --prefix nvm)/etc/bash_completion.d/nvm" ]; then
-        # shellcheck disable=SC1090
-        source "$(brew --prefix nvm)/etc/bash_completion.d/nvm"
-    fi
-
-    # npm completion
-
-    npm completion > /dev/null
+    # shellcheck disable=SC1090
+    source ~/.npm_completion
 fi
 
 # rbenv
@@ -85,7 +79,7 @@ fi
 if [[ -s "$(brew --prefix pyenv)" ]]; then
     eval "$(pyenv init -)"
 
-    if which pyenv virtualenv > /dev/null; then
+    if which pyenv-virtualenv-init > /dev/null; then
         eval "$(pyenv virtualenv-init -)";
     fi
 
@@ -101,7 +95,5 @@ fi
 
 # bash prompt
 
-if [ -f ~/.bash_prompt ]; then
-    # shellcheck disable=SC1090
-    source ~/.bash_prompt
-fi
+# shellcheck disable=SC1090
+source ~/.bash_prompt

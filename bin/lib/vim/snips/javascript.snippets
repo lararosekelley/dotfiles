@@ -1,8 +1,8 @@
 # javascript.snippets
 #
-# vim snippets for .js files
+# snippets for .js files
 #
-# assumptions: Using ES2017 syntax
+# assumptions: using es7 and Facebook's Flow type checking
 # --------
 
 # general
@@ -20,77 +20,70 @@ const $1 = function $1($2) {
 };
 endsnippet
 
-# jsdoc tags
+# jsdoc
 # --------
 
-snippet /**file "File header" b
+snippet /**f "Function JSDoc comment" w
+/**
+ * @function ${1:Name}
+ * @description ${2:Description}
+ * ${3:@public}
+ *
+ * @returns {${4:type}} ${5:Description}
+ */
+endsnippet
+
+snippet /**file "File-level JSDoc comments" w
 /**
  * @file ${1:Describe the file here}
- * @module ${2:module}
  *
- * @author ${3:Name} <${4:name@example.com}> (${5:https://example.com})
- * @copyright Copyright (c) ${6:2017} ${7:Copyright holder}. ${8:See LICENSE file.}
+ * @author ${2:Your Name} <${3:email@example.com}>
+ * @copyright ${4:All rights reserved.}
  */
 endsnippet
 
-snippet /**function "Function" w
+snippet /**c "Constant JSDoc comment" w
 /**
- * ${1:Function description}
- * @${2:public}
- *
- * @param {${3:type}} ${4:name} - ${5:Description}
- *
- * @returns {${6:type}} ${7:Description}
- *
- * @throws {${8:Error}} ${9:Description}
+ * @constant ${1:name}
+ * @description ${2:Description}
+ * @type {${3:type}}
  */
 endsnippet
 
-snippet /**class "Class" w
-/**
- * ${1:Class description}
- * @extends ${2:Class}
- */
+snippet @c "@constant JSDoc tag"
+@constant ${1:name}
 endsnippet
 
-snippet /**constructor "Class constructor" w
-/**
- * ${1:Creates an instance of Class}
- * @${2:public}
- *
- * @param {${3:type}} ${4:name} - ${5:Description}
- */
-endsnippet
-
-snippet /**constant "Constant JSDoc comment" w
-/**
- * ${1:Constant description}
- * @type {${2:type}}
- */
-endsnippet
-
-snippet @param "@param {type} name - Description"
+snippet @p "@param JSDoc tag"
 @param {${1:type}} ${2:name} - ${3:Description}
 endsnippet
 
-snippet @returns "@returns {type} Description"
+snippet @pr "@private JSDoc tag"
+@private
+endsnippet
+
+snippet @pu "@public JSDoc tag"
+@public
+endsnippet
+
+snippet @f "@function JSDoc tag"
+@function ${1:name}
+endsnippet
+
+snippet @d "@description JSDoc tag"
+@description ${1:Description}
+endsnippet
+
+snippet @r "@returns JSDoc tag"
 @returns {${1:type}} ${2:Description}
 endsnippet
 
-snippet @throws "@throws {Error} Description"
+snippet @t "@throws JSDoc tag"
 @throws {${1:Error}} ${2:Description}
 endsnippet
 
-snippet @type "@type {type}"
+snippet @ty "@type JSDoc tag"
 @type {${1:type}}
-endsnippet
-
-snippet @extends "@extends Class"
-@extends ${1:Class}
-endsnippet
-
-snippet @module "@module name"
-@module ${1:name}
 endsnippet
 
 # testing with ava
@@ -203,11 +196,11 @@ endsnippet
 # ava - assertions
 
 snippet test-pass "Test - pass" w
-t.pass('${1:Message}');
+t.pass();
 endsnippet
 
 snippet test-fail "Test - fail" w
-t.fail('${1:Message}');
+t.fail();
 endsnippet
 
 snippet test-truthy "Test - truthy" w
@@ -243,13 +236,7 @@ t.notDeepEqual($1, $2);
 endsnippet
 
 snippet test-throws "Test - throws" w
-t.throws(() => {
-    $1
-}, ${2:Error});
-endsnippet
-
-snippet test-throws-promise "Test - throws (promise version)" w
-t.throws($1);
+t.throws($1, ${2:Error});
 endsnippet
 
 snippet test-not-throws "Test - notThrows" w

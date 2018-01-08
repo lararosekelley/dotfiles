@@ -26,8 +26,8 @@
 # --------
 
 SETUP_DIR=~/.setup
-REPO_URL="https://github.com/tylucaskelley/setup/tarball/master"
-ISSUES_URL="https://github.com/tylucaskelley/setup/issues/new"
+REPO_URL="https://github.com/tylucaskelley/setup.sh/tarball/master"
+ISSUES_URL="https://github.com/tylucaskelley/setup.sh/issues/new"
 
 # 2. setup
 # --------
@@ -87,7 +87,6 @@ if ! brew help &> /dev/null; then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 else
     log -v "homebrew already installed"
-    sudo chown -R "$(whoami)" /usr/local
 fi
 
 # shellcheck disable=SC1090

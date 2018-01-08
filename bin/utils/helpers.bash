@@ -45,16 +45,12 @@ function brew_install() {
         return 1
     fi
 
-    if brew info "$1" &> /dev/null; then
-        if brew ls --versions "$1" &> /dev/null; then
-            if brew outdated | grep "$1" &> /dev/null; then
-                brew upgrade "$1"
-            fi
-        else
-            brew install "$1"
+    if brew ls --versions "$1" &> /dev/null; then
+        if brew outdated | grep "$1" &> /dev/null; then
+            brew upgrade "$1"
         fi
     else
-        echo "Requested package $1 does not exist"
+        brew install "$1"
     fi
 }
 
@@ -71,27 +67,25 @@ function brew_cask_install() {
         return 1
     fi
 
-    if brew cask info "$1" &> /dev/null; then
-        if brew cask ls --versions "$1" &> /dev/null; then
-            brew cask reinstall "$1"
-        else
-            brew cask install "$1"
-        fi
+    if brew cask ls --versions "$1" &> /dev/null; then
+        brew cask reinstall "$1"
     else
-        echo "Requested package $1 does not exist"
+        brew cask install "$1"
     fi
 }
 
 # checks if computer can run the osx.bash script
 #
 # returns:
-#   0 - if $OS is one of 10.11, 10.12, or 10.13
+#   0 - if $OS == $VERSION
 #   1 - otherwise
 #
 function os_eligible() {
+    VERSION="10.13"
+    PREV_VERSION="10.12"
     OS=$(sw_vers -productVersion | awk -F '.' '{print $1 "." $2}')
 
-    if [[ "$OS" =~ ^10.1(1|2|3)$ ]]; then
+    if [[ "$OS" =~ ^(${VERSION}|${PREV_VERSION})$ ]]; then
         return 0
     fi
 
@@ -120,7 +114,6 @@ function log() {
         case "$opt" in
             v) verbose=1 ;;
             l) level="$OPTARG" ;;
-            *) ;;
         esac
     done
 

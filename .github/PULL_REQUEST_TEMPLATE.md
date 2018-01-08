@@ -1,45 +1,34 @@
 # Submit a pull request
 
-Thank you for submitting a pull request! To speed up the review process, please ensure that everything below
-is true:
+Replace any "X" below to describe your changes. Please check the boxes here by
+inserting an "x" to confirm that your pull request meets the requirements:
 
-1. This is not a duplicate of an [existing pull request][1].
-2. No existing features have been broken without good reason.
-3. Your commit messages are detailed
-4. The code style [guidelines][2] have been followed.
-5. Documentation has been updated to reflect your changes.
-6. Tests have been added or updated to reflect your changes.
-7. All tests pass.
+- [ ] This pull request isn't a duplicate of an [existing one][1]
+- [ ] No existing features have been broken
+- [ ] Commit messages are detailed
+- [ ] The [code style guidelines][2] have been followed
+- [ ] Documentation has been updated to reflect changes
+- [ ] Tests have been added / updated to reflect changes
 
 Any questions should be directed to @tylucaskelley.
 
 ---
 
-Replace any ":question:" below with information about your pull request.
+### What changes does this pull request make?
 
-## Pull Request Details
+X
 
-Provide details about your pull request and what it adds, fixes, or changes.
+### What is the current behavior?
 
-:question:
+X
 
-## Breaking Changes
+### Does this pull request introduce any breaking changes?
 
-Describe what features are broken by this pull request and why, if any.
+X
 
-:question:
+### Other relevant information:
 
-## Issues Fixed
+X
 
-Enter the issue numbers resolved by this pull request below, if any.
-
-1. :question:
-
-## Other Relevant Information
-
-Provide any other important details below.
-
-:question:
-
-[1]: https://github.com/tylucaskelley/setup/pulls
-[2]: https://github.com/tylucaskelley/setup/blob/master/.github/CONTRIBUTING.md#code-style
+[1]: https://github.com/tylucaskelley/setup.sh/pulls
+[2]: https://github.com/tylucaskelley/setup.sh/blob/master/.github/CONTRIBUTING.md#code-style

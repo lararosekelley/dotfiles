@@ -1,34 +1,38 @@
 # Submit a feature request or bug report
 
-Before you submit an issue, check to see if it has [already been reported][1].
+Replace any "X" with your information. Before you submit an issue,
+check to see if this issue has [already been reported][1].
+
 Any questions should be directed to @tylucaskelley.
 
 ---
 
-Replace any ":question:" below with your information.
+### Is this a request for a feature or a bug report?
 
-## Development Environment
+X
 
-- Operating system: :question:
-- Browser: :question:
-- Project version: :question:
+### What is the current behavior?
 
-## Current Behavior
+X
 
-:question:
+### If this is a bug report, please provide steps to reproduce:
 
-## Expected Behavior
+X
 
-:question:
+### What is the expected or desired behavior?
 
-## Steps to Reproduce
+X
 
-Only fill this in if you are filing a bug report.
+### Please provide use cases for changing the current behavior:
 
-1. :question:
+X
 
-## Other Relevant Information
+### Please describe your development environment (OS, browser, etc.):
 
-:question:
+X
 
-[1]: https://github.com/tylucaskelley/setup/issues
+### Other relevant information:
+
+X
+
+[1]: https://github.com/tylucaskelley/setup.sh/issues

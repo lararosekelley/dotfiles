@@ -82,7 +82,7 @@ DATABASES=(
 
 log -v "setting up homebrew..."
 
-brew update && brew upgrade && brew cleanup
+brew update && brew upgrade
 
 brew tap caskroom/cask
 brew tap caskroom/fonts

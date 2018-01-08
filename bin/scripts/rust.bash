@@ -10,7 +10,6 @@ PACKAGES=(
 )
 
 brew_install rust
-mkdir -p ~/.cargo
 
 for p in "${PACKAGES[@]}"; do
     if prompt_user "install $p? (y/n)"; then
