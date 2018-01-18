@@ -1,218 +1,107 @@
 #!/usr/bin/env bash
 
-# bash_prompt
+# bashrc
 #
-# creates a more useful bash prompt with git support
+# bash settings
 # --------
 
-# command success / failure indicators
+# load dotfiles
 
-checkmark="\xe2\x9c\x94"
-crossmark="\xe2\xa8\xaf"
+files=(
+    ~/.aliases
+    ~/.exports
+    ~/.functions
+    ~/.git-prompt.sh
+    ~/.env # goes last to override any default settings
+)
 
-# colors
+for file in "${files[@]}"; do
+    if [ -f "$file" ]; then
+        # shellcheck disable=SC1090
+        source "$file"
+    fi
+done
 
-reset=$(tput sgr0)
-bold=$(tput bold)
-dim_blue=$(tput setaf 6)
-blue=$(tput setaf 33)
-cyan=$(tput setaf 37)
-green=$(tput setaf 64)
-orange=$(tput setaf 166)
-pink=$(tput setaf 5)
-red=$(tput setaf 124)
-violet=$(tput setaf 61)
-white=$(tput setaf 15)
-yellow=$(tput setaf 136)
+# bash options
 
-# other variables
+options=(
+    histappend
+    cdspell
+    globstar
+    dotglob
+    cmdhist
+    dirspell
+    nocaseglob
+)
 
-user_color="${red}"
-host_color="${orange}"
-dir_color="${yellow}"
-branch_color="${green}"
-diff_color="${cyan}"
+for option in "${options[@]}"; do
+    shopt -s "$option"
+done
 
-# exit status of last command
+# autojump
 
-function exit_status() {
-    status="$?"
-    prompt="${bold}(${red}$crossmark${reset}${bold})${reset}"
+if [ -f "$(brew --prefix)/etc/profile.d/autojump.sh" ]; then
+    # shellcheck disable=SC1090
+    source "$(brew --prefix)/etc/profile.d/autojump.sh"
+fi
 
-    if [ "${status}" -eq 0 ]; then
-        prompt="${bold}(${green}$checkmark${reset}${bold})${reset}"
+# bash completion
+
+if [ -f "$(brew --prefix)/etc/bash_completion" ]; then
+    # shellcheck disable=SC1090
+    source "$(brew --prefix)/etc/bash_completion"
+fi
+
+bind "set show-all-if-ambiguous on"
+
+# nvm
+
+if [[ -s "$(brew --prefix nvm)" ]]; then
+    # shellcheck disable=SC1090
+    source "$(brew --prefix nvm)/nvm.sh"
+    NODE_VERSION=$(nvm current)
+    nvm alias default "$NODE_VERSION" > /dev/null
+
+    # fix for homebrew nvm
+
+    if [ -f "$(brew --prefix nvm)/etc/bash_completion.d/nvm" ]; then
+        # shellcheck disable=SC1090
+        source "$(brew --prefix nvm)/etc/bash_completion.d/nvm"
     fi
 
-    echo -e "$prompt"
-}
+    # npm completion
 
-# git diff
+    npm completion > /dev/null
+fi
 
-function git_untracked() {
-    num="$(git status --porcelain 2> /dev/null | grep -c "^??")"
+# rbenv
 
-    if [ "$num" -eq 0 ]; then
-        return 0
+if [[ -s "$(brew --prefix rbenv)" ]]; then
+    eval "$(rbenv init -)"
+fi
+
+# pyenv
+
+if [[ -s "$(brew --prefix pyenv)" ]]; then
+    eval "$(pyenv init -)"
+
+    if which pyenv virtualenv > /dev/null; then
+        eval "$(pyenv virtualenv-init -)";
     fi
 
-    return 1
-}
+    # pip completion
+    _pip_completion() {
+        COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+                   COMP_CWORD=$COMP_CWORD \
+                   PIP_AUTO_COMPLETE=1 $1 ) )
+    }
 
-function git_ahead() {
-    branch="$(git name-rev --name-only HEAD 2> /dev/null)"
+    complete -o default -F _pip_completion pip
+fi
 
-    # shellcheck disable=SC2034
-    remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
+# bash prompt
 
-    # shellcheck disable=SC2181
-    if [ "$?" == "0" ]; then
-        num=$(git log origin/"$branch".."$branch" --oneline | wc -l)
-        echo "$num"
-    else
-        echo 0
-    fi
-}
-
-function git_behind() {
-    branch="$(git name-rev --name-only HEAD 2> /dev/null)"
-
-    # shellcheck disable=SC2034
-    remote_exists=$(git rev-parse --verify --quiet origin/"$branch")
-
-    # shellcheck disable=SC2181
-    if [ "$?" == "0" ]; then
-        num=$(git log "$branch"..origin/"$branch" --oneline | wc -l)
-        echo "$num"
-    else
-        echo 0
-    fi
-}
-
-function git_changed() {
-    git diff --no-ext-diff --quiet --exit-code &> /dev/null
-}
-
-function git_clean() {
-    num="$(git status --porcelain 2> /dev/null | wc -l)"
-
-    if [ "$num" -eq 0 ]; then
-        return 0
-    fi
-
-    return 1
-}
-
-function git_staged() {
-    num="$(git diff --name-only --cached 2> /dev/null | wc -l)"
-
-    if [ "$num" -eq 0 ]; then
-        return 0
-    fi
-
-    return 1
-}
-
-function git_diff() {
-    git rev-parse --git-dir &> /dev/null
-
-    # shellcheck disable=SC2181
-    if [ "$?" != "0" ]; then
-        return 1
-    fi
-
-    diff_prompt=""
-
-    local_prompt=""
-    branch_prompt=""
-
-    git_clean
-
-    # shellcheck disable=SC2181
-    if [ "$?" == "0" ]; then
-        local_prompt+="\xE2\x9C\x93"
-    fi
-
-    git_changed
-
-    if [ "$?" == "1" ]; then
-        local_prompt+="*"
-    fi
-
-    git_untracked
-
-    if [ "$?" == "1" ]; then
-        local_prompt+="+"
-    fi
-
-    git_staged
-
-    if [ "$?" == "1" ]; then
-        local_prompt+="\xE2\x97\x8F"
-    fi
-
-    ahead="$(git_ahead | tr -d '[:space:]')"
-
-    if [ "$ahead" != "0" ]; then
-        branch_prompt+="↑$ahead"
-    fi
-
-    behind="$(git_behind | tr -d '[:space:]')"
-
-    if [ "$behind" != "0" ]; then
-        branch_prompt+="↓$behind"
-    fi
-
-    if [[ ! ${#branch_prompt} -eq 0 ]]; then
-        diff_prompt+="$branch_prompt|$local_prompt"
-    else
-        diff_prompt+="$local_prompt"
-    fi
-
-    if [[ ! ${#diff_prompt} -eq 0 ]]; then
-        echo -e "[${diff_prompt}]"
-    fi
-}
-
-# programming language and environment information
-
-function node_info() {
-    output=" "
-
-    if node --version &> /dev/null; then
-        output=" [Node: $(node --version | cut -c 2-)"
-
-        if [ ! -z "${NODE_ENV+x}" ]; then
-            output+=", NODE_ENV: ${NODE_ENV}] "
-        else
-            output+="] "
-        fi
-    fi
-
-    echo "$output"
-}
-
-# set prompt
-
-export PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND}; set_prompt"
-
-function set_prompt() {
-    EXIT_ICON="$(exit_status)"
-
-    BATTERY="$(pmset -g batt | grep -E "([0-9]+\%).*" -o | cut -f1 -d ';')"
-    BATTERY_STATUS="$(pmset -g batt | grep -E "([0-9]+\%).*" -o | cut -f2 -d ';' | tr -d ' ')"
-
-    CPU_USAGE="$(ps -A -o %cpu | awk '{s+=$1} END {print s}')"
-    CPUS="$(sysctl -n hw.ncpu)"
-    CPU=$(echo "scale=2; $CPU_USAGE/$CPUS" | bc)
-
-    PS1="\[${EXIT_ICON}\] \[${bold}${user_color}\]\u\[${reset}\]" # user
-    PS1+="\[${white}\] at \[${bold}${host_color}\]\h\[${reset}\]" # host
-    PS1+="\[${white}\] in \[${bold}${dir_color}\]\w\[${reset}\]" # directory
-
-    PS1+="\[${bold}${branch_color}\]\$(__git_ps1)" # git branch
-    PS1+=" \[${diff_color}\]\$(git_diff)" # git diff & pushable commits
-
-    PS1+="\n\[${reset}${white}\]Battery: \[${bold}${pink}\]${BATTERY} (${BATTERY_STATUS})\[${reset}${white}\], CPU Usage: ${bold}${pink}${CPU}%${reset}${bold}" # system status
-
-    PS1+="\n\[${blue}\](\$(date +'%I:%M %p'))\[${bold}${dim_blue}\]$(node_info)\[${reset}${violet}\]$ \[${reset}\]" # time, NODE_ENV (if set) & prompt
-}
+if [ -f ~/.bash_prompt ]; then
+    # shellcheck disable=SC1090
+    source ~/.bash_prompt
+fi
