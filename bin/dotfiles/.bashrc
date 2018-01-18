@@ -85,7 +85,7 @@ fi
 if [[ -s "$(brew --prefix pyenv)" ]]; then
     eval "$(pyenv init -)"
 
-    if which pyenv-virtualenv-init > /dev/null; then
+    if which pyenv virtualenv > /dev/null; then
         eval "$(pyenv virtualenv-init -)";
     fi
 
@@ -101,5 +101,7 @@ fi
 
 # bash prompt
 
-# shellcheck disable=SC1090
-source ~/.bash_prompt
+if [ -f ~/.bash_prompt ]; then
+    # shellcheck disable=SC1090
+    source ~/.bash_prompt
+fi
