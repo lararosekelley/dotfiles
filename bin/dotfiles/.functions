@@ -6,79 +6,7 @@
 # --------
 
 red="\e[0;31m"
-green="\e[0;32m"
 reset="\e[0m"
-
-# set up a new git repo (made for github and bitbucket)
-#
-# uses MDL style linter for markdown, copies .gitignore, .gitattributes
-# files from home directory, creates README.md and LICENSE files. for
-# github repositories, create a .github folder with templates.
-#
-# params:
-#   host - github or bitbucket
-#
-# usage: repo host
-#
-# returns:
-#   0 - everything worked
-#   1 - something went wrong
-function repo() {
-    # init the repo
-
-    if git --version &> /dev/null; then
-        git init
-    else
-        return 1
-    fi
-
-    # create README.md and LICENSE files
-
-    dir="$(basename "$PWD")"
-    echo -e "# ${dir}\n---" > README.md
-    touch LICENSE
-
-    # copy or create .gitignore and .gitattributes files
-
-    if [ -f ~/.gitignore ]; then
-        cp ~/.gitignore .
-    else
-        touch .gitignore
-    fi
-
-    if [ -f ~/.gitattributes ]; then
-        cp ~/.gitattributes .
-    else
-        touch .gitattributes
-    fi
-
-    # copy or create .mdlrc and .mdl.style.rb files
-
-    if [ -f ~/.mdlrc ]; then
-        cp ~/.mdlrc .
-    else
-        touch .mdlrc
-    fi
-
-    if [ -f ~/.mdl.style.rb ]; then
-        cp ~/.mdl.style.rb .
-    else
-        touch .mdl.style.rb
-    fi
-
-    # misc. files
-
-    touch CHANGELOG.md
-    touch .editorconfig
-
-    # .github template files
-
-    if [ "$1" == "github" ]; then
-        git tpl
-    elif [ "$1" == "bitbucket" ]; then
-        touch CONTRIBUTING.md
-    fi
-}
 
 # asks the user to approve or deny something
 #
@@ -130,7 +58,7 @@ function golist() {
 #   3. vim
 #   4. python
 #   5. ruby
-#   6. node.js
+#   6. node
 #
 # usage: update
 #
@@ -261,7 +189,7 @@ function update() {
         fi
     fi
 
-    # node.js
+    # node
 
     if command -v npm &> /dev/null; then
         echo "updating npm packages..."
@@ -285,7 +213,7 @@ function update() {
         fi
     fi
 
-    echo -e "${green}done: software updated${reset}"
+    echo "done: software updated"
 }
 
 # set up default tmux layout

@@ -14,13 +14,12 @@ export LC_ALL="en_US.UTF-8"
 
 export EDITOR="vim"
 
-# increase history size & ignore duplicates, make sure history is shared
+# increase history size & ignore duplicates, make sure history is shared (see .bash_prompt for more)
 
 export HISTSIZE="100000"
 export HISTFILESIZE="${HISTSIZE}"
 export HISTTIMEFORMAT="%F %T "
 export HISTCONTROL="ignoredups:erasedups"
-export PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # java
 
@@ -34,6 +33,14 @@ export NVM_DIR="$HOME/.nvm"
 # go
 
 export GOPATH="$HOME/.go"
+
+# rust
+
+export CARGOPATH="$HOME/.cargo"
+
+# pyenv
+
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 # postgresql
 
@@ -58,6 +65,7 @@ export COLORFGBG="default;default"
 
 path=(
     "$GOPATH/bin"
+    "$CARGOPATH/bin"
     "/usr/local/bin"
     "/usr/local/sbin"
     "/usr/bin"
