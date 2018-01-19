@@ -32,6 +32,8 @@ ISSUES_URL="https://github.com/tylucaskelley/setup/issues/new"
 # 2. setup
 # --------
 
+cd || exit
+
 echo "please enter your password: "
 
 sudo -v
