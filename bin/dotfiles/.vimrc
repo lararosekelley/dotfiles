@@ -56,10 +56,10 @@ set cursorline
 set lazyredraw
 
 " no sounds and flashing on error
-set novisualbell
 set noerrorbells
+set visualbell
 set t_vb=
-set tm=500
+set timeoutlen=500
 
 " show trailing spaces
 set list
@@ -106,8 +106,9 @@ augroup autoread
     autocmd FocusLost,WinLeave * :silent! noautocmd w
 augroup END
 
-" recognize certain .rc files as json
-autocmd BufRead,BufNewFile,BufFilePre .{artillery,babel,eslint,nyc,stylelint}rc set filetype=json
+" recognize specific files
+autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,tern-project} set filetype=json " json
+autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser} set filetype=dosini " yaml
 
 " no concealing characters
 set conceallevel=0
@@ -228,6 +229,9 @@ nnoremap f za
 set lbr
 set tw=500
 
+" fix indentation for entire file
+nnoremap <leader>i mzgg=G`z`
+
 " spell check
 autocmd vimrc BufRead,BufNewFile *.md,*.txt setlocal spell spelllang=en_us
 nnoremap ss :setlocal spell! spelllang=en_us<CR>
@@ -251,14 +255,27 @@ set hlsearch
 " ignore case when searching
 set ignorecase
 
-" turn off search highlight
-nnoremap <leader>. :noh<CR>
+" turn off search highlight in current buffer
+nnoremap <leader>. :nohlsearch<CR>
 
 " -------------------
 " 7. helper functions
 " -------------------
 
-" helper functions
+" show highlight groups applied to current text
+
+function! <SID>HighlightGroups()
+    if !exists('*synstack')
+        return
+    endif
+
+    echo map(synstack(line('.'), col('.')), "synIDattr(v:val, 'name')")
+endfunction
+
+nmap <leader>hl :call <SID>HighlightGroups()<CR>
+
+" trim whitespace from a string
+
 function! StrTrim(text)
     return substitute(a:text, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
 endfunction
@@ -267,133 +284,183 @@ endfunction
 " 8. plugins
 " ----------
 
-call plug#begin('~/.vim/packages')
+if !empty(glob('~/.vim/autoload/plug.vim'))
+    call plug#begin('~/.vim/packages')
 
-" color scheme
-Plug 'morhetz/gruvbox'
+    " syntax highlighting for .bats files (Bash Automated Testing System)
+    Plug 'vim-scripts/bats.vim'
 
-" automatically close brackets, quotes, etc.
-Plug 'jiangmiao/auto-pairs'
+    " colorscheme
+    Plug 'morhetz/gruvbox'
 
-" close html tags
-Plug 'alvan/vim-closetag'
+    " automatically close brackets, quotes, etc.
+    Plug 'jiangmiao/auto-pairs'
 
-let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue'
+    " close html tags
+    Plug 'alvan/vim-closetag'
 
-" highlight colors
-Plug 'ap/vim-css-color'
+    let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx'
 
-" csv files
-Plug 'chrisbra/csv.vim'
+    " ctrlp
+    Plug 'ctrlpvim/ctrlp.vim'
 
-let g:csv_delim=','
-let g:csv_nomap_cr=1
-let g:csv_nomap_space=1
-let g:csv_nomap_bs=1
+    " highlight colors
+    Plug 'ap/vim-css-color'
 
-" look up documentation
-Plug 'keith/investigate.vim'
+    " csv files
+    Plug 'chrisbra/csv.vim'
 
-let g:investigate_use_dash=1
+    let g:csv_delim=','
+    let g:csv_nomap_cr=1
+    let g:csv_nomap_space=1
+    let g:csv_nomap_bs=1
 
-" editorconfig
-Plug 'editorconfig/editorconfig-vim'
+    " look up documentation
+    Plug 'keith/investigate.vim'
 
-let g:EditorConfig_exclude_patterns=[ 'fugitive://.*', 'scp://.*' ]
+    let g:investigate_use_dash=1
 
-" git
-Plug 'tpope/vim-fugitive'
-Plug 'airblade/vim-gitgutter'
+    " editorconfig
+    Plug 'editorconfig/editorconfig-vim'
 
-" database access
-Plug 'vim-scripts/dbext.vim'
+    let g:EditorConfig_exclude_patterns=[ 'fugitive://.*', 'scp://.*' ]
 
-" show indentation levels next to line numbers
-Plug 'Yggdroot/indentLine'
+    " live markdown preview
+    Plug 'shime/vim-livedown'
 
-" javascript config
-Plug 'pangloss/vim-javascript'
+    let g:livedown_autorun=0
 
-let g:javascript_plugin_jsdoc=1
+    " nerd commenter
+    Plug 'scrooloose/nerdcommenter'
 
-Plug 'othree/javascript-libraries-syntax.vim'
+    " flowtype
+    Plug 'flowtype/vim-flow'
 
-let g:used_javascript_libs='jquery,underscore,backbone,react,flux,handlebars,vue,d3'
+    let g:flow#autoclose=1
+    let g:flow#timeout=5
 
-" better json highlighting
-Plug 'elzr/vim-json'
+    " git
+    Plug 'tpope/vim-fugitive'
+    Plug 'airblade/vim-gitgutter'
 
-let g:vim_json_syntax_conceal=0
+    " database access
+    Plug 'vim-scripts/dbext.vim'
 
-" latex
-Plug 'lervag/vimtex'
+    " show indentation levels next to line numbers
+    Plug 'Yggdroot/indentLine'
 
-let g:tex_flavor='latex'
+    " javascript config
+    Plug 'pangloss/vim-javascript'
 
-" better markdown
-Plug 'plasticboy/vim-markdown'
+    let g:javascript_plugin_jsdoc=1
+    let g:javascript_plugin_flow=1
 
-let g:vim_markdown_fenced_languages=[ 'csharp=cs', 'js=javascript', 'rb=ruby', 'c++=cpp' ]
-let g:vim_markdown_conceal=0
+    " better json highlighting
+    Plug 'elzr/vim-json'
 
-" supertab
-Plug 'ervandew/supertab'
+    let g:vim_json_syntax_conceal=0
 
-let g:SuperTabDefaultCompletionType='<C-n>'
-let g:SuperTabCrMapping=0
+    " latex
+    Plug 'lervag/vimtex'
 
-" code completion via ycm
-Plug 'Valloric/YouCompleteMe', { 'do': '/usr/bin/python ./install.py' }
+    let g:tex_flavor='latex'
 
-let g:ycm_key_list_select_completion=[ '<C-j>', '<C-n>', '<Down>' ]
-let g:ycm_key_list_previous_completion=[ '<C-k>', '<C-p>', '<Up>' ]
+    " better markdown
+    Plug 'plasticboy/vim-markdown'
 
-" snippets
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
+    let g:vim_markdown_fenced_languages=[ 'csharp=cs', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
+    let g:vim_markdown_conceal=0
 
-let g:UltiSnipsExpandTrigger='<Tab>'
-let g:UltiSnipsJumpForwardTrigger='<Tab>'
-let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
-let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'snips' ]
+    " supertab
+    Plug 'ervandew/supertab'
 
-" syntax errors and warnings
-Plug 'vim-syntastic/syntastic'
-Plug 'posva/vim-vue'
-Plug 'sekel/vim-vue-syntastic'
-Plug 'mtscout6/syntastic-local-eslint.vim'
+    let g:SuperTabDefaultCompletionType='<C-n>'
+    let g:SuperTabCrMapping=0
 
-let g:syntastic_always_populate_loc_list=1
-let g:syntastic_auto_loc_list=1
-let g:syntastic_check_on_open=1
-let g:syntastic_check_on_wq=0
-let g:syntastic_enable_highlighting=1
+    " only install these on mac for the time being
 
-" syntastic checkers
+    if has('mac')
+        " code completion via ycm
+        Plug 'Valloric/YouCompleteMe', { 'do': '/usr/bin/python ./install.py --all' }
 
-let g:syntastic_javascript_checkers=[ 'eslint' ]
-let g:syntastic_ruby_checkers=[ 'rubocop' ]
-let g:syntastic_json_checkers=[ 'jsonlint' ]
-let g:syntastic_python_checkers=[ 'flake8' ]
-let g:syntastic_markdown_checkers=[ 'mdl' ]
-let g:syntastic_html_checkers=[ 'tidy' ]
-let g:syntastic_html_tidy_exec='tidy5'
-let g:syntastic_css_checkers=[ 'csslint' ]
-let g:syntastic_scss_checkers=[ 'stylelint' ]
-let g:syntastic_java_checkers=[ 'javac' ]
-let g:syntastic_sql_checkers=[ 'sqlint' ]
-let g:syntastic_tex_checkers=[ 'chktex' ]
-let g:syntastic_bash_checkers=[ 'shellcheck' ]
-let g:syntastic_sh_checkers=[ 'shellcheck' ]
-let g:syntastic_typescript_checkers=[ 'tslint' ]
-let g:syntastic_vim_checkers=[ 'vint' ]
-let g:syntastic_vue_checkers=[ 'eslint' ]
+        let g:ycm_key_list_select_completion=[ '<C-j>', '<C-n>', '<Down>' ]
+        let g:ycm_key_list_previous_completion=[ '<C-k>', '<C-p>', '<Up>' ]
+        let g:ycm_autoclose_preview_window_after_completion=1 " close window after completion accepted
 
-" configure status and tab lines
-Plug 'itchyny/lightline.vim'
+        let g:EclimCompletionMethod='omnifunc'
+    endif
 
-let g:lightline = {
-        \ 'colorscheme': 'gruvbox',
+    " snippets
+    Plug 'SirVer/ultisnips'
+    Plug 'honza/vim-snippets'
+
+    let g:UltiSnipsExpandTrigger='<Tab>'
+    let g:UltiSnipsJumpForwardTrigger='<Tab>'
+    let g:UltiSnipsJumpBackwardTrigger='<S-Tab>'
+
+    " check for existence of custom snippets directory
+
+    if !empty(glob('~/.vim/snips'))
+        let g:UltiSnipsSnippetDirectories=[ 'UltiSnips', 'snips' ]
+    endif
+
+    " syntax errors and warnings
+    Plug 'vim-syntastic/syntastic'
+
+    Plug 'posva/vim-vue'
+    Plug 'sekel/vim-vue-syntastic'
+
+    Plug 'mtscout6/syntastic-local-eslint.vim'
+
+    let g:syntastic_always_populate_loc_list=1
+    let g:syntastic_auto_loc_list=1
+    let g:syntastic_check_on_open=1
+    let g:syntastic_check_on_wq=0
+    let g:syntastic_enable_highlighting=1
+
+    " syntastic checkers
+
+    let g:syntastic_javascript_checkers=[ 'eslint' ]
+
+    let g:syntastic_ruby_checkers=[ 'rubocop' ]
+
+    let g:syntastic_json_checkers=[ 'jsonlint' ]
+
+    let g:syntastic_python_checkers=[ 'flake8' ]
+
+    let g:syntastic_markdown_checkers=[ 'mdl' ]
+    let g:syntastic_markdown_mdl_exec='markdownlint' " use node.js package instead of ruby gem
+    let g:syntastic_markdown_mdl_args=''
+
+    let g:syntastic_html_checkers=[ 'tidy' ]
+    let g:syntastic_html_tidy_exec='tidy5'
+
+    let g:syntastic_css_checkers=[ 'csslint' ]
+
+    let g:syntastic_scss_checkers=[ 'stylelint' ]
+
+    let g:syntastic_java_checkers=[ 'javac' ]
+
+    let g:syntastic_sql_checkers=[ 'sqlint' ]
+
+    let g:syntastic_tex_checkers=[ 'chktex' ]
+
+    let g:syntastic_bash_checkers=[ 'shellcheck' ]
+    let g:syntastic_sh_checkers=[ 'shellcheck' ]
+
+    let g:syntastic_typescript_checkers=[ 'tslint' ]
+
+    let g:syntastic_vim_checkers=[ 'vint' ]
+
+    let g:syntastic_vue_checkers=[ 'eslint' ]
+
+    " custom start screen
+    Plug 'mhinz/vim-startify'
+
+    " configure status and tab lines
+    Plug 'itchyny/lightline.vim'
+
+    let g:lightline={
         \ 'enable': { 'tabline': 1 },
         \ 'active': {
         \     'left': [
@@ -417,24 +484,31 @@ let g:lightline = {
         \ }
     \ }
 
-augroup AutoSyntastic
-    autocmd!
-    autocmd BufWritePost * call s:syntastic()
-augroup END
+    augroup AutoSyntastic
+        autocmd!
+        autocmd BufWritePost * call s:syntastic()
+    augroup END
 
-function! s:syntastic()
-    SyntasticCheck
-    call lightline#update()
-endfunction
+    function! s:syntastic()
+        SyntasticCheck
+        call lightline#update()
+    endfunction
 
-" custom start screen
-Plug 'mhinz/vim-startify'
+    " override any changes made by plugins - have had issues with vim-json and vim-markdown
+    set conceallevel=0
 
-call plug#end()
+    call plug#end()
+endif
 
 " set colorscheme
 try
     colorscheme gruvbox
+    let g:lightline.colorscheme='gruvbox' " have to set here due to issues on first time running :PlugInstall
+
+    " custom higlighting
+
+    hi! link jsGlobalNodeObjects GruvboxAqua
+    hi! link jsGlobalObjects GruvboxBlue
 catch
     colorscheme ron
 endtry

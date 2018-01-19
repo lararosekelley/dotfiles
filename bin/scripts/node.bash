@@ -6,25 +6,34 @@
 # --------
 
 PACKAGES=(
+    a11y
     artillery
     ava
-    babel-eslint
     bower
     eslint
     eslint-plugin-ava
     eslint-plugin-import
     eslint-plugin-promise
+    eslint-plugin-security
     eslint-plugin-vue
     firebase-tools
+    flow-bin
+    gulp-cli
     htmlhint
+    jsdoc-to-markdown
     jsonlint
-    nodemon
+    livedown
+    markdownlint-cli
+    node-gyp
     npm
     npm-check-updates
     nsp
     pm2
     stylelint
-    stylelint-scss
+    tap-dot
+    ttystudio
+    typescript
+    vue-cli
 )
 
 log -v "setting up node..."
