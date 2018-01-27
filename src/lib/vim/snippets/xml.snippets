@@ -1,0 +1,23 @@
+# xml.snippets
+#
+# vim snippets for .xml files
+#
+# --------
+
+# web development
+# --------
+
+snippet ms-browserconfig "Microsoft browser config file" b
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Please read: https://msdn.microsoft.com/en-us/library/ie/dn455106.aspx -->
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square70x70logo src="${1:img}/smalltile.png"/>
+            <square150x150logo src="$1/mediumtile.png"/>
+            <wide310x150logo src="$1/widetile.png"/>
+            <square310x310logo src="$1/largetile.png"/>
+        </tile>
+    </msapplication>
+</browserconfig>
+endsnippet

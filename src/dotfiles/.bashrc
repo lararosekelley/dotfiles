@@ -84,19 +84,13 @@ fi
 
 if [[ -s "$(brew --prefix pyenv)" ]]; then
     eval "$(pyenv init -)"
+    eval "$(pip completion --bash)"
+fi
 
-    if which pyenv virtualenv > /dev/null; then
-        eval "$(pyenv virtualenv-init -)";
-    fi
+# pipenv
 
-    # pip completion
-    _pip_completion() {
-        COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
-                   COMP_CWORD=$COMP_CWORD \
-                   PIP_AUTO_COMPLETE=1 $1 ) )
-    }
-
-    complete -o default -F _pip_completion pip
+if command -v pipenv &> /dev/null; then
+    eval "$(pipenv --completion)"
 fi
 
 # bash prompt

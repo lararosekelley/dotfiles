@@ -1,80 +1,94 @@
 # Setup
 
-> My automated development setup for Mac
+> Bootstrap your Mac for software development
+
+[![Build status][1]][2]
 
 ---
 
-![logo](img/logo.png)
+**NOTE**: This is currently broken. Fixes coming soon!
+
+
+TBD
 
 ## Prerequisites
 
-- Apple computer running macOS High Sierra (10.13)
+- macOS 10.13 (High Sierra)
 
-This will also run on macOS 10.11 and 10.12, but is no longer guaranteed to work on those operating systems. Run at
-your own risk or upgrade!
+These scripts have been tested previously on macOS 10.11 and 10.12, but are no longer guaranteed to work on those
+operating systems. Upgrade or run at your own risk!
 
 ## Installation
 
-Be sure to read [setup.bash](bin/setup.bash) before running it! It's broken up into sections and commented, so it's
-not too tough to scan through quickly. Once you've done that, copy and paste this line into your terminal:
+Before installing anything, be sure to read through the [installation script][5]. Everything is commented thoroughly,
+so it shouldn't take too much time to understand what's happening under the hood. Once you've done that, you can
+download and run the script:
 
-```sh
-curl https://raw.githubusercontent.com/tylucaskelley/setup.sh/master/bin/setup.bash -o setup.bash && caffeinate -i bash setup.bash
+```bash
+$ bash <(curl -s https://raw.githubusercontent.com/tylucaskelley/setup.sh/master/bin/setup)
 ```
 
-Note that you will be prompted for input several times as the script runs. When done, restart your terminal to see
-all changes.
-
-## ~/.env
-
-Use the provided `~/.env` file for any sensitive information, such as passwords,
-API keys, etc. This file can also be used to override anything I've written.
+You'll be prompted for your password at the beginning, and asked to confirm a few things as the script runs. When
+finished, restart your terminal to see all of the changes.
 
 ## Features
 
-Here's an overview of everything the setup scripts do:
+Here's what the setup scripts can do:
 
-1. Installs the Xcode command line tools and [Homebrew](bin/scripts/brew.bash)
-   to manage packages
-2. Configures dev environments for the latest versions of some languages (optional):
-    - [Go](bin/scripts/go.bash)
-    - [Java](bin/scripts/java.bash)
-    - [Node.js](bin/scripts/node.bash)
-    - [Python 2 & 3](bin/scripts/python.bash)
-    - [Ruby](bin/scripts/ruby.bash)
-    - [Rust](bin/scripts/rust.bash)
-3. Uses [Homebrew Cask](bin/scripts/brew-cask.bash) to install Mac applications (optional)
-4. Copies my [dotfiles](bin/dotfiles) to the home directory and creates a `.env` file for sensitive info
-5. Creates an SSH key and adds it to the macOS Keychain (optional)
-6. Sets up the [Vim](bin/scripts/vim.bash) editor for development (optional)
-7. Changes the `Terminal.app` [theme](bin/scripts/terminal.bash) (optional)
+1. Installs the Xcode command line tools
+2. Instals the Homebrew package manager
+3. Installs Mac apps with Homebrew Cask
+4. Sets up environments and installs packages for a few programming languages:
+    - Go
+    - Java
+    - Node.js (nvm)
+    - PHP
+    - Python 2 & 3 (pyenv)
+    - Ruby (rbenv)
+    - Rust
+    - Scala
+5. Set up the Vim text editor with a great configuration and lots of plugins
+6. Creates an SSH key and adds it to the macOS Keychain
+7. Changes Terminal theme and Bash prompt
+8. Configures Tmux
+9. Adds lots of convenient aliases and functions to the shell
 
-## Testing
+## FAQ
 
-To run the test suite (which is minimal at this time), simply make sure you've downloaded
-[bats](https://github.com/sstephenson/bats) and then run:
-
-```bash
-$ bats test
-```
-
-The testing tool can be downloaded via Homebrew if you're on a Mac:
-
-```bash
-$ brew install bats
-```
-
-## Contributing
-
-See [CONTRIBUTING.md](.github/CONTRIBUTING.md) if you'd like to add to the project, and file an issue if something
-goes wrong when you try to run the script.
+1. Can I run this if I've already set up my laptop?
+    - Yes; the scripts don't do anything desctructive without your permission, so it's safe to run this even if you've
+      already set up your development environment before
+2. Do I have to install everything?
+    - Nope! There are only a few required steps - namely the Xcode command line tools, Homebrew, and a few dotfiles.
+      Everything else is optional.
 
 ## Screenshots
 
-Here's a gallery of a few screenshots:
+`Terminal.app` with the provided `mux` function to create a nice Tmux session:
 
-![Terminal](img/screenshots/terminal.png)
+[Terminal][6]
 
-![Vim](img/screenshots/vim.png)
+A Vim window with some open tabs:
 
-![Autocomplete in Vim](img/screenshots/autocomplete.png)
+[Vim][7]
+
+Vim autocompletion via YouCompleteMe:
+
+[Vim autocomplete][8]
+
+## Contributing
+
+See [CONTRIBUTING.md][4].
+
+## License
+
+Copyright (c) 2014-2018 Ty-Lucas Kelley. MIT License.
+
+[1]: https://travis-ci.org/tylucaskelley/setup.svg?branch=master
+[2]: https://travis-ci.org/tylucaskelley/setup
+[3]: img/logo.png
+[4]: .github/CONTRIBUTING.md
+[5]: bin/setup
+[6]: img/screenshots/terminal.png
+[7]: img/screenshots/vim.png
+[8]: img/screenshots/vim-autocomplete.png

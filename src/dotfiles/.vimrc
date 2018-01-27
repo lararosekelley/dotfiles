@@ -107,8 +107,8 @@ augroup autoread
 augroup END
 
 " recognize specific files
-autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,tern-project} set filetype=json " json
-autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser} set filetype=dosini " yaml
+autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,tern-project,tern-config} set filetype=json " json
+autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini " yaml
 
 " no concealing characters
 set conceallevel=0
@@ -407,10 +407,12 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     " syntax errors and warnings
     Plug 'vim-syntastic/syntastic'
 
+    " vuejs
     Plug 'posva/vim-vue'
     Plug 'sekel/vim-vue-syntastic'
 
-    Plug 'mtscout6/syntastic-local-eslint.vim'
+    " eslint
+    Plug 'tylucaskelley/syntastic-local-eslint'
 
     let g:syntastic_always_populate_loc_list=1
     let g:syntastic_auto_loc_list=1
@@ -453,6 +455,15 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     let g:syntastic_vim_checkers=[ 'vint' ]
 
     let g:syntastic_vue_checkers=[ 'eslint' ]
+
+    " sessions
+    Plug 'xolox/vim-misc'
+    Plug 'xolox/vim-session'
+
+    let g:session_autosave='yes'
+
+    " tmux
+    Plug 'tmux-plugins/vim-tmux'
 
     " custom start screen
     Plug 'mhinz/vim-startify'
