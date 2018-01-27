@@ -1,0 +1,38 @@
+# txt.snippets
+#
+# vim snippets for .txt files
+#
+# --------
+
+# web development
+# --------
+
+snippet humans "humans.txt" b
+# humanstxt.org
+
+# project
+
+    Site Name:      ${1:Website}
+    Site URL:       ${2:https://example.com}
+    Created:        ${3:01/01/2000}
+    Standards:      ${4:HTML5, CSS3}
+    Web Developer:  ${5:Name}
+
+# author
+
+    Name:       $5
+    Site:       ${6:https://example.com}
+    Twitter:    ${7:@example}
+
+# thanks
+
+    ${8:To everyone who enjoys the site and signs up!}
+endsnippet
+
+snippet robots "robots.txt" b
+# robotstxt.org
+
+# Allow all content to be crawled
+User-agent: *
+Disallow:
+endsnippet

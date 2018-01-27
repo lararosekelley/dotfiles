@@ -1,0 +1,28 @@
+# vue.snippets
+#
+# vim snippets for .vue files
+#
+# assumptions: Using ES2017 syntax
+# --------
+
+# general
+# --------
+
+snippet component "Vue component" b
+<template>
+    <div id="$1">
+    </div>
+</template>
+
+<script>
+const component = {
+    name: '$1',
+};
+
+export default component;
+</script>
+
+<style lang="$2">
+
+</style>
+endsnippet

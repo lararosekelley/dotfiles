@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# aliases
+#
+# useful aliases to shorten common commands
+# --------
+
+# allow sudo for aliases
+
+alias sudo='sudo '
+
+# cd stuff
+
+alias up='cd ..'
+alias ~='cd ~'
+
+# verbose output for file and folder actions
+
+alias mv='mv -v'
+alias rm='rm -v'
+alias cp='cp -v'
+alias mkdir='mkdir -v'
+
+# colored output
+
+alias ls='ls -GF'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# usage info
+
+alias cpu='top -o cpu'
+alias mem='top -o mem'
+
+# ip
+
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en0"
+
+# misc. tools
+
+alias c='clear'
+alias chrome-kill='ps ux | grep "[C]hrome Helper --type=renderer" | grep -v extension-process | tr -s " " | cut -d " " -f2 | xargs kill'
+alias emptytrash='sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash/*; sudo rm -v /private/var/vm/sleepimage'
+alias finder='open -a Finder .'
+alias flac2mp3='for f in *.flac; do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"; done'
+alias notify='tput bel'
+alias path='echo -e ${PATH//:/\\n}'
+alias space='df -P -kHl'
+
+# brew
+
+alias bubu='brew update && brew upgrade'

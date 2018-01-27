@@ -4,6 +4,9 @@
 # --------
 
 [alias]
+    # generate project-specific .gitignore
+    ignore = "!gi() { curl -L -s https://www.gitignore.io/api/$@ ;}; gi"
+
     # grab .github folder from tylucaskelley/github-templates
     tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
 
@@ -64,6 +67,6 @@
 [filter "lfs"]
     # for github desktop app
     required = true
-	process = git-lfs filter-process
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
