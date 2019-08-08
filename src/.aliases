@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+# aliases
+#
+# useful aliases to shorten common commands
+# --------
+
+# neovim > vim
+
+alias vim='nvim'
+alias vi='nvim'
+
+# allow sudo for aliases
+
+alias sudo='sudo '
+
+# cd stuff
+
+alias up='cd ..'
+alias ~='cd ~'
+alias -- -='cd -'
+
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+
+# verbose output for file and folder actions
+
+alias mv='mv -v'
+alias rm='rm -v'
+alias cp='cp -v'
+alias mkdir='mkdir -v'
+
+# colored output
+
+alias ls='ls -GF'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
+# files
+
+alias sizeof='du -sh'
+
+# ripgrep
+
+alias rgs="rg --smart-case --fixed-strings --line-number --color=always"
+alias rgf="rg -l --smart-case --fixed-strings --line-number --color=always"
+
+# usage info
+
+alias cpu='top -o cpu'
+alias mem='top -o mem'
+
+# ip
+
+alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias localip="ipconfig getifaddr en0"
+
+# git
+
+alias g='git'
+alias wip='git add -A && git commit -m "work in progress" --no-verify'
+alias wipup='wip && git up && git rb'
+alias gcm='git checkout master'
+
+# misc. tools
+
+alias c='clear'
+alias kill-chrome='ps ux | grep "[C]hrome Helper (Renderer)" | grep -v extension-process | tr -s " " | cut -d " " -f2 | xargs kill'
+alias emptytrash='sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash/*; sudo rm -v /private/var/vm/sleepimage'
+alias finder='open -a Finder .'
+alias flac2mp3='for f in *.flac; do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"; done'
+alias notify='tput bel'
+alias path='echo -e ${PATH//:/\\n}'
+alias rake='bundle exec rake'
+alias r='bundle exec rails'
+alias rch='bundle exec rspec $(git ls-files --modified --others spec)'
+alias space='df -P -kHl'
+alias ports='lsof -nP +c 15 | grep LISTEN'
+
+# brew
+
+alias bubu='brew update && brew upgrade --ignore-pinned'
+
+# kill the dock (for ubar)
+
+alias dock-off='defaults write com.apple.dock autohide-delay -float 1000 && killall Dock'
+alias dock-on='defaults delete com.apple.dock autohide-delay && killall Dock'
+
+# stupid stuff
+
+alias fuckoff='exit'
+alias big='figlet -c -f "roman"'

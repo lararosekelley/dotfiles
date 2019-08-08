@@ -10,9 +10,9 @@
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
-# set vim to default editor
+# set neovim to default editor
 
-export EDITOR="vim"
+export EDITOR="nvim"
 
 # increase history size & ignore duplicates, make sure history is shared (see .bash_prompt for more)
 
@@ -25,10 +25,6 @@ export HISTCONTROL="ignoredups:erasedups"
 
 export JAVA_HOME
 JAVA_HOME="$(/usr/libexec/java_home)"
-
-# nvm
-
-export NVM_DIR="$HOME/.nvm"
 
 # go
 
@@ -58,25 +54,15 @@ CPPFLAGS="-I$(brew --prefix openssl)/include"
 export LDFLAGS
 LDFLAGS="-L$(brew --prefix openssl)/lib"
 
-# fix for mutt colors
+# mutt
+
 export COLORFGBG="default;default"
+
+# openvpn
+
+export OPENVPN_PATH
+OPENVPN_PATH="$(brew --prefix openvpn)"
 
 # path
 
-path=(
-    "$GOPATH/bin"
-    "$CARGOPATH/bin"
-    "/usr/local/bin"
-    "/usr/local/sbin"
-    "/usr/bin"
-    "/usr/sbin"
-    "/bin"
-    "/sbin"
-    "/opt/X11/bin"
-    "/Library/TeX/texbin"
-)
-
-# shellcheck disable=SC2178
-path=$(printf ":%s" "${path[@]}")
-
-export PATH="${path:1}"
+export PATH="$PATH:$GOPATH/bin:$CARGOPATH/bin:$OPENVPN_PATH/sbin"

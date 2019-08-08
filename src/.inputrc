@@ -2,15 +2,15 @@
 
 # inputrc
 #
-# scroll through history, use <TAB> to cycle through options, etc
+# readline init file settings
 # --------
 
-# cycle through options
+# cycle through options with shift and shift-tab
 
 TAB: menu-complete
 "\e[Z": menu-complete-backward
 
-# up and down for history search
+# up and down arrows for history search
 
 "\e[A": history-search-backward
 "\e[B": history-search-forward
@@ -31,8 +31,8 @@ set show-all-if-ambiguous on
 # autocompletion for symlinks
 set mark-symlinked-directories on
 
-# prompt when more than 200 completion options available
-set completion-query-items 200
+# prompt when more than 100 completion options available
+set completion-query-items 100
 
 # ignore case when completing
 set completion-ignore-case on
@@ -51,3 +51,6 @@ set expand-tilde off
 
 # show more file info, "ls -F" style
 set visible-stats on
+
+# colorize completion options by filetype
+set colored-stats on
