@@ -1,0 +1,150 @@
+# gitconfig
+#
+# defines aliases and settings for git
+# --------
+
+[alias]
+  # b for branch
+  b = branch
+
+  # d for diff
+  d = diff
+
+  # s for status
+  s = status
+
+  # c for checkout
+  co = checkout
+
+  # create new branch and check out
+  cob = checkout -b
+
+  # checkout from a PR on a fork of repostiory
+  co-pr = "!f() { git fetch origin \"pull/$1/head:pr/$1\" && git checkout \"pr/$1\"; }; f"
+
+  # clone without needing to type full URL
+  gh-clone = "!f() { git clone git@github.com:\"$1/$2\"; }; f"
+
+  # fancier logging
+  l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset (%C(yellow)%ae %Cgreen%cd%C(reset)) - %s'
+
+  # get current commit hash
+  head = rev-parse HEAD
+
+  # amend last commit with small changes
+  amend = "!f() { git add -A && git commit --amend; }; f"
+
+  # fixup commit by SHA
+  fixup = "!f() { git add -A && git commit --fixup \"$(git rev-parse $1)\"; }; f"
+
+  # generate project-specific .gitignore
+  ignore = "!f() { curl -L -s https://www.gitignore.io/api/$@ ;}; f"
+
+  # grab .github folder from tylucaskelley/github-templates and fill in repo info
+  tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
+
+  # update base branch and switch back to previous branch
+  up = "!git checkout \"${1:-master}\" && git fetch --prune origin && git rebase origin/${1:-master} && git checkout -"
+
+  # add all files to stage and commit changes w/ message
+  ca = "!f() { [ ! -z \"$1\" ] && git add -A && git commit -m \"$1\"; }; f"
+
+  # interactive rebase on a branch, defaults to master
+  rb = "!f() { git rebase --interactive --autosquash \"${1:-master}\"; }; f"
+
+  # sort contributors by number of commits
+  rank = shortlog -sn --no-merges
+
+  # search for text in a git repo
+  grep = grep -Ii
+
+  # list branches sorted by edit date
+  lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
+
+  # show origin URL
+  url = config --get remote.origin.url
+
+  # change origin URL
+  set-url = "!f() { git remote set-url origin \"$1\"; }; f"
+
+  # purge file from histoy
+  purge = "!f() { [ ! -z \"$1\" ] && git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch \"$1\"' --prune-empty --tag-name-filter cat -- --all; }; f"
+
+  # delete all local branches except master
+  dab = "!f() { git checkout master && git branch | grep -v 'master' | xargs git branch -D; }; f"
+
+  # set upstream of <branch> to origin/<branch>
+  su = "!f() { git branch --set-upstream-to=origin/\"$1\" \"$1\"; }; f"
+
+  # stash all
+  sa = stash save --include-untracked
+
+  # list all user-defined aliases
+  la = config --get-regexp '^alias.'
+
+  # compare current commit to previous
+  prev = diff @~..@
+[color]
+  # use colors in git commands
+  ui = auto
+[color "branch"]
+  plain = white
+  current = yellow bold reverse
+  local = yellow
+  remote = green
+  upstream = cyan
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
+[color "diff"]
+  plain = white
+  meta = yellow
+  frag = magenta bold
+  commit = yellow bold
+  old = red bold
+  new = green bold
+  whitespace = red reverse
+[color "status"]
+  header = white
+  branch = white bold
+  added = yellow bold
+  changed = green bold
+  untracked = cyan bold reverse
+  nobranch = red bold
+[core]
+  # custom .gitignore and .gitattributes
+  excludesfile = ~/.gitignore
+  attributesfile = ~/.gitattributes
+
+  # don't ignore case due to case-sensitive imports in some projects
+  ignorecase = false
+
+  # catch trailing whitespace & spaces before tabs
+  whitespace = space-before-tab,trailing-space
+
+  # make git rebase safer on macos
+  trustctime = false
+
+  # handle line endings properly
+  autocrlf = input
+
+  # use the diff-so-fancy tool
+  pager = diff-so-fancy | less --tabs=4 -RFX
+[diff]
+  # detect copies and renames
+  renames = copies
+  mnemonicprefix = true
+[help]
+  # fix & execute misspelled commands
+  autocorrect = 1
+[push]
+  # use new git push behavior
+  default = simple
+[filter "lfs"]
+  # for github desktop app
+  required = true
+  process = git-lfs filter-process
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f

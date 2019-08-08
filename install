@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+echo 'this script is not yet implemented. exiting...'
+
+exit 0

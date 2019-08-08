@@ -1,0 +1,514 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1117
+
+# functions
+#
+# useful utility functions
+# --------
+
+# Run something n times
+#
+# Params:
+#     n - Number of iterations
+#     args - Command and arguments to loop
+#
+# Usage: loop n args
+function loop() {
+  for (( n=0; n<$1; n++ ))
+    do ${*:2}
+  done
+}
+
+# Asks the user to approve or deny something
+#
+# Params:
+#     prompt - what to ask the user to approve
+#
+# Usage: ask prompt
+#
+# Returns:
+#     0 - if reply is Y or y
+#     1 - if reply is anything else
+#
+function ask() {
+  if [ -z "$1" ]; then
+    echo "usage: ${FUNCNAME[0]} prompt"
+    return 1
+  fi
+
+  read -r -e -p "$1 (y/n) "
+  echo ""
+
+  if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+# Log a colored message to the console
+#
+# Flags:
+#    -l [level] - Log level (0 = plain text, 1 = white, 2 = yellow, 3 = red, 4 = green; defaults to 0)
+#    -b - Output should be bold
+#
+# Params:
+#    message - String to print out
+#
+# Usage: print [-l level] [-b] message
+#
+function print() {
+  local usage="usage: print [-l level] [-b] message"
+
+  local use_bold=false
+  local level=0
+  local message
+  local color
+
+  local bold
+  local reset
+  local white
+  local yellow
+  local red
+
+  bold=$(tput bold)
+  reset=$(tput sgr0)
+  red=$(tput setaf 9)
+  green=$(tput setaf 10)
+  yellow=$(tput setaf 11)
+  white=$(tput setaf 15)
+
+  OPTIND=1
+
+  while getopts ":l:bh" opt; do
+    case "$opt" in
+      b)
+        use_bold=true
+        ;;
+      l)
+        if [[ "$OPTARG" =~ ^[0-9]+$ ]]; then
+          if [ "$OPTARG" -ge 0 ] && [ "$OPTARG" -le 4 ]; then
+            level="$OPTARG"
+          else
+            echo "Option -l must be between 0 and 4"
+            return 1
+          fi
+        else
+          echo "Option -l must be an integer"
+          return 1
+        fi
+        ;;
+      h)
+        echo "$usage"
+        return 0
+        ;;
+      :)
+        echo "Option -$OPTARG requires an argument"
+        return 1
+        ;;
+      *)
+        echo "Invalid option: -$OPTARG"
+        return 1
+        ;;
+    esac
+  done
+
+  shift "$((OPTIND-1))"
+
+  if [ -z "$1" ]; then
+    echo "$usage"
+    return 0
+  fi
+
+  message="$*"
+
+  if [ "$level" -eq 0 ]; then
+    color="$reset"
+  elif [ "$level" -eq 1 ]; then
+    color="$white"
+  elif [ "$level" -eq 2 ]; then
+    color="$yellow"
+  elif [ "$level" -eq 3 ]; then
+    color="$red"
+  else
+    color="$green"
+  fi
+
+  if [ "$use_bold" = true ]; then
+    echo -e "${reset}${color}${bold}${message}${reset}"
+  else
+    echo -e "${reset}${color}${message}${reset}"
+  fi
+}
+
+# Converts a video file to mp4
+#
+# Params:
+#     infile - input file
+#
+# Usage: vid2mp4 input
+#
+function vid2mp4() {
+  usage="usage: vid2mp4 input"
+
+  if [ -z "$1" ]; then
+    print "$usage"
+    return 1
+  elif command -v ffmpeg &> /dev/null; then
+    filename="$(echo "$1" | cut -d . -f 1)"
+
+    ffmpeg -i "$1" -c:v libx264 -crf 23 -c:a aac -q:a 100 "$filename.mp4"
+
+    print -b -l 4 "$1 converted and saved to $2"
+  else
+    print -b -l 3 "fatal: ffmpeg is not installed"
+  fi
+}
+
+# Converts Quicktime screen recording to a gif
+#
+# Params:
+#     infile - input file (.mov)
+#     outfile - output filename (.gif)
+#
+# Usage: mov2gif infile outfile
+#
+function mov2gif() {
+  usage="usage: mov2gif input.mov output.gif"
+
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    print "$usage"
+    return 1
+  elif command -v ffmpeg &> /dev/null && command -v gifsicle &> /dev/null; then
+    infile="$1"
+    outfile="$2"
+
+    if [ -f "$infile" ]; then
+      ffmpeg -hide_banner -loglevel quiet -i "$infile" -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > "$outfile"
+
+      print -b -l 4 "${infile} converted and saved to ${outfile}"
+    else
+      print -b -l 3 "fatal: ${infile} is not a file"
+      return 1
+    fi
+  else
+    print -b -l 3 "fatal: ffmpeg and gifsicle are not installed"
+    return 1
+  fi
+}
+
+# Create a good tmux setup or attach to an existing one
+#
+# Params:
+#   name - session name (defaults to "work")
+#
+# Usage: mux [name]
+#
+function mux() {
+  if [[ -z "$1" ]]; then
+    TMUX_SESSION="work"
+  else
+    TMUX_SESSION="$1"
+  fi
+
+  tmux start-server
+
+  if ! tmux has-session -t "$TMUX_SESSION" &> /dev/null; then
+    # first window has 3 panes
+    tmux new-session -s "$TMUX_SESSION" -n "main" -d
+    tmux split-window -h -t "$TMUX_SESSION:0"
+    tmux split-window -v -t "$TMUX_SESSION:0"
+
+    # set up vim in full screen window
+    tmux new-window -t "$TMUX_SESSION:1" -n "editor"
+    tmux send-keys -t "$TMUX_SESSION:1" vim C-m
+
+    # set up 4 equal panes, useful for watching logs
+    tmux new-window -t "$TMUX_SESSION:2" -n "misc"
+    tmux split-window -h -t "$TMUX_SESSION:2"
+    tmux split-window -v -t "$TMUX_SESSION:2.0"
+    tmux split-window -v -t "$TMUX_SESSION:2.2"
+  fi
+
+  # attach to first pane of first window
+  tmux attach-session -t "$TMUX_SESSION:0.0"
+}
+
+# Starts a Python server, with optional port argument
+#
+# Params:
+#     port - Optional port to serve at (defaults to 8080)
+#
+# Usage: server [port]
+#
+function serve() {
+  python -m http.server "${1:-8080}"
+}
+
+# Upgrade most things on the computer
+#
+# Usage: update
+#
+function update() (
+  cd || return 1
+
+  function __header() {
+    echo -e "----------------------------------------"
+    echo "$@"
+    echo -e "----------------------------------------"
+  }
+
+  # -----
+  # macOS
+  # -----
+
+  macos_status=0
+  print -b -l 1 -- "$(__header 'macOS updates')\n"
+
+  if ask "Check for and install macOS updates?"; then
+    if ask "Install all available updates?"; then
+      softwareupdate -ia --verbose
+    else
+      if ask "Install only recommended updates?"; then
+        softwareupdate -ir --verbose
+      else
+        macos_status=2
+      fi
+    fi
+  else
+    macos_status=2
+  fi
+
+  if [ "$?" == "1" ]; then
+    macos_status=1
+  fi
+
+  if [ "$macos_status" == 0 ]; then
+    print -b -l 4 "\nInstalled macOS updates.\n"
+  elif [ "$macos_status" == 1 ]; then
+    print -b -l 3 "\nSomething went wrong while updating macOS. Check log output above for details.\n"
+  else
+    print -b -l 2 "No macOS updates were installed.\n"
+  fi
+
+  # --------
+  # Homebrew
+  # --------
+
+  brew_status=0
+  print -b -l 1 -- "$(__header 'Homebrew packages')\n"
+
+  # if pyenv is installed, switch to system python for brew builds
+  if command -v pyenv &> /dev/null; then
+    current_python="$(pyenv global)"
+    pyenv global system
+  fi
+
+  if command -v brew &> /dev/null; then
+
+    if ask "Update all Homebrew packages?"; then
+      brew update && brew upgrade && brew cleanup
+    elif ask "Update Homebrew packages individually?"; then
+      brew update
+
+      for pkg in $(brew outdated --quiet); do
+        if ask "Update $pkg?"; then
+          brew upgrade "$pkg"
+        fi
+      done
+
+      brew cleanup
+    else
+      brew_status=2
+    fi
+
+    if [ "$?" == "1" ]; then
+      brew_status=1
+    fi
+
+    if [ "$brew_status" == 0 ]; then
+      print -b -l 4 "\nInstalled Homebrew packages.\n"
+    elif [ "$brew_status" == 1 ]; then
+      print -b -l 3 "\nSomething went wrong while updating Homebrew packages. Check log output above for details.\n"
+    else
+      print -b -l 2 "No Homebrew packages were installed.\n"
+    fi
+  else
+    print -b -l 2 "Homebrew not installed, continuing...\n"
+  fi
+
+  # ---------
+  # Cask apps
+  # ---------
+
+  cask_status=0
+  print -b -l 1 -- "$(__header 'macOS apps')\n"
+
+  if brew cu --help &> /dev/null; then
+    if ask "Update all macOS apps installed with Homebrew?"; then
+      brew cu --all --yes
+    elif ask "Approve app updates individually?"; then
+      brew cu --all
+    else
+      cask_status=2
+    fi
+
+    if [ "$?" == "1" ]; then
+      cask_status=1
+    fi
+
+    if [ "$cask_status" == 0 ]; then
+      print -b -l 4 "\nInstalled macOS apps.\n"
+    elif [ "$cask_status" == 1 ]; then
+      print -b -l 3 "\nSomething went wrong while updating macOS apps. Check log output above for details.\n"
+    else
+      print -b -l 2 "No macOS app updates were installed.\n"
+    fi
+  else
+    print -b -l 2 "Homebrew extension 'cu' not installed. Install with 'brew tap buo/cask-upgrade'. Continuing...\n"
+  fi
+
+  # -------
+  # Node.js
+  # -------
+
+  nodejs_status=0
+  print -b -l 1 -- "$(__header 'Node.js modules')\n"
+
+  if command -v npm &> /dev/null; then
+    node_info="node $(node -v): $(command -v node)"
+    npm_info="npm $(npm -v): $(command -v npm)"
+    npm_packages="$(npm outdated -g --parseable --depth 0 | cut -d : -f 4)"
+
+    print -b -l 2 "Make sure you want to update this Node.js version before continuing:"
+    print -b -l 1 "${node_info}"
+    print -b -l 1 "${npm_info}\n"
+
+    if ask "Update all global Node.js modules?"; then
+      for pkg in $npm_packages; do
+        npm install -g "$pkg"
+      done
+    elif ask "Update global Node.js modules individually?"; then
+      for pkg in $npm_packages; do
+        if ask "update $pkg?"; then
+          npm install -g "$pkg"
+        fi
+      done
+    else
+      nodejs_status=2
+    fi
+
+    if [ "$?" == "1" ]; then
+      nodejs_status=1
+    fi
+
+    if [ "$nodejs_status" == 0 ]; then
+      print -b -l 4 "\nUpdated Node.js modules.\n"
+    elif [ "$nodejs_status" == 1 ]; then
+      print -b -l 3 "\nSomething went wrong while updating Node.js modules. Check log output above for details.\n"
+    else
+      print -b -l 2 "Node.js modules were not updated.\n"
+    fi
+  else
+    print -b -l 2 "Node.js is not installed, continuing...\n"
+  fi
+
+  # ----------------
+  # Python (2 and 3)
+  # ----------------
+
+  python2_status=0
+  python3_status=0
+  print -b -l 1 -- "$(__header 'Python packages')\n"
+
+  if command -v pyenv &> /dev/null; then
+    # if pyenv, version was switched to system for brew update. need to switch back
+    # shellcheck disable=SC2086
+    pyenv global $current_python
+
+    python2_info="$(python2 --version 2>&1): $(command -v python2)"
+    pip2_info="$(pip2 --version)"
+    pip2_packages="$(pip2 list --no-cache-dir --outdated --format=columns | cut -d ' ' -f 1 | awk '{if(NR>2)print}')"
+
+    print -b -l 2 "Make sure you want to update this Python 2 version before continuing:"
+    print -b -l 1 "${python2_info}"
+    print -b -l 1 "${pip2_info}\n"
+
+    if command -v pip2 &> /dev/null; then
+      if ask "Update all Python 2 packages?"; then
+        for pkg in $pip2_packages; do
+          pip2 install --upgrade "$pkg"
+        done
+      elif ask "Update Python 2 packages individually?"; then
+        for pkg in $pip2_packages; do
+          if ask "Update $pkg?"; then
+            pip2 install --upgrade "$pkg"
+          fi
+        done
+      else
+        python2_status=2
+      fi
+
+      if [ "$?" == "1" ]; then
+        python2_status=1
+      fi
+
+      if [ "$python2_status" == 0 ]; then
+        print -b -l 4 "\nUpdated Python 2 packages.\n"
+      elif [ "$python2_status" == 1 ]; then
+        print -b -l 3 "\nSomething went wrong while updating Python 2 packages. Check log output above for details.\n"
+      else
+        print -b -l 2 "Python 2 packages were not updated.\n"
+      fi
+    else
+      print -b -l 2 "Python 2 could not be found, continuing..."
+    fi
+
+    python3_info="$(python3 --version 2>&1): $(command -v python3)"
+    pip3_info="$(pip3 --version)"
+    pip3_packages="$(pip3 list --no-cache-dir --outdated --format=columns | cut -d ' ' -f 1 | awk '{if(NR>2)print}')"
+
+    print -b -l 2 "Make sure you want to update this Python 3 version before continuing:"
+    print -b -l 1 "${python3_info}"
+    print -b -l 1 "${pip3_info}\n"
+
+    if command -v pip3 &> /dev/null; then
+      if ask "Update all Python 3 packages?"; then
+        for pkg in $pip3_packages; do
+          pip3 install --upgrade "$pkg"
+        done
+      elif ask "Update Python 3 packages individually?"; then
+        for pkg in $pip3_packages; do
+          if ask "Update $pkg?"; then
+            pip3 install --upgrade "$pkg"
+          fi
+        done
+      else
+        python3_status=2
+      fi
+
+      if [ "$?" == "1" ]; then
+        python3_status=1
+      fi
+
+      if [ "$python3_status" == 0 ]; then
+        print -b -l 4 "\nUpdated Python 3 packages.\n"
+      elif [ "$python3_status" == 1 ]; then
+        print -b -l 3 "\nSomething went wrong while updating Python 3 packages. Check log output above for details.\n"
+      else
+        print -b -l 2 "Python 3 packages were not updated.\n"
+      fi
+    else
+      print -b -l 2 "Python 3 could not be found, continuing..."
+    fi
+  else
+    print -b -l 2 "Python (via pyenv) could not be found, continuing...\n"
+  fi
+
+  # done
+
+  cd ~- || exit
+
+  print -b -l 4 "\nFinished updates."
+  print -b -l 1 "Something go wrong?\nFile a bug report: https://github.com/tylucaskelley/dotfiles/issues/new\n"
+)
