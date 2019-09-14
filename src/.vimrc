@@ -507,10 +507,13 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
       \ <bang>0
     \ )
 
-  if has('nvim')
-    autocmd TermOpen * tnoremap <Esc> <c-\><c-n>
-    autocmd FileType fzf tunmap <Esc>
-  endif
+  augroup TermEsc
+    if has('nvim')
+      autocmd TermOpen * tnoremap <Esc> <c-\><c-n>
+      autocmd FileType fzf tunmap <Esc>
+    endif
+  augroup END
+
 
   " match pairs
   Plug 'jiangmiao/auto-pairs'
@@ -549,7 +552,8 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     \ 'ruby': [ 'rubocop' ],
     \ 'sass': [ 'stylelint' ],
     \ 'scss': [ 'stylelint' ],
-    \ 'sh': [ 'shellcheck' ]
+    \ 'sh': [ 'shellcheck' ],
+    \ 'vim': [ 'vint' ]
   \ }
 
   let g:ale_ruby_rubocop_executable='bundle'
@@ -576,9 +580,20 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
 
   let g:LanguageClient_serverCommands={
+    \ 'javascript': [ 'javascript-typescript-stdio' ],
+    \ 'javascript.jsx': [ 'javascript-typescript-stdio' ],
+    \ 'json': [ 'vscode-json-languageserver' ],
+    \ 'python': [ '~/.pyenv/shims/pyls' ],
+    \ 'ruby': [ '~/.rbenv/shims/solargraph' ],
+    \ 'sh': [ 'bash-language-server', 'start' ],
     \ 'typescript': [ 'javascript-typescript-stdio' ],
-    \ 'typescript.tsx': [ 'javascript-typescript-stdio' ]
+    \ 'typescript.tsx': [ 'javascript-typescript-stdio' ],
+    \ 'vue': [ 'vls' ]
   \ }
+
+  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
   " -------------------------
   " filetype-specific plugins
@@ -618,7 +633,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   let g:vim_jsx_pretty_colorful_config=1
 
   " mdx
-
   Plug 'jxnblk/vim-mdx-js'
 
   " vue
@@ -637,7 +651,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   let g:vim_json_syntax_conceal=0
 
   " toml
-
   Plug 'cespare/vim-toml'
 
   " php / blade
