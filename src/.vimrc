@@ -422,6 +422,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   Plug 'Yggdroot/indentLine'
 
   let g:indentLine_setColors=0
+  let g:indentLine_setConceal=0
 
   " show yanked region
   Plug 'machakann/vim-highlightedyank'
