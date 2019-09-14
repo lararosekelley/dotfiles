@@ -8,7 +8,7 @@ This repository contains the dotfiles I use on any macOS computer I'm working of
 
 ## Getting started
 
-1. Clone the repository: ``git clone git@github.com:tylucaskelley/dotfiles``
+1. Clone the repository: `git clone git@github.com:tylucaskelley/dotfiles`
 2. Install some recommended programs via the provided `install` script: `./install`
     - Note that this script is safe to run and will not override any existing
       program installations. See below for details.
