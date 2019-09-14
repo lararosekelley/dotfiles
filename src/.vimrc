@@ -506,6 +506,11 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
       \ <bang>0
     \ )
 
+  if has('nvim')
+    autocmd TermOpen * tnoremap <Esc> <c-\><c-n>
+    autocmd FileType fzf tunmap <Esc>
+  endif
+
   " match pairs
   Plug 'jiangmiao/auto-pairs'
 
@@ -611,6 +616,10 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
   let g:vim_jsx_pretty_colorful_config=1
 
+  " mdx
+
+  Plug 'jxnblk/vim-mdx-js'
+
   " vue
   Plug 'posva/vim-vue'
 
@@ -625,6 +634,10 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   Plug 'elzr/vim-json'
 
   let g:vim_json_syntax_conceal=0
+
+  " toml
+
+  Plug 'cespare/vim-toml'
 
   " php / blade
   Plug 'jwalton512/vim-blade'
@@ -708,9 +721,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   Plug 'tpope/vim-abolish'
 
   let g:investigate_use_dash=1
-
-  " override plugin settings
-  set conceallevel=0
 
   call plug#end()
 end
