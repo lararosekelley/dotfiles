@@ -74,11 +74,13 @@ if [ -f "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh" ]; t
   source "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh"
 fi
 
-# fnm (node version manager)
+# avn (node version switching)
 
-if command -v fnm &> /dev/null; then
-  eval "$(fnm env --multi)"
+if [[ -s "$HOME/.avn/bin/avn.sh" ]]; then
+  # shellcheck disable=SC1090
+  source "$HOME/.avn/bin/avn.sh"
 fi
+
 
 # rbenv (ruby version manager)
 
@@ -102,6 +104,12 @@ fi
 
 if command -v pipenv &> /dev/null; then
   eval "$(pipenv --completion)"
+fi
+
+# poetry
+
+if command -v poetry &> /dev/null; then
+  poetry completions bash > "$(brew --prefix)/etc/bash_completion.d/poetry.bash-completion"
 fi
 
 # load bash prompt
