@@ -74,13 +74,11 @@ if [ -f "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh" ]; t
   source "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh"
 fi
 
-# avn (node version switching)
+# nodenv (node version manager)
 
-if [[ -s "$HOME/.avn/bin/avn.sh" ]]; then
-  # shellcheck disable=SC1090
-  source "$HOME/.avn/bin/avn.sh"
+if [[ -s "$(brew --prefix nodenv)" ]]; then
+  eval "$(nodenv init -)"
 fi
-
 
 # rbenv (ruby version manager)
 
