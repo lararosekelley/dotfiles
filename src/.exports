@@ -42,21 +42,14 @@ export N_PREFIX="$HOME/.n"
 
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
+# ignore python 2 deprecation warnings
+
+export PYTHONWARNINGS="ignore:DEPRECATION"
+
 # postgresql
 
 export PGDATA="/usr/local/var/postgres"
 export PGHOST=localhost
-
-# openssl via homebrew
-
-export CFLAGS
-CFLAGS="-I$(brew --prefix openssl)/include"
-
-export CPPFLAGS
-CPPFLAGS="-I$(brew --prefix openssl)/include"
-
-export LDFLAGS
-LDFLAGS="-L$(brew --prefix openssl)/lib"
 
 # mutt
 
