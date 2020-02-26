@@ -12,7 +12,7 @@ files=(
   ~/.exports
   ~/.functions
   ~/.gitprompt
-  ~/.env # placed last for precedence
+  ~/.environment # placed last for precedence
 )
 
 for file in "${files[@]}"; do

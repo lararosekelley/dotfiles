@@ -30,16 +30,16 @@ function vid2mp4() {
   usage="usage: vid2mp4 input"
 
   if [ -z "$1" ]; then
-    print "$usage"
+    echo "$usage"
     return 1
   elif command -v ffmpeg &> /dev/null; then
     filename="$(echo "$1" | cut -d . -f 1)"
 
     ffmpeg -i "$1" -c:v libx264 -crf 23 -c:a aac -q:a 100 "$filename.mp4"
 
-    print -b -l 4 "$1 converted and saved to $2"
+    echo "$1 converted and saved to $2"
   else
-    print -b -l 3 "fatal: ffmpeg is not installed"
+    echo "fatal: ffmpeg is not installed"
   fi
 }
 
@@ -55,7 +55,7 @@ function mov2gif() {
   usage="usage: mov2gif input.mov output.gif"
 
   if [ -z "$1" ] || [ -z "$2" ]; then
-    print "$usage"
+    echo "$usage"
     return 1
   elif command -v ffmpeg &> /dev/null && command -v gifsicle &> /dev/null; then
     infile="$1"
@@ -64,13 +64,13 @@ function mov2gif() {
     if [ -f "$infile" ]; then
       ffmpeg -hide_banner -loglevel quiet -i "$infile" -s 600x400 -pix_fmt rgb24 -r 10 -f gif - | gifsicle --optimize=3 --delay=3 > "$outfile"
 
-      print -b -l 4 "${infile} converted and saved to ${outfile}"
+      echo "${infile} converted and saved to ${outfile}"
     else
-      print -b -l 3 "fatal: ${infile} is not a file"
+      echo "fatal: ${infile} is not a file"
       return 1
     fi
   else
-    print -b -l 3 "fatal: ffmpeg and gifsicle are not installed"
+    echo "fatal: ffmpeg and gifsicle are not installed"
     return 1
   fi
 }
@@ -98,14 +98,18 @@ function mux() {
     tmux split-window -v -t "$TMUX_SESSION:0"
 
     # set up vim in full screen window
-    tmux new-window -t "$TMUX_SESSION:1" -n "editor"
+    tmux new-window -t "$TMUX_SESSION:1" -n "editor 1"
     tmux send-keys -t "$TMUX_SESSION:1" vim C-m
 
+    # second vim window
+    tmux new-window -t "$TMUX_SESSION:2" -n "editor 2"
+    tmux send-keys -t "$TMUX_SESSION:2" vim C-m
+
     # set up 4 equal panes, useful for watching logs
-    tmux new-window -t "$TMUX_SESSION:2" -n "misc"
-    tmux split-window -h -t "$TMUX_SESSION:2"
-    tmux split-window -v -t "$TMUX_SESSION:2.0"
-    tmux split-window -v -t "$TMUX_SESSION:2.2"
+    tmux new-window -t "$TMUX_SESSION:3" -n "misc"
+    tmux split-window -h -t "$TMUX_SESSION:3"
+    tmux split-window -v -t "$TMUX_SESSION:3.0"
+    tmux split-window -v -t "$TMUX_SESSION:3.2"
   fi
 
   # attach to first pane of first window
@@ -121,4 +125,15 @@ function mux() {
 #
 function serve() {
   python -m http.server "${1:-8080}"
+}
+
+# Installs peer dependencies for JavaScript projects, using Yarn
+#
+# Params:
+#     package - package name
+#
+# Usage: peerdeps package
+function peerdeps() {
+  local PKG="$1"
+  npm info "$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs yarn add --dev "$PKG@latest"
 }
