@@ -218,6 +218,7 @@ augroup RecognizeFiles
   autocmd BufRead,BufNewFile,BufFilePre .{sequelizerc,jestconfig,fxrc} set filetype=javascript
   autocmd BufRead,BufNewFile,BufFilePre *.jsx set filetype=javascript.jsx
   autocmd BufRead,BufNewFile,BufFilePre *.tsx set filetype=typescript.tsx
+  autocmd BufRead,BufNewFile,BufFilePre .env.* set filetype=sh
 augroup END
 
 " no concealing characters
@@ -298,6 +299,16 @@ set smarttab
 " auto indent
 set autoindent
 set smartindent
+
+" ...except for python
+augroup PythonIndent
+  au BufNewFile,BufRead *.py
+    \ set expandtab
+    \ set autoindent
+    \ set tabstop=4
+    \ set softtabstop=4
+    \ set shiftwidth=4
+augroup END
 
 " proper word wrapping
 set wrap
@@ -529,15 +540,15 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
   Plug 'w0rp/ale'
 
-  let g:ale_completion_enabled=1
-  let g:ale_open_list=1
-  let g:ale_echo_msg_format='[%linter%] %s'
-  let g:ale_linters_explicit=1
-
   let g:ale_linter_aliases={
     \ 'vue': [ 'css', 'typescript' ],
     \ 'jsx': [ 'css', 'javascript' ],
     \ 'tsx': [ 'css', 'typescript' ]
+  \ }
+
+  let g:ale_fixers={
+    \ 'javascript': [ 'eslint' ],
+    \ 'python': [ 'black' ]
   \ }
 
   let g:ale_linters={
@@ -548,7 +559,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     \ 'tsx': [ 'stylelint', 'eslint' ],
     \ 'vue': [ 'stylelint', 'eslint' ],
     \ 'markdown': [ 'markdownlint' ],
-    \ 'python': [ 'pycodestyle' ],
+    \ 'python': [ 'pycodestyle', 'pyflakes' ],
     \ 'ruby': [ 'rubocop' ],
     \ 'sass': [ 'stylelint' ],
     \ 'scss': [ 'stylelint' ],
@@ -556,7 +567,14 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     \ 'vim': [ 'vint' ]
   \ }
 
+  let g:ale_completion_enabled=1
+  let g:ale_open_list=1
+  let g:ale_echo_msg_format='[%linter%] %s'
+  let g:ale_linters_explicit=1
+  let g:ale_fix_on_save=1
   let g:ale_ruby_rubocop_executable='bundle'
+
+  Plug 'psf/black'
 
   " --------------
   " autocompletion / language servers
@@ -619,7 +637,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   let g:javascript_plugin_jsdoc=1
   let g:javascript_plugin_flow=1
 
-  " Plug 'HerringtonDarkholme/yats.vim'
   Plug 'leafgarland/typescript-vim'
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }

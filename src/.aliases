@@ -82,7 +82,7 @@ alias ports='lsof -nP +c 15 | grep LISTEN'
 
 # brew
 
-alias bubu='brew update && brew upgrade --ignore-pinned'
+alias bubu='brew update && brew upgrade --ignore-pinned && brew cu --all --yes'
 
 # kill the dock (for ubar)
 
