@@ -590,8 +590,8 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
   let g:node_host_prog=expand('/usr/local/bin/neovim-node-host')
 
-  let g:python_host_prog=expand('~/.pyenv/versions/neovim2/bin/python')
-  let g:python3_host_prog=expand('~/.pyenv/versions/neovim3/bin/python')
+  let g:python_host_prog=expand('~/.pyenv/versions/neovim2.7/bin/python')
+  let g:python3_host_prog=expand('~/.pyenv/versions/neovim3.8/bin/python')
 
   let g:deoplete#enable_at_startup=1
 
