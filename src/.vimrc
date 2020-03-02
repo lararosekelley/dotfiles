@@ -574,8 +574,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   let g:ale_fix_on_save=1
   let g:ale_ruby_rubocop_executable='bundle'
 
-  Plug 'psf/black'
-
   " --------------
   " autocompletion / language servers
   " --------------
