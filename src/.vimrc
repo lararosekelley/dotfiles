@@ -589,6 +589,9 @@ if filereadable(vim_plug_file)
   " recognize indent settings per project
   Plug 'tpope/vim-sleuth'
 
+  " man pages
+  Plug 'vim-utils/vim-man'
+
   " --------
   " 8e. testing
   " --------
