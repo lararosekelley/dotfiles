@@ -2,59 +2,59 @@ set encoding=utf-8
 set fileencoding=utf-8
 
 " --------
-" File: .vimrc
-" Description: Vim configuration
-" Author: Ty-Lucas Kelley <tylucaskelley@gmail.com>
-" Source: https://github.com/tylucaskelley/setup
-" Last Modified: 11 December 2018
+" table of contents
 " --------
-
-" -------- sections --------
-"
 " 1. general
 " 2. key mappings
-" 3. ui, colors, fonts
-" 4. files
-" 5. navigation, tabs, buffers
-" 6. text, indent, folding
-" 7. search
-" 8. helper functions
-" 9. plugins
-"
+"     a. leader commands
+" 3. navigation and search
+" 4. text, indentation, and folding
+" 5. appearance
+" 6. files
+" 7. custom functions
+" 8. plugins
+"    a. appearance
+"    b. navigation and search
+"    c. git
+"    d. files and projects
+"    e. testing
+"    f. syntax
+"    g. languages
+"    h. autocomplete
+"    i. misc.
 " --------
 
-" ----------
+" --------
 " 1. general
-" ----------
+" --------
 
-" use , as leader key
-let g:mapleader=','
+" check for necessary executables
+let nodejs_executable = '/usr/local/bin/neovim-node-host'
+let python2_executable = expand('~/.pyenv/versions/neovim2.7/bin/python')
+let python3_executable = expand('~/.pyenv/versions/neovim3.8/bin/python')
+let vim_plug_file = expand('~/.vim/autoload/plug.vim')
+
+if !filereadable(nodejs_executable) || !filereadable(python2_executable) || !filereadable(python3_executable)
+  echoerr 'Missing executables!'
+endif
+
+" optional files and folders
+let gitgutter_plugin = expand('~/.vim/packages/vim-gitgutter') 
 
 " longer command history
-set history=5000
+set history=10000
 
-" get rid of escape key delay
-set timeoutlen=1000
-set ttimeoutlen=10
-
-" allow for filetype-specific plugins
+" filetype-specific plugins
 filetype plugin indent on
 
-" ---------------
+" neovim plugins
+let g:node_host_prog=expand(nodejs_executable)
+let g:python_host_prog=expand(python2_executable)
+let g:python3_host_prog=expand(python3_executable)
+
+" --------
 " 2. key mappings
-" ---------------
-
-" kill search result highlighting
-nnoremap <silent> <CR> :noh<CR><CR>
-
-" select entire file's contents
-nnoremap <leader>a ggVG
-
-" delete everything in a file
-nnoremap <leader>d ggdG
-
-" copy entire file's contents to system clipboard and return to previous cursor position
-nnoremap <leader>c gg"+yG``
+" --------
 
 " force use of hjkl for navigation in normal mode
 nnoremap <Left> :echoe "use h to move left"<CR>
@@ -68,24 +68,60 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 
-" initiate commands with spacebar
+" initiate commands with space bar
 nnoremap <Space> :
 
-" initiate search with <Tab> in normal mode
+" initiate search with tab key
 nnoremap <Tab> /
 
-" move between tabs with Shift-l and Shift-h
+" switch tabs with Shift-l and Shift-h
 nnoremap <S-l> gt
 nnoremap <S-h> gT
 
-" close all open buffers
+" hitting enter also removes search highlighting
+nnoremap <silent> <CR> :noh<CR><CR>
+
+" decrease indent in insert mode
+inoremap <S-Tab> <C-D>
+
+" decrease indent in visual mode
+vnoremap <S-Tab> <gv
+
+" increase indent in visual mode
+vnoremap <Tab> >gv
+
+" backspace to delete in visual mode
+vnoremap <BS> d
+
+" exit terminal mode
+tnoremap <Esc> <C-\><C-n>
+
+" --------
+" 2a. leader commands
+" --------
+
+" use , as leader key
+let g:mapleader=','
+
+" kill all open buffers
 nnoremap <leader>x :bufdo bd<CR>
 
-" split windows
-nnoremap <leader>h :split<CR>
-nnoremap <leader>v :vsplit<CR>
+" select all content in file
+nnoremap <leader>a ggVG
 
-" resize window splits to be equal
+" delete all content in file
+nnoremap <leader>d ggdG
+
+" copy file content to clipboard
+nnoremap <leader>c gg"*yG``
+
+" create blank vertical split
+nnoremap <leader>v :vnew<CR>
+
+" create blank horizontal split
+nnoremap <leader>h <C-w>n
+
+" make window splits equal size
 nnoremap <leader>e <C-w>=
 
 " reload .vimrc
@@ -106,54 +142,163 @@ nnoremap <leader>i mzgg=G`z`
 " toggle fold open/close
 nnoremap <leader>, za
 
-" start substitution
+" start find & replace
 nnoremap <leader>s :%s/\<<C-r><C-w>\>/
-
-" select entire file contents
-nnoremap <leader>a ggVG
-
-" copy entire file contents to system clipboard and return to previous cursor position
-nnoremap <leader>c gg"+yG``
 
 " turn paste mode off
 nnoremap <leader>p :set nopaste<CR>
 
-" adjust indentation
-inoremap <S-Tab> <C-D>
-vnoremap <Tab> >gv
-vnoremap <S-Tab> <gv
-
-" backspace to delete in visual mode
-vnoremap <BS> d
-
-" helpful git stuff
+" squash everything beneath top commit while rebasing
 augroup GitRebase
   autocmd!
   autocmd FileType gitrebase nnoremap <buffer> <leader>s :2,$s/^pick/squash/<CR>
 augroup END
 
-" exit terminal-mode
-tnoremap <Esc> <C-\><C-n>
+" show highlight groups (definition below)
+nnoremap <leader>hg :call <SID>HighlightGroups()<CR>
 
-" --------------------
-" 3. ui, colors, fonts
-" --------------------
+" --------
+" 3. navigation and search
+" --------
 
-" support truecolor
+" enable mouse mode
+if !has('nvim')
+  set ttymouse=xterm2
+endif
+
+set mouse=a
+
+" lower escape key delay
+set timeoutlen=1000
+set ttimeoutlen=10
+
+" lower time to write to swap
+set updatetime=100
+
+" use common backspace behavior
+set backspace=indent,eol,start
+
+" send more characters at once
+set ttyfast
+
+" wrap to previous/next line wit hjkl
+set whichwrap=<,>,h,l,[,]
+
+" splits open below and to the right
+set splitright
+set splitbelow
+
+" return to last cursor position when opening a file
+augroup ReturnToPrevCursor
+  autocmd!
+  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+augroup END
+
+" add padding while scrolling
+set scrolloff=10
+set sidescrolloff=10
+
+" always show tab and status bars
+set laststatus=2
+set showtabline=2
+
+" close location list if parent window closed
+augroup LocationList
+  autocmd!
+  autocmd QuitPre * silent! lclose
+augroup END
+
+" grep-style regex
+set magic
+
+" use global search by default
+set gdefault
+
+" real-time search
+set incsearch
+
+" highlight matches
+set hlsearch
+
+" ignore case during search
+set ignorecase
+
+" completion
+set omnifunc=syntaxcomplete#Complete
+set completeopt=menu
+
+" --------
+" 4. text, indentation, and folding
+" --------
+
+" work with system clipboard
+if has('clipboard')
+  set clipboard=unnamedplus
+end
+
+" spaces instead of tabs
+set tabstop=2
+set softtabstop=0
+set expandtab
+set shiftwidth=2
+set smarttab
+
+" auto indentation
+set autoindent
+set smartindent
+
+" word wrapping
+set wrap
+set textwidth=0
+set wrapmargin=0
+set linebreak
+
+" max number of folds
+set foldnestmax=10
+
+" language-specific folding
+set foldmethod=indent
+
+" display fold info
+set foldcolumn=4
+
+" open folds when reading file
+set nofoldenable
+set foldlevelstart=99
+
+" enable spellcheck in certain files
+augroup SpellCheck
+  autocmd!
+  autocmd BufRead,BufNewFile *.md,*.markdown,*.txt setlocal spell spelllang=en_us
+augroup END
+
+" --------
+" 5. appearance
+" --------
+
+" truecolor support
 if has('termguicolors')
   set termguicolors
 endif
 
-" turn on syntax highlighting
+" preview command results before committing (for example find/replace)
+if has('nvim')
+  set inccommand=split
+endif
+
+" command window height
+set cmdheight=1
+
+" syntax highlighting
 syntax enable
 
 " dark background
 set background=dark
 
-" show line at column 120
+" show marker at 120 line length
 set colorcolumn=120
 
-" show current command in bottom right
+" show current command at bottom-right
 set showcmd
 
 " highlight current line
@@ -175,21 +320,25 @@ set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
 set ruler
 set number
 
-" don't warn about unsaved changes to buffers
-set hidden
-
 " highlight matching braces
 set showmatch
 set matchtime=2
 
-" show result of various commands like search/replace before you commit
-if has('nvim')
-  set inccommand=split
-endif
+" don't warn about abandoned buffers
+set hidden
+
+" no concealing characters
+set conceallevel=0
 
 " --------
-" 4. files
+" 6. files
 " --------
+
+" support comments in .json files
+augroup JsonComments
+  autocmd!
+  autocmd FileType json syntax match Comment +\/\/.\+$+
+augroup END
 
 " filename completion
 if has('wildmenu')
@@ -204,25 +353,23 @@ if has('wildmenu')
   set wildignore+=*.bmp,*.gif,*.ico,*.jpeg,*.jpg,*.png
   set wildignore+=.git,.svn,.hg
 
-  " enable it
+  " enable menu
   set wildmenu
   set wildmode=longest:full,full
 endif
 
-" recognize some specific files
+" override default highlighting for certain files
 augroup RecognizeFiles
   autocmd!
   autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,tern-project,tern-config} set filetype=json
   autocmd BufRead,BufNewFile,BufFilePre Procfile,.prettierrc set filetype=yaml
   autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini
+  autocmd BufRead,BufNewFile,BufFilePre *.conf set filetype=dosini
   autocmd BufRead,BufNewFile,BufFilePre .{sequelizerc,jestconfig,fxrc} set filetype=javascript
   autocmd BufRead,BufNewFile,BufFilePre *.jsx set filetype=javascript.jsx
   autocmd BufRead,BufNewFile,BufFilePre *.tsx set filetype=typescript.tsx
   autocmd BufRead,BufNewFile,BufFilePre .env.* set filetype=sh
 augroup END
-
-" no concealing characters
-set conceallevel=0
 
 " no swaps and backups
 set nobackup
@@ -233,132 +380,12 @@ set noswapfile
 set undofile
 set undodir=~/.vim/undo
 
-" ----------------------------
-" 5. navigation, tabs, buffers
-" ----------------------------
-
-" make backspace work like other editors
-set backspace=indent,eol,start
-
-" send more chars at once
-set ttyfast
-
-" enable mouse mode
-if !has('nvim')
-  set ttymouse=xterm2
-endif
-
-set mouse=a
-
-" wrap to prev/next line with arrow keys
-set whichwrap=<,>,h,l,[,]
-
-" open splits below and to the right
-set splitright
-set splitbelow
-
-" don't cd to current file's directory automatically
+" don't change current directory automatically
 set noautochdir
 
-" return to last edit position when opening a file
-augroup last_position
-  autocmd!
-  autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-augroup END
-
-" pad scrolling with a few lines from window border
-set scrolloff=10
-set sidescrolloff=10
-
-" always show status and tab bars
-set laststatus=2
-set showtabline=2
-
-" close location list if parent window is quit
-augroup LocList
-  autocmd!
-  autocmd QuitPre * silent! lclose
-augroup END
-
-" ------------------------
-" 6. text, indent, folding
-" ------------------------
-
-" sync with system clipboard
-if has('clipboard')
-  set clipboard=unnamedplus
-endif
-
-" spaces instead of tabs, width of 2
-set tabstop=2
-set softtabstop=0
-set expandtab
-set shiftwidth=2
-set smarttab
-
-" auto indent
-set autoindent
-set smartindent
-
-" ...except for python
-augroup PythonIndent
-  au BufNewFile,BufRead *.py
-    \ set expandtab
-    \ set autoindent
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-augroup END
-
-" proper word wrapping
-set wrap
-set textwidth=0
-set wrapmargin=0
-set linebreak
-
-" grep-style regex
-set magic
-
-" max number of folds to create
-set foldnestmax=10
-
-" language-based folding
-set foldmethod=indent
-
-" display fold info
-set foldcolumn=4
-
-" folds open by default when reading file
-set nofoldenable
-set foldlevelstart=99
-
-" spellcheck for markdown and text files automatically
-augroup Spelling
-  autocmd!
-  autocmd BufRead,BufNewFile *.md,*.txt setlocal spell spelllang=en_us
-augroup END
-
-" ---------
-" 7. search
-" ---------
-
-" add the g flag to search and replace
-set gdefault
-
-" real-time search
-set incsearch
-
-" highlight matches
-set hlsearch
-
-" ignore case when searching
-set ignorecase
-
-" -------------------
-" 8. helper functions
-" -------------------
-
-nmap <leader>hg :call <SID>HighlightGroups()<CR>
+" --------
+" 7. custom functions
+" --------
 
 " show highlight groups applied to current text
 function! <SID>HighlightGroups()
@@ -369,23 +396,23 @@ function! <SID>HighlightGroups()
   echo map(synstack(line('.'), col('.')), "synIDattr(v:val, 'name')")
 endfunction
 
-" trim whitespace from a string
-function! StrTrim(text)
-  return substitute(a:text, '^\n*\s*\(.\{-}\)\n*\s*$', '\1', '')
-endfunction
-
-" ----------
-" 9. plugins
-" ----------
-
-if !empty(glob('~/.vim/autoload/plug.vim'))
+" --------
+" 8. plugins
+" --------
+"
+if filereadable(vim_plug_file)
   call plug#begin('~/.vim/packages')
 
-  " ----------
-  " ui changes
-  " ----------
+  " --------
+  " 8a. appearance
+  " --------
 
-  " color schemes
+  " start screen
+  Plug 'mhinz/vim-startify'
+
+  let g:startify_bookmarks=[ '~/.vimrc', '~/.bashrc', '~/.aliases', '~/.functions', '~/.exports' ]
+
+  " color scheme
   Plug 'morhetz/gruvbox'
 
   " lightline
@@ -419,63 +446,64 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     \ },
   \ }
 
-  " nicer start screen
-  Plug 'mhinz/vim-startify'
+  " show indent guides
+  Plug 'thaerkh/vim-indentguides'
 
-  let g:startify_bookmarks=[ '~/.vimrc', '~/.bashrc', '~/.aliases', '~/.functions', '~/.exports', '~/.env' ]
+  " highlight copied text
+  Plug 'machakann/vim-highlightedyank'
 
-  " merge two tabs
+  " --------
+  " 8b. navigation and search
+  " --------
+
+  " merge tabs into vertical splits
   Plug 'vim-scripts/Tabmerge'
 
   nnoremap <leader>tm :execute "Tabmerge left"<CR>
 
-  " show indent guides
-  Plug 'Yggdroot/indentLine'
+  " look up documentation
+  Plug 'keith/investigate.vim'
 
-  let g:indentLine_setColors=0
-  let g:indentLine_setConceal=0
+  let g:investigate_use_dash=1
 
-  " show yanked region
-  Plug 'machakann/vim-highlightedyank'
+  " smooth scrolling with <C-d> and <C-u>
+  Plug 'yuttie/comfortable-motion.vim'
 
-  " ---
-  " git
-  " ---
+  " navigate between vim and tmux seamlessly
+  Plug 'christoomey/vim-tmux-navigator'
+
+  " better find and replace
+  Plug 'tpope/vim-abolish'
+
+  " close HTML tags
+  Plug 'alvan/vim-closetag'
+
+  let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx,*.js,*.erb,*.tsx'
+
+  " --------
+  " 8c. git
+  " --------
 
   " git wrapper
   Plug 'tpope/vim-fugitive'
+
+  " github support
   Plug 'tpope/vim-rhubarb'
 
+  " gitlab support
+  Plug 'shumphrey/fugitive-gitlab.vim'
+
+  " copy link to current line
   nnoremap <leader>yg :.Gbrowse!<CR>
 
-  " show diff in gutter
+  " show git diff in gutter
   Plug 'airblade/vim-gitgutter'
 
-  " -----
-  " files
-  " -----
+  " --------
+  " 8d. files and projects
+  " --------
 
-  " unix commands like :Rename and :SudoEdit
-  Plug 'tpope/vim-eunuch'
-
-  " bookmark lines and comment
-  Plug 'MattesGroeger/vim-bookmarks'
-
-  " add in keywords to close code blocks (e.g. endif, end, done, etc.)
-  Plug 'tpope/vim-endwise'
-
-  " reload files changed outside of vim
-  Plug 'djoshea/vim-autoread'
-
-  " quick commenting of lines (<leader>cc being most useful)
-  Plug 'scrooloose/nerdcommenter'
-
-  let g:NERDSpaceDelims=1
-  let g:NERDDefaultAlign='left'
-  let g:NERDCommentEmptyLines=1
-  let g:NERDTrimTrailingWhitespace=1
-
-  " fuzzy file finding
+  " fuzzy file search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
   Plug 'junegunn/fzf.vim'
 
@@ -499,7 +527,6 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
 
   let g:fzf_history_dir='~/.local/share/fzf-history'
 
-  " fuzzy file finding
   nnoremap <silent> <leader>f :FzfGFiles<CR>
   nnoremap <silent> <leader>F :FzfFiles<CR>
   nnoremap <silent> <leader>r :FzfRg<CR>
@@ -518,6 +545,7 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
       \ <bang>0
     \ )
 
+  " close fzf with Esc key
   augroup TermEsc
     if has('nvim')
       autocmd TermOpen * tnoremap <Esc> <c-\><c-n>
@@ -525,6 +553,33 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
     endif
   augroup END
 
+  " make vim project-aware
+  Plug 'airblade/vim-rooter'
+
+  let g:rooter_resolve_links=1
+
+  " add UNIX-like commands
+  Plug 'tpope/vim-eunuch'
+
+  " add bookmarks to lines
+  Plug 'MattesGroeger/vim-bookmarks'
+
+  " close blocks automatically
+  Plug 'tpope/vim-endwise'
+
+  " reload files changed outside of vim
+  Plug 'djoshea/vim-autoread'
+
+  " comment out lines quickly
+  Plug 'scrooloose/nerdcommenter'
+
+  let g:NERDSpaceDelims=1
+  let g:NERDDefaultAlign='left'
+  let g:NERDCommentEmptyLines=1
+  let g:NERDTrimTrailingWhitespace=1
+
+  " emoji support
+  Plug 'junegunn/vim-emoji'
 
   " match pairs
   Plug 'jiangmiao/auto-pairs'
@@ -534,157 +589,79 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   " recognize indent settings per project
   Plug 'tpope/vim-sleuth'
 
-  " ---------------
-  " syntax checking
-  " ---------------
+  " --------
+  " 8e. testing
+  " --------
+
+  " run tests
+  Plug 'janko-m/vim-test'
+  Plug 'tpope/vim-dispatch'
+
+  nnoremap <leader>t :TestFile<CR>
+  nnoremap <leader>T :TestNearest<CR>
+
+  let test#strategy='dispatch'
+
+  " language-specific test settings
+  let test#ruby#minitest#file_pattern='\.test\.rb'
+
+  " --------
+  " 8f. syntax
+  " --------
 
   Plug 'w0rp/ale'
 
+  " open location list
+  let g:ale_open_list=1
+
+  " only run linters specified in ale_linters
+  let g:ale_linters_explicit=1
+
+  " run fixers on save
+  let g:ale_fix_on_save=1
+
+  " custom executables
+  let g:ale_ruby_rubocop_executable='bundle'
+
+  " define linters to use
+  let g:ale_linters={
+    \ 'css': [ 'stylelint' ],
+    \ 'javascript': [ 'stylelint', 'eslint' ],
+    \ 'jsx': [ 'stylelint', 'eslint' ],
+    \ 'markdown': [ 'markdownlint' ],
+    \ 'python': [ 'flake8', 'mypy' ],
+    \ 'ruby': [ 'rubocop' ],
+    \ 'sass': [ 'stylelint' ],
+    \ 'scss': [ 'stylelint' ],
+    \ 'sh': [ 'shellcheck' ],
+    \ 'tsx': [ 'stylelint', 'eslint' ],
+    \ 'typescript': [ 'stylelint', 'eslint' ],
+    \ 'vim': [ 'vint' ],
+    \ 'vue': [ 'stylelint', 'eslint' ]
+  \ }
+
+  " run fixers on save
+  let g:ale_fixers={
+    \ 'javascript': [ 'eslint', 'prettier' ],
+    \ 'python': [ 'black', 'isort' ]
+  \ }
+
+  " map filetypes to others
   let g:ale_linter_aliases={
     \ 'vue': [ 'css', 'typescript' ],
     \ 'jsx': [ 'css', 'javascript' ],
     \ 'tsx': [ 'css', 'typescript' ]
   \ }
 
-  let g:ale_fixers={
-    \ 'javascript': [ 'eslint' ],
-    \ 'python': [ 'black' ]
-  \ }
+  " --------
+  " 8g. languages
+  " --------
 
-  let g:ale_linters={
-    \ 'css': [ 'stylelint' ],
-    \ 'javascript': [ 'stylelint', 'eslint' ],
-    \ 'jsx': [ 'stylelint', 'eslint' ],
-    \ 'typescript': [ 'stylelint', 'eslint' ],
-    \ 'tsx': [ 'stylelint', 'eslint' ],
-    \ 'vue': [ 'stylelint', 'eslint' ],
-    \ 'markdown': [ 'markdownlint' ],
-    \ 'python': [ 'pycodestyle', 'pyflakes' ],
-    \ 'ruby': [ 'rubocop' ],
-    \ 'sass': [ 'stylelint' ],
-    \ 'scss': [ 'stylelint' ],
-    \ 'sh': [ 'shellcheck' ],
-    \ 'vim': [ 'vint' ]
-  \ }
-
-  let g:ale_completion_enabled=1
-  let g:ale_open_list=1
-  let g:ale_echo_msg_format='[%linter%] %s'
-  let g:ale_linters_explicit=1
-  let g:ale_fix_on_save=1
-  let g:ale_ruby_rubocop_executable='bundle'
-
-  " --------------
-  " autocompletion / language servers
-  " --------------
-
-  if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  else
-    Plug 'Shougo/deoplete.nvim'
-    Plug 'roxma/nvim-yarp'
-    Plug 'roxma/vim-hug-neovim-rpc'
-  endif
-
-  let g:node_host_prog=expand('/usr/local/bin/neovim-node-host')
-
-  let g:python_host_prog=expand('~/.pyenv/versions/neovim2.7/bin/python')
-  let g:python3_host_prog=expand('~/.pyenv/versions/neovim3.8/bin/python')
-
-  let g:deoplete#enable_at_startup=1
-
-  Plug 'autozimu/LanguageClient-neovim', { 'branch': 'next', 'do': 'bash install.sh' }
-
-  let g:LanguageClient_serverCommands={
-    \ 'javascript': [ 'javascript-typescript-stdio' ],
-    \ 'javascript.jsx': [ 'javascript-typescript-stdio' ],
-    \ 'json': [ 'vscode-json-languageserver' ],
-    \ 'python': [ '~/.pyenv/shims/pyls' ],
-    \ 'ruby': [ '~/.rbenv/shims/solargraph' ],
-    \ 'sh': [ 'bash-language-server', 'start' ],
-    \ 'typescript': [ 'javascript-typescript-stdio' ],
-    \ 'typescript.tsx': [ 'javascript-typescript-stdio' ],
-    \ 'vue': [ 'vls' ]
-  \ }
-
-  nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-  nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-  nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-
-  " -------------------------
-  " filetype-specific plugins
-  " -------------------------
-
-  " html / css
-  Plug 'JulesWang/css.vim'
-  Plug 'mattn/emmet-vim'
-
-  let g:user_emmet_settings={
-    \ 'javascript.jsx': {
-    \   'extends': 'jsx',
-    \ }
-  \ }
-
-  Plug 'alvan/vim-closetag'
-
-  let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx,*.js,*.erb,*.tsx'
-
-  " javascript / typescript / coffeescript
-  Plug 'pangloss/vim-javascript'
-
-  let g:javascript_plugin_jsdoc=1
-  let g:javascript_plugin_flow=1
-
-  Plug 'leafgarland/typescript-vim'
-  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-  Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
-  Plug 'prettier/vim-prettier', { 'do': 'npm install' }
-
+  " coffeescript
   Plug 'kchmck/vim-coffee-script'
 
-  " jsx / tsx
-  Plug 'maxmellon/vim-jsx-pretty'
-
-  let g:vim_jsx_pretty_colorful_config=1
-
-  " mdx
-  Plug 'jxnblk/vim-mdx-js'
-
-  " vue
-  Plug 'posva/vim-vue'
-
-  augroup VimHighlight
-    autocmd FileType vue syntax sync fromstart
-  augroup END
-
-  " graphql
-  Plug 'jparise/vim-graphql'
-
-  " json
-  Plug 'elzr/vim-json'
-
-  let g:vim_json_syntax_conceal=0
-
-  " toml
-  Plug 'cespare/vim-toml'
-
-  " php / blade
-  Plug 'jwalton512/vim-blade'
-
-  " markdown
-  Plug 'plasticboy/vim-markdown'
-
-  let g:vim_markdown_conceal=0
-  let g:vim_markdown_fenced_languages=[ 'cs=csharp', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
-
-  " ruby
-  Plug 'vim-ruby/vim-ruby'
-  Plug 'tpope/vim-rails'
-  Plug 'tpope/vim-bundler'
-  Plug 'asux/vim-capybara'
-
-  " graphviz
-  Plug 'wannesm/wmgraphviz.vim'
+  " css
+  Plug 'JulesWang/css.vim'
 
   " csv
   Plug 'chrisbra/csv.vim'
@@ -694,70 +671,118 @@ if !empty(glob('~/.vim/autoload/plug.vim'))
   let g:csv_nomap_space=1
   let g:csv_nomap_bs=1
 
-  " latex
-  Plug 'lervag/vimtex'
+  " graphql
+  Plug 'jparise/vim-graphql'
 
-  let g:tex_flavor='latex'
-  let g:vimtex_compiler_progname=expand('~/.pyenv/versions/neovim3/bin/nvr')
-
-  " vim
-  Plug 'junegunn/vader.vim'
+  " graphviz
+  Plug 'wannesm/wmgraphviz.vim'
 
   " jenkins
   Plug 'martinda/Jenkinsfile-vim-syntax'
 
-  " -------
-  " testing
-  " -------
+  " json
+  Plug 'elzr/vim-json'
 
-  " kick off tests
-  Plug 'janko-m/vim-test'
-  Plug 'tpope/vim-dispatch'
+  let g:vim_json_syntax_conceal=0
 
-  nnoremap <leader>t :TestFile<CR>
-  nnoremap <leader>T :TestNearest<CR>
+  " javascript/typescript, jsx/tsx
+  Plug 'pangloss/vim-javascript'
+  Plug 'leafgarland/typescript-vim'
+  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+  Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
+  Plug 'prettier/vim-prettier', { 'do': 'npm install' }
+  Plug 'maxmellon/vim-jsx-pretty'
 
-  let test#strategy='dispatch'
-  let test#ruby#minitest#file_pattern='\.test\.rb'
+  let g:javascript_plugin_jsdoc=1
+  let g:javascript_plugin_flow=1
+  let g:vim_jsx_pretty_colorful_config=1
 
-  " -----
-  " misc.
-  " -----
+  " latex
+  Plug 'lervag/vimtex'
 
-  " smooth scrolling with <C-d> and <C-u>
-  Plug 'yuttie/comfortable-motion.vim'
+  let g:tex_flavor='latex'
 
-  " navigate between vim and tmux seamlessly
-  Plug 'christoomey/vim-tmux-navigator'
+  if has('nvim')
+    let g:vimtex_latexmk_progname='nvr'
+  end
 
-  " emoji support
-  Plug 'junegunn/vim-emoji'
+  " markdown / mdx
+  Plug 'plasticboy/vim-markdown'
+  Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
+  Plug 'jxnblk/vim-mdx-js'
 
-  set completefunc=emoji#complete
+  let g:vim_markdown_conceal=0
+  let g:vim_markdown_fenced_languages=[ 'cs=csharp', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
+
+  " php / blade
+  Plug 'jwalton512/vim-blade'
+
+  " ruby
+  Plug 'vim-ruby/vim-ruby'
+  Plug 'tpope/vim-rails'
+  Plug 'tpope/vim-bundler'
+  Plug 'asux/vim-capybara'
+
+  " toml
+  Plug 'cespare/vim-toml'
+
+  " vimscript
+  Plug 'junegunn/vader.vim'
+
+  " vue
+  Plug 'posva/vim-vue'
+
+  " fix for vue highlighting
+  augroup VueHighlight
+    autocmd FileType vue syntax sync fromstart
+  augroup END
+
+  " --------
+  " 8h. autocomplete
+  " --------
+
+  " code autocompletion
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+
+  let g:coc_global_extensions = [
+    \ 'coc-eslint',
+    \ 'coc-json',
+    \ 'coc-prettier',
+    \ 'coc-python',
+    \ 'coc-tsserver',
+  \ ]
+
+  nnoremap <silent> gd <Plug>(coc-definition)
+  nnoremap <silent> gy <Plug>(coc-type-definition)
+  nnoremap <silent> gi <Plug>(coc-implementation)
+  nnoremap <silent> gr <Plug>(coc-references)
+
+  " --------
+  " 8i. misc.
+  " --------
 
   " standardize vim async api
   Plug 'prabirshrestha/async.vim'
 
-  " make vim project-aware
-  Plug 'airblade/vim-rooter'
-
-  let g:rooter_resolve_links=1
-
-  " look up documentation
-  Plug 'keith/investigate.vim'
-
-  " better find and replace
-  Plug 'tpope/vim-abolish'
-
-  let g:investigate_use_dash=1
-
   call plug#end()
-end
 
-" set colorscheme after plugin stuff is done
-try
-  colorscheme gruvbox
-  let g:lightline.colorscheme='gruvbox'
-catch
-  colorscheme ron
-endtry
+  " --------
+  " certain settings have to come after vim-plug initialization
+  " --------
+
+  " vim-emoji: use emojis with vim-gitgutter plugin
+  if isdirectory(gitgutter_plugin)
+    let g:gitgutter_sign_added = emoji#for('small_blue_diamond')
+    let g:gitgutter_sign_modified = emoji#for('small_orange_diamond')
+    let g:gitgutter_sign_removed = emoji#for('small_red_triangle')
+    let g:gitgutter_sign_modified_removed = emoji#for('collision')
+  endif
+
+  " set colorscheme
+  try
+    colorscheme gruvbox
+    let g:lightline.colorscheme='gruvbox'
+  catch
+    colorscheme ron
+  endtry
+end
