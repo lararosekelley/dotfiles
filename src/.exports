@@ -34,10 +34,6 @@ export GOPATH="$HOME/.go"
 
 export CARGOPATH="$HOME/.cargo"
 
-# node
-
-export N_PREFIX="$HOME/.n"
-
 # pyenv
 
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
@@ -62,4 +58,4 @@ OPENVPN_PATH="$(brew --prefix openvpn)"
 
 # path
 
-export PATH="$HOME/.poetry/bin:$N_PREFIX/bin:$GOPATH/bin:$CARGOPATH/bin:$OPENVPN_PATH/sbin:/usr/local/sbin:$PATH"
+export PATH="$HOME/.poetry/bin:$GOPATH/bin:$CARGOPATH/bin:$OPENVPN_PATH/sbin:/usr/local/sbin:$PATH"

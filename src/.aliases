@@ -58,6 +58,10 @@ alias mem='top -o mem'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en0"
 
+# docker
+
+alias docker_stop_all='docker stop $(docker ps -a -q)'
+
 # git
 
 alias g='git'
