@@ -737,6 +737,7 @@ if filereadable(vim_plug_file)
 
   " fix for vue highlighting
   augroup VueHighlight
+    autocmd!
     autocmd FileType vue syntax sync fromstart
   augroup END
 
@@ -764,7 +765,7 @@ if filereadable(vim_plug_file)
   " 8i. misc.
   " --------
 
-  " standardize vim async api
+  " standardize vim/neovim async api
   Plug 'prabirshrestha/async.vim'
 
   call plug#end()
