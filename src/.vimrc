@@ -18,10 +18,9 @@ set fileencoding=utf-8
 "    c. git
 "    d. files and projects
 "    e. testing
-"    f. syntax
-"    g. languages
-"    h. autocomplete
-"    i. misc.
+"    f. languages
+"    g. autocompletion and linting
+"    h. misc.
 " --------
 
 " --------
@@ -56,6 +55,9 @@ let g:python3_host_prog=expand(python3_executable)
 " 2. key mappings
 " --------
 
+" initiate commands with space
+nnoremap <Space> :
+
 " force use of hjkl for navigation in normal mode
 nnoremap <Left> :echoe "use h to move left"<CR>
 nnoremap <Right> :echoe "use l to move right"<CR>
@@ -67,9 +69,6 @@ nnoremap <C-l> <C-w>l
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
-
-" initiate commands with space bar
-nnoremap <Space> :
 
 " initiate search with tab key
 nnoremap <Tab> /
@@ -100,7 +99,7 @@ tnoremap <Esc> <C-\><C-n>
 " 2a. leader commands
 " --------
 
-" use , as leader key
+" use comma as leader key
 let g:mapleader=','
 
 " kill all open buffers
@@ -142,7 +141,7 @@ nnoremap <leader>i mzgg=G`z`
 " toggle fold open/close
 nnoremap <leader>, za
 
-" start find & replace
+" start find/replace
 nnoremap <leader>s :%s/\<<C-r><C-w>\>/
 
 " turn paste mode off
@@ -330,6 +329,9 @@ set hidden
 " no concealing characters
 set conceallevel=0
 
+" don't pass messages to completion menu
+set shortmess+=c
+
 " --------
 " 6. files
 " --------
@@ -371,6 +373,13 @@ augroup RecognizeFiles
   autocmd BufRead,BufNewFile,BufFilePre .env.* set filetype=sh
 augroup END
 
+" force full highlighting for large files using JSX
+augroup HighlightFiles
+  autocmd!
+  autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+  autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+augroup END
+
 " no swaps and backups
 set nobackup
 set nowritebackup
@@ -386,6 +395,30 @@ set noautochdir
 " --------
 " 7. custom functions
 " --------
+
+" coc current function
+function! CocCurrentFunction()
+  return get(b:, 'coc_current_function', '')
+endfunction
+
+" coc diagnostics
+function! StatusDiagnostic() abort
+  let info = get(b:, 'coc_diagnostic_info', {})
+
+  if empty(info) | return '' | endif
+
+  let msgs = []
+
+  if get(info, 'error', 0)
+    call add(msgs, 'E' . info['error'])
+  endif
+
+  if get(info, 'warning', 0)
+    call add(msgs, 'W' . info['warning'])
+  endif
+
+  return join(msgs, ' '). ' ' . get(g:, 'coc_status', '')
+endfunction
 
 " show highlight groups applied to current text
 function! <SID>HighlightGroups()
@@ -417,37 +450,29 @@ if filereadable(vim_plug_file)
 
   " lightline
   Plug 'itchyny/lightline.vim'
-  Plug 'maximbaz/lightline-ale'
 
   let g:lightline={
     \ 'enable': { 'tabline': 1 },
     \ 'active': {
     \   'left': [
     \     [ 'mode', 'paste', 'spell' ],
-    \     [ 'gitbranch', 'readonly', 'relativepath', 'modified' ]
+    \     [ 'gitbranch', 'readonly', 'relativepath', 'modified' ],
+    \     [ 'cocdiagnostic' ]
     \   ],
     \   'right': [
-    \     [ 'ale_errors', 'ale_warnings', 'ale_ok', 'lineinfo' ],
-    \     [ 'fileformat', 'fileencoding', 'filetype', 'bufnum' ]
+    \     [ 'lineinfo', 'fileformat', 'fileencoding', 'filetype', 'bufnum' ]
     \   ]
     \ },
-    \ 'component_expand': {
-    \   'ale_errors': 'lightline#ale#errors',
-    \   'ale_warnings': 'lightline#ale#warnings',
-    \   'ale_ok': 'lightline#ale#ok'
-    \ },
-    \ 'component_type': {
-    \   'ale_errors': 'error',
-    \   'ale_warnings': 'warning',
-    \   'ale_ok': 'left'
-    \ },
     \ 'component_function': {
+    \   'cocdiagnostic': 'StatusDiagnostic',
     \   'gitbranch': 'fugitive#head'
     \ },
   \ }
 
   " show indent guides
-  Plug 'thaerkh/vim-indentguides'
+  Plug 'Yggdroot/indentLine'
+
+  let g:indentLine_setConceal=0
 
   " highlight copied text
   Plug 'machakann/vim-highlightedyank'
@@ -455,6 +480,9 @@ if filereadable(vim_plug_file)
   " --------
   " 8b. navigation and search
   " --------
+
+  " find characters on line quicker
+  Plug 'unblevable/quick-scope'
 
   " merge tabs into vertical splits
   Plug 'vim-scripts/Tabmerge'
@@ -465,9 +493,6 @@ if filereadable(vim_plug_file)
   Plug 'keith/investigate.vim'
 
   let g:investigate_use_dash=1
-
-  " smooth scrolling with <C-d> and <C-u>
-  Plug 'yuttie/comfortable-motion.vim'
 
   " navigate between vim and tmux seamlessly
   Plug 'christoomey/vim-tmux-navigator'
@@ -571,7 +596,7 @@ if filereadable(vim_plug_file)
   Plug 'djoshea/vim-autoread'
 
   " comment out lines quickly
-  Plug 'scrooloose/nerdcommenter'
+  Plug 'preservim/nerdcommenter'
 
   let g:NERDSpaceDelims=1
   let g:NERDDefaultAlign='left'
@@ -609,55 +634,7 @@ if filereadable(vim_plug_file)
   let test#ruby#minitest#file_pattern='\.test\.rb'
 
   " --------
-  " 8f. syntax
-  " --------
-
-  Plug 'w0rp/ale'
-
-  " open location list
-  let g:ale_open_list=1
-
-  " only run linters specified in ale_linters
-  let g:ale_linters_explicit=1
-
-  " run fixers on save
-  let g:ale_fix_on_save=1
-
-  " custom executables
-  let g:ale_ruby_rubocop_executable='bundle'
-
-  " define linters to use
-  let g:ale_linters={
-    \ 'css': [ 'stylelint' ],
-    \ 'javascript': [ 'stylelint', 'eslint' ],
-    \ 'jsx': [ 'stylelint', 'eslint' ],
-    \ 'markdown': [ 'markdownlint' ],
-    \ 'python': [ 'flake8', 'mypy' ],
-    \ 'ruby': [ 'rubocop' ],
-    \ 'sass': [ 'stylelint' ],
-    \ 'scss': [ 'stylelint' ],
-    \ 'sh': [ 'shellcheck' ],
-    \ 'tsx': [ 'stylelint', 'eslint' ],
-    \ 'typescript': [ 'stylelint', 'eslint' ],
-    \ 'vim': [ 'vint' ],
-    \ 'vue': [ 'stylelint', 'eslint' ]
-  \ }
-
-  " run fixers on save
-  let g:ale_fixers={
-    \ 'javascript': [ 'eslint', 'prettier' ],
-    \ 'python': [ 'black', 'isort' ]
-  \ }
-
-  " map filetypes to others
-  let g:ale_linter_aliases={
-    \ 'vue': [ 'css', 'typescript' ],
-    \ 'jsx': [ 'css', 'javascript' ],
-    \ 'tsx': [ 'css', 'typescript' ]
-  \ }
-
-  " --------
-  " 8g. languages
+  " 8f. languages
   " --------
 
   " coffeescript
@@ -742,28 +719,66 @@ if filereadable(vim_plug_file)
   augroup END
 
   " --------
-  " 8h. autocomplete
+  " 8g. autocompletion and linting
   " --------
 
-  " code autocompletion
+  " coc provides vscode-esque completion
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
   let g:coc_global_extensions = [
-    \ 'coc-eslint',
+    \ 'coc-css',
+    \ 'coc-diagnostic',
     \ 'coc-json',
-    \ 'coc-prettier',
+    \ 'coc-marketplace',
+    \ 'coc-stylelint',
     \ 'coc-python',
     \ 'coc-tsserver',
+    \ 'coc-vimlsp'
   \ ]
 
+  " use prettier/eslint conditionally based on project
+  if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
+    let g:coc_global_extensions += [ 'coc-prettier' ]
+  endif
+
+  if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
+    let g:coc_global_extensions += [ 'coc-eslint' ]
+  endif
+
+  " use <C-d> and <C-S-d> to navigate warnings and errors
+  nmap <silent> <C-d> <Plug>(coc-diagnostic-next)
+  nmap <silent> <C-S-d> <Plug>(coc-diagnostic-prev)
+
+  " code navigation
   nnoremap <silent> gd <Plug>(coc-definition)
   nnoremap <silent> gy <Plug>(coc-type-definition)
   nnoremap <silent> gi <Plug>(coc-implementation)
   nnoremap <silent> gr <Plug>(coc-references)
 
+  " use K to show documentation in preview window
+  nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+  function! s:show_documentation()
+    if (index([ 'vim','help' ], &filetype) >= 0)
+      execute 'h '.expand('<cword>')
+    else
+      call CocAction('doHover')
+    endif
+  endfunction
+
+  " python - run isort on save (not available in coc settings)
+  " TODO: doesn't save after sorting
+  augroup SortImports
+    autocmd!
+    autocmd BufWritePre *.py :CocCommand python.sortImports
+  augroup END
+
   " --------
-  " 8i. misc.
+  " 8h. misc.
   " --------
+
+  " coding scratchpad
+  Plug 'metakirby5/codi.vim'
 
   " standardize vim/neovim async api
   Plug 'prabirshrestha/async.vim'
