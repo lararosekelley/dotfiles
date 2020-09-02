@@ -110,10 +110,22 @@ if command -v poetry &> /dev/null; then
   poetry completions bash > "$(brew --prefix)/etc/bash_completion.d/poetry.bash-completion"
 fi
 
+# trellis
+
+if command -v trellis &> /dev/null; then
+  complete -C /usr/local/bin/trellis trellis
+fi
+
 # load bash prompt
 
 if [ -f ~/.bash_prompt ]; then
   # shellcheck disable=SC1090
   source ~/.bash_prompt
   PROMPT_COMMAND="set_prompt; autojump_add_to_database; history -a; history -c; history -r"
+fi
+
+# direnv - needs to be last
+
+if command -v direnv &> /dev/null; then
+  eval "$(direnv hook bash)"
 fi
