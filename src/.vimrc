@@ -668,14 +668,23 @@ if filereadable(vim_plug_file)
   " javascript/typescript, jsx/tsx
   Plug 'pangloss/vim-javascript'
   Plug 'leafgarland/typescript-vim'
+  Plug 'peitalin/vim-jsx-typescript'
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
-  Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
   Plug 'prettier/vim-prettier', { 'do': 'npm install' }
   Plug 'maxmellon/vim-jsx-pretty'
 
   let g:javascript_plugin_jsdoc=1
   let g:javascript_plugin_flow=1
   let g:vim_jsx_pretty_colorful_config=1
+
+  Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
+
+  augroup CalculateImportCost
+    autocmd!
+    autocmd InsertLeave *.js,*.jsx,*.ts,*.tsx ImportCost
+    autocmd BufEnter *.js,*.jsx,*.ts,*.tsx ImportCost
+    autocmd CursorHold *.js,*.jsx,*.ts,*.tsx ImportCost
+  augroup END
 
   " latex
   Plug 'lervag/vimtex'
@@ -684,6 +693,7 @@ if filereadable(vim_plug_file)
 
   if has('nvim')
     let g:vimtex_latexmk_progname='nvr'
+    let g:vimtex_compiler_progname='nvr'
   end
 
   " markdown / mdx
@@ -696,6 +706,11 @@ if filereadable(vim_plug_file)
 
   " php / blade
   Plug 'jwalton512/vim-blade'
+
+  " python
+  Plug 'vim-python/python-syntax'
+
+  let g:python_highlight_all=1
 
   " ruby
   Plug 'vim-ruby/vim-ruby'

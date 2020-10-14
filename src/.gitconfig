@@ -44,7 +44,7 @@
   tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
 
   # update base branch and switch back to previous branch
-  up = "!git checkout \"${1:-master}\" && git fetch --prune origin && git rebase origin/\"${1:-master}\" && git checkout -"
+  up = "!git checkout \"${1:-master}\" && git fetch --prune origin && git rebase \"origin/${1:-master}\" && git checkout -"
 
   # add all files to stage and commit changes w/ message
   ca = "!f() { [ ! -z \"$1\" ] && git add -A && git commit -m \"$1\"; }; f"
@@ -136,17 +136,19 @@
   # detect copies and renames
   renames = copies
   mnemonicprefix = true
+  submodule = diff
 [help]
   # fix & execute misspelled commands
   autocorrect = 1
 [push]
   # use new git push behavior
   default = simple
+[pull]
+  # default pull behavior
+  rebase = false
 [filter "lfs"]
   # for github desktop app
   required = true
   process = git-lfs filter-process
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
-[pull]
-  rebase = false
