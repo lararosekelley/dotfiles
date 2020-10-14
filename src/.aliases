@@ -58,10 +58,6 @@ alias mem='top -o mem'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en0"
 
-# docker
-
-alias docker_stop_all='docker stop $(docker ps -a -q)'
-
 # git
 
 alias g='git'
@@ -78,17 +74,20 @@ alias finder='open -a Finder .'
 alias flac2mp3='for f in *.flac; do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"; done'
 alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
+alias space='df -P -kHl'
+alias ports='lsof -nP +c 15 | grep LISTEN'
+
+# rails
+
 alias rake='bundle exec rake'
 alias r='bundle exec rails'
 alias rch='bundle exec rspec $(git ls-files --modified --others spec)'
-alias space='df -P -kHl'
-alias ports='lsof -nP +c 15 | grep LISTEN'
 
 # brew
 
 alias bubu='brew update && brew upgrade --ignore-pinned && brew cu --all --yes'
 
-# kill the dock (for ubar)
+# kill the dock
 
 alias dock-off='defaults write com.apple.dock autohide-delay -float 1000 && killall Dock'
 alias dock-on='defaults delete com.apple.dock autohide-delay && killall Dock'
