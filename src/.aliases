@@ -85,7 +85,7 @@ alias rch='bundle exec rspec $(git ls-files --modified --others spec)'
 
 # brew
 
-alias bubu='brew update && brew upgrade --ignore-pinned && brew cu --all --yes'
+alias bubu='brew update && brew upgrade --ignore-pinned && brew upgrade --cask'
 
 # kill the dock
 

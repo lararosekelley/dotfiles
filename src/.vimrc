@@ -29,8 +29,8 @@ set fileencoding=utf-8
 
 " check for necessary executables
 let nodejs_executable = '/usr/local/bin/neovim-node-host'
-let python2_executable = expand('~/.pyenv/versions/neovim2.7/bin/python')
-let python3_executable = expand('~/.pyenv/versions/neovim3.8/bin/python')
+let python2_executable = expand('~/.pyenv/versions/neovim2.7.18/bin/python')
+let python3_executable = expand('~/.pyenv/versions/neovim3.9.0/bin/python')
 let vim_plug_file = expand('~/.vim/autoload/plug.vim')
 
 if !filereadable(nodejs_executable) || !filereadable(python2_executable) || !filereadable(python3_executable)
@@ -704,6 +704,9 @@ if filereadable(vim_plug_file)
   let g:vim_markdown_conceal=0
   let g:vim_markdown_fenced_languages=[ 'cs=csharp', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
 
+  " nginx
+  Plug 'chr4/nginx.vim'
+
   " php / blade
   Plug 'jwalton512/vim-blade'
 
@@ -783,10 +786,10 @@ if filereadable(vim_plug_file)
 
   " python - run isort on save (not available in coc settings)
   " TODO: doesn't save after sorting
-  augroup SortImports
-    autocmd!
-    autocmd BufWritePre *.py :CocCommand python.sortImports
-  augroup END
+  " augroup SortImports
+    " autocmd!
+    " autocmd BufWritePre *.py :CocCommand python.sortImports
+  " augroup END
 
   " --------
   " 8h. misc.
