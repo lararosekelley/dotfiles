@@ -584,6 +584,9 @@ if filereadable(vim_plug_file)
   let g:rooter_change_directory_for_non_project_files = 'current'
   let g:rooter_resolve_links=1
 
+  " extend root directories to include vimwiki root
+  let g:rooter_patterns = ['.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'index.md']
+
   " add UNIX-like commands
   Plug 'tpope/vim-eunuch'
 
@@ -804,6 +807,14 @@ if filereadable(vim_plug_file)
     \ }
   \ ]
 
+  " shortcut for navigating to diary index page
+  command! Diary VimwikiDiaryIndex
+
+  augroup VimWiki
+      autocmd!
+      " automatically update links when reading diary index page
+      autocmd BufRead,BufNewFile diary.md VimwikiDiaryGenerateLinks
+  augroup end
 
   call plug#end()
 
