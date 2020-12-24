@@ -1,0 +1,50 @@
+{
+  // --------
+  // general preferences
+  // --------
+
+  // formatting on save
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "javascriptreact",
+    "python",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // --------
+  // javascript and typescript (coc-tsserver, coc-eslint, coc-prettier)
+  // --------
+
+  // eslint
+  "eslint.autoFixOnSave": true,
+  "eslint.filetypes": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact"
+  ],
+
+  // prettier
+  "prettier.disableSuccessMessage": true,
+
+  // --------
+  // python (coc-pyright)
+  // --------
+
+  // formatting
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": "${workspaceFolder}/.venv/bin/black",
+
+  // linting
+  "python.linting.banditEnabled": true,
+  "python.linting.banditPath": "${workspaceFolder}/.venv/bin/bandit",
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Path": "${workspaceFolder}/.venv/bin/flake8",
+  "python.linting.mypyEnabled": true,
+  "python.linting.mypyPath": "${workspaceFolder}/.venv/bin/mypy",
+
+  // paths
+  "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
+  "python.venvPath": "${workspaceFolder}/.venv"
+}
