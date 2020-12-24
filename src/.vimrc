@@ -367,6 +367,7 @@ augroup RecognizeFiles
   autocmd BufRead,BufNewFile,BufFilePre Procfile,.prettierrc set filetype=yaml
   autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini
   autocmd BufRead,BufNewFile,BufFilePre *.conf set filetype=dosini
+  autocmd BufRead,BufNewFile,BufFilePre .tmux.conf set filetype=tmux
   autocmd BufRead,BufNewFile,BufFilePre .{sequelizerc,jestconfig,fxrc} set filetype=javascript
   autocmd BufRead,BufNewFile,BufFilePre *.jsx set filetype=javascript.jsx
   autocmd BufRead,BufNewFile,BufFilePre *.tsx set filetype=typescript.tsx
@@ -802,6 +803,9 @@ if filereadable(vim_plug_file)
 
   " standardize vim/neovim async api
   Plug 'prabirshrestha/async.vim'
+
+  " session management
+  Plug 'tpope/vim-obsession'
 
   " wiki
   Plug 'vimwiki/vimwiki'
