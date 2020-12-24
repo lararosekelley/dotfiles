@@ -38,7 +38,7 @@ if !filereadable(nodejs_executable) || !filereadable(python2_executable) || !fil
 endif
 
 " optional files and folders
-let gitgutter_plugin = expand('~/.vim/packages/vim-gitgutter') 
+let gitgutter_plugin = expand('~/.vim/packages/vim-gitgutter')
 
 " longer command history
 set history=10000
@@ -352,7 +352,7 @@ if has('wildmenu')
   set wildignore+=*.pyc,*.egg
   set wildignore+=*.class,*.jar
   set wildignore+=.DS_Store,.Trashes,.Spotlight-V100
-  set wildignore+=*.bmp,*.gif,*.ico,*.jpeg,*.jpg,*.png
+  set wildignore+=*.bmp,*.gif,*.ico,*.png,*.jpg,*.jpeg
   set wildignore+=.git,.svn,.hg
 
   " enable menu
@@ -581,6 +581,7 @@ if filereadable(vim_plug_file)
   " make vim project-aware
   Plug 'airblade/vim-rooter'
 
+  let g:rooter_change_directory_for_non_project_files = 'current'
   let g:rooter_resolve_links=1
 
   " add UNIX-like commands
@@ -641,7 +642,8 @@ if filereadable(vim_plug_file)
   Plug 'kchmck/vim-coffee-script'
 
   " css
-  Plug 'JulesWang/css.vim'
+  Plug 'vim-language-dept/css-syntax.vim'
+  Plug 'ap/vim-css-color'
 
   " csv
   Plug 'chrisbra/csv.vim'
@@ -746,22 +748,21 @@ if filereadable(vim_plug_file)
   let g:coc_global_extensions = [
     \ 'coc-css',
     \ 'coc-diagnostic',
+    \ 'coc-eslint',
     \ 'coc-json',
     \ 'coc-marketplace',
+    \ 'coc-prettier',
+    \ 'coc-pyright',
     \ 'coc-stylelint',
-    \ 'coc-python',
     \ 'coc-tsserver',
     \ 'coc-vimlsp'
   \ ]
 
-  " use prettier/eslint conditionally based on project
-  if isdirectory('./node_modules') && isdirectory('./node_modules/prettier')
-    let g:coc_global_extensions += [ 'coc-prettier' ]
-  endif
-
-  if isdirectory('./node_modules') && isdirectory('./node_modules/eslint')
-    let g:coc_global_extensions += [ 'coc-eslint' ]
-  endif
+  " coc-pyright - sort python imports on save
+  augroup PythonSortImports
+    autocmd!
+    autocmd BufWritePre *.py silent! :call CocAction('runCommand', 'pyright.organizeimports')
+  augroup END
 
   " use <C-d> and <C-S-d> to navigate warnings and errors
   nmap <silent> <C-d> <Plug>(coc-diagnostic-next)
@@ -784,22 +785,25 @@ if filereadable(vim_plug_file)
     endif
   endfunction
 
-  " python - run isort on save (not available in coc settings)
-  " TODO: doesn't save after sorting
-  " augroup SortImports
-    " autocmd!
-    " autocmd BufWritePre *.py :CocCommand python.sortImports
-  " augroup END
-
   " --------
   " 8h. misc.
   " --------
 
-  " coding scratchpad
-  Plug 'metakirby5/codi.vim'
-
   " standardize vim/neovim async api
   Plug 'prabirshrestha/async.vim'
+
+  " wiki
+  Plug 'vimwiki/vimwiki'
+
+  let g:vimwiki_global_ext = 0
+  let g:vimwiki_list = [
+    \ {
+      \ 'path': '~/Documents/notes/',
+      \ 'syntax': 'markdown',
+      \ 'ext': '.md'
+    \ }
+  \ ]
+
 
   call plug#end()
 
