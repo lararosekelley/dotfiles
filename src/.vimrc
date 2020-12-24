@@ -443,7 +443,15 @@ if filereadable(vim_plug_file)
   " start screen
   Plug 'mhinz/vim-startify'
 
-  let g:startify_bookmarks=[ '~/.vimrc', '~/.bashrc', '~/.aliases', '~/.functions', '~/.exports' ]
+  let g:startify_bookmarks=[
+    \ '~/.aliases',
+    \ '~/.bashrc',
+    \ '~/.config/nvim/coc-settings.json',
+    \ '~/.environment',
+    \ '~/.exports',
+    \ '~/.functions',
+    \ '~/.vimrc'
+  \ ]
 
   " color scheme
   Plug 'morhetz/gruvbox'
