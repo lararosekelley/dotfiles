@@ -13,6 +13,15 @@
   ],
 
   // --------
+  // diagnostics (coc-diagnostic)
+  // --------
+
+  "diagnostic-languageserver.mergeConfig": true,
+  "diagnostic-languageserver.filetypes": {
+    "sh": "shellcheck"
+  },
+
+  // --------
   // javascript and typescript (coc-tsserver, coc-eslint, coc-prettier)
   // --------
 
@@ -31,6 +40,9 @@
   // --------
   // python (coc-pyright)
   // --------
+
+  // turn off type checking from pyright
+  "python.analysis.typeCheckingMode": "off",
 
   // formatting
   "python.formatting.provider": "black",
