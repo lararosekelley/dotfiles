@@ -57,7 +57,7 @@ to ensure you aren't duplicating anyone's work. Then, do the following:
 
 Please follow the coding style conventions detailed below:
 
-TBD
+1. Use shellcheck to verify any Bash scripts
 
 [1]: mailto:tylucaskelley@gmail.com
 [2]: https://github.com/tylucaskelley/dotfiles/issues/new
