@@ -13,7 +13,7 @@ if [[ "$REPLY" =~ ^[Yy]$ ]]; then
     fi
   done < <(find . -type f -print0)
 
-  echo -e "\nupdated src/ directory with latest files from $HOME"
+  echo -e "\nupdated repository with latest files from $HOME directory."
 else
   echo -e "\naborting..."
 fi
