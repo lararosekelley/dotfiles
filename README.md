@@ -8,17 +8,21 @@ This repository contains the configuration files I use on macOS or Linux compute
 
 ## Getting started
 
-Just clone the repository and copy to your home directory:
+Clone the repository:
 
 ```bash
 $ git clone git@github.com:tylucaskelley/dotfiles
-$ cp dotfiles/src/* ~
 ```
 
-## Roadmap
+Next, either copy files manually to your home directory, or
+use the provided `copy` script:
 
-- [ ] Script to install dotfiles automatically
-- [ ] Specific support for Linux and macOS (right now only tested on macOS)
+```bash
+$ cd dotfiles && ./copy
+```
+
+It will prompt you to copy each file individually, so that
+no unexpected changes are made.
 
 ## License
 

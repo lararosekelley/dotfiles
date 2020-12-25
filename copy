@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+read -rp "copy dotfiles to your home directory? (y/n) " start
+
+if [[ "$start" =~ ^[Yy]$ ]]; then
+  cd src/ || exit 1
+  count=0
+
+  while IFS= read -r -d '' file; do
+    if [[ $(diff "$file" "$HOME/$file") ]]; then
+      read -rp "difference in $file detected. update it? (y/n) " copy_file 0</dev/tty
+
+      if [[ "$copy_file" =~ ^[Yy]$ ]]; then
+        cp "$file" "$HOME/$file"
+        ((count++))
+
+        echo -e "$file updated."
+      fi
+
+      unset copy_file
+    fi
+  done < <(find . -type f -print0)
+
+  echo -e "\nupdated $count files in $HOME directory."
+  unset count
+else
+  echo -e "\naborting..."
+fi
+
+unset start
+exit 0
