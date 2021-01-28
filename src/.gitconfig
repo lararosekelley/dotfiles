@@ -16,8 +16,11 @@
   # c for checkout
   co = checkout
 
-  # create new branch and check out
+  # create new branch and checkout
   cob = checkout -b
+
+  # checkout default branch; depends on 'head' alias below
+  cod = "!f() { git checkout \"$(git head)\"; }; f"
 
   # checkout from a PR on a fork of repostiory
   co-pr = "!f() { git fetch origin \"pull/$1/head:pr/$1\" && git checkout \"pr/$1\"; }; f"
@@ -29,7 +32,10 @@
   l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset (%C(yellow)%ae %Cgreen%cd%C(reset)) - %s'
 
   # get current commit hash
-  head = rev-parse HEAD
+  current = rev-parse HEAD
+
+  # get default branch (aka origin/HEAD)
+  head = "!f() { git symbolic-ref --short refs/remotes/origin/HEAD | sed 's@^origin/@@'; }; f"
 
   # amend last commit with small changes
   amend = "!f() { git add -A && git commit --amend; }; f"
