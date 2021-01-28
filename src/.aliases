@@ -5,7 +5,7 @@
 # useful aliases to shorten common commands
 # --------
 
-# neovim > vim
+# neovim instead of vim
 
 alias vim='nvim'
 alias vi='nvim'
@@ -62,8 +62,6 @@ alias localip="ipconfig getifaddr en0"
 
 alias g='git'
 alias wip='git add -A && git commit -m "work in progress" --no-verify'
-alias wipup='wip && git up && git rb'
-alias gcm='git checkout master'
 
 # misc. tools
 
@@ -76,6 +74,7 @@ alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
 alias space='df -P -kHl'
 alias ports='lsof -nP +c 15 | grep LISTEN'
+alias notes='vim ~/Documents/notes/index.md'
 
 # rails
 

@@ -54,11 +54,15 @@ bind "set show-all-if-ambiguous on"
 
 complete -W "NSGlobalDomain" defaults;
 
-# completion for git alias "g"
+# git completion
 
-if type _git &> /dev/null && [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
-  complete -o default -o nospace -F _git g;
-fi;
+if [[ -f "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ]]; then
+  # shellcheck disable=SC1090
+  source "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
+
+  # completion for g alias
+  __git_complete g __git_main
+fi
 
 # autojump
 
@@ -69,10 +73,11 @@ fi
 
 # github cli
 
-if [ -f "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh" ]; then
-  # shellcheck disable=SC1090
-  source "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh"
-fi
+# TODO: bring back after https://github.com/github/hub/issues/2684 fixed
+# if [ -f "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh" ]; then
+  # # shellcheck disable=SC1090
+  # source "$(brew --prefix hub)/etc/bash_completion.d/hub.bash_completion.sh"
+# fi
 
 # nodenv (node version manager)
 
