@@ -762,14 +762,19 @@ if filereadable(vim_plug_file)
   " coc provides vscode-esque completion
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
+  " for coc-db to work
+  Plug 'tpope/vim-dadbod'
+
   let g:coc_global_extensions=[
     \ 'coc-css',
+    \ 'coc-db',
     \ 'coc-diagnostic',
     \ 'coc-eslint',
     \ 'coc-json',
     \ 'coc-marketplace',
     \ 'coc-prettier',
     \ 'coc-pyright',
+    \ 'coc-sql',
     \ 'coc-stylelint',
     \ 'coc-tsserver',
     \ 'coc-vimlsp'
@@ -809,6 +814,9 @@ if filereadable(vim_plug_file)
   " standardize vim/neovim async api
   Plug 'prabirshrestha/async.vim'
 
+  " better writing habits
+  Plug 'reedes/vim-wordy'
+
   " session management
   Plug 'tpope/vim-obsession'
 
@@ -820,7 +828,16 @@ if filereadable(vim_plug_file)
     \ {
       \ 'path': '~/Documents/notes/',
       \ 'syntax': 'markdown',
-      \ 'ext': '.md'
+      \ 'ext': '.md',
+      \ 'nested_syntaxes': {
+        \ 'cs': 'csharp',
+        \ 'c++': 'cpp',
+        \ 'bash': 'sh',
+        \ 'viml': 'vim',
+        \ 'rb': 'ruby',
+        \ 'js': 'javascript',
+        \ 'ini': 'dosini'
+      \ }
     \ }
   \ ]
 

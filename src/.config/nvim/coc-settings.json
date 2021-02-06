@@ -27,12 +27,6 @@
 
   // eslint
   "eslint.autoFixOnSave": true,
-  "eslint.filetypes": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact"
-  ],
 
   // prettier
   "prettier.disableSuccessMessage": true,
@@ -43,10 +37,12 @@
 
   // turn off type checking from pyright
   "python.analysis.typeCheckingMode": "off",
+  "pyright.organizeimports.provider": "isort",
 
   // formatting
   "python.formatting.provider": "black",
   "python.formatting.blackPath": "${workspaceFolder}/.venv/bin/black",
+  "python.sortImports.path": "${workspaceFolder}/.venv/bin/isort",
 
   // linting
   "python.linting.banditEnabled": true,
@@ -58,5 +54,8 @@
 
   // paths
   "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
-  "python.venvPath": "${workspaceFolder}/.venv"
+  "python.venvPath": "${workspaceFolder}/.venv",
+
+  // sql
+  "sql.database": "postgresql"
 }
