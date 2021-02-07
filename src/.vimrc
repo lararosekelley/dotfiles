@@ -824,6 +824,7 @@ if filereadable(vim_plug_file)
   Plug 'vimwiki/vimwiki'
 
   let g:vimwiki_global_ext=0
+  let g:vimwiki_listsyms='✗○◐●✓'
   let g:vimwiki_list=[
     \ {
       \ 'path': '~/Documents/notes/',
