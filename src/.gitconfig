@@ -1,4 +1,4 @@
-# gitconfig
+# .gitconfig
 #
 # defines aliases and settings for git
 # --------
@@ -19,23 +19,20 @@
   # create new branch and checkout
   cob = checkout -b
 
-  # checkout default branch; depends on 'head' alias below
-  cod = "!f() { git checkout \"$(git head)\"; }; f"
-
-  # checkout from a PR on a fork of repostiory
-  co-pr = "!f() { git fetch origin \"pull/$1/head:pr/$1\" && git checkout \"pr/$1\"; }; f"
-
-  # clone without needing to type full URL
-  gh-clone = "!f() { git clone git@github.com:\"$1/$2\"; }; f"
-
   # fancier logging
   l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset (%C(yellow)%ae %Cgreen%cd%C(reset)) - %s'
 
   # get current commit hash
   current = rev-parse HEAD
 
+  # checkout from a PR on a fork of repostiory
+  co-pr = "!f() { git fetch origin \"pull/$1/head:pr/$1\" && git checkout \"pr/$1\"; }; f"
+
   # get default branch (aka origin/HEAD)
   head = "!f() { git symbolic-ref --short refs/remotes/origin/HEAD | sed 's@^origin/@@'; }; f"
+
+  # checkout default remote branch; depends on 'head' alias above
+  cod = "!f() { git checkout \"$(git head)\"; }; f"
 
   # amend last commit with small changes
   amend = "!f() { git add -A && git commit --amend; }; f"
@@ -50,13 +47,13 @@
   tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
 
   # update base branch and switch back to previous branch
-  up = "!git checkout \"${1:-master}\" && git fetch --prune origin && git rebase \"origin/${1:-master}\" && git checkout -"
+  up = "!git checkout \"${1:-$(git head)}\" && git fetch --prune origin && git rebase \"origin/${1:-$(git head)}\" && git checkout -"
 
   # add all files to stage and commit changes w/ message
   ca = "!f() { [ ! -z \"$1\" ] && git add -A && git commit -m \"$1\"; }; f"
 
-  # interactive rebase on a branch, defaults to master
-  rb = "!f() { git rebase --interactive --autosquash \"${1:-master}\"; }; f"
+  # interactive rebase on a branch, defaults to default branch
+  rb = "!f() { git rebase --interactive --autosquash \"${1:-$(git head)}\"; }; f"
 
   # sort contributors by number of commits
   rank = shortlog -sn --no-merges
@@ -75,9 +72,6 @@
 
   # purge file from histoy
   purge = "!f() { [ ! -z \"$1\" ] && git filter-branch --force --index-filter 'git rm --cached --ignore-unmatch \"$1\"' --prune-empty --tag-name-filter cat -- --all; }; f"
-
-  # delete all local branches except master
-  dab = "!f() { git checkout master && git branch | grep -v 'master' | xargs git branch -D; }; f"
 
   # set upstream of <branch> to origin/<branch>
   su = "!f() { git branch --set-upstream-to=origin/\"$1\" \"$1\"; }; f"
@@ -99,11 +93,6 @@
   local = yellow
   remote = green
   upstream = cyan
-[color "diff-highlight"]
-  oldNormal = red bold
-  oldHighlight = red bold 52
-  newNormal = green bold
-  newHighlight = green bold 22
 [color "diff"]
   plain = white
   meta = yellow
@@ -112,6 +101,11 @@
   old = red bold
   new = green bold
   whitespace = red reverse
+[color "diff-highlight"]
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
 [color "status"]
   header = white
   branch = white bold
@@ -143,18 +137,20 @@
   renames = copies
   mnemonicprefix = true
   submodule = diff
-[help]
-  # fix & execute misspelled commands
-  autocorrect = 1
-[push]
-  # use new git push behavior
-  default = simple
-[pull]
-  # default pull behavior
-  rebase = false
 [filter "lfs"]
   # for github desktop app
   required = true
   process = git-lfs filter-process
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
+[help]
+  # fix & execute misspelled commands
+  autocorrect = 1
+[init]
+  defaultBranch = main
+[push]
+  # use new git push behavior
+  default = simple
+[pull]
+  # default pull behavior
+  rebase = false
