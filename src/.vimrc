@@ -90,6 +90,9 @@ vnoremap <Tab> >gv
 " exit terminal mode
 tnoremap <Esc> <C-\><C-n>
 
+" accept autocomplete suggestion with Enter
+inoremap <silent> <CR> <C-r>=<SID>coc_confirm()<CR>
+
 " --------
 " 2a. leader commands
 " --------
@@ -246,6 +249,12 @@ set expandtab
 set shiftwidth=2
 set smarttab
 
+" filetype-specific indentation
+augroup FileTypeIndent
+  autocmd!
+  autocmd FileType markdown setlocal shiftwidth=4 softtabstop=4
+augroup end
+
 " auto indentation
 set autoindent
 set smartindent
@@ -356,7 +365,6 @@ if has('wildmenu')
   set wildignore+=*.pyc,*.egg
   set wildignore+=*.class,*.jar
   set wildignore+=.DS_Store,.Trashes,.Spotlight-V100
-  set wildignore+=*.bmp,*.gif,*.ico,*.png,*.jpg,*.jpeg
   set wildignore+=.git,.svn,.hg
 
   " enable menu
@@ -433,6 +441,15 @@ function! <SID>HighlightGroups()
   echo map(synstack(line('.'), col('.')), "synIDattr(v:val, 'name')")
 endfunction
 
+" accept coc completion suggestions without confilcting with vim-endwise
+function! s:coc_confirm() abort
+  if pumvisible()
+    return coc#_select_confirm()
+  else
+    return "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  endif
+endfunction
+
 " --------
 " 8. plugins
 " --------
@@ -447,6 +464,7 @@ if filereadable(vim_plug_file)
   " start screen
   Plug 'mhinz/vim-startify'
 
+  let g:startify_change_to_dir=0
   let g:startify_bookmarks=[
     \ '~/.aliases',
     \ '~/.bashrc',
@@ -472,10 +490,11 @@ if filereadable(vim_plug_file)
     \     [ 'cocdiagnostic' ]
     \   ],
     \   'right': [
-    \     [ 'lineinfo', 'fileformat', 'fileencoding', 'filetype', 'bufnum' ]
+    \     [ 'lineinfo', 'fileformat', 'fileencoding', 'projectindent', 'filetype', 'bufnum' ]
     \   ]
     \ },
     \ 'component_function': {
+    \   'projectindent': 'SleuthIndicator',
     \   'cocdiagnostic': 'StatusDiagnostic',
     \   'gitbranch': 'fugitive#head'
     \ },
@@ -721,6 +740,7 @@ if filereadable(vim_plug_file)
   Plug 'jxnblk/vim-mdx-js'
 
   let g:vim_markdown_conceal=0
+  let g:vim_markdown_new_list_item_indent=3
   let g:vim_markdown_fenced_languages=[ 'cs=csharp', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
 
   " nginx
@@ -769,6 +789,8 @@ if filereadable(vim_plug_file)
     \ 'coc-css',
     \ 'coc-db',
     \ 'coc-diagnostic',
+    \ 'coc-dictionary',
+    \ 'coc-emoji',
     \ 'coc-eslint',
     \ 'coc-json',
     \ 'coc-marketplace',
@@ -777,13 +799,14 @@ if filereadable(vim_plug_file)
     \ 'coc-sql',
     \ 'coc-stylelint',
     \ 'coc-tsserver',
-    \ 'coc-vimlsp'
+    \ 'coc-vimlsp',
+    \ 'coc-word',
   \ ]
 
-  " coc-pyright - sort python imports on save
+  " sort python imports on save
   augroup PythonSortImports
     autocmd!
-    autocmd BufWritePre *.py silent! :call CocAction('runCommand', 'pyright.organizeimports')
+    autocmd BufWritePre *.py silent! :call CocAction('runCommand', 'python.sortImports')
   augroup end
 
   " use <C-d> and <C-S-d> to navigate warnings and errors
