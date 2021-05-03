@@ -534,7 +534,7 @@ if filereadable(vim_plug_file)
   " close HTML tags
   Plug 'alvan/vim-closetag'
 
-  let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx,*.js,*.erb,*.tsx'
+  let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx,*.js,*.erb,*.tsx,*.svelte'
 
   " --------
   " 8c. git
@@ -550,7 +550,7 @@ if filereadable(vim_plug_file)
   Plug 'shumphrey/fugitive-gitlab.vim'
 
   " copy link to current line
-  nnoremap <leader>yg :.Gbrowse!<CR>
+  nnoremap <leader>yg :.GBrowse!<CR>
 
   " show git diff in gutter
   Plug 'airblade/vim-gitgutter'
@@ -701,25 +701,17 @@ if filereadable(vim_plug_file)
 
   let g:vim_json_syntax_conceal=0
 
-  " javascript/typescript/react
+  " javascript/typescript/react/svelte
   Plug 'pangloss/vim-javascript'
   Plug 'leafgarland/typescript-vim'
   Plug 'peitalin/vim-jsx-typescript'
   Plug 'chemzqm/vim-jsx-improve'
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   Plug 'prettier/vim-prettier', { 'do': 'npm install' }
+  Plug 'evanleck/vim-svelte', { 'branch': 'main' }
 
   let g:javascript_plugin_jsdoc=1
   let g:javascript_plugin_flow=1
-
-  Plug 'yardnsm/vim-import-cost', { 'do': 'npm install' }
-
-  augroup CalculateImportCost
-    autocmd!
-    autocmd InsertLeave *.js,*.jsx,*.ts,*.tsx ImportCost
-    autocmd BufEnter *.js,*.jsx,*.ts,*.tsx ImportCost
-    autocmd CursorHold *.js,*.jsx,*.ts,*.tsx ImportCost
-  augroup end
 
   " latex
   Plug 'lervag/vimtex'
@@ -760,6 +752,12 @@ if filereadable(vim_plug_file)
   Plug 'tpope/vim-bundler'
   Plug 'asux/vim-capybara'
 
+  Plug 'hashivim/vim-terraform'
+
+  let g:terraform_align=1
+  let g:terraform_fold_sections=1
+  let g:terraform_fmt_on_save=1
+
   " toml
   Plug 'cespare/vim-toml'
 
@@ -797,6 +795,7 @@ if filereadable(vim_plug_file)
     \ 'coc-prettier',
     \ 'coc-pyright',
     \ 'coc-sql',
+    \ 'coc-svelte',
     \ 'coc-stylelint',
     \ 'coc-tsserver',
     \ 'coc-vimlsp',
@@ -815,6 +814,7 @@ if filereadable(vim_plug_file)
 
   " code navigation
   nmap <silent> gd <Plug>(coc-definition)
+  nmap <silent> gs :call CocAction('jumpDefinition', 'vsplit')<CR>
   nmap <silent> gy <Plug>(coc-type-definition)
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
