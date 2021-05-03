@@ -13,7 +13,10 @@
   # s for status
   s = status
 
-  # c for checkout
+  # cp for cherry-pick
+  cp = cherry-pick
+
+  # co for checkout
   co = checkout
 
   # create new branch and checkout
@@ -25,7 +28,11 @@
   # get current commit hash
   current = rev-parse HEAD
 
-  # checkout from a PR on a fork of repostiory
+  # download and apply a patch from a github PR (github only)
+  # usage: git apply-pr repo pr
+  apply-pr = "!f() { curl -v -H \"Authorization: token ${GITHUB_TOKEN}\" -H 'Accept: application/vnd.github.v3.patch' -SL \"https://api.github.com/repos/${1}/pulls/${2}\" | git apply --check; }; f"
+
+  # checkout from a PR on a fork of repostiory (github only)
   co-pr = "!f() { git fetch origin \"pull/$1/head:pr/$1\" && git checkout \"pr/$1\"; }; f"
 
   # get default branch (aka origin/HEAD)
@@ -47,7 +54,7 @@
   tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
 
   # update base branch and switch back to previous branch
-  up = "!git checkout \"${1:-$(git head)}\" && git fetch --prune origin && git rebase \"origin/${1:-$(git head)}\" && git checkout -"
+  up = "!git checkout \"${1:-$(git head)}\" && git fetch --prune origin && git rebase \"origin/${1:-$(git head)}\" && git checkout \"-\""
 
   # add all files to stage and commit changes w/ message
   ca = "!f() { [ ! -z \"$1\" ] && git add -A && git commit -m \"$1\"; }; f"
