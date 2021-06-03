@@ -21,11 +21,6 @@ export HISTFILESIZE="${HISTSIZE}"
 export HISTTIMEFORMAT="%F %T "
 export HISTCONTROL="ignoredups:erasedups"
 
-# java
-
-export JAVA_HOME
-JAVA_HOME="$(/usr/libexec/java_home)"
-
 # go
 
 export GOPATH="$HOME/.go"
@@ -34,14 +29,7 @@ export GOPATH="$HOME/.go"
 
 export CARGOPATH="$HOME/.cargo"
 
-# node
-
-export N_PREFIX="$HOME/.n"
-
 # pyenv
-
-export LDFLAGS="-L/usr/local/opt/zlib/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include"
 
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
@@ -49,20 +37,18 @@ export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 export PYTHONWARNINGS="ignore:DEPRECATION"
 
-# postgresql
-
-export PGDATA="/usr/local/var/postgres"
-export PGHOST=localhost
-
 # mutt
 
 export COLORFGBG="default;default"
 
-# openvpn
+# nodenv
 
-export OPENVPN_PATH
-OPENVPN_PATH="$(brew --prefix openvpn)"
+export NODENV_PATH="$HOME/.nodenv/bin"
+
+# rbenv
+
+export RBENV_PATH="$HOME/.rbenv/bin"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.poetry/bin:$N_PREFIX/bin:$GOPATH/bin:$CARGOPATH/bin:$OPENVPN_PATH/sbin:/usr/local/sbin:$PATH"
+export PATH="$HOME/.bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$HOME/.pyenv/bin:$GOPATH/bin:$CARGOPATH/bin:$PATH"

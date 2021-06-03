@@ -28,12 +28,11 @@ set fileencoding=utf-8
 " --------
 
 " check for necessary executables
-let nodejs_executable='/usr/local/bin/neovim-node-host'
-let python2_executable=expand('~/.pyenv/versions/neovim2.7.18/bin/python')
-let python3_executable=expand('~/.pyenv/versions/neovim3.9.0/bin/python')
+let python2_executable=expand('~/.pyenv/versions/neovim2.7/bin/python')
+let python3_executable=expand('~/.pyenv/versions/neovim3.9/bin/python')
 let vim_plug_file=expand('~/.vim/autoload/plug.vim')
 
-if !filereadable(nodejs_executable) || !filereadable(python2_executable) || !filereadable(python3_executable)
+if !filereadable(python2_executable) || !filereadable(python3_executable)
   echoerr 'Missing executables!'
 endif
 
@@ -47,7 +46,6 @@ set history=10000
 filetype plugin indent on
 
 " neovim plugins
-let g:node_host_prog=expand(nodejs_executable)
 let g:python_host_prog=expand(python2_executable)
 let g:python3_host_prog=expand(python3_executable)
 
@@ -383,6 +381,7 @@ augroup RecognizeFiles
   autocmd BufRead,BufNewFile,BufFilePre .{sequelizerc,jestconfig,fxrc} set filetype=javascript
   autocmd BufRead,BufNewFile,BufFilePre *.jsx,*.tsx set filetype=typescriptreact
   autocmd BufRead,BufNewFile,BufFilePre .env.* set filetype=sh
+  autocmd BufRead,BufNewFile,BufFilePre *.service set filetype=systemd
 augroup end
 
 " force full highlighting for large files using JSX
@@ -732,7 +731,7 @@ if filereadable(vim_plug_file)
   Plug 'jxnblk/vim-mdx-js'
 
   let g:vim_markdown_conceal=0
-  let g:vim_markdown_new_list_item_indent=3
+  let g:vim_markdown_new_list_item_indent=4
   let g:vim_markdown_fenced_languages=[ 'cs=csharp', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
 
   " nginx
@@ -815,6 +814,7 @@ if filereadable(vim_plug_file)
   " code navigation
   nmap <silent> gd <Plug>(coc-definition)
   nmap <silent> gs :call CocAction('jumpDefinition', 'vsplit')<CR>
+  nmap <silent> gS :call CocAction('jumpDefinition', 'tab drop')<CR>
   nmap <silent> gy <Plug>(coc-type-definition)
   nmap <silent> gi <Plug>(coc-implementation)
   nmap <silent> gr <Plug>(coc-references)
@@ -850,7 +850,7 @@ if filereadable(vim_plug_file)
   let g:vimwiki_listsyms='✗○◐●✓'
   let g:vimwiki_list=[
     \ {
-      \ 'path': '~/Documents/notes/',
+      \ 'path': '~/Dropbox/Storage/notes/',
       \ 'syntax': 'markdown',
       \ 'ext': '.md',
       \ 'nested_syntaxes': {

@@ -66,30 +66,18 @@ alias wip='git add -A && git commit -m "work in progress" --no-verify'
 # misc. tools
 
 alias c='clear'
-alias kill-chrome='ps ux | grep "[C]hrome Helper (Renderer)" | grep -v extension-process | tr -s " " | cut -d " " -f2 | xargs kill'
-alias emptytrash='sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash/*; sudo rm -v /private/var/vm/sleepimage'
-alias finder='open -a Finder .'
 alias flac2mp3='for f in *.flac; do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"; done'
 alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
 alias space='df -P -kHl'
-alias ports='lsof -nP +c 15 | grep LISTEN'
-alias notes='vim ~/Documents/notes/index.md'
+alias ports='lsof -n -i -P | grep LISTEN'
+alias notes='vim ~/Dropbox/Storage/notes/index.md'
 
 # rails
 
 alias rake='bundle exec rake'
 alias r='bundle exec rails'
 alias rch='bundle exec rspec $(git ls-files --modified --others spec)'
-
-# brew
-
-alias bubu='brew update && brew upgrade --ignore-pinned && brew upgrade --cask'
-
-# kill the dock
-
-alias dock-off='defaults write com.apple.dock autohide-delay -float 1000 && killall Dock'
-alias dock-on='defaults delete com.apple.dock autohide-delay && killall Dock'
 
 # stupid stuff
 
