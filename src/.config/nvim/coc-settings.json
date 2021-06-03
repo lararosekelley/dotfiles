@@ -5,6 +5,8 @@
 
   // formatting on save
   "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "scss",
     "javascript",
     "javascriptreact",
     "python",

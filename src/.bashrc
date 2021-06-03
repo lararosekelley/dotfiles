@@ -38,83 +38,41 @@ for option in "${options[@]}"; do
   shopt -s "$option"
 done
 
-# bash completion
-
-brew_prefix="$(brew --prefix)"
-completions_dir="$brew_prefix/etc/bash_completion.d"
-
-if [[ -r "$brew_prefix/etc/profile.d/bash_completion.sh" ]]; then
-  export BASH_COMPLETION_COMPAT_DIR
-  BASH_COMPLETION_COMPAT_DIR="$completions_dir"
-
-  # shellcheck disable=SC1090
-  source "$brew_prefix/etc/profile.d/bash_completion.sh"
-fi
-
 bind "set show-all-if-ambiguous on"
 
-# completion for macos "defaults" command
+# bash completion
 
-complete -W "NSGlobalDomain" defaults;
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    source /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    source /etc/bash_completion
+  fi
+fi
 
 # git completion
 
-if [[ -f "$completions_dir/git-completion.bash" ]]; then
-  # shellcheck disable=SC1090
-  source "$completions_dir/git-completion.bash"
-
-  # completion for g alias
+if [ -f /usr/share/bash-completion/completions/git ]; then
+  source /usr/share/bash-completion/completions/git
   __git_complete g __git_main
 fi
 
 # autojump
 
-if [ -f "$brew_prefix/etc/profile.d/autojump.sh" ]; then
-  # shellcheck disable=SC1090
-  source "$brew_prefix/etc/profile.d/autojump.sh"
-fi
+source /usr/share/autojump/autojump.bash
 
-# nodenv (node version manager)
+# pyenv
 
-if [[ -s "$brew_prefix/opt/nodenv" ]]; then
-  eval "$(nodenv init -)"
-fi
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
-# rbenv (ruby version manager)
+# nodenv
 
-if [[ -s "$brew_prefix/opt/rbenv" ]]; then
-  eval "$(rbenv init -)"
-fi
+eval "$(nodenv init -)"
 
-# pyenv (python version manager)
+# rbenv
 
-if [[ -s "$brew_prefix/opt/pyenv" ]]; then
-  eval "$(pyenv init -)"
-fi
-
-# pip
-
-if command -v pip &> /dev/null; then
-  if [[ ! -f "$completions_dir/pip.bash-completion" ]]; then
-    pip completion --bash > "$completions_dir/pip.bash-completion"
-  fi
-fi
-
-# pipenv
-
-if command -v pipenv &> /dev/null; then
-  if [[ ! -f "$completions_dir/pipenv.bash-completion" ]]; then
-    pipenv --completion > "$completions_dir/pipenv.bash-completion"
-  fi
-fi
-
-# poetry
-
-if command -v poetry &> /dev/null; then
-  if [[ ! -f "$completions_dir/poetry.bash-completion" ]]; then
-    poetry completions bash > "$completions_dir/poetry.bash-completion"
-  fi
-fi
+eval "$(rbenv init -)"
 
 # load bash prompt
 
