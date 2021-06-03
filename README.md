@@ -4,7 +4,7 @@
 
 ---
 
-This repository contains the configuration files I use on macOS or Linux computers.
+This repository contains the configuration files I use on Linux computers (only tested on Ubuntu).
 
 ## Getting started
 
