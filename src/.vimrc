@@ -709,6 +709,12 @@ if filereadable(vim_plug_file)
   Plug 'prettier/vim-prettier', { 'do': 'npm install' }
   Plug 'evanleck/vim-svelte', { 'branch': 'main' }
 
+  " sort ts/js imports on save
+  augroup JavaScriptSortImports
+    autocmd!
+    autocmd BufWritePre *.{js,ts,jsx,tsx} silent! :call CocAction('runCommand', 'tsserver.organizeImports')
+  augroup end
+
   let g:javascript_plugin_jsdoc=1
   let g:javascript_plugin_flow=1
 

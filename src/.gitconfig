@@ -10,6 +10,9 @@
   # d for diff
   d = diff
 
+  # deleting multiple branches
+  dm = "!f() { git branch | grep \"$1\" | xargs -r git branch -D; }; f"
+
   # s for status
   s = status
 
