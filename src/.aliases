@@ -45,8 +45,8 @@ alias sizeof='du -sh'
 
 # ripgrep
 
-alias rgs="rg --smart-case --fixed-strings --line-number --color=always"
-alias rgf="rg -l --smart-case --fixed-strings --line-number --color=always"
+alias rgs="rg --hidden --smart-case --fixed-strings --line-number --color=always"
+alias rgf="rg -l --hidden --smart-case --fixed-strings --line-number --color=always"
 
 # usage info
 
