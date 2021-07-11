@@ -71,7 +71,6 @@ alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
 alias space='df -P -kHl'
 alias ports='lsof -n -i -P | grep LISTEN'
-alias notes='vim ~/Dropbox/Storage/notes/index.md'
 
 # rails
 
