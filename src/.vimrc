@@ -856,7 +856,7 @@ if filereadable(vim_plug_file)
   let g:vimwiki_listsyms='✗○◐●✓'
   let g:vimwiki_list=[
     \ {
-      \ 'path': '~/Dropbox/Storage/notes/',
+      \ 'path': '/mnt/Storage/Dropbox/Files/notes',
       \ 'syntax': 'markdown',
       \ 'ext': '.md',
       \ 'nested_syntaxes': {
