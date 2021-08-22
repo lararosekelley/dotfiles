@@ -724,7 +724,6 @@ if filereadable(vim_plug_file)
   let g:tex_flavor='latex'
 
   if has('nvim')
-    let g:vimtex_latexmk_progname='nvr'
     let g:vimtex_compiler_progname='nvr'
   end
 
@@ -852,11 +851,12 @@ if filereadable(vim_plug_file)
   " wiki
   Plug 'vimwiki/vimwiki'
 
+  let g:vimwiki_create_link=0
   let g:vimwiki_global_ext=0
   let g:vimwiki_listsyms='✗○◐●✓'
   let g:vimwiki_list=[
     \ {
-      \ 'path': '/mnt/Storage/Dropbox/Files/notes',
+      \ 'path': '/run/media/tylucaskelley/Storage/Dropbox/Files/notes',
       \ 'syntax': 'markdown',
       \ 'ext': '.md',
       \ 'nested_syntaxes': {
@@ -871,7 +871,8 @@ if filereadable(vim_plug_file)
     \ }
   \ ]
 
-  " shortcut for navigating to diary index page
+  " shortcut for navigating to index pages
+  command! Notes VimwikiIndex
   command! Diary VimwikiDiaryIndex
 
   augroup VimWikiSettings
@@ -883,10 +884,15 @@ if filereadable(vim_plug_file)
       " automatically update links when reading diary index page
       autocmd BufRead,BufNewFile diary.md VimwikiDiaryGenerateLinks
 
-      " remap vimwiki commands
+      " keep my original keymappings for some commands
       autocmd FileType vimwiki nnoremap <buffer> <Tab> /
-      autocmd FileType vimwiki nnoremap <buffer> <leader>wn <Plug>VimwikiNextLink
-      autocmd FileType vimwiki nnoremap <buffer> <leader>wp <Plug>VimwikiPrevLink
+      autocmd FileType vimwiki nnoremap <buffer> <CR> :noh<CR><CR>
+
+      " vimwiki commands
+      autocmd FileType vimwiki nnoremap <buffer> wh :VimwikiIndex<CR>
+      autocmd FileType vimwiki nnoremap <buffer> wd :VimwikiDiaryIndex<CR>
+      autocmd FileType vimwiki nnoremap <buffer> wf :VimwikiFollowLink<CR>
+      autocmd FileType vimwiki nnoremap <buffer> ws :VimwikiVSplitLink<CR>
 
       " customize syntax regions
       autocmd FileType vimwiki syntax region VimwikiBlockquote start=/^\s*>/ end="$"
