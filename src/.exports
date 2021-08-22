@@ -31,6 +31,7 @@ export CARGOPATH="$HOME/.cargo"
 
 # pyenv
 
+export PYENV_ROOT="$HOME/.pyenv"
 export PYENV_VIRTUALENV_DISABLE_PROMPT=1
 
 # ignore python 2 deprecation warnings
@@ -51,4 +52,4 @@ export RBENV_PATH="$HOME/.rbenv/bin"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$HOME/.pyenv/bin:$GOPATH/bin:$CARGOPATH/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOPATH/bin:$CARGOPATH/bin:$PATH"
