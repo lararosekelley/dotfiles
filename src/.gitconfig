@@ -31,6 +31,9 @@
   # get current commit hash
   current = rev-parse HEAD
 
+  # list stale remote branches, optionally excluding an additional pattern
+  list-stale = "!f() { git branch -r --merged | egrep -v \"(^\\*|${1:-$(git head)})\" | sed 's/origin\\///'; }; f"
+
   # download and apply a patch from a github PR (github only)
   # usage: git apply-pr repo pr
   apply-pr = "!f() { curl -v -H \"Authorization: token ${GITHUB_TOKEN}\" -H 'Accept: application/vnd.github.v3.patch' -SL \"https://api.github.com/repos/${1}/pulls/${2}\" | git apply --check; }; f"
@@ -155,7 +158,7 @@
   smudge = git-lfs smudge -- %f
 [help]
   # fix & execute misspelled commands
-  autocorrect = 1
+  autocorrect = 30
 [init]
   defaultBranch = main
 [push]

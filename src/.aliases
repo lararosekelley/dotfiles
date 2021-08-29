@@ -35,7 +35,7 @@ alias mkdir='mkdir -v'
 
 # colored output
 
-alias ls='ls -GF'
+alias ls='ls -GF --color'
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'

@@ -24,6 +24,7 @@ export HISTCONTROL="ignoredups:erasedups"
 # go
 
 export GOPATH="$HOME/.go"
+export GOBIN="$GOPATH/bin"
 
 # rust
 
@@ -52,4 +53,4 @@ export RBENV_PATH="$HOME/.rbenv/bin"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOPATH/bin:$CARGOPATH/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGOPATH/bin:$PATH"
