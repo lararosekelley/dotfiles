@@ -74,6 +74,12 @@ eval "$(nodenv init -)"
 
 eval "$(rbenv init -)"
 
+# ruby completion
+
+if [ -f ~/Code/oss/completion-ruby/completion-ruby-all ]; then
+  source ~/Code/oss/completion-ruby/completion-ruby-all
+fi
+
 # load bash prompt
 
 if [ -f ~/.bash_prompt ]; then

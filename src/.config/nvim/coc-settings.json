@@ -3,6 +3,8 @@
   // general preferences
   // --------
 
+  "codeLens.enable": true,
+
   // formatting on save
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
@@ -13,6 +15,18 @@
     "typescript",
     "typescriptreact"
   ],
+
+  // --------
+  // language server (for servers without plugins)
+  // --------
+
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
+      "filetypes": ["go"]
+    }
+  },
 
   // --------
   // diagnostics (coc-diagnostic)
@@ -59,6 +73,14 @@
   // paths
   "python.pythonPath": "${workspaceFolder}/.venv/bin/python",
   "python.venvPath": "${workspaceFolder}/.venv",
+
+  // --------
+  // ruby (coc-solargraph)
+  // --------
+  "solargraph.diagnostics": true,
+  "solargraph.formatting": true,
+  "solargraph.autoformat": true,
+  "solargraph.useBundler": true,
 
   // --------
   // databases (coc-db, coc-sql)

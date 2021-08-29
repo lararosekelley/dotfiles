@@ -374,6 +374,7 @@ endif
 augroup RecognizeFiles
   autocmd!
   autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,tern-project,tern-config} set filetype=json
+  autocmd BufRead,BufNewFile,BufFilePre *.home set filetype=json  " higharc
   autocmd BufRead,BufNewFile,BufFilePre Procfile,.prettierrc set filetype=yaml
   autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini
   autocmd BufRead,BufNewFile,BufFilePre *.conf set filetype=dosini
@@ -689,6 +690,11 @@ if filereadable(vim_plug_file)
   " graphql
   Plug 'jparise/vim-graphql'
 
+  " golang
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+  let g:go_def_mapping_enabled=0
+
   " graphviz
   Plug 'wannesm/wmgraphviz.vim'
 
@@ -799,8 +805,9 @@ if filereadable(vim_plug_file)
     \ 'coc-prettier',
     \ 'coc-pyright',
     \ 'coc-sql',
-    \ 'coc-svelte',
+    \ 'coc-solargraph',
     \ 'coc-stylelint',
+    \ 'coc-svelte',
     \ 'coc-tsserver',
     \ 'coc-vimlsp',
     \ 'coc-word',
