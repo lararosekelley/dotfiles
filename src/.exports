@@ -30,6 +30,10 @@ export GOBIN="$GOPATH/bin"
 
 export CARGOPATH="$HOME/.cargo"
 
+# perl
+
+export PERL_MM_OPT="$HOME/perl5"
+
 # pyenv
 
 export PYENV_ROOT="$HOME/.pyenv"
