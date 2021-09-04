@@ -49,6 +49,9 @@ filetype plugin indent on
 let g:python_host_prog=expand(python2_executable)
 let g:python3_host_prog=expand(python3_executable)
 
+" load local .vimrc files
+set exrc
+
 " --------
 " 2. key mappings
 " --------
@@ -373,7 +376,7 @@ endif
 " override default highlighting for certain files
 augroup RecognizeFiles
   autocmd!
-  autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,tern-project,tern-config} set filetype=json
+  autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,parcelrc,tern-project,tern-config} set filetype=json
   autocmd BufRead,BufNewFile,BufFilePre *.home set filetype=json  " higharc
   autocmd BufRead,BufNewFile,BufFilePre Procfile,.prettierrc set filetype=yaml
   autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini
@@ -558,6 +561,9 @@ if filereadable(vim_plug_file)
   " --------
   " 8d. files and projects
   " --------
+
+  " .env file support
+  Plug 'tpope/vim-dotenv'
 
   " fuzzy file search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -768,6 +774,14 @@ if filereadable(vim_plug_file)
   let g:terraform_fold_sections=1
   let g:terraform_fmt_on_save=1
 
+  " sql
+  Plug 'tpope/vim-dadbod' " also required for coc-db to work
+  Plug 'kristijanhusak/vim-dadbod-ui'
+
+  let g:db_ui_save_location=expand('~/.vimdb')
+
+  nnoremap <leader>D :DBUI<CR>
+
   " toml
   Plug 'cespare/vim-toml'
 
@@ -789,9 +803,6 @@ if filereadable(vim_plug_file)
 
   " coc provides vscode-esque completion
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-
-  " for coc-db to work
-  Plug 'tpope/vim-dadbod'
 
   let g:coc_global_extensions=[
     \ 'coc-css',

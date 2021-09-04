@@ -65,6 +65,7 @@ source /usr/share/autojump/autojump.bash
 
 eval "$(pyenv init --path)"
 eval "$(pyenv virtualenv-init -)"
+eval "$(pyenv init -)"
 
 # nodenv
 
