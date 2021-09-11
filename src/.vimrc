@@ -113,9 +113,6 @@ nnoremap <leader>a ggVG
 " reformat all content in file
 nnoremap <leader>z ggVGgq
 
-" delete all content in file
-nnoremap <leader>d ggdG
-
 " copy file content to clipboard
 nnoremap <leader>c gg"*yG``
 
@@ -539,6 +536,17 @@ if filereadable(vim_plug_file)
 
   let g:closetag_filenames='*.html,*.xhtml,*.phtml,*.xml,*.vue,*.jsx,*.js,*.erb,*.tsx,*.svelte'
 
+  " maximize current pane
+  Plug 'szw/vim-maximizer'
+
+  let g:maximizer_set_default_mapping=0
+  nnoremap <leader>m :MaximizerToggle!<CR>
+
+  function! GotoWindow(id)
+    call win_gotoid(a:id)
+    MaximizerToggle
+  endfunction
+
   " --------
   " 8c. git
   " --------
@@ -661,6 +669,31 @@ if filereadable(vim_plug_file)
   " --------
   " 8e. testing
   " --------
+
+  " debugging
+  Plug 'puremourning/vimspector'
+
+  let g:vimspector_install_gadgets=[ 'vscode-node-debug2', 'debugger-for-chrome', 'debugpy', 'vscode-go' ]
+
+  nnoremap <leader>dd :call vimspector#Launch()<CR>
+  nnoremap <leader>d<space> :call vimspector#Continue()<CR>
+  nnoremap <leader>de :call vimspector#Reset()<CR>
+
+  nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
+  nnoremap <leader>dt :call GotoWindow(g:vimspector_session_windows.tagpage)<CR>
+  nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
+  nnoremap <leader>dw :call GotoWindow(g:vimspector_session_windows.watches)<CR>
+  nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<CR>
+  nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
+
+  nmap <leader>dl <Plug>VimspectorStepInto
+  nmap <leader>dj <Plug>VimspectorStepOver
+  nmap <leader>dk <Plug>VimspectorStepOut
+  nmap <leader>d_ <Plug>VimspectorRestart
+
+  nmap <leader>dr <Plug>VimspectorRunToCursor
+  nmap <leader>db <Plug>VimspectorToggleBreakpoint
+  nmap <leader>dcb <Plug>VimspectorToggleConditionalBreakpoint
 
   " run tests
   Plug 'janko-m/vim-test'
