@@ -47,6 +47,9 @@
   // prettier
   "prettier.disableSuccessMessage": true,
 
+  // use relative imports by default
+  "typescript.preferences.importModuleSpecifier": "relative",
+
   // --------
   // python (coc-pyright)
   // --------
