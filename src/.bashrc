@@ -64,8 +64,8 @@ source /usr/share/autojump/autojump.bash
 # pyenv
 
 eval "$(pyenv init --path)"
-eval "$(pyenv virtualenv-init -)"
 eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 # nodenv
 
@@ -88,3 +88,5 @@ if [ -f ~/.bash_prompt ]; then
   source ~/.bash_prompt
   PROMPT_COMMAND="set_prompt; autojump_add_to_database; history -a; history -c; history -r"
 fi
+
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
