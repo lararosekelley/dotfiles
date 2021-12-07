@@ -25,11 +25,32 @@
   # create new branch and checkout
   cob = checkout -b
 
+  # undo last commit
+  undo = reset --soft HEAD~
+
   # fancier logging
   l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset (%C(yellow)%ae %Cgreen%cd%C(reset)) - %s'
 
   # get current commit hash
   current = rev-parse HEAD
+
+  # stash all
+  sa = stash save --include-untracked
+
+  # list all user-defined aliases
+  la = config --get-regexp '^alias.'
+
+  # compare current commit to previous
+  prev = diff @~..@
+
+  # sort contributors by number of commits
+  rank = shortlog -sn --no-merges
+
+  # search for text in a git repo
+  grep = grep -Ii
+
+  # show origin URL
+  url = config --get remote.origin.url
 
   # list stale remote branches, optionally excluding an additional pattern
   list-stale = "!f() { git branch -r --merged | egrep -v \"(^\\*|${1:-$(git head)})\" | sed 's/origin\\///'; }; f"
@@ -68,17 +89,8 @@
   # interactive rebase on a branch, defaults to default branch
   rb = "!f() { git rebase --interactive --autosquash \"${1:-$(git head)}\"; }; f"
 
-  # sort contributors by number of commits
-  rank = shortlog -sn --no-merges
-
-  # search for text in a git repo
-  grep = grep -Ii
-
   # list branches sorted by edit date
   lb = "!git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'"
-
-  # show origin URL
-  url = config --get remote.origin.url
 
   # change origin URL
   set-url = "!f() { git remote set-url origin \"$1\"; }; f"
@@ -88,15 +100,6 @@
 
   # set upstream of <branch> to origin/<branch>
   su = "!f() { git branch --set-upstream-to=origin/\"$1\" \"$1\"; }; f"
-
-  # stash all
-  sa = stash save --include-untracked
-
-  # list all user-defined aliases
-  la = config --get-regexp '^alias.'
-
-  # compare current commit to previous
-  prev = diff @~..@
 [color]
   # use colors in git commands
   ui = auto

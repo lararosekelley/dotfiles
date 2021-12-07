@@ -777,12 +777,21 @@ if filereadable(vim_plug_file)
 
   " markdown / mdx
   Plug 'plasticboy/vim-markdown'
-  Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app & yarn install'  }
   Plug 'jxnblk/vim-mdx-js'
 
   let g:vim_markdown_conceal=0
   let g:vim_markdown_new_list_item_indent=4
-  let g:vim_markdown_fenced_languages=[ 'cs=csharp', 'js=javascript', 'rb=ruby', 'c++=cpp', 'ini=dosini', 'bash=sh', 'viml=vim' ]
+  let g:vim_markdown_fenced_languages=[
+    \ 'bash=sh',
+    \ 'c++=cpp',
+    \ 'cs=csharp',
+    \ 'js=javascript',
+    \ 'jsx=javascriptreact',
+    \ 'rb=ruby',
+    \ 'ini=dosini',
+    \ 'viml=vim',
+    \ 'tsx=typescriptreact',
+  \ ]
 
   " nginx
   Plug 'chr4/nginx.vim'
