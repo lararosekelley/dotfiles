@@ -153,12 +153,6 @@
   renames = copies
   mnemonicprefix = true
   submodule = diff
-[filter "lfs"]
-  # for github desktop app
-  required = true
-  process = git-lfs filter-process
-  clean = git-lfs clean -- %f
-  smudge = git-lfs smudge -- %f
 [help]
   # fix & execute misspelled commands
   autocorrect = 30
@@ -170,3 +164,8 @@
 [pull]
   # default pull behavior
   rebase = false
+[filter "lfs"]
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+  clean = git-lfs clean -- %f

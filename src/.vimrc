@@ -855,6 +855,7 @@ if filereadable(vim_plug_file)
     \ 'coc-eslint',
     \ 'coc-json',
     \ 'coc-marketplace',
+    \ 'coc-markdownlint',
     \ 'coc-prettier',
     \ 'coc-pyright',
     \ 'coc-sql',
