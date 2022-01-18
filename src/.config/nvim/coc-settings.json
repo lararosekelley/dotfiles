@@ -11,6 +11,7 @@
     "scss",
     "javascript",
     "javascriptreact",
+    "markdown",
     "python",
     "typescript",
     "typescriptreact"
@@ -45,7 +46,8 @@
   "eslint.autoFixOnSave": true,
 
   // prettier
-  "prettier.disableSuccessMessage": true,
+  "prettier.eslintIntegration": true,
+  "prettier.stylelintIntegration": true,
 
   // use relative imports by default
   "typescript.preferences.importModuleSpecifier": "relative",
@@ -91,10 +93,16 @@
   "sql.database": "postgresql",
 
   // --------
-  // writing (coc-dictionary, coc-word, coc-emoji)
+  // writing (coc-dictionary, coc-word, coc-emoji, coc-markdownlint)
   // --------
   "coc.source.emoji.filetypes": [
     "markdown",
     "vimwiki"
-  ]
+  ],
+
+  "markdownlint.config": {
+    "line-length": {
+      "line_length": 120
+    }
+  }
 }
