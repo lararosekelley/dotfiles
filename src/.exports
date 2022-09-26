@@ -57,4 +57,4 @@ export RBENV_PATH="$HOME/.rbenv/bin"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGOPATH/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGOPATH/bin:$PATH"
