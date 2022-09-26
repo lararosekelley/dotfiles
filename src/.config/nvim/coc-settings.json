@@ -3,7 +3,9 @@
   // general preferences
   // --------
 
+  // code lens
   "codeLens.enable": true,
+  "codeLens.position": "eol",
 
   // formatting on save
   "coc.preferences.formatOnSaveFiletypes": [
@@ -14,7 +16,8 @@
     "markdown",
     "python",
     "typescript",
-    "typescriptreact"
+    "typescriptreact",
+    "vimwiki"
   ],
 
   // --------
@@ -45,12 +48,11 @@
   // eslint
   "eslint.autoFixOnSave": true,
 
-  // prettier
-  "prettier.eslintIntegration": true,
-  "prettier.stylelintIntegration": true,
-
   // use relative imports by default
   "typescript.preferences.importModuleSpecifier": "relative",
+
+  // logging
+  "tsserver.log": "verbose",
 
   // --------
   // python (coc-pyright)
@@ -101,7 +103,11 @@
   ],
 
   "markdownlint.config": {
+    "ul-indent": {
+      "indent": 4
+    },
     "line-length": {
+      "code_blocks": false,
       "line_length": 120
     }
   }

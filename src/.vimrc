@@ -1,17 +1,15 @@
-set encoding=utf-8
-set fileencoding=utf-8
-
-" --------
+" ---------------------------------
 " table of contents
-" --------
+"
 " 1. general
+"     a. neovim
 " 2. key mappings
 "     a. leader commands
 " 3. navigation and search
 " 4. text, indentation, and folding
 " 5. appearance
-" 6. files
-" 7. custom functions
+" 6. files and backups
+" 7. helper functions
 " 8. plugins
 "    a. appearance
 "    b. navigation and search
@@ -21,47 +19,48 @@ set fileencoding=utf-8
 "    f. languages
 "    g. autocompletion and linting
 "    h. misc.
-" --------
+" ---------------------------------
 
-" --------
+" ----------
 " 1. general
-" --------
+" ----------
 
-" check for necessary executables
-let python2_executable=expand('~/.pyenv/versions/neovim2.7/bin/python')
-let python3_executable=expand('~/.pyenv/versions/neovim3.9/bin/python')
-let vim_plug_file=expand('~/.vim/autoload/plug.vim')
-
-if !filereadable(python2_executable) || !filereadable(python3_executable)
-  echoerr 'Missing executables!'
-endif
-
-" optional files and folders
-let gitgutter_plugin=expand('~/.vim/packages/vim-gitgutter')
+" use utf-8 for display and file output
+set encoding=utf-8
+set fileencoding=utf-8
 
 " longer command history
 set history=10000
 
-" filetype-specific plugins
-filetype plugin indent on
+" ----------
+" 1a. neovim
+" ----------
 
-" neovim plugins
-let g:python_host_prog=expand(python2_executable)
-let g:python3_host_prog=expand(python3_executable)
+" disable perl
+let g:loaded_perl_provider=0
 
-" load local .vimrc files
-set exrc
+" check for executables
+let python2_executable=expand('~/.pyenv/versions/neovim2.7/bin/python')
+let python3_executable=expand('~/.pyenv/versions/neovim3.9/bin/python')
 
-" --------
+if filereadable(python2_executable) && filereadable(python3_executable)
+  " neovim plugins
+  let g:python_host_prog=expand(python2_executable)
+  let g:python3_host_prog=expand(python3_executable)
+else
+  echoerr 'Missing Python executables!'
+endif
+
+" ---------------
 " 2. key mappings
-" --------
+" ---------------
 
 " initiate commands with space
 nnoremap <Space> :
 
 " use left and right arrow keys for jumping
-nnoremap <Left> <C-^>
-nnoremap <Right> <C-o>
+nnoremap <Left> <C-o>
+nnoremap <Right> <C-i>
 
 " navigate between window splits with Ctrl keys
 nnoremap <C-l> <C-w>l
@@ -73,8 +72,8 @@ nnoremap <C-k> <C-w>k
 nnoremap <Tab> /
 
 " switch tabs with Shift-l and Shift-h
-nnoremap <S-l> gt
-nnoremap <S-h> gT
+nnoremap <S-k> gt
+nnoremap <S-j> gT
 
 " hitting enter also removes search highlighting
 nnoremap <silent> <CR> :noh<CR><CR>
@@ -91,12 +90,9 @@ vnoremap <Tab> >gv
 " exit terminal mode
 tnoremap <Esc> <C-\><C-n>
 
-" accept autocomplete suggestion with Enter
-inoremap <silent> <CR> <C-r>=<SID>coc_confirm()<CR>
-
-" --------
+" -------------------
 " 2a. leader commands
-" --------
+" -------------------
 
 " use comma as leader key
 let g:mapleader=','
@@ -125,9 +121,6 @@ nnoremap <leader>h <C-w>n
 " make window splits equal size
 nnoremap <leader>e <C-w>=
 
-" reload .vimrc
-nnoremap <leader>. :source ~/.vimrc<CR>
-
 " remove all trailing whitespace in file
 nnoremap <leader>w :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
@@ -144,7 +137,7 @@ nnoremap <leader>i mzgg=G`z`
 nnoremap <leader>g ggVGgq
 
 " toggle fold open/close
-nnoremap <leader>, za
+nnoremap <leader>. za
 
 " start find/replace
 nnoremap <leader>s :%s/\<<C-r><C-w>\>/
@@ -161,23 +154,23 @@ augroup end
 " show highlight groups (definition below)
 nnoremap <leader>hg :call <SID>HighlightGroups()<CR>
 
-" --------
+" open netrw
+nnoremap <leader>, :call ToggleFileTree()<CR>
+
+" ------------------------
 " 3. navigation and search
-" --------
+" ------------------------
 
 " enable mouse mode
+set mouse=a
+
 if !has('nvim')
   set ttymouse=xterm2
 endif
 
-set mouse=a
-
 " lower escape key delay
 set timeoutlen=1000
 set ttimeoutlen=10
-
-" lower time to write to swap
-set updatetime=100
 
 " use common backspace behavior
 set backspace=indent,eol,start
@@ -227,13 +220,13 @@ set hlsearch
 " ignore case during search
 set ignorecase
 
-" completion
+" completion suggestions
 set omnifunc=syntaxcomplete#Complete
 set completeopt=menu
 
-" --------
+" ---------------------------------
 " 4. text, indentation, and folding
-" --------
+" ---------------------------------
 
 " work with system clipboard
 if has('clipboard')
@@ -282,9 +275,9 @@ augroup SpellCheck
   autocmd BufRead,BufNewFile *.md,*.markdown,*.txt setlocal spell spelllang=en_us
 augroup end
 
-" --------
+" -------------
 " 5. appearance
-" --------
+" -------------
 
 " truecolor support
 if has('termguicolors')
@@ -295,6 +288,19 @@ endif
 if has('nvim')
   set inccommand=split
 endif
+
+" netrw file browser
+let g:netrw_banner=0
+let g:netrw_liststyle=3
+let g:netrw_browse_split=4
+let g:netrw_altv=1
+let g:netrw_winsize=25
+let g:netrw_list_hide=&wildignore
+
+augroup netrw_remap
+  autocmd!
+  autocmd filetype netrw call NetrwRemap()
+augroup END
 
 " command window height
 set cmdheight=1
@@ -310,6 +316,9 @@ set colorcolumn=120
 
 " show current command at bottom-right
 set showcmd
+
+" always show sign column
+set signcolumn=yes
 
 " highlight current line
 set cursorline
@@ -343,9 +352,46 @@ set conceallevel=0
 " don't pass messages to completion menu
 set shortmess+=c
 
-" --------
-" 6. files
-" --------
+" override default highlighting for certain files
+augroup RecognizeFiles
+  autocmd!
+  autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,parcelrc,tern-project,tern-config} set filetype=json
+  autocmd BufRead,BufNewFile,BufFilePre *.home set filetype=json  " higharc
+  autocmd BufRead,BufNewFile,BufFilePre Procfile,.prettierrc,.commitlintrc set filetype=yaml
+  autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini
+  autocmd BufRead,BufNewFile,BufFilePre *.conf set filetype=dosini
+  autocmd BufRead,BufNewFile,BufFilePre .tmux.conf set filetype=tmux
+  autocmd BufRead,BufNewFile,BufFilePre .{sequelizerc,jestconfig,fxrc} set filetype=javascript
+  autocmd BufRead,BufNewFile,BufFilePre *.jsx,*.tsx set filetype=typescriptreact
+  autocmd BufRead,BufNewFile,BufFilePre .env.* set filetype=sh
+  autocmd BufRead,BufNewFile,BufFilePre *.service set filetype=systemd
+augroup end
+
+" force full highlighting for large files using JSX
+augroup HighlightFiles
+  autocmd!
+  autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
+  autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
+augroup end
+
+" --------------------
+" 6. files and backups
+" --------------------
+
+" lower time to write to swap
+set updatetime=100
+
+" no swaps and backups
+set nobackup
+set nowritebackup
+set noswapfile
+
+" persistent undo
+set undofile
+set undodir=~/.vim/undo
+
+" don't change current directory automatically
+set noautochdir
 
 " support comments in .json files
 augroup JsonComments
@@ -370,43 +416,9 @@ if has('wildmenu')
   set wildmode=longest:full,full
 endif
 
-" override default highlighting for certain files
-augroup RecognizeFiles
-  autocmd!
-  autocmd BufRead,BufNewFile,BufFilePre .{artilleryrc,babelrc,eslintrc,jsdocrc,nycrc,stylelintrc,markdownlintrc,parcelrc,tern-project,tern-config} set filetype=json
-  autocmd BufRead,BufNewFile,BufFilePre *.home set filetype=json  " higharc
-  autocmd BufRead,BufNewFile,BufFilePre Procfile,.prettierrc set filetype=yaml
-  autocmd BufRead,BufNewFile,BufFilePre .{flake8,licenser,flowconfig} set filetype=dosini
-  autocmd BufRead,BufNewFile,BufFilePre *.conf set filetype=dosini
-  autocmd BufRead,BufNewFile,BufFilePre .tmux.conf set filetype=tmux
-  autocmd BufRead,BufNewFile,BufFilePre .{sequelizerc,jestconfig,fxrc} set filetype=javascript
-  autocmd BufRead,BufNewFile,BufFilePre *.jsx,*.tsx set filetype=typescriptreact
-  autocmd BufRead,BufNewFile,BufFilePre .env.* set filetype=sh
-  autocmd BufRead,BufNewFile,BufFilePre *.service set filetype=systemd
-augroup end
-
-" force full highlighting for large files using JSX
-augroup HighlightFiles
-  autocmd!
-  autocmd BufEnter *.{js,jsx,ts,tsx} :syntax sync fromstart
-  autocmd BufLeave *.{js,jsx,ts,tsx} :syntax sync clear
-augroup end
-
-" no swaps and backups
-set nobackup
-set nowritebackup
-set noswapfile
-
-" persistent undo
-set undofile
-set undodir=~/.vim/undo
-
-" don't change current directory automatically
-set noautochdir
-
-" --------
-" 7. custom functions
-" --------
+" -------------------
+" 7. helper functions
+" -------------------
 
 " coc current function
 function! CocCurrentFunction()
@@ -441,25 +453,50 @@ function! <SID>HighlightGroups()
   echo map(synstack(line('.'), col('.')), "synIDattr(v:val, 'name')")
 endfunction
 
-" accept coc completion suggestions without confilcting with vim-endwise
-function! s:coc_confirm() abort
-  if pumvisible()
-    return coc#_select_confirm()
+" toggle netrw and keep it on left side of screen
+function! ToggleFileTree()
+  if exists("t:expl_buf_num")
+    let expl_win_num=bufwinnr(t:expl_buf_num)
+
+    if expl_win_num != -1
+      let cur_win_nr=winnr()
+      exec expl_win_num . 'wincmd w'
+      close
+      exec cur_win_nr . 'wincmd w'
+      unlet t:expl_buf_num
+    else
+      unlet t:expl_buf_num
+    endif
   else
-    return "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+    exec '1wincmd w'
+    Vexplore
+    let t:expl_buf_num = bufnr("%")
   endif
 endfunction
 
-" --------
+" netrw-specific remappings
+function! NetrwRemap()
+  nnoremap <buffer> <C-l> <C-w>l
+endfunction
+
+" ----------
 " 8. plugins
-" --------
-"
+" ----------
+
+" check for vim-plug config file
+let vim_plug_file=expand('~/.vim/autoload/plug.vim')
+let gitgutter_plugin=expand('~/.vim/packages/vim-gitgutter')
+
+if !filereadable(vim_plug_file)
+  echoerr 'Missing vim-plug config file!'
+endif
+
 if filereadable(vim_plug_file)
   call plug#begin('~/.vim/packages')
 
-  " --------
+  " --------------
   " 8a. appearance
-  " --------
+  " --------------
 
   " start screen
   Plug 'mhinz/vim-startify'
@@ -496,7 +533,7 @@ if filereadable(vim_plug_file)
     \ 'component_function': {
     \   'projectindent': 'SleuthIndicator',
     \   'cocdiagnostic': 'StatusDiagnostic',
-    \   'gitbranch': 'fugitive#head'
+    \   'gitbranch': 'FugitiveHead'
     \ },
   \ }
 
@@ -508,9 +545,9 @@ if filereadable(vim_plug_file)
   " highlight copied text
   Plug 'machakann/vim-highlightedyank'
 
-  " --------
+  " -------------------------
   " 8b. navigation and search
-  " --------
+  " -------------------------
 
   " find characters on line quicker
   Plug 'unblevable/quick-scope'
@@ -519,6 +556,9 @@ if filereadable(vim_plug_file)
   Plug 'vim-scripts/Tabmerge'
 
   nnoremap <leader>tm :execute "Tabmerge left"<CR>
+
+  " sticky scrolling
+  Plug 'wellle/context.vim'
 
   " look up documentation
   Plug 'keith/investigate.vim'
@@ -547,9 +587,9 @@ if filereadable(vim_plug_file)
     MaximizerToggle
   endfunction
 
-  " --------
+  " -------
   " 8c. git
-  " --------
+  " -------
 
   " git wrapper
   Plug 'tpope/vim-fugitive'
@@ -566,9 +606,9 @@ if filereadable(vim_plug_file)
   " show git diff in gutter
   Plug 'airblade/vim-gitgutter'
 
-  " --------
+  " ----------------------
   " 8d. files and projects
-  " --------
+  " ----------------------
 
   " .env file support
   Plug 'tpope/vim-dotenv'
@@ -666,9 +706,9 @@ if filereadable(vim_plug_file)
   " man pages
   Plug 'vim-utils/vim-man'
 
-  " --------
+  " -----------
   " 8e. testing
-  " --------
+  " -----------
 
   " debugging
   Plug 'puremourning/vimspector'
@@ -707,9 +747,9 @@ if filereadable(vim_plug_file)
   " language-specific test settings
   let test#ruby#minitest#file_pattern='\.test\.rb'
 
-  " --------
+  " -------------
   " 8f. languages
-  " --------
+  " -------------
 
   " coffeescript
   Plug 'kchmck/vim-coffee-script'
@@ -754,12 +794,6 @@ if filereadable(vim_plug_file)
   Plug 'prettier/vim-prettier', { 'do': 'npm install' }
   Plug 'evanleck/vim-svelte', { 'branch': 'main' }
 
-  " sort ts/js imports on save
-  augroup JavaScriptSortImports
-    autocmd!
-    autocmd BufWritePre *.{js,ts,jsx,tsx} silent! :call CocAction('runCommand', 'tsserver.organizeImports')
-  augroup end
-
   let g:javascript_plugin_jsdoc=1
   let g:javascript_plugin_flow=1
 
@@ -798,6 +832,9 @@ if filereadable(vim_plug_file)
 
   " php / blade
   Plug 'jwalton512/vim-blade'
+
+  " prisma
+  Plug 'pantharshit00/vim-prisma'
 
   " python
   Plug 'vim-python/python-syntax'
@@ -839,9 +876,9 @@ if filereadable(vim_plug_file)
     autocmd FileType vue syntax sync fromstart
   augroup end
 
-  " --------
+  " ------------------------------
   " 8g. autocompletion and linting
-  " --------
+  " ------------------------------
 
   " coc provides vscode-esque completion
   Plug 'neoclide/coc.nvim', { 'branch': 'release' }
@@ -854,24 +891,27 @@ if filereadable(vim_plug_file)
     \ 'coc-emoji',
     \ 'coc-eslint',
     \ 'coc-json',
-    \ 'coc-marketplace',
     \ 'coc-markdownlint',
+    \ 'coc-marketplace',
     \ 'coc-prettier',
+    \ 'coc-prisma',
     \ 'coc-pyright',
-    \ 'coc-sql',
     \ 'coc-solargraph',
-    \ 'coc-stylelint',
+    \ 'coc-sql',
+    \ 'coc-stylelintplus',
     \ 'coc-svelte',
     \ 'coc-tsserver',
     \ 'coc-vimlsp',
     \ 'coc-word',
   \ ]
 
-  " sort python imports on save
-  augroup PythonSortImports
-    autocmd!
-    autocmd BufWritePre *.py silent! :call CocAction('runCommand', 'python.sortImports')
-  augroup end
+  let g:coc_filetype_map = {
+    \ 'vimwiki': 'markdown',
+  \ }
+
+  " use enter to accept selected completion item or notify coc.nvim to format
+  inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
+    \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
   " use <C-d> and <C-S-d> to navigate warnings and errors
   nmap <silent> <C-d> <Plug>(coc-diagnostic-next)
@@ -886,7 +926,7 @@ if filereadable(vim_plug_file)
   nmap <silent> gr <Plug>(coc-references)
 
   " use K to show documentation in preview window
-  nnoremap <silent> K :call <SID>show_documentation()<CR>
+  nnoremap <silent> H :call <SID>show_documentation()<CR>
 
   function! s:show_documentation()
     if (index([ 'vim','help' ], &filetype) >= 0)
@@ -896,12 +936,15 @@ if filereadable(vim_plug_file)
     endif
   endfunction
 
-  " --------
+  " ---------
   " 8h. misc.
-  " --------
+  " ---------
 
   " standardize vim/neovim async api
   Plug 'prabirshrestha/async.vim'
+
+  " todoist integration
+  Plug 'romgrk/todoist.nvim', { 'do': ':TodoistInstall' }
 
   " better writing habits
   Plug 'reedes/vim-wordy'
@@ -932,15 +975,21 @@ if filereadable(vim_plug_file)
     \ }
   \ ]
 
-  " shortcut for navigating to index pages
+  " shortcut for navigating to important notes directories
   command! Notes VimwikiIndex
   command! Diary VimwikiDiaryIndex
+
+  " open notes in small vertical split
+  nnoremap <leader>N :80vs<BAR> :Notes<CR>
 
   augroup VimWikiSettings
       autocmd!
 
-      " use 80 textwidth for vimwiki files for easy reformatting
-      autocmd FileType vimwiki setlocal textwidth=80
+      " use 120 textwidth for vimwiki files for easy reformatting
+      autocmd FileType vimwiki setlocal textwidth=120
+
+      " 4 space indent
+      autocmd FileType vimwiki setlocal shiftwidth=4 softtabstop=4
 
       " automatically update links when reading diary index page
       autocmd BufRead,BufNewFile diary.md VimwikiDiaryGenerateLinks
@@ -964,9 +1013,9 @@ if filereadable(vim_plug_file)
 
   call plug#end()
 
-  " --------
-  " certain settings have to come after vim-plug initialization
-  " --------
+  " ------------------------------------------------
+  " settings that come after vim-plug initialization
+  " ------------------------------------------------
 
   " vim-emoji: use emojis with vim-gitgutter plugin
   if isdirectory(gitgutter_plugin)
@@ -983,4 +1032,4 @@ if filereadable(vim_plug_file)
   catch
     colorscheme ron
   endtry
-end
+endif
