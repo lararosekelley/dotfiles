@@ -9,7 +9,7 @@
 
 alias vim='nvim'
 alias vi='nvim'
-alias vimrc='vim ~/.vimrc'
+alias vimrc='vim ~/.config/nvim/init.lua'
 
 # allow sudo for aliases
 

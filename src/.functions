@@ -40,6 +40,34 @@ function vid2mp4() {
     echo "$1 converted and saved to $2"
   else
     echo "fatal: ffmpeg is not installed"
+    return 1
+  fi
+}
+
+# Cuts out a specific time window from an input video
+#
+# Params:
+#     input    - input file
+#     output   - output file name
+#     start    - starting timestamp (format: hh:mm:ss)
+#     duration - length to slice, starting at 'start' timestamp
+#
+# Usage: vidslice input output start duration
+#
+function vidslice() {
+  usage="usage: vidslice input output start duration"
+
+  # check that all args are present, and that input is a file
+  if [ -z "$1" ] || [ ! -f "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+    echo "$usage"
+    return 1
+  elif command -v ffmpeg &> /dev/null; then
+    ffmpeg -ss "$3" -t "$4" -i "$1" -vcodec copy -acodec copy "$2"
+
+    echo -e "\n\nsliced $4 from $1, starting at $3, and saved to $2"
+  else
+    echo "fatal: ffmpeg not installed"
+    return 1
   fi
 }
 
@@ -78,19 +106,23 @@ function mov2gif() {
 # Create a good tmux setup or attach to an existing one
 #
 # Params:
-#   name - session name (defaults to "work")
+#   name - session name (defaults to "home")
 #
 # Usage: mux [name]
 #
 function mux() {
   if [[ -z "$1" ]]; then
-    TMUX_SESSION="work"
+    TMUX_SESSION="home"
   else
     TMUX_SESSION="$1"
   fi
 
-  tmux start-server
+  # check if server already running
+  if ! tmux info &> /dev/null; then
+    tmux start-server
+  fi
 
+  # set up windows and panes
   if ! tmux has-session -t "$TMUX_SESSION" &> /dev/null; then
     # first window has 3 panes
     tmux new-session -s "$TMUX_SESSION" -n "main" -d
@@ -99,13 +131,17 @@ function mux() {
 
     # set up vim in full screen window
     tmux new-window -t "$TMUX_SESSION:1" -n "editor"
-    tmux send-keys -t "$TMUX_SESSION:1" vim C-m
+    tmux send-keys -t "$TMUX_SESSION:1" vim Enter
 
     # set up 4 equal panes, useful for watching logs
     tmux new-window -t "$TMUX_SESSION:2" -n "logs"
     tmux split-window -h -t "$TMUX_SESSION:2"
     tmux split-window -v -t "$TMUX_SESSION:2.0"
     tmux split-window -v -t "$TMUX_SESSION:2.2"
+
+    # set up logging
+    tmux send-keys -t "$TMUX_SESSION:2.0" "journalctl -f" Enter
+    tmux send-keys -t "$TMUX_SESSION:2.2" glances Enter
   fi
 
   # attach to first pane of first window

@@ -26,6 +26,10 @@ export HISTCONTROL="ignoredups:erasedups"
 export GOPATH="$HOME/.go"
 export GOBIN="$GOPATH/bin"
 
+# lua
+
+export LUAROCKS_CONFIG="$HOME/.luarocks/config-5.4.lua"
+
 # rust
 
 export CARGOPATH="$HOME/.cargo"

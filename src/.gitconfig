@@ -55,6 +55,9 @@
   # show origin URL
   url = config --get remote.origin.url
 
+  # most recent branches
+  recent = for-each-ref --count=5 --sort=-committerdate refs/heads/ --format='%(refname:short)'
+
   # list stale remote branches, optionally excluding an additional pattern
   list-stale = "!f() { git branch -r --merged | egrep -v \"(^\\*|${1:-$(git head)})\" | sed 's/origin\\///'; }; f"
 
@@ -156,6 +159,8 @@
   renames = copies
   mnemonicprefix = true
   submodule = diff
+[fetch]
+  prune = true
 [help]
   # fix & execute misspelled commands
   autocorrect = 30
@@ -166,9 +171,11 @@
   default = simple
 [pull]
   # default pull behavior
-  rebase = false
+  rebase = true 
 [filter "lfs"]
   clean = git-lfs clean -- %f
   smudge = git-lfs smudge -- %f
   process = git-lfs filter-process
   required = true
+[diff "lfs"]
+  textconv = cat

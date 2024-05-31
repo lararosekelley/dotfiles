@@ -4,7 +4,8 @@
 
 ---
 
-This repository contains the configuration files I use on Linux computers (only tested on Ubuntu).
+This repository contains the configuration files I use on
+Linux computers (only tested on Fedora as of 2024).
 
 ## Getting started
 
@@ -24,6 +25,10 @@ $ cd dotfiles && ./copy
 It will prompt you to copy each file individually, so that
 no unexpected changes are made.
 
+### Neovim configuration
+
+For my Neovim configuration, check out my [nvim](https://github.com/tylucaskelley/nvim) repository.
+
 ## License
 
-Copyright (c) 2014-2021 Ty-Lucas Kelley. MIT License.
+Copyright (c) 2014-2024 Ty-Lucas Kelley. MIT License.

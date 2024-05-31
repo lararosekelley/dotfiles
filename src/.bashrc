@@ -81,6 +81,10 @@ if [ -f ~/Code/oss/completion-ruby/completion-ruby-all ]; then
   source ~/Code/oss/completion-ruby/completion-ruby-all
 fi
 
+# rust
+
+source "$HOME/.cargo/env"
+
 # load bash prompt
 
 if [ -f ~/.bash_prompt ]; then
@@ -89,4 +93,4 @@ if [ -f ~/.bash_prompt ]; then
   PROMPT_COMMAND="set_prompt; autojump_add_to_database; history -a; history -c; history -r"
 fi
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.config/emacs/bin:$PATH"
