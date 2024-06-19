@@ -44,22 +44,20 @@ bind "set show-all-if-ambiguous on"
 
 if ! shopt -oq posix; then
   if [ -f /usr/share/bash-completion/bash_completion ]; then
-    source /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    source /etc/bash_completion
+    source "/usr/share/bash-completion/bash_completion"
   fi
 fi
 
 # git completion
 
 if [ -f /usr/share/bash-completion/completions/git ]; then
-  source /usr/share/bash-completion/completions/git
+  source "/usr/share/bash-completion/completions/git"
   __git_complete g __git_main
 fi
 
 # autojump
 
-source /usr/share/autojump/autojump.bash
+source "/usr/share/autojump/autojump.bash"
 
 # pyenv
 
@@ -78,7 +76,7 @@ eval "$(rbenv init -)"
 # ruby completion
 
 if [ -f ~/Code/oss/completion-ruby/completion-ruby-all ]; then
-  source ~/Code/oss/completion-ruby/completion-ruby-all
+  source "$HOME/Code/oss/completion-ruby/completion-ruby-all"
 fi
 
 # rust
@@ -88,8 +86,8 @@ source "$HOME/.cargo/env"
 # load bash prompt
 
 if [ -f ~/.bash_prompt ]; then
-  # shellcheck disable=SC1090
-  source ~/.bash_prompt
+  source "$HOME/.bash_prompt"
+
   PROMPT_COMMAND="set_prompt; autojump_add_to_database; history -a; history -c; history -r"
 fi
 

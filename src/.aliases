@@ -68,7 +68,6 @@ alias wip='git add -A && git commit -m "work in progress" --no-verify'
 
 alias c='clear'
 alias dl='youtube-dl -x'
-alias flac2mp3='for f in *.flac; do ffmpeg -i "$f" -aq 1 "${f%flac}mp3"; done'
 alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
 alias space='df -P -kHl'
