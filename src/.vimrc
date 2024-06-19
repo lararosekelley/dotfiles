@@ -1,3 +1,5 @@
+" NOTE: This configuration has been superseded by NeoVim setup in ~/.config/nvim/init.lua
+"
 " ---------------------------------
 " table of contents
 "

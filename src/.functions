@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1117
 
 # functions
 #
@@ -14,8 +13,18 @@
 #
 # Usage: loop n args
 function loop() {
-  for (( n=0; n<$1; n++ ))
-    do ${*:2}
+  for (( n=0; n<$1; n++ )); do
+    # shellcheck disable=SC2048
+    ${*:2}
+  done
+}
+
+# Convert flac files in current directory to mp3
+#
+# Usage: flac2mp3
+function flac2mp3() {
+  for f in *.flac; do
+    ffmpeg -i "$f" -aq 1 "${f%flac}mp3"
   done
 }
 
