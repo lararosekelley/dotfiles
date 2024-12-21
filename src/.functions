@@ -126,9 +126,9 @@ function mux() {
     TMUX_SESSION="$1"
   fi
 
-  # check if server already running
+  # check if server already running, start a "dummy" session if not
   if ! tmux info &> /dev/null; then
-    tmux start-server
+    tmux new -s "_default" -d
   fi
 
   # set up windows and panes

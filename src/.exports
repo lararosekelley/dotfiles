@@ -32,7 +32,7 @@ export LUAROCKS_CONFIG="$HOME/.luarocks/config-5.4.lua"
 
 # rust
 
-export CARGOPATH="$HOME/.cargo"
+export CARGO_PATH="$HOME/.cargo"
 
 # perl
 
@@ -59,6 +59,10 @@ export NODENV_PATH="$HOME/.nodenv/bin"
 
 export RBENV_PATH="$HOME/.rbenv/bin"
 
+# snaps
+
+export SNAP_PATH="/var/lib/snapd/snap"
+
 # path
 
-export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGOPATH/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$PATH"
