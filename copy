@@ -7,7 +7,7 @@ if [[ "$start" =~ ^[Yy]$ ]]; then
   count=0
 
   while IFS= read -r -d '' file; do
-    if [[ $(diff "$file" "$HOME/$file") ]]; then
+    if [[ $(diff -N "$file" "$HOME/$file") ]]; then
       read -rp "difference in $file detected. update it? (y/n) " copy_file 0</dev/tty
 
       if [[ "$copy_file" =~ ^[Yy]$ ]]; then
