@@ -79,10 +79,6 @@ if [ -f ~/Code/oss/completion-ruby/completion-ruby-all ]; then
   source "$HOME/Code/oss/completion-ruby/completion-ruby-all"
 fi
 
-# rust
-
-source "$HOME/.cargo/env"
-
 # load bash prompt
 
 if [ -f ~/.bash_prompt ]; then
