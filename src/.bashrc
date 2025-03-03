@@ -81,7 +81,9 @@ fi
 
 # rust
 
-source "$HOME/.cargo/env"
+if [ -f ~/.cargo/env ]; then
+  source "$HOME/.cargo/env"
+fi
 
 # load bash prompt
 
