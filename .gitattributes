@@ -1,17 +1,1 @@
 src/.lara.knsv filter=lfs diff=lfs merge=lfs -text
-*.md filter=lfs diff=lfs merge=lfs -text
-*.gitignore filter=lfs diff=lfs merge=lfs -text
-*.markdownlintrc filter=lfs diff=lfs merge=lfs -text
-/LICENSE filter=lfs diff=lfs merge=lfs -text
-/copy filter=lfs diff=lfs merge=lfs -text
-*.aliases filter=lfs diff=lfs merge=lfs -text
-*.bash_prompt filter=lfs diff=lfs merge=lfs -text
-*.bashrc filter=lfs diff=lfs merge=lfs -text
-*.exports filter=lfs diff=lfs merge=lfs -text
-*.functions filter=lfs diff=lfs merge=lfs -text
-*.git_prompt filter=lfs diff=lfs merge=lfs -text
-*.gitconfig filter=lfs diff=lfs merge=lfs -text
-*.inputrc filter=lfs diff=lfs merge=lfs -text
-*.knsv filter=lfs diff=lfs merge=lfs -text
-*.conf filter=lfs diff=lfs merge=lfs -text
-/update filter=lfs diff=lfs merge=lfs -text
