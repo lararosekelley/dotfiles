@@ -40,6 +40,17 @@ done
 
 bind "set show-all-if-ambiguous on"
 
+# command-not-found behavior in dnf
+
+command_not_found_handle() {
+  if command -v dnf &>/dev/null; then
+    echo "Command '$1' not found. Searching..."
+    dnf provides "*/$1"
+  else
+    echo "Command '$1' not found."
+  fi
+}
+
 # bash completion
 
 if ! shopt -oq posix; then
@@ -58,11 +69,18 @@ fi
 # autojump
 
 if [ -f /usr/share/autojump/autojump.bash ]; then
+  # shellcheck disable=SC1091
   source "/usr/share/autojump/autojump.bash"
 fi
 
 if [ -f "$HOME/.autojump/etc/profile.d/autojump.sh" ]; then
   source "$HOME/.autojump/etc/profile.d/autojump.sh"
+fi
+
+# keychain
+
+if keychain &> /dev/null && [ -f "$HOME/.ssh/id_ed25519" ]; then
+  eval "$(keychain --eval id_ed25519 --quiet)"
 fi
 
 # pyenv
@@ -88,6 +106,7 @@ fi
 # rust
 
 if [ -f ~/.cargo/env ]; then
+  # shellcheck disable=SC1091
   source "$HOME/.cargo/env"
 fi
 
