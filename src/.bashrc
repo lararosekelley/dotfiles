@@ -40,15 +40,37 @@ done
 
 bind "set show-all-if-ambiguous on"
 
-# command-not-found behavior in dnf
-
+# command not found handler (relies on PackageKit-command-not-found)
+# copied from /etc/profile.d/PackageKit.sh
 command_not_found_handle() {
-  if command -v dnf &>/dev/null; then
-    echo "Command '$1' not found. Searching..."
-    dnf provides "*/$1"
-  else
-    echo "Command '$1' not found."
+  local runcnf=1
+  local retval=127
+
+  # only search for the command if we're interactive
+  [[ $- == *"i"* ]] || runcnf=0
+
+  # don't run if DBus isn't running
+  [[ ! -S /run/dbus/system_bus_socket ]] && runcnf=0
+
+  # don't run if packagekitd doesn't exist in the _system_ root
+  [[ ! -x '/usr/libexec/packagekitd' ]] && runcnf=0
+
+  # don't run if bash command completion is being run
+  [[ -n ${COMP_CWORD-} ]] && runcnf=0
+
+  # don't run if we've been uninstalled since the shell was launched
+  [[ ! -x '/usr/libexec/pk-command-not-found' ]] && runcnf=0
+
+  # run the command, or just print a warning
+  if [ $runcnf -eq 1 ]; then
+    '/usr/libexec/pk-command-not-found' "$@"
+    retval=$?
+  elif [[ -n "${BASH_VERSION-}" ]]; then
+    printf >&2 'bash: %s%s\n' "${1:+$1: }" "$(gettext PackageKit 'command not found')"
   fi
+
+  # return success or failure
+  return $retval
 }
 
 # bash completion
