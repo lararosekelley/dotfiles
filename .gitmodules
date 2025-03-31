@@ -1,0 +1,3 @@
+[submodule "oh-my-git"]
+	path = oh-my-git
+	url = git@github.com:arialdomartini/oh-my-git.git
