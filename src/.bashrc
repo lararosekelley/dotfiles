@@ -11,7 +11,7 @@ files=(
   ~/.aliases
   ~/.exports
   ~/.functions
-  ~/.git_prompt
+  ~/.git_prompt/prompt.sh
   ~/.environment # placed last for precedence
 )
 
