@@ -1,3 +1,72 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:edcacafb9ce6227af3ae3c10bf6b150c12cf3fce996fdfa17b421328842aa6d0
-size 1146
+#!/usr/bin/env bash
+
+# exports
+#
+# global variables
+# --------
+
+# english & utf-8
+
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
+# set neovim to default editor
+
+export EDITOR="nvim"
+
+# increase history size & ignore duplicates, make sure history is shared (see .bash_prompt for more)
+
+export HISTSIZE="100000"
+export HISTFILESIZE="${HISTSIZE}"
+export HISTTIMEFORMAT="%F %T "
+export HISTCONTROL="ignoredups:erasedups"
+
+# ollama / local llm's
+
+export OLLAMA_API_BASE="http://127.0.0.1:11434"
+
+# go
+
+export GOPATH="$HOME/.go"
+export GOBIN="$GOPATH/bin"
+
+# lua
+
+export LUAROCKS_CONFIG="$HOME/.luarocks/config-5.4.lua"
+
+# rust
+
+export CARGO_PATH="$HOME/.cargo"
+
+# perl
+
+export PERL_MM_OPT="$HOME/perl5"
+
+# pyenv
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+
+# ignore python 2 deprecation warnings
+
+export PYTHONWARNINGS="ignore:DEPRECATION"
+
+# mutt
+
+export COLORFGBG="default;default"
+
+# nodenv
+
+export NODENV_PATH="$HOME/.nodenv/bin"
+
+# rbenv
+
+export RBENV_PATH="$HOME/.rbenv/bin"
+
+# snaps
+
+export SNAP_PATH="/var/lib/snapd/snap"
+
+# path
+
+export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$PATH"
