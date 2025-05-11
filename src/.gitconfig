@@ -83,8 +83,8 @@
   # generate project-specific .gitignore
   ignore = "!f() { curl -L -s https://www.toptal.com/developers/gitignore/api/$@ ;}; f"
 
-  # grab .github folder from tylucaskelley/github-templates and fill in repo info
-  tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/tylucaskelley/github-templates/master/install.sh)\"; }; f"
+  # grab .github folder from lararosekelley/github-templates and fill in repo info
+  tpl = "!f() { bash -c \"$(curl -s https://raw.githubusercontent.com/lararosekelley/github-templates/master/install.sh)\"; }; f"
 
   # update base branch and switch back to previous branch
   up = "!git checkout \"${1:-$(git head)}\" && git fetch --prune origin && git rebase \"origin/${1:-$(git head)}\" && git checkout \"-\""
