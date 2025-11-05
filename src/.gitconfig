@@ -31,6 +31,9 @@
   # undo last commit
   undo = reset --soft HEAD~
 
+  # unstage
+  unstage = restore --staged .
+
   # fancier logging
   l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset (%C(yellow)%ae %Cgreen%cd%C(reset)) - %s'
 
