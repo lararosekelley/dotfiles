@@ -1,3 +1,21 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d887bd20ac17f83c9a3a683657aee4aa22bd29cfc7fca7d3dbbbe8b2f6681be5
-size 458
+#!/usr/bin/env bash
+
+read -p "copy dotfiles from home directory to repository? (y/n) " -r
+
+if [[ "$REPLY" =~ ^[Yy]$ ]]; then
+  cd src/ || exit 1
+
+  while IFS= read -r -d '' file; do
+    if [[ $(diff -N "$file" "$HOME/$file") ]]; then
+      echo -e "updating $file..."
+
+      cp "$HOME/$file" "$file"
+    fi
+  done < <(find . -type f -print0)
+
+  echo -e "\nupdated repository with latest files from $HOME directory."
+else
+  echo -e "\naborting..."
+fi
+
+exit 0
