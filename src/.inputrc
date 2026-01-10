@@ -55,8 +55,12 @@ set expand-tilde off
 # show more file info, "ls -F" style
 set visible-stats on
 
-# colorize completion options by filetype
-set colored-stats on
+# colorize completion options by filetype (disabled in tmux due to rendering issue)
+$if term=tmux-256color
+  set colored-stats off
+$else
+  set colored-stats on
+$endif
 
 # --------
 # command mode settings
