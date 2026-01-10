@@ -69,4 +69,4 @@ export SNAP_PATH="/var/lib/snapd/snap"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$HOME/.opencode/bin:$PATH"
