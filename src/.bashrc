@@ -141,3 +141,12 @@ if [ -f ~/.bash_prompt ]; then
 fi
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.config/emacs/bin:$PATH"
+
+# Added by higharc setup
+export PATH="/home/lara/Code/work/product/bin:$PATH"
+
+# higharc shell completion
+[ -f /home/lara/.higharc/completion.bash ] && source /home/lara/.higharc/completion.bash
+
+# higharc shorthand alias
+alias h='higharc'
