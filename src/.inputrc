@@ -7,6 +7,9 @@
 
 # settings
 
+# visual, not audible bell
+set bell-style none
+
 # use vim keybindings instead of emacs
 set editing-mode vi
 
