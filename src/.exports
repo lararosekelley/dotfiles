@@ -38,6 +38,10 @@ export LUAROCKS_CONFIG="$HOME/.luarocks/config-5.4.lua"
 
 export CARGO_PATH="$HOME/.cargo"
 
+# fly.io
+
+export FLYCTL_INSTALL="$HOME/.fly"
+
 # perl
 
 export PERL_MM_OPT="$HOME/perl5"
@@ -69,4 +73,4 @@ export SNAP_PATH="/var/lib/snapd/snap"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$HOME/.opencode/bin:$PATH"
+export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$HOME/.opencode/bin:$PATH:$FLYCTL_INSTALL/bin:$PATH"
