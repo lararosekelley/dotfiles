@@ -64,6 +64,10 @@ For my Neovim configuration, check out my [nvim](https://github.com/lararosekell
 
 For my Emacs configuration, check out my [emacs.d](https://github.com/lararosekelley/emacs.d) repository.
 
+### Kitty configuration
+
+For my Kitty configuration, check out my [kitty](https://github.com/lararosekelley/kitty) repository.
+
 ## License
 
 Copyright (c) 2014-2025 Lara Kelley. MIT License.
