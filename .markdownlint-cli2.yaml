@@ -1,0 +1,45 @@
+# Configuration for markdownlint-cli2
+
+# NOTE: Globs are passed explicitly via CLI (not here) so that lint-staged
+# can run on only staged files without also picking up **/*.md from config.
+
+# Globs to ignore
+ignores:
+  # Build output and caches
+  - node_modules/**
+  - out/**
+  - build/**
+  - .next/**
+  - .yarn/**
+  - .cache/**
+
+  # Generated/third-party content
+  - docs/api/**
+  - packages/custom/**
+
+  # Changelog fragments (not standalone markdown docs)
+  - tools/higharc/changelog/fragments/**
+
+  # Chat/aider history files
+  - .aider*
+
+  # Nested node_modules in packages and lib
+  - packages/**/node_modules/**
+  - lib/**/node_modules/**
+
+# Rule configuration
+config:
+  default: true
+
+  # Line length: disabled
+  MD013: false
+
+  # Allow duplicate headings if not siblings (e.g., same "Fixed" under different versions)
+  MD024:
+    siblings_only: true
+
+  # Allow inline HTML
+  MD033: false
+
+  # Don't require first line to be a top-level heading
+  MD041: false
