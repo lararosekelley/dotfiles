@@ -83,3 +83,7 @@ alias rch='bundle exec rspec $(git ls-files --modified --others spec)'
 
 alias fuckoff='exit'
 alias big='figlet -c -f "roman"'
+
+# work
+
+alias h='higharc'

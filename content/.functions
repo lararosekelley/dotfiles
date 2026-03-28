@@ -21,6 +21,9 @@ function loop() {
 
 # Update various dependencies for different languages
 #
+# Params:
+#     none
+#
 # Usage: update
 function update() {
   # node.js
@@ -46,6 +49,9 @@ function update() {
 
 # Convert flac files in current directory to mp3
 #
+# Params:
+#     none
+#
 # Usage: flac2mp3
 function flac2mp3() {
   for f in *.flac; do
@@ -56,7 +62,7 @@ function flac2mp3() {
 # Converts a video file to mp4
 #
 # Params:
-#     infile - input file
+#     infile - Input file
 #
 # Usage: vid2mp4 input
 #
@@ -81,10 +87,10 @@ function vid2mp4() {
 # Cuts out a specific time window from an input video
 #
 # Params:
-#     input    - input file
-#     output   - output file name
-#     start    - starting timestamp (format: hh:mm:ss)
-#     duration - length to slice, starting at 'start' timestamp
+#     input - Input file
+#     output - Output file name
+#     start - Starting timestamp (format: hh:mm:ss)
+#     duration - Length to slice, starting at start timestamp
 #
 # Usage: vidslice input output start duration
 #
@@ -108,8 +114,8 @@ function vidslice() {
 # Converts Quicktime screen recording to a gif
 #
 # Params:
-#     infile - input file (.mov)
-#     outfile - output filename (.gif)
+#     infile - Input file (.mov)
+#     outfile - Output filename (.gif)
 #
 # Usage: mov2gif infile outfile
 #
@@ -140,7 +146,7 @@ function mov2gif() {
 # Create a good tmux setup or attach to an existing one
 #
 # Params:
-#   name - session name (defaults to "home")
+#     name - Session name (defaults to "home")
 #
 # Usage: mux [name]
 #
@@ -187,7 +193,7 @@ function mux() {
 # Params:
 #     port - Optional port to serve at (defaults to 8080)
 #
-# Usage: server [port]
+# Usage: serve [port]
 #
 function serve() {
   python -m http.server "${1:-8080}"
@@ -196,7 +202,7 @@ function serve() {
 # Installs peer dependencies for JavaScript projects, using Yarn
 #
 # Params:
-#     package - package name
+#     package - Package name
 #
 # Usage: peerdeps package
 function peerdeps() {
@@ -207,8 +213,8 @@ function peerdeps() {
 # Recursively find and replace text within files in a directory
 #
 # Params:
-#    old: Text to search for
-#    new: Replacement text
+#     old - Text to search for
+#     new - Replacement text
 #
 # Usage: sub old new
 function sub() {
@@ -227,9 +233,14 @@ function sub() {
   fi
 }
 
-# vterm (emacs)
+# Print shell escape sequences for Emacs vterm integration
 #
-# https://github.com/akermu/emacs-libvterm?tab=readme-ov-file#shell-side-configuration
+# Params:
+#     sequence - Escape sequence payload
+#
+# Usage: vterm_printf sequence
+#
+# Ref: https://github.com/akermu/emacs-libvterm?tab=readme-ov-file#shell-side-configuration
 vterm_printf() {
     if [ -n "$TMUX" ] \
         && { [ "${TERM%%-*}" = "tmux" ] \
@@ -243,3 +254,108 @@ vterm_printf() {
         printf "\e]%s\e\\" "$1"
     fi
 }
+
+# Handle unknown commands using PackageKit
+#
+# Params:
+#     args - Command and arguments
+#
+# Usage: command_not_found_handle args
+#
+# Copied from /etc/profile.d/PackageKit.sh
+command_not_found_handle() {
+  local runcnf=1
+  local retval=127
+
+  # only search for the command if we're interactive
+  [[ $- == *"i"* ]] || runcnf=0
+
+  # don't run if DBus isn't running
+  [[ ! -S /run/dbus/system_bus_socket ]] && runcnf=0
+
+  # don't run if packagekitd doesn't exist in the _system_ root
+  [[ ! -x '/usr/libexec/packagekitd' ]] && runcnf=0
+
+  # don't run if bash command completion is being run
+  [[ -n ${COMP_CWORD-} ]] && runcnf=0
+
+  # don't run if we've been uninstalled since the shell was launched
+  [[ ! -x '/usr/libexec/pk-command-not-found' ]] && runcnf=0
+
+  # run the command, or just print a warning
+  if [ $runcnf -eq 1 ]; then
+    '/usr/libexec/pk-command-not-found' "$@"
+    retval=$?
+  elif [[ -n "${BASH_VERSION-}" ]]; then
+    printf >&2 'bash: %s%s\n' "${1:+$1: }" "$(gettext PackageKit 'command not found')"
+  fi
+
+  # return success or failure
+  return $retval
+}
+
+# Remove duplicate entries from $PATH
+#
+# Params:
+#     none
+#
+# Usage: path_dedup
+path_dedup() {
+  local old_path="$PATH"
+  local new_path=""
+  local dir
+
+  while [ -n "$old_path" ]; do
+    dir="${old_path%%:*}"
+
+    if [ "$old_path" = "$dir" ]; then
+      old_path=""
+    else
+      old_path="${old_path#*:}"
+    fi
+
+    [ -n "$dir" ] || continue
+
+    case ":$new_path:" in
+      *":$dir:"*) ;;
+      *) new_path="${new_path:+$new_path:}$dir" ;;
+    esac
+  done
+
+  PATH="$new_path"
+}
+
+# Add a directory to the front of $PATH if missing
+#
+# Params:
+#     dir - Directory to prepend
+#
+# Usage: path_prepend_if_missing dir
+path_prepend_if_missing() {
+  local dir="$1"
+
+  [ -n "$dir" ] || return
+
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$dir:$PATH" ;;
+  esac
+}
+
+# Add a directory to the end of $PATH if missing
+#
+# Params:
+#     dir - Directory to append
+#
+# Usage: path_append_if_missing dir
+path_append_if_missing() {
+  local dir="$1"
+
+  [ -n "$dir" ] || return
+
+  case ":$PATH:" in
+    *":$dir:"*) ;;
+    *) PATH="$PATH:$dir" ;;
+  esac
+}
+

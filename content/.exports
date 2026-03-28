@@ -73,4 +73,16 @@ export SNAP_PATH="/var/lib/snapd/snap"
 
 # path
 
-export PATH="$HOME/.bin:$HOME/.local/bin:$HOME/.poetry/bin:$RBENV_PATH:$NODENV_PATH:$PYENV_ROOT/bin:$GOBIN:$CARGO_PATH/bin:$SNAP_PATH/bin:$HOME/.opencode/bin:$PATH:$FLYCTL_INSTALL/bin:$PATH"
+path_prepend_if_missing "$FLYCTL_INSTALL/bin"
+path_prepend_if_missing "$HOME/.opencode/bin"
+path_prepend_if_missing "$SNAP_PATH/bin"
+path_prepend_if_missing "$CARGO_PATH/bin"
+path_prepend_if_missing "$GOBIN"
+path_prepend_if_missing "$PYENV_ROOT/bin"
+path_prepend_if_missing "$NODENV_PATH"
+path_prepend_if_missing "$RBENV_PATH"
+path_prepend_if_missing "$HOME/.poetry/bin"
+path_prepend_if_missing "$HOME/.local/bin"
+path_prepend_if_missing "$HOME/.bin"
+
+export PATH

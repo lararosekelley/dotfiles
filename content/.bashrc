@@ -8,9 +8,9 @@
 # load dotfiles
 
 files=(
+  ~/.functions
   ~/.aliases
   ~/.exports
-  ~/.functions
   ~/.git_prompt
   ~/.environment # placed last for precedence
 )
@@ -40,39 +40,6 @@ done
 
 bind "set show-all-if-ambiguous on"
 
-# command not found handler (relies on PackageKit-command-not-found)
-# copied from /etc/profile.d/PackageKit.sh
-command_not_found_handle() {
-  local runcnf=1
-  local retval=127
-
-  # only search for the command if we're interactive
-  [[ $- == *"i"* ]] || runcnf=0
-
-  # don't run if DBus isn't running
-  [[ ! -S /run/dbus/system_bus_socket ]] && runcnf=0
-
-  # don't run if packagekitd doesn't exist in the _system_ root
-  [[ ! -x '/usr/libexec/packagekitd' ]] && runcnf=0
-
-  # don't run if bash command completion is being run
-  [[ -n ${COMP_CWORD-} ]] && runcnf=0
-
-  # don't run if we've been uninstalled since the shell was launched
-  [[ ! -x '/usr/libexec/pk-command-not-found' ]] && runcnf=0
-
-  # run the command, or just print a warning
-  if [ $runcnf -eq 1 ]; then
-    '/usr/libexec/pk-command-not-found' "$@"
-    retval=$?
-  elif [[ -n "${BASH_VERSION-}" ]]; then
-    printf >&2 'bash: %s%s\n' "${1:+$1: }" "$(gettext PackageKit 'command not found')"
-  fi
-
-  # return success or failure
-  return $retval
-}
-
 # bash completion
 
 if ! shopt -oq posix; then
@@ -93,9 +60,7 @@ fi
 if [ -f /usr/share/autojump/autojump.bash ]; then
   # shellcheck disable=SC1091
   source "/usr/share/autojump/autojump.bash"
-fi
-
-if [ -f "$HOME/.autojump/etc/profile.d/autojump.sh" ]; then
+elif [ -f "$HOME/.autojump/etc/profile.d/autojump.sh" ]; then
   source "$HOME/.autojump/etc/profile.d/autojump.sh"
 fi
 
@@ -140,13 +105,16 @@ if [ -f ~/.bash_prompt ]; then
   PROMPT_COMMAND="set_prompt; autojump_add_to_database; history -a; history -c; history -r"
 fi
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$HOME/.config/emacs/bin:$PATH"
+path_prepend_if_missing "$HOME/.config/emacs/bin"
+path_prepend_if_missing "$HOME/.config/yarn/global/node_modules/.bin"
+path_prepend_if_missing "$HOME/.yarn/bin"
 
 # Added by higharc setup
-export PATH="/home/lara/Code/work/product/bin:$PATH"
+path_prepend_if_missing "/home/lara/Code/work/product/bin"
 
 # higharc shell completion
 [ -f /home/lara/.higharc/completion.bash ] && source /home/lara/.higharc/completion.bash
 
-# higharc shorthand alias
-alias h='higharc'
+path_dedup
+
+export PATH
