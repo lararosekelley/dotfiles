@@ -241,7 +241,7 @@ function sub() {
 # Usage: vterm_printf sequence
 #
 # Ref: https://github.com/akermu/emacs-libvterm?tab=readme-ov-file#shell-side-configuration
-vterm_printf() {
+function vterm_printf() {
     if [ -n "$TMUX" ] \
         && { [ "${TERM%%-*}" = "tmux" ] \
             || [ "${TERM%%-*}" = "screen" ]; }; then
@@ -263,7 +263,7 @@ vterm_printf() {
 # Usage: command_not_found_handle args
 #
 # Copied from /etc/profile.d/PackageKit.sh
-command_not_found_handle() {
+function command_not_found_handle() {
   local runcnf=1
   local retval=127
 
@@ -300,7 +300,7 @@ command_not_found_handle() {
 #     none
 #
 # Usage: path_dedup
-path_dedup() {
+function path_dedup() {
   local old_path="$PATH"
   local new_path=""
   local dir
@@ -331,7 +331,7 @@ path_dedup() {
 #     dir - Directory to prepend
 #
 # Usage: path_prepend_if_missing dir
-path_prepend_if_missing() {
+function path_prepend_if_missing() {
   local dir="$1"
 
   [ -n "$dir" ] || return
@@ -348,7 +348,7 @@ path_prepend_if_missing() {
 #     dir - Directory to append
 #
 # Usage: path_append_if_missing dir
-path_append_if_missing() {
+function path_append_if_missing() {
   local dir="$1"
 
   [ -n "$dir" ] || return
@@ -358,4 +358,3 @@ path_append_if_missing() {
     *) PATH="$PATH:$dir" ;;
   esac
 }
-

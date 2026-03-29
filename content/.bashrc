@@ -5,14 +5,14 @@
 # bash settings
 # --------
 
-# load dotfiles
+# load dotfiles (order matters)
 
 files=(
   ~/.functions
   ~/.aliases
   ~/.exports
   ~/.git_prompt
-  ~/.environment # placed last for precedence
+  ~/.environment # keep out of source control
 )
 
 for file in "${files[@]}"; do
