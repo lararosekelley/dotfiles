@@ -21,6 +21,10 @@ export HISTFILESIZE="${HISTSIZE}"
 export HISTTIMEFORMAT="%F %T "
 export HISTCONTROL="ignoredups:erasedups"
 
+# appimagelauncher needs this
+
+export QT_QPA_PLATFORM=xcb
+
 # ollama / local llm's
 
 export OLLAMA_API_BASE="http://127.0.0.1:11434"
