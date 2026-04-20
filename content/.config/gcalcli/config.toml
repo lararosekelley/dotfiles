@@ -4,4 +4,4 @@ default-calendars = ["Personal", "Music", "Health & Fitness"]
 ignore-calendars = ["Holidays in United States", "The Queer Big Apple Corps", "feed your ears - nyc music + more", "Misc. Events", "HOUSE of HONK NYC", "Jams & Open Mics", "Bushwick Big Band"]
 
 [output]
-week-start = "Monday"
+week-start = "sunday"
