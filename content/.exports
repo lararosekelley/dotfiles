@@ -10,6 +10,11 @@
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
+# Avoid forcing Qt apps onto X11 in Wayland sessions.
+if [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
+  unset QT_QPA_PLATFORM
+fi
+
 # set neovim to default editor
 
 export EDITOR="nvim"

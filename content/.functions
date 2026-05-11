@@ -358,3 +358,32 @@ function path_append_if_missing() {
     *) PATH="$PATH:$dir" ;;
   esac
 }
+
+# Switch AWS_PROFILE to work
+#
+# Usage: aws-work
+aws-work() {
+  export AWS_PROFILE=work
+  export AWS_REGION=us-east-1
+  echo "Switched to AWS profile: $AWS_PROFILE"
+  aws sts get-caller-identity --query 'Account' --output text
+}
+
+# Switch AWS_PROFILE to personal
+#
+# Usage: aws-personal
+aws-personal() {
+  export AWS_PROFILE=personal
+  export AWS_REGION=us-east-1
+  echo "Switched to AWS profile: $AWS_PROFILE"
+  aws sts get-caller-identity --query 'Account' --output text
+}
+
+# Check current AWS_PROFILE
+#
+# Usage: aws-current
+aws-current() {
+  echo "AWS_PROFILE=${AWS_PROFILE:-<unset>}"
+  echo "AWS_REGION=${AWS_REGION:-<unset>}"
+  aws sts get-caller-identity
+}
