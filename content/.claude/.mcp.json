@@ -1,0 +1,52 @@
+{
+  "mcpServers": {
+    "circleci": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@circleci/mcp-server-circleci@latest"],
+      "env": {
+        "CIRCLECI_TOKEN": "${CIRCLE_TOKEN}",
+        "CIRCLECI_BASE_URL": "https://circleci.com"
+      }
+    },
+    "magic-patterns": {
+      "type": "http",
+      "url": "https://mcp.magicpatterns.com/mcp"
+    },
+    "linear": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
+    "notion": {
+      "type": "http",
+      "url": "https://mcp.notion.com/mcp"
+    },
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    },
+    "datadog": {
+      "type": "http",
+      "url": "https://mcp.us5.datadoghq.com/api/unstable/mcp-server/mcp"
+    },
+    "aws": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "mcp-proxy-for-aws@latest",
+        "https://aws-mcp.us-east-1.api.aws/mcp"
+      ],
+      "env": {
+        "AWS_REGION": "${AWS_REGION}"
+      }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "oauth": {
+        "clientId": "Ov23lim54jCgx5QRsuz2",
+        "callbackPort": 8080
+      }
+    }
+  }
+}
