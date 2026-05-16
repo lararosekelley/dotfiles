@@ -34,6 +34,9 @@
   # unstage
   unstage = restore --staged .
 
+  # show line count changes in last commit
+  changed-lines = diff --stat HEAD^ HEAD
+
   # fancier logging
   l = log --oneline --decorate --graph --date=relative --pretty=format:'%C(red)%h%Creset (%C(yellow)%ae %Cgreen%cd%C(reset)) - %s'
 
