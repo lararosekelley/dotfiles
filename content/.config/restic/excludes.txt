@@ -1,0 +1,14 @@
+# VCS metadata
+**/.git
+**/.svn
+**/.hg
+
+# Dependency and build caches
+**/node_modules
+**/.cache
+**/__pycache__
+**/*.pyc
+
+# Common desktop junk files
+**/.DS_Store
+**/Thumbs.db
