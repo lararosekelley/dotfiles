@@ -164,13 +164,13 @@ function mux() {
 
   # set up windows and panes
   if ! tmux has-session -t "$TMUX_SESSION" &> /dev/null; then
-    # first window has 3 panes
+    # create session - first window has 3 panes
     tmux new-session -s "$TMUX_SESSION" -n "primary" -d
     tmux split-window -h -t "$TMUX_SESSION:0"
     tmux split-window -v -t "$TMUX_SESSION:0"
 
-    # second window is same
-    tmux new-session -s "$TMUX_SESSION" -n "secondary" -d
+    # second window is same as first
+    tmux new-window -t "$TMUX_SESSION:1" -n "secondary"
     tmux split-window -h -t "$TMUX_SESSION:1"
     tmux split-window -v -t "$TMUX_SESSION:1"
 
