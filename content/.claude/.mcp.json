@@ -37,7 +37,7 @@
         "https://aws-mcp.us-east-1.api.aws/mcp"
       ],
       "env": {
-        "AWS_REGION": "${AWS_REGION}"
+        "AWS_REGION": "us-east-1"
       }
     },
     "github": {
