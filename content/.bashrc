@@ -55,6 +55,10 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   __git_complete g __git_main
 fi
 
+# git-stk
+
+source <(git stk completions bash)
+
 # autojump
 
 if [ -f /usr/share/autojump/autojump.bash ]; then
