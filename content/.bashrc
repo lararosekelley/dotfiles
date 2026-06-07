@@ -57,7 +57,7 @@ fi
 
 # git-stk
 
-source <(git stk completions bash)
+command -v git-stk >/dev/null && source <(git stk completions bash)
 
 # autojump
 
