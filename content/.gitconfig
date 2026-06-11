@@ -189,7 +189,9 @@
   process = git-lfs filter-process
   required = true
 [stk]
-  pushOnSubmit = true
-  pushOnRestack = true
-  submitStack = true
   updateRefs = true
+  pushOnRestack = true
+  pushOnSubmit = true
+  submitStack = true
+  mergeStrategy = squash
+  mergeWait = true
