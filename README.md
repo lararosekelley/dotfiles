@@ -1,6 +1,6 @@
 # Dotfiles
 
-> My dotfiles
+> My dotfiles (Linux-oriented)
 
 ---
 
