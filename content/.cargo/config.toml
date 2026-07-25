@@ -1,0 +1,11 @@
+# Leave headroom for the compositor and editor. Default is one job per logical
+# CPU (16 here), which starves the desktop during a workspace build.
+[build]
+jobs = 12
+
+# mold is much faster at linking than GNU ld, which is a large share of the
+# wall time on incremental dev builds. GCC 16 drives it via -fuse-ld.
+# Note: rustflags are part of the build fingerprint, so adding this forces one
+# full rebuild per project the first time you build after the change.
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "link-arg=-fuse-ld=mold"]

@@ -1,0 +1,28 @@
+# User-level rust-analyzer config. Applies to every RA instance (nvim, the
+# Claude Code rust-analyzer LSP plugin, opencode) unless a project-level
+# rust-analyzer.toml overrides it.
+
+# Default is null -> RA sizes its worker pool to the whole machine. On a
+# 16-thread box with several RA instances alive at once that oversubscribes
+# badly. 4 is plenty for analysis latency.
+numThreads = 4
+
+[cachePriming]
+# Default is "physical" (8 here). This is the burst that pins every core for
+# ~30s each time an RA instance starts, and one starts per editor/agent session.
+numThreads = 2
+
+[cargo]
+# Default null means RA shares ./target with your CLI `cargo build`. They then
+# block each other on the target dir lock and redo each other's work. `true`
+# moves RA to ./target/rust-analyzer so the two never contend.
+targetDir = true
+
+[check]
+# Default null behaves as --all-targets, which pulls in every test, bench,
+# example and their dev-dependencies on each save. That is what was building
+# octocrab et al. in the background.
+allTargets = false
+# Cap the compiler fan-out for RA's on-save check so it cannot saturate all 16
+# threads while you are typing.
+extraArgs = ["--jobs", "4"]
