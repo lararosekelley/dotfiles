@@ -392,3 +392,37 @@ aws-current() {
   echo "AWS_REGION=${AWS_REGION:-<unset>}"
   aws sts get-caller-identity
 }
+
+# Start an LLM harness with seeded AWS credentials
+#
+# Params:
+#   harness - Harness to use (opencode, claude)
+#   profile - AWS profile to use (work or personal, optional)
+#
+# Usage: ai harness [profile]
+ai() {
+  local harness=$1
+  local profile=$2
+
+  case "$harness" in
+    claude|opencode) ;;
+    *)
+      echo "Usage: ai harness [profile]" >&2
+      echo "  harness: claude, opencode" >&2
+      echo "  profile: work, personal (optional)" >&2
+      return 1
+      ;;
+  esac
+
+  case "$profile" in
+    "") ;;
+    work) aws-work || return 1 ;;
+    personal) aws-personal || return 1 ;;
+    *)
+      echo "ai: unknown profile '$profile' (expected work or personal)" >&2
+      return 1
+      ;;
+  esac
+
+  command "$harness" "${@:3}"
+}

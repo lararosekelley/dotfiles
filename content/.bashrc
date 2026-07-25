@@ -55,10 +55,6 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   __git_complete g __git_main
 fi
 
-# git-stk
-
-command -v git-stk >/dev/null && source <(git stk completions bash)
-
 # autojump
 
 if [ -f /usr/share/autojump/autojump.bash ]; then
@@ -122,3 +118,9 @@ path_prepend_if_missing "/home/lara/Code/work/product/bin"
 path_dedup
 
 export PATH
+
+# added by git-stk setup
+command -v git-stk >/dev/null && source <(git stk completions bash)
+
+# added by navi setup
+command -v navi >/dev/null && source <(navi completions bash)

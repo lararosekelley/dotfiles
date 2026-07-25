@@ -193,5 +193,6 @@
   pushOnRestack = true
   pushOnSubmit = true
   submitStack = true
-  mergeStrategy = squash
+	mergeStrategy = rebase
   mergeWait = true
+  fetchBeforeRestack = true

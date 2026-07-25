@@ -87,3 +87,8 @@ alias big='figlet -c -f "roman"'
 # work
 
 alias h='higharc'
+
+# my personal oss projects
+
+alias git-stk-debug='~/Code/personal/git-stk/target/debug/git-stk'
+alias navi-debug='~/Code/personal/navi/target/debug/navi'
