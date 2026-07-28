@@ -19,5 +19,6 @@
 # End of https://www.gitignore.io/api/linux
 
 target/
+node_modules/
 .claude/
 !content/.claude
