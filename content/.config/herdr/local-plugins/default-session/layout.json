@@ -1,0 +1,89 @@
+{
+  "$comment": [
+    "Default session layout, modeled on the `mux` function in ~/.functions.",
+    "",
+    "Each tab gets a BSP tree handed to the herdr `layout.apply` socket method.",
+    "  pane   -> { \"label\": name, \"run\": shell command (optional),",
+    "              \"requires_repo\": run inside a checkout, see default_repo }",
+    "  split  -> { \"direction\": \"right\"|\"down\", \"ratio\": 0-1, \"first\": node, \"second\": node }",
+    "",
+    "`run` commands are wrapped so the pane drops back to an interactive shell",
+    "when the program exits, instead of the tab going dead.",
+    "`{plugin_root}` in a `run` string expands to this directory.",
+    "Panes with no `run` are plain shells rooted at the space cwd.",
+    "",
+    "`requires_repo` panes use the space cwd when it is a checkout, and fall back",
+    "to default_repo when it is not (a space rooted at ~, say).",
+    "",
+    "A tab marked `primary_only` is skipped when spaces get the layout",
+    "automatically, so global monitors exist once instead of once per project."
+  ],
+  "focus_tab": 1,
+  "default_repo": "~/Code/personal/larakelley.com",
+  "tabs": [
+    {
+      "label": "shell",
+      "layout": {
+        "type": "split",
+        "direction": "right",
+        "ratio": 0.5,
+        "first": { "type": "pane", "label": "main" },
+        "second": {
+          "type": "split",
+          "direction": "down",
+          "ratio": 0.5,
+          "first": { "type": "pane", "label": "scratch" },
+          "second": { "type": "pane", "label": "watch" }
+        }
+      }
+    },
+    {
+      "label": "agents",
+      "layout": {
+        "type": "split",
+        "direction": "right",
+        "ratio": 0.5,
+        "first": { "type": "pane", "label": "agent 1" },
+        "second": { "type": "pane", "label": "agent 2" }
+      }
+    },
+    {
+      "label": "editor",
+      "layout": { "type": "pane", "label": "nvim", "run": "nvim" }
+    },
+    {
+      "label": "git",
+      "layout": {
+        "type": "split",
+        "direction": "right",
+        "ratio": 0.5,
+        "first": { "type": "pane", "label": "lazygit", "run": "lazygit", "requires_repo": true },
+        "second": { "type": "pane", "label": "git", "requires_repo": true }
+      }
+    },
+    {
+      "label": "review",
+      "layout": { "type": "pane", "label": "tuicr", "run": "tuicr tui", "requires_repo": true }
+    },
+    {
+      "label": "prs",
+      "layout": {
+        "type": "pane",
+        "label": "ghzinga",
+        "run": "bash {plugin_root}/prs.sh",
+        "requires_repo": true
+      }
+    },
+    {
+      "label": "system",
+      "primary_only": true,
+      "layout": {
+        "type": "split",
+        "direction": "right",
+        "ratio": 0.5,
+        "first": { "type": "pane", "label": "glances", "run": "glances" },
+        "second": { "type": "pane", "label": "journal", "run": "journalctl -f" }
+      }
+    }
+  ]
+}

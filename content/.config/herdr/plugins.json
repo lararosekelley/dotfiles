@@ -1,5 +1,106 @@
 [
   {
+    "plugin_id": "default-session",
+    "name": "Default Session",
+    "version": "0.1.0",
+    "min_herdr_version": "0.7.5",
+    "description": "Scaffold a tmux-style default layout on startup, plus tmux-style tab/pane helpers.",
+    "manifest_path": "/home/lara/.config/herdr/local-plugins/default-session/herdr-plugin.toml",
+    "plugin_root": "/home/lara/.config/herdr/local-plugins/default-session",
+    "enabled": true,
+    "platforms": [
+      "linux",
+      "macos"
+    ],
+    "startup": [
+      {
+        "command": [
+          "python3",
+          "session.py",
+          "startup"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "apply",
+        "title": "default session: apply layout to this space",
+        "contexts": [
+          "workspace",
+          "global"
+        ],
+        "command": [
+          "python3",
+          "session.py",
+          "apply"
+        ]
+      },
+      {
+        "id": "balance",
+        "title": "default session: even out split ratios",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "python3",
+          "session.py",
+          "balance"
+        ]
+      },
+      {
+        "id": "tab-move-left",
+        "title": "default session: move tab left",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "python3",
+          "session.py",
+          "move-tab",
+          "left"
+        ]
+      },
+      {
+        "id": "tab-move-right",
+        "title": "default session: move tab right",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "python3",
+          "session.py",
+          "move-tab",
+          "right"
+        ]
+      },
+      {
+        "id": "toggle-mouse",
+        "title": "default session: toggle mouse capture",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "python3",
+          "session.py",
+          "toggle-mouse"
+        ]
+      }
+    ],
+    "events": [
+      {
+        "on": "workspace.created",
+        "command": [
+          "python3",
+          "session.py",
+          "apply-if-new"
+        ]
+      }
+    ],
+    "source": {
+      "kind": "local"
+    }
+  },
+  {
     "plugin_id": "persiyanov.reviewr",
     "name": "reviewr",
     "version": "0.26.1",

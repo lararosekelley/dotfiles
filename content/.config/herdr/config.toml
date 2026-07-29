@@ -1,11 +1,53 @@
 # herdr configuration file
 #
 # see https://herdr.dev/docs/config-reference
+#
+# many of the settings below mirror ~/.tmux.conf, so muscle memory carries over.
+# the startup layout itself lives in local-plugins/default-session.
 # --------
 
 # general settings
 
 onboarding = false
+
+# theme
+#
+# catppuccin, same palette as ~/.tmux.conf
+# --------
+
+[theme]
+name = "catppuccin"
+
+# ui
+# --------
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+# blue, matching the tmux clock color
+
+accent = "#89b4fa"
+
+# tmux `bind c` makes a window immediately and auto-names it
+
+prompt_new_tab_name = false
+
+# tmux `set -g mouse on` plus tmux-yank's copy-on-select
+
+mouse_capture = true
+copy_on_select = true
+
+# sidebar rows, standing in for the tmux status line (branch and dirty state
+# instead of date/user/session)
+
+[ui.sidebar.spaces]
+rows = [["state_icon", "workspace"], ["branch", "git_status"]]
+
+[ui.sidebar.agents]
+rows = [["state_icon", "workspace", "tab"], ["agent"]]
+
+[ui.sidebar.agents.rows_by_agent]
+claude = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"], ["agent"]]
 
 [ui.toast]
 delivery = "herdr"
@@ -13,17 +55,47 @@ delivery = "herdr"
 [ui.sound]
 enabled = true
 
-[ui]
-show_agent_labels_on_pane_borders = true
+# session persistence
+#
+# herdr keeps the session tree itself, so this covers what tmux-resurrect and
+# tmux-continuum did: bring agents back, and replay recent pane output
+# --------
+
+[session]
+resume_agents_on_restore = true
 
 [experimental]
-pane_history = false
+pane_history = true
 
-# navigation between tabs via shift-left/right
+# keys
+# --------
 
 [keys]
-next_tab = ["prefix+n", "shift+left"]
-previous_tab = ["prefix+p", "shift+right"]
+
+# tmux: shift-left/right move between windows
+
+previous_tab = ["prefix+p", "shift+left"]
+next_tab = ["prefix+n", "shift+right"]
+
+# tmux: | splits side by side, - splits top and bottom
+
+split_vertical = ["prefix+v", "prefix+|"]
+split_horizontal = "prefix+minus"
+
+# tmux: C-\ jumps back to the last pane
+
+last_pane = "prefix+backslash"
+
+# spaces
+#
+# no tmux equivalent: spaces are per-project containers, all visible at once in
+# the sidebar. shift+arrow moves between tabs, prefix+shift+arrow between spaces.
+# focus_agent jumps straight to whichever agent needs attention, in any space.
+
+previous_workspace = "prefix+shift+left"
+next_workspace = "prefix+shift+right"
+switch_workspace = "prefix+shift+1..9"
+focus_agent = "prefix+alt+1..9"
 
 # vim navigation via ctrl-j/k/h/l (https://github.com/paulbkim-dev/vim-herdr-navigation)
 
@@ -50,3 +122,53 @@ key = "ctrl+l"
 type = "plugin_action"
 command = "vim-herdr-navigation.right"
 description = "navigate right (vim/herdr)"
+
+# default-session plugin (local-plugins/default-session)
+
+[[keys.command]]
+key = "prefix+alt+s"
+type = "plugin_action"
+command = "default-session.apply"
+description = "apply the default tab/split layout to this space"
+
+# tmux: C-S-left/right swap windows
+
+[[keys.command]]
+key = "ctrl+shift+left"
+type = "plugin_action"
+command = "default-session.tab-move-left"
+description = "move tab left"
+
+[[keys.command]]
+key = "ctrl+shift+right"
+type = "plugin_action"
+command = "default-session.tab-move-right"
+description = "move tab right"
+
+# tmux: M-1/M-2 even out the layout
+#
+# not on prefix+alt+1 like tmux, since focus_agent claims the whole alt+1..9 range
+
+[[keys.command]]
+key = "prefix+alt+e"
+type = "plugin_action"
+command = "default-session.balance"
+description = "even out split ratios in this tab"
+
+# tmux: prefix+m / prefix+M toggle mouse mode
+
+[[keys.command]]
+key = "prefix+m"
+type = "plugin_action"
+command = "default-session.toggle-mouse"
+description = "toggle mouse capture"
+
+# lazygit, without giving up a pane for it
+
+[[keys.command]]
+key = "prefix+alt+g"
+type = "popup"
+command = "lazygit"
+width = "80%"
+height = "80%"
+description = "lazygit popup"

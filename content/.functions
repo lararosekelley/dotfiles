@@ -193,6 +193,98 @@ function mux() {
   tmux attach-session -t "$TMUX_SESSION:0.0"
 }
 
+# Open herdr with one space per repo, then attach
+#
+# Tabs and splits come from the default-session plugin, which builds any space
+# that has nothing in it yet. Spaces already open are left alone, so this is
+# safe to re-run against a live session.
+#
+# Params:
+#     repos - Repo paths to open (defaults to the list below)
+#
+# Usage: herd [repo ...]
+function herd() {
+  local repos=("$@")
+
+  if [[ ${#repos[@]} -eq 0 ]]; then
+    repos=(
+      "$HOME/Code/work/product"
+      "$HOME/Code/work/devops"
+      "$HOME/Code/personal/larakelley.com"
+      "$HOME/Code/personal/git-stk"
+      "$HOME/Code/personal/navi"
+    )
+  fi
+
+  if ! command -v herdr &> /dev/null; then
+    echo "fatal: herdr must be installed"
+    return 1
+  fi
+
+  # start the server detached first, the way mux does with tmux, so spaces can
+  # be created over the socket api before a client attaches
+  if ! herdr status server 2> /dev/null | grep -q "status: running"; then
+    (nohup herdr server &> /dev/null &)
+
+    local waited=0
+
+    until herdr status server 2> /dev/null | grep -q "status: running"; do
+      sleep 0.2
+      waited=$((waited + 1))
+
+      if [[ "$waited" -gt 50 ]]; then
+        echo "fatal: herdr server did not start"
+        return 1
+      fi
+    done
+  fi
+
+  # the space to land in once the repo spaces exist, normally the ~ one
+  local main_space
+  main_space="$(herdr workspace list \
+    | python3 -c 'import json,sys; w=json.load(sys.stdin)["result"]["workspaces"]; print(next((s["workspace_id"] for s in w if s["focused"]), w[0]["workspace_id"] if w else ""))')"
+
+  local open_spaces
+  open_spaces="$(herdr workspace list \
+    | python3 -c 'import json,sys; print("\n".join(w["label"] for w in json.load(sys.stdin)["result"]["workspaces"]))')"
+
+  local repo label
+  for repo in "${repos[@]}"; do
+    if [[ ! -d "$repo" ]]; then
+      echo "skipping missing repo: $repo"
+      continue
+    fi
+
+    label="$(basename "$repo")"
+
+    if grep -qxF "$label" <<< "$open_spaces"; then
+      echo "space already open: $label"
+      continue
+    fi
+
+    if herdr workspace create --cwd "$repo" --label "$label" --no-focus &> /dev/null; then
+      echo "space created: $label"
+    else
+      echo "failed to create space: $label"
+    fi
+  done
+
+  # spaces are built in the background, so wait for the layouts to settle before
+  # claiming focus back from them
+  sleep 2
+
+  if [[ -n "$main_space" ]]; then
+    herdr workspace focus "$main_space" &> /dev/null
+  fi
+
+  # already inside a herdr pane, so the new spaces are all that was needed
+  if [[ -n "$HERDR_ENV" ]]; then
+    return 0
+  fi
+
+  herdr
+}
+
 # Starts a Python server, with optional port argument
 #
 # Params:

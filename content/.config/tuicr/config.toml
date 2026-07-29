@@ -1,0 +1,28 @@
+# tuicr configuration file
+#
+# a code review TUI: https://github.com/tuicr
+# local themes go in ~/.config/tuicr/themes
+# --------
+
+# catppuccin mocha, same palette as herdr, tmux, and kitty
+#
+# an explicit theme wins over `appearance`, which tuicr warns about if both are
+# set, so appearance is left out on purpose
+
+theme = "catppuccin-mocha"
+
+# diffs side by side, with the file tree visible
+
+diff_view = "side-by-side"
+show_file_list = true
+
+# vim-style comment editing, and a few pixels of context while scrolling
+
+comment_vim = true
+scroll_offset = 4
+cursor_line = true
+
+# stamped on comments I write, so agent comments stay visually distinct
+# (agents pass --username explicitly)
+
+username = "lara"

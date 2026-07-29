@@ -56,6 +56,40 @@ just sync-to-repo
 just status
 ```
 
+### herdr configuration
+
+[herdr](https://herdr.dev) config lives in `content/.config/herdr`. The startup
+layout — tabs, splits, and the TUIs in them — is a local plugin under
+`content/.config/herdr/local-plugins/default-session`; see
+[its README](./content/.config/herdr/local-plugins/default-session/README.md)
+for the layout and keybindings.
+
+Syncing the files is not enough on its own. Plugins are registered in
+`plugins.json`, so link the local one and install the third-party ones:
+
+```bash
+herdr plugin link ~/.config/herdr/local-plugins/default-session
+herdr plugin install persiyanov/herdr-reviewr
+herdr plugin install paulbkim-dev/vim-herdr-navigation
+```
+
+The layout expects these on `PATH`:
+
+| tool         | used by                                            |
+| ------------ | -------------------------------------------------- |
+| `python3`    | the default-session plugin                         |
+| `git`        | repo detection for the git, review, and prs tabs   |
+| `nvim`       | `editor` tab                                       |
+| `lazygit`    | `git` tab and the `prefix+alt+g` popup             |
+| `glances`    | `system` tab                                       |
+| `journalctl` | `system` tab (systemd)                             |
+| `tuicr`      | `review` tab                                       |
+| `ghzinga`    | `prs` tab (`cargo install ghzinga`)                |
+| `gh`         | picking which PR the `prs` tab opens               |
+
+Anything missing degrades rather than breaks: the pane reports the failure and
+drops back to an interactive shell.
+
 ### Neovim configuration
 
 For my Neovim configuration, check out my [nvim](https://github.com/lararosekelley/nvim) repository.
