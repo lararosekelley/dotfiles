@@ -1,0 +1,52 @@
+# herdr configuration file
+#
+# see https://herdr.dev/docs/config-reference
+# --------
+
+# general settings
+
+onboarding = false
+
+[ui.toast]
+delivery = "herdr"
+
+[ui.sound]
+enabled = true
+
+[ui]
+show_agent_labels_on_pane_borders = true
+
+[experimental]
+pane_history = false
+
+# navigation between tabs via shift-left/right
+
+[keys]
+next_tab = ["prefix+n", "shift+left"]
+previous_tab = ["prefix+p", "shift+right"]
+
+# vim navigation via ctrl-j/k/h/l (https://github.com/paulbkim-dev/vim-herdr-navigation)
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "vim-herdr-navigation.left"
+description = "navigate left (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "vim-herdr-navigation.down"
+description = "navigate down (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "vim-herdr-navigation.up"
+description = "navigate up (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "vim-herdr-navigation.right"
+description = "navigate right (vim/herdr)"
