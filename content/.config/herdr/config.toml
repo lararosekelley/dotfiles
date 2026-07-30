@@ -89,13 +89,21 @@ last_pane = "prefix+backslash"
 # spaces
 #
 # no tmux equivalent: spaces are per-project containers, all visible at once in
-# the sidebar. shift+arrow moves between tabs, prefix+shift+arrow between spaces.
-# focus_agent jumps straight to whichever agent needs attention, in any space.
+# the sidebar. shift+left/right walks tabs, shift+up/down walks spaces, matching
+# how the sidebar stacks them.
 
-previous_workspace = "prefix+shift+left"
-next_workspace = "prefix+shift+right"
+previous_workspace = "shift+up"
+next_workspace = "shift+down"
 switch_workspace = "prefix+shift+1..9"
-focus_agent = "prefix+alt+1..9"
+
+# agents
+#
+# prefix+a walks the agents that want attention, wherever they live. the indexed
+# version needs ctrl+digit, which not every terminal forwards.
+
+next_agent = "prefix+a"
+previous_agent = "prefix+shift+a"
+focus_agent = "prefix+ctrl+1..9"
 
 # vim navigation via ctrl-j/k/h/l (https://github.com/paulbkim-dev/vim-herdr-navigation)
 
@@ -124,9 +132,12 @@ command = "vim-herdr-navigation.right"
 description = "navigate right (vim/herdr)"
 
 # default-session plugin (local-plugins/default-session)
+#
+# prefix+d builds this space, prefix+ctrl+d builds every space that came back
+# from a restore as bare shells
 
 [[keys.command]]
-key = "prefix+alt+s"
+key = "prefix+d"
 type = "plugin_action"
 command = "default-session.apply"
 description = "apply the default tab/split layout to this space"
@@ -145,12 +156,10 @@ type = "plugin_action"
 command = "default-session.tab-move-right"
 description = "move tab right"
 
-# tmux: M-1/M-2 even out the layout
-#
-# not on prefix+alt+1 like tmux, since focus_agent claims the whole alt+1..9 range
+# vim's C-w = rather than tmux's M-1/M-2
 
 [[keys.command]]
-key = "prefix+alt+e"
+key = "prefix+="
 type = "plugin_action"
 command = "default-session.balance"
 description = "even out split ratios in this tab"
@@ -163,10 +172,19 @@ type = "plugin_action"
 command = "default-session.toggle-mouse"
 description = "toggle mouse capture"
 
+# tmux-resurrect's @resurrect-processes: relaunch the programs in every space
+# whose panes came back from a restore as bare shells
+
+[[keys.command]]
+key = "prefix+ctrl+d"
+type = "plugin_action"
+command = "default-session.rehydrate"
+description = "relaunch programs in spaces restored as bare shells"
+
 # lazygit, without giving up a pane for it
 
 [[keys.command]]
-key = "prefix+alt+g"
+key = "prefix+ctrl+g"
 type = "popup"
 command = "lazygit"
 width = "80%"

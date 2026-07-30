@@ -48,6 +48,18 @@
         ]
       },
       {
+        "id": "rehydrate",
+        "title": "default session: relaunch programs in restored spaces",
+        "contexts": [
+          "global"
+        ],
+        "command": [
+          "python3",
+          "session.py",
+          "rehydrate"
+        ]
+      },
+      {
         "id": "tab-move-left",
         "title": "default session: move tab left",
         "contexts": [

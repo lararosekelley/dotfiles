@@ -7,6 +7,7 @@ Builds a tmux-style default layout over the herdr socket api:
     session.py apply              scaffold the current space unconditionally
     session.py apply-if-new       scaffold a space that has nothing in it yet
     session.py move-tab left      swap the focused tab with its neighbor
+    session.py rehydrate          relaunch programs in spaces restored as bare shells
     session.py balance            reset every split in the focused tab to 50/50
     session.py toggle-mouse       flip ui.mouse_capture and reload the config
 
@@ -35,6 +36,10 @@ SETTLE_POLL_SECONDS = 0.2
 
 # how long one run's claim on building a space stays valid
 CLAIM_TTL_SECONDS = 60.0
+
+# shells restored from a snapshot have long since settled, so rehydrate only
+# needs to outwait rc files, not a cold start
+REHYDRATE_SETTLE_SECONDS = 1.5
 
 
 # socket api
@@ -170,9 +175,13 @@ def plugin_context() -> dict:
 
 def space_root_cwd(snap: dict, workspace_id: str) -> str | None:
     """Anchor every pane to the space's own cwd rather than whatever has focus."""
-    context_cwd = plugin_context().get("workspace_cwd")
-    if context_cwd:
-        return context_cwd
+    context = plugin_context()
+
+    # only trust the invocation context for the space it actually describes,
+    # otherwise rebuilding several spaces would give them all the focused cwd
+    if context.get("workspace_id") == workspace_id and context.get("workspace_cwd"):
+        return context["workspace_cwd"]
+
     panes = [pane for pane in snap["panes"] if pane["workspace_id"] == workspace_id]
     return panes[0]["cwd"] if panes else None
 
@@ -240,14 +249,14 @@ def is_idle_shell(pane_id: str) -> bool:
     return name in SHELL_NAMES and info.get("foreground_process_group_id") == info.get("shell_pid")
 
 
-def settles_to_idle_shell(pane_id: str) -> bool:
+def settles_to_idle_shell(pane_id: str, timeout: float = SETTLE_TIMEOUT_SECONDS) -> bool:
     """Wait out .bashrc before judging whether a pane is busy.
 
     Startup hooks fire milliseconds after the root pane spawns, while the shell
     is still sourcing rc files and running completion subshells. Sampling once
     there reads as "something is running", so poll until it goes quiet.
     """
-    deadline = time.monotonic() + SETTLE_TIMEOUT_SECONDS
+    deadline = time.monotonic() + timeout
     while True:
         if is_idle_shell(pane_id):
             return True
@@ -274,16 +283,21 @@ def not_fresh_reason(snap: dict, workspace_id: str) -> str | None:
     return None
 
 
+def claim_path(workspace_id: str) -> Path:
+    state_dir = Path(os.environ.get("HERDR_PLUGIN_STATE_DIR") or "/tmp")
+    state_dir.mkdir(parents=True, exist_ok=True)
+    return state_dir / f"building-{workspace_id.replace(':', '_')}"
+
+
 def claim(workspace_id: str) -> bool:
     """Take a short-lived claim on building a space.
 
     The startup hook and the workspace.created event can both fire for the space
     a fresh session opens with. Whoever claims it first builds it; the other
-    backs off. The claim ages out so a later rebuild is never blocked by it.
+    backs off. Claims are released when the build finishes and age out if a run
+    dies holding one, so a later rebuild is never blocked by a stale claim.
     """
-    state_dir = Path(os.environ.get("HERDR_PLUGIN_STATE_DIR") or "/tmp")
-    state_dir.mkdir(parents=True, exist_ok=True)
-    marker = state_dir / f"building-{workspace_id.replace(':', '_')}"
+    marker = claim_path(workspace_id)
 
     try:
         os.close(os.open(marker, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
@@ -301,7 +315,24 @@ def claim(workspace_id: str) -> bool:
     return True
 
 
+def release(workspace_id: str) -> None:
+    try:
+        claim_path(workspace_id).unlink()
+    except OSError:
+        pass
+
+
 def cmd_startup() -> int:
+    """Build a fresh session, or relaunch a restored one.
+
+    With rehydrate_on_startup set, this is tmux-continuum's `@continuum-restore`:
+    every space that came back as bare shells gets its programs again. Panes get
+    the longer settle window here, since a server that just started is still
+    spawning shells and resuming agents.
+    """
+    if load_layout().get("rehydrate_on_startup", True):
+        return rehydrate_pass(SETTLE_TIMEOUT_SECONDS)
+
     snap = wait_for_root_pane()
     workspace_id = target_workspace(snap)
 
@@ -314,7 +345,10 @@ def cmd_startup() -> int:
         print(f"{workspace_id} is already being built; leaving it alone")
         return 0
 
-    apply_layout(snap, workspace_id)
+    try:
+        apply_layout(snap, workspace_id)
+    finally:
+        release(workspace_id)
     return 0
 
 
@@ -322,6 +356,12 @@ def cmd_apply() -> int:
     snap = snapshot()
     apply_layout(snap, target_workspace(snap))
     return 0
+
+
+def is_primary(snap: dict, workspace_id: str) -> bool:
+    """The session's first space is the primary one, whichever path builds it."""
+    spaces = snap["workspaces"]
+    return bool(spaces) and spaces[0]["workspace_id"] == workspace_id
 
 
 def cmd_apply_if_new() -> int:
@@ -338,8 +378,82 @@ def cmd_apply_if_new() -> int:
         print(f"{workspace_id} is already being built; leaving it alone")
         return 0
 
-    apply_layout(snap, workspace_id, primary=False)
+    try:
+        apply_layout(snap, workspace_id, primary=is_primary(snap, workspace_id))
+    finally:
+        release(workspace_id)
     return 0
+
+
+def rebuild_space(snap: dict, workspace_id: str, primary: bool) -> None:
+    """Replace a space's tabs with the layout, rather than appending to them."""
+    tabs = [tab["tab_id"] for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
+    for tab_id in tabs[1:]:
+        call("tab.close", {"tab_id": tab_id})
+
+    # re-read: apply_layout replaces the first tab it finds in the space
+    apply_layout(snapshot(), workspace_id, primary=primary)
+
+
+def agent_panes(snap: dict, workspace_id: str) -> list[str]:
+    """Panes herdr tracks as agents, including ones waiting to be resumed.
+
+    Agent session refs are persisted, so a restored claude pane can still look
+    like an idle shell for a moment. Rebuilding it would throw away a resumable
+    conversation, so agent metadata vetoes a rebuild on its own.
+    """
+    return [
+        pane["pane_id"]
+        for pane in snap["panes"]
+        if pane["workspace_id"] == workspace_id and (pane.get("agent") or pane.get("agent_session"))
+    ]
+
+
+def rehydrate_pass(settle_seconds: float) -> int:
+    """tmux-resurrect's @resurrect-processes, after the fact.
+
+    A restored session brings back spaces, tabs, splits, and cwds, but every
+    pane comes back as a bare shell. Rebuild the spaces where that is all
+    there is, and leave anything with real work in it alone.
+    """
+    snap = wait_for_root_pane()
+    spaces = snap["workspaces"]
+    rebuilt = 0
+
+    for space in spaces:
+        workspace_id = space["workspace_id"]
+
+        agents = agent_panes(snap, workspace_id)
+        if agents:
+            print(f"{space['label']}: agent in {', '.join(agents)}, leaving it alone")
+            continue
+
+        panes = [pane["pane_id"] for pane in snap["panes"] if pane["workspace_id"] == workspace_id]
+        busy = next(
+            (pane_id for pane_id in panes if not settles_to_idle_shell(pane_id, settle_seconds)),
+            None,
+        )
+        if busy:
+            print(f"{space['label']}: something is running in {busy}, leaving it alone")
+            continue
+
+        if not claim(workspace_id):
+            print(f"{space['label']}: already being built, leaving it alone")
+            continue
+
+        print(f"{space['label']}: relaunching")
+        try:
+            rebuild_space(snap, workspace_id, primary=is_primary(snap, workspace_id))
+        finally:
+            release(workspace_id)
+        rebuilt += 1
+
+    print(f"rehydrated {rebuilt} of {len(spaces)} space(s)")
+    return 0
+
+
+def cmd_rehydrate() -> int:
+    return rehydrate_pass(REHYDRATE_SETTLE_SECONDS)
 
 
 def cmd_move_tab(direction: str) -> int:
@@ -422,6 +536,8 @@ def main(argv: list[str]) -> int:
         return cmd_apply_if_new()
     if command == "move-tab":
         return cmd_move_tab(argv[2] if len(argv) > 2 else "right")
+    if command == "rehydrate":
+        return cmd_rehydrate()
     if command == "balance":
         return cmd_balance()
     if command == "toggle-mouse":

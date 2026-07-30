@@ -40,6 +40,15 @@ title = "default session: move tab right"
 contexts = ["global"]
 command = ["python3", "session.py", "move-tab", "right"]
 
+# tmux-resurrect's @resurrect-processes, after the fact: a restore brings back
+# the tab tree but every pane as a bare shell, so relaunch what belongs in them
+
+[[actions]]
+id = "rehydrate"
+title = "default session: relaunch programs in restored spaces"
+contexts = ["global"]
+command = ["python3", "session.py", "rehydrate"]
+
 # tmux M-1/M-2 even-vertical/even-horizontal
 
 [[actions]]

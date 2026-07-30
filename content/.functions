@@ -199,12 +199,29 @@ function mux() {
 # that has nothing in it yet. Spaces already open are left alone, so this is
 # safe to re-run against a live session.
 #
+# Pass --reset to throw away the saved session first, the way deleting the
+# tmux-resurrect folder did. State files are moved aside as .bak, not deleted.
+#
 # Params:
 #     repos - Repo paths to open (defaults to the list below)
 #
-# Usage: herd [repo ...]
+# Usage: herd [--reset] [--yes] [repo ...]
 function herd() {
-  local repos=("$@")
+  local reset=false confirmed=false
+  local repos=()
+  local arg
+
+  for arg in "$@"; do
+    case "$arg" in
+      --reset) reset=true ;;
+      -y | --yes) confirmed=true ;;
+      -h | --help)
+        echo "usage: herd [--reset] [--yes] [repo ...]"
+        return 0
+        ;;
+      *) repos+=("$arg") ;;
+    esac
+  done
 
   if [[ ${#repos[@]} -eq 0 ]]; then
     repos=(
@@ -213,12 +230,55 @@ function herd() {
       "$HOME/Code/personal/larakelley.com"
       "$HOME/Code/personal/git-stk"
       "$HOME/Code/personal/navi"
+      "$HOME/Code/personal/dotfiles"
     )
   fi
 
   if ! command -v herdr &> /dev/null; then
     echo "fatal: herdr must be installed"
     return 1
+  fi
+
+  if [[ "$reset" == true ]]; then
+    # stopping the server from inside one of its own panes would kill this shell
+    if [[ -n "${HERDR_ENV:-}" ]]; then
+      echo "fatal: cannot reset from inside herdr, detach first with prefix+q"
+      return 1
+    fi
+
+    if [[ "$confirmed" != true ]]; then
+      local answer
+
+      read -r -p "reset the saved herdr session? every space is rebuilt [y/N] " answer
+
+      if [[ ! "$answer" =~ ^[Yy]$ ]]; then
+        echo "left alone"
+        return 1
+      fi
+    fi
+
+    # the server writes the session out as it shuts down, so let it finish
+    # before moving anything aside
+    herdr server stop &> /dev/null
+
+    local stopping=0
+
+    while herdr status server 2> /dev/null | grep -q "status: running"; do
+      sleep 0.2
+      stopping=$((stopping + 1))
+
+      if [[ "$stopping" -gt 50 ]]; then
+        echo "fatal: herdr server would not stop"
+        return 1
+      fi
+    done
+
+    local state
+    for state in "$HOME/.config/herdr/session.json" "$HOME/.config/herdr/session-history.json"; do
+      if [[ -f "$state" ]]; then
+        mv -f "$state" "$state.bak" && echo "moved aside: $(basename "$state")"
+      fi
+    done
   fi
 
   # start the server detached first, the way mux does with tmux, so spaces can
@@ -237,6 +297,14 @@ function herd() {
         return 1
       fi
     done
+  fi
+
+  # a session with no spaces yet only grows one when a client attaches, which is
+  # after the repo spaces below — so make the home space first and let it stay
+  # the primary space
+  if ! herdr workspace list | grep -q '"workspace_id"'; then
+    herdr workspace create --cwd "$HOME" --no-focus &> /dev/null && echo "space created: ~"
+    sleep 1
   fi
 
   # the space to land in once the repo spaces exist, normally the ~ one

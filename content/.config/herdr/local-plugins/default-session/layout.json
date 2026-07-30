@@ -16,10 +16,14 @@
     "to default_repo when it is not (a space rooted at ~, say).",
     "",
     "A tab marked `primary_only` is skipped when spaces get the layout",
-    "automatically, so global monitors exist once instead of once per project."
+    "automatically, so global monitors exist once instead of once per project.",
+    "",
+    "`rehydrate_on_startup` relaunches programs in every space that came back",
+    "from a restore as bare shells. Set it false to only build fresh sessions."
   ],
   "focus_tab": 1,
   "default_repo": "~/Code/personal/larakelley.com",
+  "rehydrate_on_startup": true,
   "tabs": [
     {
       "label": "shell",

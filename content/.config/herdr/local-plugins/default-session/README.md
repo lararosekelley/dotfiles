@@ -20,8 +20,9 @@ hooks run when a **server** starts, so the layout appears on the next
 
 ## What it does
 
-On startup, if the session is untouched — one space, one tab, one idle shell —
-it builds the tabs from [`layout.json`](./layout.json):
+On startup it builds every space that has nothing running in it, from
+[`layout.json`](./layout.json) — a fresh session, or a restored one whose panes
+all came back as bare shells (see [After a reboot](#after-a-reboot)):
 
 | tab      | panes                                         |
 | -------- | --------------------------------------------- |
@@ -56,9 +57,9 @@ Details worth knowing:
   reopens whatever you last looked at in some other repo. The script opens the
   PR for the current branch, else the newest open PR, else the repo's own
   session.
-- All splits are even. `prefix+alt+e` puts them back that way after resizing.
-- A restored session already has its tabs, so the startup hook leaves it alone.
-  Same for any session where something is running.
+- All splits are even. `prefix+=` puts them back that way after resizing.
+- Spaces holding a running program or an agent are never rebuilt, on startup or
+  by hand.
 - The startup hook waits for the root pane to finish sourcing rc files before
   deciding whether anything is running in it. Judging that on one sample reads a
   shell still loading `.bashrc` as busy.
@@ -71,10 +72,11 @@ Bound in [`../../config.toml`](../../config.toml):
 
 | action           | key                | tmux equivalent          |
 | ---------------- | ------------------ | ------------------------ |
-| `apply`          | `prefix+alt+s`     | (none) build this layout |
+| `apply`          | `prefix+d`         | (none) build this layout |
+| `rehydrate`      | `prefix+ctrl+d`    | `@resurrect-processes`   |
 | `tab-move-left`  | `ctrl+shift+left`  | `swap-window -t -1`      |
 | `tab-move-right` | `ctrl+shift+right` | `swap-window -t +1`      |
-| `balance`        | `prefix+alt+1`     | `select-layout even-*`   |
+| `balance`        | `prefix+=`         | vim's `C-w =`            |
 | `toggle-mouse`   | `prefix+m`         | `bind m` / `bind M`      |
 
 `apply` replaces the current tab and appends the rest, so running it in a space
@@ -84,6 +86,43 @@ whole set.
 
 `toggle-mouse` rewrites `ui.mouse_capture` in `~/.config/herdr/config.toml` and
 reloads the server, so run `just sync-to-repo` if you want the flip kept.
+
+## After a reboot
+
+A restore brings back spaces, tabs, splits, and cwds, but every pane comes back
+as a bare shell — herdr does not relaunch programs the way tmux-resurrect's
+`@resurrect-processes` did. The startup hook fills that gap: for each space whose
+panes are *all* idle shells, it closes the extra tabs and rebuilds the space from
+`layout.json`, so nvim, lazygit, glances, journalctl, tuicr, and ghzinga come
+back where they belong. That makes launching herdr the equivalent of
+`@continuum-restore 'on'`.
+
+Set `rehydrate_on_startup` false in `layout.json` to go back to only building
+fresh sessions. `prefix+ctrl+d` runs the same pass by hand at any time.
+
+Spaces are skipped by evidence, not by guess:
+
+```text
+~: something is running in w1:pK, leaving it alone
+navi: agent in w2:pQ, leaving it alone
+rehydrated 0 of 2 space(s)
+```
+
+Agent panes veto a rebuild on metadata alone, not on whether a process is up.
+herdr persists `agent_session` refs so it can resume claude conversations, and a
+pane waiting to be resumed looks exactly like an idle shell — rebuilding it would
+throw the conversation away.
+
+## Resetting
+
+`herd --reset` is the equivalent of deleting the tmux-resurrect directory: it
+stops the server, moves `session.json` and `session-history.json` aside as
+`.bak`, then builds everything from scratch. It refuses to run from inside a
+herdr pane, since stopping the server would take that shell with it.
+
+A fresh session has no spaces until a client attaches, which is after `herd`
+creates its repo spaces — so `herd` makes the `~` space itself first, keeping it
+the primary space and the one you land in.
 
 Anything can also be driven by hand:
 
@@ -104,7 +143,7 @@ python3 session.py balance
 the space itself isn't a checkout. `{plugin_root}` inside a `run` string expands
 to this directory, which is how the `prs` tab finds `prs.sh`.
 
-No restart needed — the file is read on each run, so `prefix+alt+s` in a fresh
+No restart needed — the file is read on each run, so `prefix+d` in a fresh
 space is enough to see a change.
 
 ## Opening a space per repo
@@ -116,6 +155,7 @@ are skipped, so it is safe to re-run.
 ```bash
 herd                                    # the default repo list
 herd ~/Code/work/product ~/Code/oss/foo # or an explicit list
+herd --reset                            # throw away the saved session first
 ```
 
 Each new space triggers the `workspace.created` hook, so it arrives with tabs

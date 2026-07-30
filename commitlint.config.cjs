@@ -17,6 +17,7 @@ module.exports = {
         "emacs",
         "editor",
         "tmux",
+        "herdr",
         "terminal",
         "git",
         "github",
