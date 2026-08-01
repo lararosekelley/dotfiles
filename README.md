@@ -137,10 +137,16 @@ For my Kitty configuration, check out my [kitty](https://github.com/lararosekell
 
 ## Formatting and linting
 
-`just format` and `just lint` cover both languages in the repo; `just format-lint`
-runs everything including `cargo check`. The per-language recipes are
-`format-rust`/`lint-rust` (rustfmt, clippy) and `format-python`/`lint-python`
-(black, flake8).
+`just format` and `just lint` cover everything in the repo; `just format-lint`
+runs both plus `cargo check`. The per-language recipes are
+`format-rust`/`lint-rust` (rustfmt, clippy), `format-python`/`lint-python`
+(black, flake8), and `format-markdown`/`lint-markdown` (markdownlint-cli2, whose
+globs are passed on the command line rather than read from
+`.markdownlint-cli2.yaml`).
+
+`just lint` also runs as a `pre-commit` hook, so a commit fails rather than
+landing unformatted. The companion `commit-msg` hook runs commitlint. Both live
+in `.husky/` and are installed by `npm install` (via the `prepare` script).
 
 Python here means the scripts under `content/`. [black](https://black.readthedocs.io) owns formatting and
 [flake8](https://flake8.pycqa.org) catches the rest; their settings live in

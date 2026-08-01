@@ -7,6 +7,10 @@
 ignores:
   # Build output and caches
   - node_modules/**
+  - target/**
+
+  # Third-party submodule
+  - oh-my-git/**
   - out/**
   - build/**
   - .next/**

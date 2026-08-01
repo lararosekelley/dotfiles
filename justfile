@@ -4,6 +4,11 @@ set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
 python_paths := "content"
 
+# markdownlint-cli2 takes its globs on the command line, not from its config,
+# so quote this to keep bash from expanding it first
+
+markdown_paths := "**/*.md"
+
 default:
   @just --list
 
@@ -12,7 +17,7 @@ build:
 
 format-lint: format lint check
 
-format: format-rust format-python
+format: format-rust format-python format-markdown
 
 format-rust:
   cargo fmt
@@ -20,7 +25,10 @@ format-rust:
 format-python:
   black {{python_paths}}
 
-lint: lint-rust lint-python
+format-markdown:
+  npx --no -- markdownlint-cli2 --fix "{{markdown_paths}}"
+
+lint: lint-rust lint-python lint-markdown
 
 lint-rust:
   cargo fmt --check
@@ -29,6 +37,9 @@ lint-rust:
 lint-python:
   black --check --diff {{python_paths}}
   flake8 {{python_paths}}
+
+lint-markdown:
+  npx --no -- markdownlint-cli2 "{{markdown_paths}}"
 
 check:
   cargo check
