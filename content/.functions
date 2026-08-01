@@ -193,6 +193,19 @@ function mux() {
   tmux attach-session -t "$TMUX_SESSION:0.0"
 }
 
+# Repos herd opens a space for, unless --repos says otherwise
+#
+# Sourced before ~/.exports and ~/.environment, so either can override this.
+
+HERD_REPOS=(
+  "$HOME/Code/work/product"
+  "$HOME/Code/work/devops"
+  "$HOME/Code/personal/larakelley.com"
+  "$HOME/Code/personal/git-stk"
+  "$HOME/Code/personal/navi"
+  "$HOME/Code/personal/dotfiles"
+)
+
 # Open herdr with one space per repo, then attach
 #
 # Tabs and splits come from the default-session plugin, which builds any space
@@ -203,35 +216,69 @@ function mux() {
 # tmux-resurrect folder did. State files are moved aside as .bak, not deleted.
 #
 # Params:
-#     repos - Repo paths to open (defaults to the list below)
+#     --repos - Repos to open, instead of $HERD_REPOS
+#     --reset - Move the saved session aside, then rebuild from scratch
+#     --yes   - Skip the reset confirmation
 #
-# Usage: herd [--reset] [--yes] [repo ...]
+# Usage: herd [--repos path ...] [--reset] [--yes]
 function herd() {
-  local reset=false confirmed=false
+  local reset=false confirmed=false collecting=false
   local repos=()
   local arg
 
   for arg in "$@"; do
     case "$arg" in
-      --reset) reset=true ;;
-      -y | --yes) confirmed=true ;;
+      --repos)
+        collecting=true
+        ;;
+      --repos=*)
+        collecting=false
+        IFS=',' read -r -a repos <<< "${arg#--repos=}"
+        ;;
+      --reset)
+        collecting=false
+        reset=true
+        ;;
+      -y | --yes)
+        collecting=false
+        confirmed=true
+        ;;
       -h | --help)
-        echo "usage: herd [--reset] [--yes] [repo ...]"
+        cat << EOF
+usage: herd [--repos path ...] [--reset] [--yes]
+
+Opens a herdr space per repo and attaches. Spaces already open are left alone,
+so this is safe to re-run. Tabs, splits, and the programs in them come from the
+default-session plugin.
+
+  --repos path ...  Repos to open, instead of \$HERD_REPOS
+  --reset           Move the saved session aside as .bak, then rebuild
+  -y, --yes         Skip the reset confirmation
+  -h, --help        Show this help
+
+Without --repos:
+$(printf '  %s\n' "${HERD_REPOS[@]}")
+EOF
         return 0
         ;;
-      *) repos+=("$arg") ;;
+      -*)
+        echo "fatal: unknown option: $arg"
+        echo "usage: herd [--repos path ...] [--reset] [--yes]"
+        return 1
+        ;;
+      *)
+        if [[ "$collecting" != true ]]; then
+          echo "fatal: pass repos with --repos, as in: herd --repos $arg"
+          return 1
+        fi
+
+        repos+=("$arg")
+        ;;
     esac
   done
 
   if [[ ${#repos[@]} -eq 0 ]]; then
-    repos=(
-      "$HOME/Code/work/product"
-      "$HOME/Code/work/devops"
-      "$HOME/Code/personal/larakelley.com"
-      "$HOME/Code/personal/git-stk"
-      "$HOME/Code/personal/navi"
-      "$HOME/Code/personal/dotfiles"
-    )
+    repos=("${HERD_REPOS[@]}")
   fi
 
   if ! command -v herdr &> /dev/null; then
@@ -352,6 +399,49 @@ function herd() {
 
   herdr
 }
+
+# Completion for herd
+#
+# Offers flags, then repo paths once --repos is in play: the default list first,
+# then ordinary directory completion for anything else.
+#
+# Params:
+#     none (bash completion protocol)
+#
+# Usage: complete -F _herd herd
+function _herd() {
+  local current="${COMP_WORDS[COMP_CWORD]}"
+  local flags="--repos --reset --yes --help"
+  local collecting=false
+  local word
+
+  for word in "${COMP_WORDS[@]:1:COMP_CWORD-1}"; do
+    case "$word" in
+      --repos) collecting=true ;;
+      -*) collecting=false ;;
+    esac
+  done
+
+  COMPREPLY=()
+
+  if [[ "$collecting" != true || "$current" == -* ]]; then
+    # shellcheck disable=SC2207
+    COMPREPLY=($(compgen -W "$flags" -- "$current"))
+    return 0
+  fi
+
+  # shellcheck disable=SC2207
+  COMPREPLY=($(compgen -W "${HERD_REPOS[*]}" -- "$current"))
+
+  # directory completion only once something is typed, otherwise every directory
+  # in the current one buries the repo list
+  if [[ -n "$current" ]]; then
+    # shellcheck disable=SC2207
+    COMPREPLY+=($(compgen -d -- "$current"))
+  fi
+}
+
+complete -o filenames -F _herd herd
 
 # Starts a Python server, with optional port argument
 #

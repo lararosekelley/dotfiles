@@ -153,10 +153,15 @@ the server detached, opens a space per repo, then attaches. Spaces already open
 are skipped, so it is safe to re-run.
 
 ```bash
-herd                                    # the default repo list
-herd ~/Code/work/product ~/Code/oss/foo # or an explicit list
-herd --reset                            # throw away the saved session first
+herd                                          # $HERD_REPOS
+herd --repos ~/Code/work/product ~/Code/oss/x # or an explicit list
+herd --reset                                  # throw the saved session away first
+herd --help                                   # flags and the default list
 ```
+
+`HERD_REPOS` in `~/.functions` holds the default list; `~/.exports` or
+`~/.environment` can override it, since both load after. Tab completion offers
+the flags, then those repos plus directory completion after `--repos`.
 
 Each new space triggers the `workspace.created` hook, so it arrives with tabs
 already built, and `herd` puts focus back on the space you started in before

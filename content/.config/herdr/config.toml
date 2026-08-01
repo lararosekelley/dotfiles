@@ -40,6 +40,7 @@ copy_on_select = true
 # sidebar rows, standing in for the tmux status line (branch and dirty state
 # instead of date/user/session)
 
+agent_panel_sort = "spaces"
 [ui.sidebar.spaces]
 rows = [["state_icon", "workspace"], ["branch", "git_status"]]
 
