@@ -79,6 +79,7 @@ The layout expects these on `PATH`:
 | ------------ | -------------------------------------------------- |
 | `python3`    | the default-session plugin                         |
 | `git`        | repo detection for the git, review, and prs tabs   |
+| `claude`     | `agents` tab                                       |
 | `nvim`       | `editor` tab                                       |
 | `lazygit`    | `git` tab and the `prefix+alt+g` popup             |
 | `glances`    | `system` tab                                       |
@@ -101,6 +102,23 @@ For my Emacs configuration, check out my [emacs.d](https://github.com/lararoseke
 ### Kitty configuration
 
 For my Kitty configuration, check out my [kitty](https://github.com/lararosekelley/kitty) repository.
+
+## Formatting and linting
+
+`just format` and `just lint` cover both languages in the repo; `just format-lint`
+runs everything including `cargo check`. The per-language recipes are
+`format-rust`/`lint-rust` (rustfmt, clippy) and `format-python`/`lint-python`
+(black, flake8).
+
+Python here means the scripts under `content/` — currently the herdr
+default-session plugin. [black](https://black.readthedocs.io) owns formatting and
+[flake8](https://flake8.pycqa.org) catches the rest; their settings live in
+`pyproject.toml` and `.flake8`, with flake8's line length matched to black's 88.
+Install the tools once with:
+
+```bash
+just install-python-tools
+```
 
 ## License
 

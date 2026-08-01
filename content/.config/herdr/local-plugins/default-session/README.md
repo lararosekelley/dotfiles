@@ -27,7 +27,7 @@ all came back as bare shells (see [After a reboot](#after-a-reboot)):
 | tab      | panes                                         |
 | -------- | --------------------------------------------- |
 | `shell`  | main shell, plus scratch/watch shells stacked |
-| `agents` | two even panes, ready for claude/codex        |
+| `agents` | `claude`, beside a spare pane for codex       |
 | `editor` | full screen `nvim`                            |
 | `git`    | `lazygit` beside a git shell                  |
 | `review` | full screen `tuicr`                           |
@@ -58,8 +58,8 @@ Details worth knowing:
   PR for the current branch, else the newest open PR, else the repo's own
   session.
 - All splits are even. `prefix+=` puts them back that way after resizing.
-- Spaces holding a running program or an agent are never rebuilt, on startup or
-  by hand.
+- Tabs holding a running program or an agent are never rebuilt on startup, and
+  neither are the spaces they live in.
 - The startup hook waits for the root pane to finish sourcing rc files before
   deciding whether anything is running in it. Judging that on one sample reads a
   shell still loading `.bashrc` as busy.
@@ -91,27 +91,37 @@ reloads the server, so run `just sync-to-repo` if you want the flip kept.
 
 A restore brings back spaces, tabs, splits, and cwds, but every pane comes back
 as a bare shell — herdr does not relaunch programs the way tmux-resurrect's
-`@resurrect-processes` did. The startup hook fills that gap: for each space whose
-panes are *all* idle shells, it closes the extra tabs and rebuilds the space from
-`layout.json`, so nvim, lazygit, glances, journalctl, tuicr, and ghzinga come
-back where they belong. That makes launching herdr the equivalent of
+`@resurrect-processes` did. The startup hook fills that gap: every tab whose
+panes are *all* idle shells is rebuilt from its entry in `layout.json`, so nvim,
+lazygit, glances, journalctl, tuicr, ghzinga, and claude come back where they
+belong. That makes launching herdr the equivalent of
 `@continuum-restore 'on'`.
+
+The pass works a tab at a time, matching tabs to the layout by label. That
+matters now that `agents` holds a claude: a resumed agent vetoes its own tab, but
+the rest of the space still gets rebuilt. Vetoing space-wide would leave every
+other tab a bare shell for the rest of the session. Tabs that aren't in
+`layout.json` are left where they are, and a space with nothing in it at all —
+a fresh session's first one — gets the whole layout instead.
 
 Set `rehydrate_on_startup` false in `layout.json` to go back to only building
 fresh sessions. `prefix+ctrl+d` runs the same pass by hand at any time.
 
-Spaces are skipped by evidence, not by guess:
+Tabs are skipped by evidence, not by guess:
 
 ```text
-~: something is running in w1:pK, leaving it alone
-navi: agent in w2:pQ, leaving it alone
-rehydrated 0 of 2 space(s)
+~/shell: relaunching
+~/agents: agent in w1:p5, leaving it alone
+~/editor: something is running in w1:p7, leaving it alone
+navi/notes: not in layout.json, leaving it alone
+rehydrated 1 tab(s), built 0 space(s)
 ```
 
 Agent panes veto a rebuild on metadata alone, not on whether a process is up.
 herdr persists `agent_session` refs so it can resume claude conversations, and a
 pane waiting to be resumed looks exactly like an idle shell — rebuilding it would
-throw the conversation away.
+throw the conversation away. A pane with no saved session is just an idle shell,
+so rehydrate starts `claude` there fresh.
 
 ## Resetting
 
@@ -166,7 +176,7 @@ the flags, then those repos plus directory completion after `--repos`.
 Each new space triggers the `workspace.created` hook, so it arrives with tabs
 already built, and `herd` puts focus back on the space you started in before
 attaching. Note the cost: every project space starts its own `nvim`, `lazygit`,
-`tuicr`, and `ghzinga`. Marking more tabs `primary_only` trims that.
+`tuicr`, `ghzinga`, and `claude`. Marking more tabs `primary_only` trims that.
 
 ## Editing the plugin manifest
 

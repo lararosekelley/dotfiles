@@ -7,7 +7,7 @@ Builds a tmux-style default layout over the herdr socket api:
     session.py apply              scaffold the current space unconditionally
     session.py apply-if-new       scaffold a space that has nothing in it yet
     session.py move-tab left      swap the focused tab with its neighbor
-    session.py rehydrate          relaunch programs in spaces restored as bare shells
+    session.py rehydrate          relaunch programs in panes restored as bare shells
     session.py balance            reset every split in the focused tab to 50/50
     session.py toggle-mouse       flip ui.mouse_capture and reload the config
 
@@ -25,7 +25,9 @@ import sys
 import time
 from pathlib import Path
 
-PLUGIN_ROOT = Path(os.environ.get("HERDR_PLUGIN_ROOT") or Path(__file__).resolve().parent)
+PLUGIN_ROOT = Path(
+    os.environ.get("HERDR_PLUGIN_ROOT") or Path(__file__).resolve().parent
+)
 LAYOUT_FILE = PLUGIN_ROOT / "layout.json"
 CONFIG_FILE = Path.home() / ".config" / "herdr" / "config.toml"
 SHELL_NAMES = {"bash", "zsh", "fish", "sh", "dash", "ksh", "nu", "elvish"}
@@ -34,7 +36,7 @@ SHELL_NAMES = {"bash", "zsh", "fish", "sh", "dash", "ksh", "nu", "elvish"}
 SETTLE_TIMEOUT_SECONDS = 5.0
 SETTLE_POLL_SECONDS = 0.2
 
-# how long one run's claim on building a space stays valid
+# how long one run's claim on building a space or a tab stays valid
 CLAIM_TTL_SECONDS = 60.0
 
 # shells restored from a snapshot have long since settled, so rehydrate only
@@ -55,7 +57,9 @@ def socket_path() -> str:
 
 def call(method: str, params: dict | None = None) -> dict:
     """Send one newline-delimited json request and return its result."""
-    request = json.dumps({"id": f"default-session:{method}", "method": method, "params": params or {}})
+    request = json.dumps(
+        {"id": f"default-session:{method}", "method": method, "params": params or {}}
+    )
 
     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as conn:
         conn.connect(socket_path())
@@ -69,7 +73,9 @@ def call(method: str, params: dict | None = None) -> dict:
 
     message = json.loads(line)
     if "error" in message:
-        raise RuntimeError(f"{method}: {message['error'].get('message', message['error'])}")
+        raise RuntimeError(
+            f"{method}: {message['error'].get('message', message['error'])}"
+        )
     return message["result"]
 
 
@@ -85,6 +91,22 @@ def wait_for_root_pane() -> dict:
         if snap.get("panes") or time.monotonic() >= deadline:
             return snap
         time.sleep(SETTLE_POLL_SECONDS)
+
+
+# reading the session tree
+# --------
+
+
+def space_tabs(snap: dict, workspace_id: str) -> list[dict]:
+    return [tab for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
+
+
+def space_panes(snap: dict, workspace_id: str) -> list[dict]:
+    return [pane for pane in snap["panes"] if pane["workspace_id"] == workspace_id]
+
+
+def tab_panes(snap: dict, tab_id: str) -> list[dict]:
+    return [pane for pane in snap["panes"] if pane["tab_id"] == tab_id]
 
 
 # layout building
@@ -182,7 +204,7 @@ def space_root_cwd(snap: dict, workspace_id: str) -> str | None:
     if context.get("workspace_id") == workspace_id and context.get("workspace_cwd"):
         return context["workspace_cwd"]
 
-    panes = [pane for pane in snap["panes"] if pane["workspace_id"] == workspace_id]
+    panes = space_panes(snap, workspace_id)
     return panes[0]["cwd"] if panes else None
 
 
@@ -190,35 +212,57 @@ def target_workspace(snap: dict) -> str:
     return os.environ.get("HERDR_WORKSPACE_ID") or snap["focused_workspace_id"]
 
 
+def wanted_tabs(spec: dict, primary: bool) -> list[dict]:
+    """The layout tabs a space should have.
+
+    Global monitors belong in one place, not once per project space.
+    """
+    return [tab for tab in spec["tabs"] if primary or not tab.get("primary_only")]
+
+
+def apply_tab(
+    spec_tab: dict,
+    cwd: str | None,
+    repo: str | None,
+    tab_id: str | None = None,
+    workspace_id: str | None = None,
+) -> str:
+    """Build one tab from its layout spec, replacing tab_id when given."""
+    params: dict = {
+        "tab_label": spec_tab["label"],
+        "root": to_layout_node(spec_tab["layout"], cwd, repo),
+        "focus": False,
+    }
+    # tab_id and workspace_id are mutually exclusive: replacing a tab already
+    # implies its space
+    if tab_id:
+        params["tab_id"] = tab_id
+    else:
+        params["workspace_id"] = workspace_id
+
+    return call("layout.apply", params)["layout"]["tab_id"]
+
+
 def apply_layout(snap: dict, workspace_id: str, primary: bool = True) -> None:
     spec = load_layout()
     cwd = space_root_cwd(snap, workspace_id)
     repo = repo_cwd(cwd, spec)
-    tabs = [tab for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
-
-    # global monitors belong in one place, not once per project space
-    wanted = [tab for tab in spec["tabs"] if primary or not tab.get("primary_only")]
+    tabs = space_tabs(snap, workspace_id)
 
     # the first tab replaces the tab we start from, the rest are appended
     replace_tab_id = tabs[0]["tab_id"] if tabs else None
     created: list[str] = []
 
-    for index, tab in enumerate(wanted):
-        params: dict = {
-            "tab_label": tab["label"],
-            "root": to_layout_node(tab["layout"], cwd, repo),
-            "focus": False,
-        }
-        # tab_id and workspace_id are mutually exclusive: replacing a tab already
-        # implies its space
-        if index == 0 and replace_tab_id:
-            params["tab_id"] = replace_tab_id
-        else:
-            params["workspace_id"] = workspace_id
-
-        result = call("layout.apply", params)
-        created.append(result["layout"]["tab_id"])
-        print(f"tab {index + 1}: {tab['label']} -> {result['layout']['tab_id']}")
+    for index, tab in enumerate(wanted_tabs(spec, primary)):
+        tab_id = apply_tab(
+            tab,
+            cwd,
+            repo,
+            tab_id=replace_tab_id if index == 0 else None,
+            workspace_id=workspace_id,
+        )
+        created.append(tab_id)
+        print(f"tab {index + 1}: {tab['label']} -> {tab_id}")
 
     focus_index = max(1, int(spec.get("focus_tab", 1))) - 1
     if focus_index < len(created):
@@ -246,10 +290,14 @@ def is_idle_shell(pane_id: str) -> bool:
     if len(foreground) != 1:
         return False
     name = (foreground[0].get("name") or "").lstrip("-")
-    return name in SHELL_NAMES and info.get("foreground_process_group_id") == info.get("shell_pid")
+    return name in SHELL_NAMES and info.get("foreground_process_group_id") == info.get(
+        "shell_pid"
+    )
 
 
-def settles_to_idle_shell(pane_id: str, timeout: float = SETTLE_TIMEOUT_SECONDS) -> bool:
+def settles_to_idle_shell(
+    pane_id: str, timeout: float = SETTLE_TIMEOUT_SECONDS
+) -> bool:
     """Wait out .bashrc before judging whether a pane is busy.
 
     Startup hooks fire milliseconds after the root pane spawns, while the shell
@@ -265,7 +313,47 @@ def settles_to_idle_shell(pane_id: str, timeout: float = SETTLE_TIMEOUT_SECONDS)
         time.sleep(SETTLE_POLL_SECONDS)
 
 
-def not_fresh_reason(snap: dict, workspace_id: str) -> str | None:
+def agent_panes(panes: list[dict]) -> list[str]:
+    """Panes herdr tracks as agents, including ones waiting to be resumed.
+
+    Agent session refs are persisted, so a restored claude pane can still look
+    like an idle shell for a moment. Rebuilding it would throw away a resumable
+    conversation, so agent metadata vetoes a rebuild on its own.
+    """
+    return [
+        pane["pane_id"]
+        for pane in panes
+        if pane.get("agent") or pane.get("agent_session")
+    ]
+
+
+def busy_pane(panes: list[dict], settle_seconds: float) -> str | None:
+    """The first pane with something running in it, if any."""
+    return next(
+        (
+            pane["pane_id"]
+            for pane in panes
+            if not settles_to_idle_shell(pane["pane_id"], settle_seconds)
+        ),
+        None,
+    )
+
+
+def in_use_reason(panes: list[dict], settle_seconds: float) -> str | None:
+    """Why these panes hold real work, or None when they are all bare shells."""
+    agents = agent_panes(panes)
+    if agents:
+        return f"agent in {', '.join(agents)}"
+
+    busy = busy_pane(panes, settle_seconds)
+    if busy:
+        return f"something is running in {busy}"
+    return None
+
+
+def not_fresh_reason(
+    snap: dict, workspace_id: str, settle_seconds: float = SETTLE_TIMEOUT_SECONDS
+) -> str | None:
     """Why this space should be left alone, or None when it is ours to build.
 
     A restored space already has its tabs (and possibly running agents), so a
@@ -273,31 +361,29 @@ def not_fresh_reason(snap: dict, workspace_id: str) -> str | None:
     Judged per space, not per session: other spaces being open says nothing about
     whether this one has anything in it.
     """
-    tabs = [tab for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
-    panes = [pane for pane in snap["panes"] if pane["workspace_id"] == workspace_id]
+    tabs = space_tabs(snap, workspace_id)
+    panes = space_panes(snap, workspace_id)
     if len(tabs) != 1 or len(panes) != 1:
         return f"{len(tabs)} tab(s) and {len(panes)} pane(s) already open"
 
-    if not settles_to_idle_shell(panes[0]["pane_id"]):
-        return f"something is still running in {panes[0]['pane_id']}"
-    return None
+    return in_use_reason(panes, settle_seconds)
 
 
-def claim_path(workspace_id: str) -> Path:
+def claim_path(key: str) -> Path:
     state_dir = Path(os.environ.get("HERDR_PLUGIN_STATE_DIR") or "/tmp")
     state_dir.mkdir(parents=True, exist_ok=True)
-    return state_dir / f"building-{workspace_id.replace(':', '_')}"
+    return state_dir / f"building-{key.replace(':', '_')}"
 
 
-def claim(workspace_id: str) -> bool:
-    """Take a short-lived claim on building a space.
+def claim(key: str) -> bool:
+    """Take a short-lived claim on building a space or a single tab.
 
     The startup hook and the workspace.created event can both fire for the space
     a fresh session opens with. Whoever claims it first builds it; the other
     backs off. Claims are released when the build finishes and age out if a run
     dies holding one, so a later rebuild is never blocked by a stale claim.
     """
-    marker = claim_path(workspace_id)
+    marker = claim_path(key)
 
     try:
         os.close(os.open(marker, os.O_CREAT | os.O_EXCL | os.O_WRONLY))
@@ -315,9 +401,9 @@ def claim(workspace_id: str) -> bool:
     return True
 
 
-def release(workspace_id: str) -> None:
+def release(key: str) -> None:
     try:
-        claim_path(workspace_id).unlink()
+        claim_path(key).unlink()
     except OSError:
         pass
 
@@ -325,8 +411,8 @@ def release(workspace_id: str) -> None:
 def cmd_startup() -> int:
     """Build a fresh session, or relaunch a restored one.
 
-    With rehydrate_on_startup set, this is tmux-continuum's `@continuum-restore`:
-    every space that came back as bare shells gets its programs again. Panes get
+    With rehydrate_on_startup set, this is tmux-continuum's @continuum-restore:
+    every space that came back as bare shells starts programs again. Panes get
     the longer settle window here, since a server that just started is still
     spawning shells and resuming agents.
     """
@@ -359,17 +445,17 @@ def cmd_apply() -> int:
 
 
 def is_primary(snap: dict, workspace_id: str) -> bool:
-    """The session's first space is the primary one, whichever path builds it."""
+    """Session's first space is the primary one, whichever path builds it."""
     spaces = snap["workspaces"]
     return bool(spaces) and spaces[0]["workspace_id"] == workspace_id
 
 
 def cmd_apply_if_new() -> int:
-    """The workspace.created path: build the space only if nothing is in it yet."""
+    """workspace.created path: build the space only if nothing is in it yet."""
     snap = wait_for_root_pane()
     workspace_id = target_workspace(snap)
 
-    tabs = [tab for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
+    tabs = space_tabs(snap, workspace_id)
     if len(tabs) > 1:
         print(f"{workspace_id} already has {len(tabs)} tabs; leaving it alone")
         return 0
@@ -385,70 +471,83 @@ def cmd_apply_if_new() -> int:
     return 0
 
 
-def rebuild_space(snap: dict, workspace_id: str, primary: bool) -> None:
-    """Replace a space's tabs with the layout, rather than appending to them."""
-    tabs = [tab["tab_id"] for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
-    for tab_id in tabs[1:]:
-        call("tab.close", {"tab_id": tab_id})
+def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) -> int:
+    """Relaunch the programs in one restored space, tab by tab.
 
-    # re-read: apply_layout replaces the first tab it finds in the space
-    apply_layout(snapshot(), workspace_id, primary=primary)
-
-
-def agent_panes(snap: dict, workspace_id: str) -> list[str]:
-    """Panes herdr tracks as agents, including ones waiting to be resumed.
-
-    Agent session refs are persisted, so a restored claude pane can still look
-    like an idle shell for a moment. Rebuilding it would throw away a resumable
-    conversation, so agent metadata vetoes a rebuild on its own.
+    Tab at a time rather than space at a time because the agents tab is expected
+    to hold a claude herdr resumed on restore: vetoing the whole space over it
+    would leave nvim, lazygit, and the monitors sitting as bare shells for the
+    rest of the session. Tabs are matched to the layout by label, so a tab that
+    isn't in layout.json is left where it is.
     """
-    return [
-        pane["pane_id"]
-        for pane in snap["panes"]
-        if pane["workspace_id"] == workspace_id and (pane.get("agent") or pane.get("agent_session"))
-    ]
+    workspace_id = space["workspace_id"]
+    cwd = space_root_cwd(snap, workspace_id)
+    repo = repo_cwd(cwd, spec)
+    by_label = {
+        tab["label"]: tab for tab in wanted_tabs(spec, is_primary(snap, workspace_id))
+    }
+    relaunched = 0
+
+    for tab in space_tabs(snap, workspace_id):
+        tab_id = tab["tab_id"]
+        where = f"{space['label']}/{tab['label']}"
+
+        spec_tab = by_label.get(tab["label"])
+        if not spec_tab:
+            print(f"{where}: not in layout.json, leaving it alone")
+            continue
+
+        reason = in_use_reason(tab_panes(snap, tab_id), settle_seconds)
+        if reason:
+            print(f"{where}: {reason}, leaving it alone")
+            continue
+
+        if not claim(tab_id):
+            print(f"{where}: already being built, leaving it alone")
+            continue
+
+        print(f"{where}: relaunching")
+        try:
+            apply_tab(spec_tab, cwd, repo, tab_id=tab_id)
+        finally:
+            release(tab_id)
+        relaunched += 1
+
+    return relaunched
 
 
 def rehydrate_pass(settle_seconds: float) -> int:
     """tmux-resurrect's @resurrect-processes, after the fact.
 
     A restored session brings back spaces, tabs, splits, and cwds, but every
-    pane comes back as a bare shell. Rebuild the spaces where that is all
-    there is, and leave anything with real work in it alone.
+    pane comes back as a bare shell. Relaunch what belongs in those panes, and
+    leave anything with real work in it alone. A space with nothing in it yet —
+    a fresh session's first one, say — gets the whole layout instead.
     """
     snap = wait_for_root_pane()
-    spaces = snap["workspaces"]
-    rebuilt = 0
+    spec = load_layout()
+    built = 0
+    relaunched = 0
 
-    for space in spaces:
+    for space in snap["workspaces"]:
         workspace_id = space["workspace_id"]
 
-        agents = agent_panes(snap, workspace_id)
-        if agents:
-            print(f"{space['label']}: agent in {', '.join(agents)}, leaving it alone")
-            continue
-
-        panes = [pane["pane_id"] for pane in snap["panes"] if pane["workspace_id"] == workspace_id]
-        busy = next(
-            (pane_id for pane_id in panes if not settles_to_idle_shell(pane_id, settle_seconds)),
-            None,
-        )
-        if busy:
-            print(f"{space['label']}: something is running in {busy}, leaving it alone")
+        if not_fresh_reason(snap, workspace_id, settle_seconds):
+            relaunched += rehydrate_space(snap, space, spec, settle_seconds)
             continue
 
         if not claim(workspace_id):
             print(f"{space['label']}: already being built, leaving it alone")
             continue
 
-        print(f"{space['label']}: relaunching")
+        print(f"{space['label']}: building")
         try:
-            rebuild_space(snap, workspace_id, primary=is_primary(snap, workspace_id))
+            apply_layout(snap, workspace_id, primary=is_primary(snap, workspace_id))
         finally:
             release(workspace_id)
-        rebuilt += 1
+        built += 1
 
-    print(f"rehydrated {rebuilt} of {len(spaces)} space(s)")
+    print(f"rehydrated {relaunched} tab(s), built {built} space(s)")
     return 0
 
 
@@ -459,7 +558,9 @@ def cmd_rehydrate() -> int:
 def cmd_move_tab(direction: str) -> int:
     snap = snapshot()
     workspace_id = target_workspace(snap)
-    tabs = [tab["tab_id"] for tab in snap["tabs"] if tab["workspace_id"] == workspace_id]
+    tabs = [
+        tab["tab_id"] for tab in snap["tabs"] if tab["workspace_id"] == workspace_id
+    ]
     focused = os.environ.get("HERDR_TAB_ID") or snap.get("focused_tab_id")
 
     if focused not in tabs or len(tabs) < 2:
@@ -516,11 +617,18 @@ def cmd_toggle_mouse() -> int:
         return 1
 
     enabled = match.group(2) == "true"
-    CONFIG_FILE.write_text(text[: match.start()] + f"{match.group(1)}{str(not enabled).lower()}" + text[match.end() :])
+    CONFIG_FILE.write_text(
+        text[: match.start()]
+        + f"{match.group(1)}{str(not enabled).lower()}"
+        + text[match.end() :]
+    )
     call("server.reload_config")
 
     state = "off" if enabled else "on"
-    call("notification.show", {"title": "herdr", "body": f"mouse mode: {state}", "sound": "none"})
+    call(
+        "notification.show",
+        {"title": "herdr", "body": f"mouse mode: {state}", "sound": "none"},
+    )
     print(f"mouse capture {state}")
     return 0
 

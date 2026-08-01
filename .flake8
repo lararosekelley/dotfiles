@@ -1,0 +1,17 @@
+[flake8]
+# black owns formatting, so flake8 is here for the rest: unused imports and
+# names, undefined variables, shadowed builtins.
+
+# match black's line length instead of pycodestyle's 79
+
+max-line-length = 88
+
+# E203 (whitespace before ':') is what black does to slices, so it has to go
+
+extend-ignore = E203
+
+extend-exclude =
+    .git,
+    node_modules,
+    oh-my-git,
+    target

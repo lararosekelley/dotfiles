@@ -173,8 +173,8 @@ type = "plugin_action"
 command = "default-session.toggle-mouse"
 description = "toggle mouse capture"
 
-# tmux-resurrect's @resurrect-processes: relaunch the programs in every space
-# whose panes came back from a restore as bare shells
+# parallel to tmux-resurrect's @resurrect-processes: relaunch the programs in
+# every space whose panes came back from a restore as bare shells
 
 [[keys.command]]
 key = "prefix+ctrl+d"
