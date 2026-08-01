@@ -2,9 +2,9 @@
   {
     "plugin_id": "default-session",
     "name": "Default Session",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "min_herdr_version": "0.7.5",
-    "description": "Scaffold a tmux-style default layout on startup, plus tmux-style tab/pane helpers.",
+    "description": "Scaffold a default layout on startup, with tab/pane helpers.",
     "manifest_path": "/home/lara/.config/herdr/local-plugins/default-session/herdr-plugin.toml",
     "plugin_root": "/home/lara/.config/herdr/local-plugins/default-session",
     "enabled": true,
