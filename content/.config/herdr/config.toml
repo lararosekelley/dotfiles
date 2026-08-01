@@ -16,9 +16,6 @@ onboarding = false
 show_agent_labels_on_pane_borders = true
 accent = "#89b4fa"
 
-[theme]
-name = "catppuccin"
-
 # makes a window immediately and auto-names it
 prompt_new_tab_name = false
 
@@ -26,8 +23,13 @@ prompt_new_tab_name = false
 mouse_capture = true
 copy_on_select = true
 
-# sidebar rows (branch and dirty state)
+# agent panel ordering: "spaces" groups by space, "priority" is the attention queue
 agent_panel_sort = "spaces"
+
+[theme]
+name = "catppuccin"
+
+# sidebar rows (branch and dirty state)
 [ui.sidebar.spaces]
 rows = [["state_icon", "workspace"], ["branch", "git_status"]]
 
