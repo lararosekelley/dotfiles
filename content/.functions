@@ -212,8 +212,8 @@ HERD_REPOS=(
 # that has nothing in it yet. Spaces already open are left alone, so this is
 # safe to re-run against a live session.
 #
-# Pass --reset to throw away the saved session first, the way deleting the
-# tmux-resurrect folder did. State files are moved aside as .bak, not deleted.
+# Pass --reset to throw away the saved session first.
+# State files are moved aside as .bak, not deleted.
 #
 # Params:
 #     --repos - Repos to open, instead of $HERD_REPOS
@@ -328,7 +328,7 @@ EOF
     done
   fi
 
-  # start the server detached first, the way mux does with tmux, so spaces can
+  # start the server detached first, so spaces can
   # be created over the socket api before a client attaches
   if ! herdr status server 2> /dev/null | grep -q "status: running"; then
     (nohup herdr server &> /dev/null &)
@@ -346,9 +346,7 @@ EOF
     done
   fi
 
-  # a session with no spaces yet only grows one when a client attaches, which is
-  # after the repo spaces below — so make the home space first and let it stay
-  # the primary space
+  # a session with no spaces yet only grows one when a client attaches
   if ! herdr workspace list | grep -q '"workspace_id"'; then
     herdr workspace create --cwd "$HOME" --no-focus &> /dev/null && echo "space created: ~"
     sleep 1

@@ -1,45 +1,32 @@
 # herdr configuration file
 #
-# see https://herdr.dev/docs/config-reference
-#
-# many of the settings below mirror ~/.tmux.conf, so muscle memory carries over.
-# the startup layout itself lives in local-plugins/default-session.
+# see https://herdr.dev/docs/config-reference;
+# startup layout itself lives in local-plugins/default-session
 # --------
 
 # general settings
-
-onboarding = false
-
-# theme
-#
-# catppuccin, same palette as ~/.tmux.conf
 # --------
 
-[theme]
-name = "catppuccin"
+onboarding = false
 
 # ui
 # --------
 
 [ui]
 show_agent_labels_on_pane_borders = true
-
-# blue, matching the tmux clock color
-
 accent = "#89b4fa"
 
-# tmux `bind c` makes a window immediately and auto-names it
+[theme]
+name = "catppuccin"
 
+# makes a window immediately and auto-names it
 prompt_new_tab_name = false
 
-# tmux `set -g mouse on` plus tmux-yank's copy-on-select
-
+# copy on select
 mouse_capture = true
 copy_on_select = true
 
-# sidebar rows, standing in for the tmux status line (branch and dirty state
-# instead of date/user/session)
-
+# sidebar rows (branch and dirty state)
 agent_panel_sort = "spaces"
 [ui.sidebar.spaces]
 rows = [["state_icon", "workspace"], ["branch", "git_status"]]
@@ -56,10 +43,7 @@ delivery = "herdr"
 [ui.sound]
 enabled = true
 
-# session persistence
-#
-# herdr keeps the session tree itself, so this covers what tmux-resurrect and
-# tmux-continuum did: bring agents back, and replay recent pane output
+# sessions
 # --------
 
 [session]
@@ -68,46 +52,41 @@ resume_agents_on_restore = true
 [experimental]
 pane_history = true
 
-# keys
+# keybindings
 # --------
 
 [keys]
 
-# tmux: shift-left/right move between windows
-
+# shift-left/right move between windows
 previous_tab = ["prefix+p", "shift+left"]
 next_tab = ["prefix+n", "shift+right"]
 
-# tmux: | splits side by side, - splits top and bottom
-
+# | splits side by side, - splits top and bottom
 split_vertical = ["prefix+v", "prefix+|"]
 split_horizontal = "prefix+minus"
-
-# tmux: C-\ jumps back to the last pane
+# C-\ jumps back to the last pane
 
 last_pane = "prefix+backslash"
 
 # spaces
-#
-# no tmux equivalent: spaces are per-project containers, all visible at once in
-# the sidebar. shift+left/right walks tabs, shift+up/down walks spaces, matching
-# how the sidebar stacks them.
+# --------
 
+# shift+left/right walks tabs, shift+up/down walks spaces, matching
+# how the sidebar stacks them.
 previous_workspace = "shift+up"
 next_workspace = "shift+down"
 switch_workspace = "prefix+shift+1..9"
 
 # agents
-#
+# --------
+
 # prefix+a walks the agents that want attention, wherever they live. the indexed
 # version needs ctrl+digit, which not every terminal forwards.
-
 next_agent = "prefix+a"
 previous_agent = "prefix+shift+a"
 focus_agent = "prefix+ctrl+1..9"
 
 # vim navigation via ctrl-j/k/h/l (https://github.com/paulbkim-dev/vim-herdr-navigation)
-
 [[keys.command]]
 key = "ctrl+h"
 type = "plugin_action"
@@ -133,18 +112,17 @@ command = "vim-herdr-navigation.right"
 description = "navigate right (vim/herdr)"
 
 # default-session plugin (local-plugins/default-session)
-#
+# --------
+
 # prefix+d builds this space, prefix+ctrl+d builds every space that came back
 # from a restore as bare shells
-
 [[keys.command]]
 key = "prefix+d"
 type = "plugin_action"
 command = "default-session.apply"
 description = "apply the default tab/split layout to this space"
 
-# tmux: C-S-left/right swap windows
-
+# C-S-left/right swap windows
 [[keys.command]]
 key = "ctrl+shift+left"
 type = "plugin_action"
@@ -157,33 +135,27 @@ type = "plugin_action"
 command = "default-session.tab-move-right"
 description = "move tab right"
 
-# vim's C-w = rather than tmux's M-1/M-2
-
 [[keys.command]]
 key = "prefix+="
 type = "plugin_action"
 command = "default-session.balance"
 description = "even out split ratios in this tab"
 
-# tmux: prefix+m / prefix+M toggle mouse mode
-
+# prefix+m / prefix+M toggle mouse mode
 [[keys.command]]
 key = "prefix+m"
 type = "plugin_action"
 command = "default-session.toggle-mouse"
 description = "toggle mouse capture"
 
-# parallel to tmux-resurrect's @resurrect-processes: relaunch the programs in
-# every space whose panes came back from a restore as bare shells
-
+# relaunch the programs in every space whose panes came back from a restore as bare shells
 [[keys.command]]
 key = "prefix+ctrl+d"
 type = "plugin_action"
 command = "default-session.rehydrate"
 description = "relaunch programs in spaces restored as bare shells"
 
-# lazygit, without giving up a pane for it
-
+# lazygit
 [[keys.command]]
 key = "prefix+ctrl+g"
 type = "popup"

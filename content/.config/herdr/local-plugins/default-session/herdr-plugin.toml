@@ -1,33 +1,29 @@
 id = "default-session"
 name = "Default Session"
-version = "0.1.0"
+version = "0.2.0"
 min_herdr_version = "0.7.5"
-description = "Scaffold a tmux-style default layout on startup, plus tmux-style tab/pane helpers."
+description = "Scaffold a default layout on startup, with tab/pane helpers."
 platforms = ["linux", "macos"]
 
 # runs once after the server restores the session and the api socket is ready.
 # only scaffolds when the session is untouched (one tab holding one idle shell).
-
 [[startup]]
 command = ["python3", "session.py", "startup"]
 
 # every new space gets the layout too, minus the primary_only tabs.
 # skips spaces that already have tabs, so it cannot fight the startup hook.
-
 [[events]]
 on = "workspace.created"
 command = ["python3", "session.py", "apply-if-new"]
 
 # manual apply, for spaces created after startup (prefix+alt+s)
-
 [[actions]]
 id = "apply"
 title = "default session: apply layout to this space"
 contexts = ["workspace", "global"]
 command = ["python3", "session.py", "apply"]
 
-# tmux ctrl-shift-left/right window swapping
-
+# ctrl-shift-left/right window swapping
 [[actions]]
 id = "tab-move-left"
 title = "default session: move tab left"
@@ -40,25 +36,21 @@ title = "default session: move tab right"
 contexts = ["global"]
 command = ["python3", "session.py", "move-tab", "right"]
 
-# tmux-resurrect's @resurrect-processes, after the fact: a restore brings back
-# the tab tree but every pane as a bare shell, so relaunch what belongs in them
-
+# a restore brings back the tab tree but every pane as a bare shell, so relaunch what belongs in them
 [[actions]]
 id = "rehydrate"
 title = "default session: relaunch programs in restored spaces"
 contexts = ["global"]
 command = ["python3", "session.py", "rehydrate"]
 
-# tmux M-1/M-2 even-vertical/even-horizontal
-
+# M-1/M-2 even-vertical/even-horizontal
 [[actions]]
 id = "balance"
 title = "default session: even out split ratios"
 contexts = ["global"]
 command = ["python3", "session.py", "balance"]
 
-# tmux prefix+m / prefix+M mouse mode toggle
-
+# prefix+m / prefix+M mouse mode toggle
 [[actions]]
 id = "toggle-mouse"
 title = "default session: toggle mouse capture"

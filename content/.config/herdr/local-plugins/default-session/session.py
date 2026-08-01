@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """herdr default-session plugin.
 
-Builds a tmux-style default layout over the herdr socket api:
+Scaffold a default layout on startup, with tab/pane helpers:
 
     session.py startup            scaffold, but only if the session is untouched
     session.py apply              scaffold the current space unconditionally
@@ -411,8 +411,7 @@ def release(key: str) -> None:
 def cmd_startup() -> int:
     """Build a fresh session, or relaunch a restored one.
 
-    With rehydrate_on_startup set, this is tmux-continuum's @continuum-restore:
-    every space that came back as bare shells starts programs again. Panes get
+    Every space that comes back as bare shells starts programs again. Panes get
     the longer settle window here, since a server that just started is still
     spawning shells and resuming agents.
     """
@@ -517,7 +516,7 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
 
 
 def rehydrate_pass(settle_seconds: float) -> int:
-    """tmux-resurrect's @resurrect-processes, after the fact.
+    """Restore previous processes in each pane in every space/tab.
 
     A restored session brings back spaces, tabs, splits, and cwds, but every
     pane comes back as a bare shell. Relaunch what belongs in those panes, and
@@ -609,7 +608,7 @@ def cmd_balance() -> int:
 
 
 def cmd_toggle_mouse() -> int:
-    """tmux's prefix+m / prefix+M, as a single toggle."""
+    """prefix+m / prefix+M, as a single toggle."""
     text = CONFIG_FILE.read_text()
     match = re.search(r"^(\s*mouse_capture\s*=\s*)(true|false)\s*$", text, re.MULTILINE)
     if not match:
