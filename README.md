@@ -6,7 +6,8 @@
 
 This repository contains the configuration files I use on Linux computers.
 Dotfiles live under the `content/` directory.
-Only tested on Fedora as of 2024, confirmed to work with Fedora 41.
+
+Only tested on Fedora as of 2026, confirmed to work with Fedora 40+.
 
 ## Getting started
 
@@ -59,7 +60,7 @@ just status
 ### herdr configuration
 
 [herdr](https://herdr.dev) config lives in `content/.config/herdr`. The startup
-layout — tabs, splits, and the TUIs in them — is a local plugin under
+layout (tabs, splits, and the TUIs in them) is a local plugin under
 `content/.config/herdr/local-plugins/default-session`; see
 [its README](./content/.config/herdr/local-plugins/default-session/README.md)
 for the layout and keybindings.
@@ -73,23 +74,54 @@ herdr plugin install persiyanov/herdr-reviewr
 herdr plugin install paulbkim-dev/vim-herdr-navigation
 ```
 
+The agent integrations need installing too, so they are deliberately not synced:
+
+```bash
+herdr integration install claude
+herdr integration install opencode
+```
+
+The tracked `.claude/settings.json` registers the Claude one as a `SessionStart`
+hook, so it points at a file that only exists once the command above has run.
+`herdr integration status` lists what is installed and whether it's current.
+
 The layout expects these on `PATH`:
 
-| tool         | used by                                            |
-| ------------ | -------------------------------------------------- |
-| `python3`    | the default-session plugin                         |
-| `git`        | repo detection for the git, review, and prs tabs   |
-| `claude`     | `agents` tab                                       |
-| `nvim`       | `editor` tab                                       |
-| `lazygit`    | `git` tab and the `prefix+alt+g` popup             |
-| `glances`    | `system` tab                                       |
-| `journalctl` | `system` tab (systemd)                             |
-| `tuicr`      | `review` tab                                       |
-| `ghzinga`    | `prs` tab (`cargo install ghzinga`)                |
-| `gh`         | picking which PR the `prs` tab opens               |
+| tool         | used by                                          |
+| ------------ | ------------------------------------------------ |
+| `python3`    | the default-session plugin                       |
+| `git`        | repo detection for the git, review, and prs tabs |
+| `claude`     | `agents` tab                                     |
+| `nvim`       | `editor` tab                                     |
+| `lazygit`    | `git` tab and the `prefix+alt+g` popup           |
+| `glances`    | `system` tab                                     |
+| `journalctl` | `system` tab (systemd)                           |
+| `tuicr`      | `review` tab                                     |
+| `ghzinga`    | `prs` tab (`cargo install ghzinga`)              |
+| `gh`         | picking which PR the `prs` tab opens             |
 
 Anything missing degrades rather than breaks: the pane reports the failure and
 drops back to an interactive shell.
+
+### Background services
+
+`content/.config/systemd/user` holds the user units, which syncing alone does not
+turn on:
+
+| unit                                  | what it does                           |
+| ------------------------------------- | -------------------------------------- |
+| `navi.service`                        | PR-review alerts, polls every 60s      |
+| `recollindex.service.d/override.conf` | keeps recoll's indexer off the desktop |
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now navi.service
+```
+
+`navi.service` reads its tokens from `~/.config/navi/navi.env`, which is not
+synced. Create it by hand (`chmod 600`) with one `KEY=value` per line for the
+sources enabled in `config.toml`. The unit tolerates the file being missing, so
+navi starts either way and only the sources needing a token stay quiet.
 
 ### Neovim configuration
 
@@ -110,8 +142,7 @@ runs everything including `cargo check`. The per-language recipes are
 `format-rust`/`lint-rust` (rustfmt, clippy) and `format-python`/`lint-python`
 (black, flake8).
 
-Python here means the scripts under `content/` — currently the herdr
-default-session plugin. [black](https://black.readthedocs.io) owns formatting and
+Python here means the scripts under `content/`. [black](https://black.readthedocs.io) owns formatting and
 [flake8](https://flake8.pycqa.org) catches the rest; their settings live in
 `pyproject.toml` and `.flake8`, with flake8's line length matched to black's 88.
 Install the tools once with:

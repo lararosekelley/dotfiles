@@ -520,8 +520,8 @@ def rehydrate_pass(settle_seconds: float) -> int:
 
     A restored session brings back spaces, tabs, splits, and cwds, but every
     pane comes back as a bare shell. Relaunch what belongs in those panes, and
-    leave anything with real work in it alone. A space with nothing in it yet —
-    a fresh session's first one, say — gets the whole layout instead.
+    leave anything with real work in it alone. A space with nothing in it yet
+    gets the whole layout instead.
     """
     snap = wait_for_root_pane()
     spec = load_layout()

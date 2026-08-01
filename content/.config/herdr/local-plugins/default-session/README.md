@@ -21,8 +21,8 @@ hooks run when a **server** starts, so the layout appears on the next
 ## What it does
 
 On startup it builds every space that has nothing running in it, from
-[`layout.json`](./layout.json) — a fresh session, or a restored one whose panes
-all came back as bare shells (see [After a reboot](#after-a-reboot)):
+[`layout.json`](./layout.json) (a fresh session, or a restored one whose panes
+all came back as bare shells (see [After a reboot](#after-a-reboot))):
 
 | tab      | panes                                         |
 | -------- | --------------------------------------------- |
@@ -34,11 +34,11 @@ all came back as bare shells (see [After a reboot](#after-a-reboot)):
 | `prs`    | full screen `ghzinga`, via `prs.sh`           |
 | `system` | `glances` beside `journalctl -f`              |
 
-That covers what the `mux` function in `~/.functions` set up under tmux —
-`primary`, `editor`, and the logs window — with the repo-oriented TUIs added.
+That covers what the `mux` function in `~/.functions` set up under tmux.
+`primary`, `editor`, and the logs window, with the repo-oriented TUIs added.
 
 Every space created afterwards gets the same treatment through a
-`workspace.created` event hook, minus any tab marked `primary_only` — `system`
+`workspace.created` event hook, minus any tab marked `primary_only`. `system`
 is one, so global monitors exist once rather than once per project.
 
 Details worth knowing:
@@ -46,8 +46,8 @@ Details worth knowing:
 - Panes inherit the space's cwd, so launching herdr from a checkout gives every
   tab the right repo.
 - Panes marked `requires_repo` (`lazygit`, `tuicr`, `ghzinga`, and the git
-  shell) need a checkout. When the space is rooted somewhere that isn't one —
-  `~`, say — they fall back to `default_repo` in `layout.json`. If that is also
+  shell) need a checkout. When the space is rooted somewhere that isn't one (such as `~`),
+  they fall back to `default_repo` in `layout.json`. If that is also
   missing they print a hint instead of an error.
 - Every `run` command falls back to an interactive shell when the program
   exits, so quitting nvim leaves a usable pane instead of a dead tab.
@@ -90,9 +90,9 @@ reloads the server, so run `just sync-to-repo` if you want the flip kept.
 ## After a reboot
 
 A restore brings back spaces, tabs, splits, and cwds, but every pane comes back
-as a bare shell — herdr does not relaunch programs the way tmux-resurrect's
+as a bare shell. herdr does not relaunch programs the way tmux-resurrect's
 `@resurrect-processes` did. The startup hook fills that gap: every tab whose
-panes are *all* idle shells is rebuilt from its entry in `layout.json`, so nvim,
+panes are _all_ idle shells is rebuilt from its entry in `layout.json`, so nvim,
 lazygit, glances, journalctl, tuicr, ghzinga, and claude come back where they
 belong. That makes launching herdr the equivalent of
 `@continuum-restore 'on'`.
@@ -101,8 +101,8 @@ The pass works a tab at a time, matching tabs to the layout by label. That
 matters now that `agents` holds a claude: a resumed agent vetoes its own tab, but
 the rest of the space still gets rebuilt. Vetoing space-wide would leave every
 other tab a bare shell for the rest of the session. Tabs that aren't in
-`layout.json` are left where they are, and a space with nothing in it at all —
-a fresh session's first one — gets the whole layout instead.
+`layout.json` are left where they are, and a space with nothing in it at all
+gets the whole layout instead.
 
 Set `rehydrate_on_startup` false in `layout.json` to go back to only building
 fresh sessions. `prefix+ctrl+d` runs the same pass by hand at any time.
@@ -119,7 +119,7 @@ rehydrated 1 tab(s), built 0 space(s)
 
 Agent panes veto a rebuild on metadata alone, not on whether a process is up.
 herdr persists `agent_session` refs so it can resume claude conversations, and a
-pane waiting to be resumed looks exactly like an idle shell — rebuilding it would
+pane waiting to be resumed looks exactly like an idle shell. Rebuilding it would
 throw the conversation away. A pane with no saved session is just an idle shell,
 so rehydrate starts `claude` there fresh.
 
@@ -131,7 +131,7 @@ stops the server, moves `session.json` and `session-history.json` aside as
 herdr pane, since stopping the server would take that shell with it.
 
 A fresh session has no spaces until a client attaches, which is after `herd`
-creates its repo spaces — so `herd` makes the `~` space itself first, keeping it
+creates its repo spaces, so `herd` makes the `~` space itself first, keeping it
 the primary space and the one you land in.
 
 Anything can also be driven by hand:
@@ -153,7 +153,7 @@ python3 session.py balance
 the space itself isn't a checkout. `{plugin_root}` inside a `run` string expands
 to this directory, which is how the `prs` tab finds `prs.sh`.
 
-No restart needed — the file is read on each run, so `prefix+d` in a fresh
+No restart needed. The file is read on each run, so `prefix+d` in a fresh
 space is enough to see a change.
 
 ## Opening a space per repo
@@ -181,7 +181,7 @@ attaching. Note the cost: every project space starts its own `nvim`, `lazygit`,
 ## Editing the plugin manifest
 
 `plugins.json` caches the manifest, so re-link after changing
-`herdr-plugin.toml` — new actions and event hooks stay invisible until then:
+`herdr-plugin.toml`. New actions and event hooks stay invisible until then:
 
 ```bash
 herdr plugin link ~/.config/herdr/local-plugins/default-session

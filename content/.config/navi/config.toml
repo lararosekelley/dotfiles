@@ -1,0 +1,107 @@
+# navi configuration
+
+[general]
+# Seconds between poll passes when running `navi run`.
+poll_interval_secs = 60
+# Log filter: "info", or e.g. "navi=debug,octocrab=warn".
+log_level = "info"
+# Offset from UTC in minutes, used only for quiet-hours evaluation.
+# e.g. -420 = US Pacific (PDT), 60 = Central Europe.
+utc_offset_minutes = 0
+
+[github]
+enabled = true
+# Env var holding a GitHub PAT with `notifications` + `repo` (read) scope.
+token_env = "NAVI_GITHUB_TOKEN"
+# For GitHub Enterprise Server, set api_base = "https://ghe.example.com/api/v3"
+
+[gitlab]
+# Off by default. Enable to get review-request and mention alerts from GitLab.
+enabled = false
+# Env var holding a GitLab PAT with `read_api` scope.
+token_env = "NAVI_GITLAB_TOKEN"
+# For self-hosted, set api_base = "https://gitlab.example.com/api/v4"
+
+[gitea]
+# Off by default. Works with Gitea and Forgejo.
+enabled = false
+token_env = "NAVI_GITEA_TOKEN"
+# For your instance, set api_base = "https://gitea.example.com/api/v1"
+
+[slack]
+enabled = true
+# Env var holding a Slack bot token (xoxb-...). Needs chat:write + im:write.
+token_env = "NAVI_SLACK_TOKEN"
+# "self" DMs whoever the token authenticates as; or set a Slack user id like "U0123".
+dm_to = "U01HYL76WR0"
+
+[discord]
+# Off by default. dm_to is either a webhook URL (simplest, no token) or a user id.
+enabled = false
+# Env var holding a bot token (needed only for user-DM mode, not webhooks).
+token_env = "NAVI_DISCORD_TOKEN"
+# dm_to = "https://discord.com/api/webhooks/..."   # webhook, or a user id like "123456789012345678"
+dm_to = ""
+
+[email]
+# Off by default. Sends one message per event, threaded per PR.
+enabled = true
+smtp_host = "smtp.gmail.com"
+smtp_port = 587
+# "none" (local sink like Mailpit), "starttls" (587), or "implicit" (465).
+tls = "starttls"
+username = "lararosekelley@gmail.com"
+password_env = "NAVI_EMAIL_PASSWORD"
+from = "navi <navi@larakelley.com>"
+to = "Lara Kelley <lararosekelley@gmail.com>"
+
+[rules.events]
+# Toggle individual alert kinds. All default on (you opt out of noise).
+review_requested = true
+re_review_requested = true
+review_submitted = true
+review_dismissed = true
+comment_reply = true
+mentioned = true
+merged = true
+closed = true
+ready_for_review = false
+
+[rules.repos]
+allow = []
+deny = ["lararosekelley/git-stk-e2e-*", "lararosekelley/navi-e2e*"]
+
+[[rules.mute]]
+match = "excerpt"
+pattern = "CircleCI pipeline triggered"
+
+[[rules.mute]]
+match = "excerpt"
+pattern = "Bundle Analysis for web"
+
+[rules.quiet_hours]
+enabled = false
+start = "22:00"
+end = "08:00"
+
+[rules.merge_close]
+# Whether to alert on merge/close for PRs you authored and/or reviewed.
+author = true
+reviewer = true
+
+# mute_authors is a list of logins whose actions never notify (e.g. bots):
+[rules]
+mute_authors = ["linear-code[bot]"]
+
+# Routes wire sources to destinations. Omit this section entirely to send every
+# source to every enabled destination. List routes to be explicit, e.g. github+gitlab
+# to slack, or github to discord:
+[[routes]]
+source = "github"
+destination = "slack"
+repos = ["higharc/*"]
+
+[[routes]]
+source = "github"
+destination = "email"
+repos = ["lararosekelley/*", "greylocklabs/*", "jazzband/*", "ltrainbrass/*", "psorch/*"]

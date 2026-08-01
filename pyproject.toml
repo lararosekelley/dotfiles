@@ -1,13 +1,11 @@
-# Python tooling for the scripts under content/ — currently just the herdr
-# default-session plugin.
+# Python tooling for the scripts under content/
 #
-# flake8 has no pyproject support, so its half of this lives in .flake8.
+# flake8 has no pyproject support, so its half of this lives in .flake8
 
 [tool.black]
 line-length = 88
 
 # these run against whatever python3 the box has, so stay off newer syntax
-
 target-version = ["py39"]
 
 extend-exclude = '''

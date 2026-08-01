@@ -2,8 +2,8 @@
 #
 # Open ghzinga on something useful for the repo in the current directory.
 #
-# ghzinga picks a restore session from anchors it saved earlier — herdr pane ids
-# score "strong" while cwd and git remote only score "weak" — so a bare launch
+# ghzinga picks a restore session from anchors it saved earlier. herdr pane ids
+# score "strong" while cwd and git remote only score "weak". so, a bare launch
 # happily reopens another repo's PR. Naming the session after the repo pins it
 # instead, and an explicit resource gives it a sensible cold start:
 #
