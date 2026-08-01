@@ -15,8 +15,10 @@
     "`requires_repo` panes use the space cwd when it is a checkout, and fall back",
     "to default_repo when it is not (a space rooted at ~, say).",
     "",
-    "A tab marked `primary_only` is skipped when spaces get the layout",
-    "automatically, so global monitors exist once instead of once per project.",
+    "A tab marked `primary_only` is skipped in every space but the primary one,",
+    "so global monitors exist once instead of once per project. `secondary_only`",
+    "is the mirror: skipped in the primary space, since the repo-oriented TUIs",
+    "have no repo to point at from ~. An explicit `apply` builds the whole set.",
     "",
     "`rehydrate_on_startup` relaunches programs tab by tab wherever a restore",
     "brought panes back as bare shells, leaving tabs that hold an agent or a",
@@ -44,6 +46,7 @@
     },
     {
       "label": "agents",
+      "secondary_only": true,
       "layout": {
         "type": "split",
         "direction": "right",
@@ -58,6 +61,7 @@
     },
     {
       "label": "git",
+      "secondary_only": true,
       "layout": {
         "type": "split",
         "direction": "right",
@@ -68,10 +72,12 @@
     },
     {
       "label": "review",
+      "secondary_only": true,
       "layout": { "type": "pane", "label": "tuicr", "run": "tuicr tui", "requires_repo": true }
     },
     {
       "label": "prs",
+      "secondary_only": true,
       "layout": {
         "type": "pane",
         "label": "ghzinga",
@@ -84,7 +90,7 @@
       "primary_only": true,
       "layout": {
         "type": "split",
-        "direction": "right",
+        "direction": "down",
         "ratio": 0.5,
         "first": { "type": "pane", "label": "glances", "run": "glances" },
         "second": { "type": "pane", "label": "journal", "run": "journalctl -f" }

@@ -24,22 +24,30 @@ On startup it builds every space that has nothing running in it, from
 [`layout.json`](./layout.json) (a fresh session, or a restored one whose panes
 all came back as bare shells (see [After a reboot](#after-a-reboot))):
 
-| tab      | panes                                         |
-| -------- | --------------------------------------------- |
-| `shell`  | main shell, plus scratch/watch shells stacked |
-| `agents` | `claude`, beside a spare pane for codex       |
-| `editor` | full screen `nvim`                            |
-| `git`    | `lazygit` beside a git shell                  |
-| `review` | full screen `tuicr`                           |
-| `prs`    | full screen `ghzinga`, via `prs.sh`           |
-| `system` | `glances` beside `journalctl -f`              |
+| tab      | panes                                         | where           |
+| -------- | --------------------------------------------- | --------------- |
+| `shell`  | main shell, plus scratch/watch shells stacked | everywhere      |
+| `agents` | `claude`, beside a spare pane for codex       | repo spaces     |
+| `editor` | full screen `nvim`                            | everywhere      |
+| `git`    | `lazygit` beside a git shell                  | repo spaces     |
+| `review` | full screen `tuicr`                           | repo spaces     |
+| `prs`    | full screen `ghzinga`, via `prs.sh`           | repo spaces     |
+| `system` | `glances` stacked over `journalctl -f`        | `~` space only  |
 
 That covers what the `mux` function in `~/.functions` set up under tmux.
 `primary`, `editor`, and the logs window, with the repo-oriented TUIs added.
 
 Every space created afterwards gets the same treatment through a
-`workspace.created` event hook, minus any tab marked `primary_only`. `system`
-is one, so global monitors exist once rather than once per project.
+`workspace.created` event hook. Which tabs a space gets depends on whether it is
+the primary (`~`) space:
+
+- `primary_only` tabs are skipped everywhere else, so global monitors exist once
+  rather than once per project. `system` is one.
+- `secondary_only` tabs are skipped in the primary space. `agents`, `git`,
+  `review`, and `prs` are all repo-oriented, and `~` is not a checkout, so the
+  `~` space gets `shell`, `editor`, and `system` and nothing else.
+
+An explicit `apply` ignores both flags and builds the whole set.
 
 Details worth knowing:
 
@@ -80,9 +88,9 @@ Bound in [`../../config.toml`](../../config.toml):
 | `toggle-mouse`   | `prefix+m`         | `bind m` / `bind M`      |
 
 `apply` replaces the current tab and appends the rest, so running it in a space
-that already has tabs leaves those tabs in place ahead of the new ones. It also
-includes `primary_only` tabs, since asking for it explicitly means you want the
-whole set.
+that already has tabs leaves those tabs in place ahead of the new ones. It
+ignores `primary_only` and `secondary_only`, since asking for it explicitly
+means you want the whole set.
 
 `toggle-mouse` rewrites `ui.mouse_capture` in `~/.config/herdr/config.toml` and
 reloads the server, so run `just sync-to-repo` if you want the flip kept.
@@ -110,12 +118,26 @@ fresh sessions. `prefix+ctrl+d` runs the same pass by hand at any time.
 Tabs are skipped by evidence, not by guess:
 
 ```text
-~/shell: relaunching
-~/agents: agent in w1:p5, leaving it alone
-~/editor: something is running in w1:p7, leaving it alone
+~/shell: only shells, nothing to relaunch
+~/editor: relaunching
+product/agents: agent in w2:p5, leaving it alone
+product/editor: something is running in w2:p7, leaving it alone
 navi/notes: not in layout.json, leaving it alone
 rehydrated 1 tab(s), built 0 space(s)
 ```
+
+A tab whose layout starts no programs is skipped outright. `shell` is the only
+one: a restore brings its panes back exactly as the layout would build them, so
+there is nothing to relaunch, and every other tab is vetoed by the program
+running in it. That left `shell` as the one tab rebuilt on every single startup.
+
+Rebuilding is not free. `layout.apply` against an existing tab hands back a
+_new_ tab id, so the `~` space came out of a `herd --reset` with `shell` sitting
+on `w1:t9` while `agents` through `system` kept `t3`–`t8`, putting it last in
+tab order rather than first. Repo spaces escaped it only by accident of timing:
+`herd` creates them after the startup hook has taken its snapshot, so they are
+not in the pass at all. Tabs that genuinely do get relaunched are now moved back
+to the index they held.
 
 Agent panes veto a rebuild on metadata alone, not on whether a process is up.
 herdr persists `agent_session` refs so it can resume claude conversations, and a
@@ -148,6 +170,9 @@ python3 session.py balance
 - `{"type": "pane", "label": ..., "run": ..., "requires_repo": ...}`
 - `{"type": "split", "direction": ..., "ratio": ..., "first": ..., "second": ...}`
   where direction is `right` or `down` and ratio is between 0 and 1
+
+Each tab also takes an optional `primary_only` or `secondary_only` flag, which
+decide whether it lands in the `~` space, the repo spaces, or both.
 
 `default_repo` at the top of the file is where `requires_repo` panes land when
 the space itself isn't a checkout. `{plugin_root}` inside a `run` string expands

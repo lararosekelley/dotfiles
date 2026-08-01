@@ -24,7 +24,7 @@ mouse_capture = true
 copy_on_select = true
 
 # agent panel ordering: "spaces" groups by space, "priority" is the attention queue
-agent_panel_sort = "spaces"
+agent_panel_sort = "priority"
 
 [theme]
 name = "catppuccin"

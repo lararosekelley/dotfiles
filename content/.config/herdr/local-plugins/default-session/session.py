@@ -212,12 +212,34 @@ def target_workspace(snap: dict) -> str:
     return os.environ.get("HERDR_WORKSPACE_ID") or snap["focused_workspace_id"]
 
 
-def wanted_tabs(spec: dict, primary: bool) -> list[dict]:
+def wanted_tabs(spec: dict, primary: bool | None) -> list[dict]:
     """The layout tabs a space should have.
 
-    Global monitors belong in one place, not once per project space.
+    Global monitors belong in one place, not once per project space, and the
+    repo-oriented TUIs have no repo to point at from the ~ space. `primary=None`
+    asks for the whole set, which is what an explicit `apply` wants.
     """
-    return [tab for tab in spec["tabs"] if primary or not tab.get("primary_only")]
+    if primary is None:
+        return list(spec["tabs"])
+
+    skip = "secondary_only" if primary else "primary_only"
+    return [tab for tab in spec["tabs"] if not tab.get(skip)]
+
+
+def tab_runs_programs(spec_tab: dict) -> bool:
+    """Whether a tab's layout starts anything, or is only plain shells.
+
+    A tab of bare shells is indistinguishable from itself after a restore, so
+    rehydrate has nothing to relaunch there. Rebuilding it anyway is how the
+    `shell` tab used to get thrown away and re-added on every startup.
+    """
+
+    def starts_something(node: dict) -> bool:
+        if node.get("type") == "split":
+            return starts_something(node["first"]) or starts_something(node["second"])
+        return bool(node.get("run") or node.get("command"))
+
+    return starts_something(spec_tab["layout"])
 
 
 def apply_tab(
@@ -243,7 +265,7 @@ def apply_tab(
     return call("layout.apply", params)["layout"]["tab_id"]
 
 
-def apply_layout(snap: dict, workspace_id: str, primary: bool = True) -> None:
+def apply_layout(snap: dict, workspace_id: str, primary: bool | None = True) -> None:
     spec = load_layout()
     cwd = space_root_cwd(snap, workspace_id)
     repo = repo_cwd(cwd, spec)
@@ -438,8 +460,10 @@ def cmd_startup() -> int:
 
 
 def cmd_apply() -> int:
+    # asking for the layout by hand means the whole set, primary_only and
+    # secondary_only tabs included
     snap = snapshot()
-    apply_layout(snap, target_workspace(snap))
+    apply_layout(snap, target_workspace(snap), primary=None)
     return 0
 
 
@@ -487,13 +511,17 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
     }
     relaunched = 0
 
-    for tab in space_tabs(snap, workspace_id):
+    for index, tab in enumerate(space_tabs(snap, workspace_id)):
         tab_id = tab["tab_id"]
         where = f"{space['label']}/{tab['label']}"
 
         spec_tab = by_label.get(tab["label"])
         if not spec_tab:
             print(f"{where}: not in layout.json, leaving it alone")
+            continue
+
+        if not tab_runs_programs(spec_tab):
+            print(f"{where}: only shells, nothing to relaunch")
             continue
 
         reason = in_use_reason(tab_panes(snap, tab_id), settle_seconds)
@@ -507,7 +535,11 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
 
         print(f"{where}: relaunching")
         try:
-            apply_tab(spec_tab, cwd, repo, tab_id=tab_id)
+            rebuilt_id = apply_tab(spec_tab, cwd, repo, tab_id=tab_id)
+            # replacing a tab hands back a new id, so put it back where the old
+            # one sat rather than leaving it wherever herdr appended it
+            if rebuilt_id != tab_id:
+                call("tab.move", {"tab_id": rebuilt_id, "insert_index": index})
         finally:
             release(tab_id)
         relaunched += 1
