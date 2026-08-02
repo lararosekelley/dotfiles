@@ -199,4 +199,4 @@ just install-python-tools
 
 ## License
 
-Copyright (c) 2014-2025 Lara Kelley. MIT License.
+Copyright (c) 2014-2026 Lara Kelley. MIT License.
