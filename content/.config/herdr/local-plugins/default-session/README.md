@@ -34,6 +34,9 @@ all came back as bare shells (see [After a reboot](#after-a-reboot))):
 | `prs`    | full screen `ghzinga`, via `prs.sh`           | repo spaces     |
 | `system` | `glances` stacked over `journalctl -f`        | `~` space only  |
 
+The `~` space's main shell opens on a `fastfetch` banner; see
+[the pane flags](#editing-the-layout) for why the repo spaces skip it.
+
 That covers what the `mux` function in `~/.functions` set up under tmux.
 `primary`, `editor`, and the logs window, with the repo-oriented TUIs added.
 
@@ -47,6 +50,11 @@ the primary (`~`) space:
   `review`, and `prs` are all repo-oriented, and `~` is not a checkout, so the
   `~` space gets `shell`, `editor`, and `system` and nothing else.
 
+Both flags also work on a single **pane**, where they scope its `run` rather
+than the pane itself: the pane is still built in every space, just as a plain
+shell. The `shell` tab's main pane uses that to greet the `~` space with
+`fastfetch` without paying for it once per project space.
+
 An explicit `apply` ignores both flags and builds the whole set.
 
 Details worth knowing:
@@ -58,7 +66,9 @@ Details worth knowing:
   they fall back to `default_repo` in `layout.json`. If that is also
   missing they print a hint instead of an error.
 - Every `run` command falls back to an interactive shell when the program
-  exits, so quitting nvim leaves a usable pane instead of a dead tab.
+  exits, so quitting nvim leaves a usable pane instead of a dead tab. A pane
+  marked `oneshot` leans on that: `fastfetch` prints and hands the pane back
+  right away, so the banner is scrollback above an ordinary prompt.
 - The `prs` tab goes through [`prs.sh`](./prs.sh), which pins ghzinga to a
   session named after the repo. Left to itself ghzinga scores saved herdr pane
   ids as "strong" anchors and cwd or git remote as "weak", so a bare launch
@@ -118,7 +128,8 @@ fresh sessions. `prefix+ctrl+d` runs the same pass by hand at any time.
 Tabs are skipped by evidence, not by guess:
 
 ```text
-~/shell: only shells, nothing to relaunch
+~/shell: replayed 1 command(s) in place
+product/shell: only shells, nothing to relaunch
 ~/editor: relaunching
 product/agents: agent in w2:p5, leaving it alone
 product/editor: something is running in w2:p7, leaving it alone
@@ -130,6 +141,13 @@ A tab whose layout starts no programs is skipped outright. `shell` is the only
 one: a restore brings its panes back exactly as the layout would build them, so
 there is nothing to relaunch, and every other tab is vetoed by the program
 running in it. That left `shell` as the one tab rebuilt on every single startup.
+
+`oneshot` panes are the exception that doesn't reopen that hole. `fastfetch`
+prints and exits, so a restored `shell` tab is still "only shells" as far as
+rebuilding goes — rebuilding it to get the banner back would throw away the cwds
+the restore just recovered. Instead the command is typed into the shell already
+sitting in the pane, over `pane.send_text`, and only when that pane settles to
+an idle prompt. A pane you left something running in keeps it.
 
 Rebuilding is not free. `layout.apply` against an existing tab hands back a
 _new_ tab id, so the `~` space came out of a `herd --reset` with `shell` sitting
@@ -167,12 +185,17 @@ python3 session.py balance
 
 `layout.json` is a BSP tree per tab:
 
-- `{"type": "pane", "label": ..., "run": ..., "requires_repo": ...}`
+- `{"type": "pane", "label": ..., "run": ..., "requires_repo": ..., "oneshot": ...}`
 - `{"type": "split", "direction": ..., "ratio": ..., "first": ..., "second": ...}`
   where direction is `right` or `down` and ratio is between 0 and 1
 
 Each tab also takes an optional `primary_only` or `secondary_only` flag, which
-decide whether it lands in the `~` space, the repo spaces, or both.
+decide whether it lands in the `~` space, the repo spaces, or both. On a pane
+the same flags scope its `run`, leaving the pane itself in every space.
+
+`oneshot` marks a `run` that prints and exits rather than owning the pane. It
+keeps the tab out of rehydrate's rebuild path and gets replayed into the
+restored shell instead, which is what makes the `fastfetch` banner cheap.
 
 `default_repo` at the top of the file is where `requires_repo` panes land when
 the space itself isn't a checkout. `{plugin_root}` inside a `run` string expands

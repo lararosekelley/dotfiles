@@ -157,14 +157,16 @@ def repo_cwd(space_cwd: str | None, spec: dict) -> str | None:
     return space_cwd
 
 
-def to_layout_node(node: dict, cwd: str | None, repo: str | None = None) -> dict:
+def to_layout_node(
+    node: dict, cwd: str | None, repo: str | None = None, primary: bool | None = None
+) -> dict:
     if node.get("type") == "split":
         return {
             "type": "split",
             "direction": node["direction"],
             "ratio": node["ratio"],
-            "first": to_layout_node(node["first"], cwd, repo),
-            "second": to_layout_node(node["second"], cwd, repo),
+            "first": to_layout_node(node["first"], cwd, repo, primary),
+            "second": to_layout_node(node["second"], cwd, repo, primary),
         }
 
     pane: dict = {"type": "pane"}
@@ -176,7 +178,7 @@ def to_layout_node(node: dict, cwd: str | None, repo: str | None = None) -> dict
         pane["cwd"] = pane_cwd
     if node.get("command"):
         pane["command"] = node["command"]
-    elif node.get("run"):
+    elif node.get("run") and in_scope(node, primary):
         pane["command"] = shell_wrap(node["run"], bool(node.get("requires_repo")))
     return pane
 
@@ -212,34 +214,56 @@ def target_workspace(snap: dict) -> str:
     return os.environ.get("HERDR_WORKSPACE_ID") or snap["focused_workspace_id"]
 
 
-def wanted_tabs(spec: dict, primary: bool | None) -> list[dict]:
-    """The layout tabs a space should have.
+def in_scope(spec: dict, primary: bool | None) -> bool:
+    """Whether a tab or a pane's program belongs in this kind of space.
 
     Global monitors belong in one place, not once per project space, and the
     repo-oriented TUIs have no repo to point at from the ~ space. `primary=None`
     asks for the whole set, which is what an explicit `apply` wants.
     """
     if primary is None:
-        return list(spec["tabs"])
+        return True
+    return not spec.get("secondary_only" if primary else "primary_only")
 
-    skip = "secondary_only" if primary else "primary_only"
-    return [tab for tab in spec["tabs"] if not tab.get(skip)]
+
+def wanted_tabs(spec: dict, primary: bool | None) -> list[dict]:
+    """The layout tabs a space should have."""
+    return [tab for tab in spec["tabs"] if in_scope(tab, primary)]
 
 
 def tab_runs_programs(spec_tab: dict) -> bool:
-    """Whether a tab's layout starts anything, or is only plain shells.
+    """Whether a tab's layout starts anything long-lived, or is only shells.
 
     A tab of bare shells is indistinguishable from itself after a restore, so
     rehydrate has nothing to relaunch there. Rebuilding it anyway is how the
-    `shell` tab used to get thrown away and re-added on every startup.
+    `shell` tab used to get thrown away and re-added on every startup. `oneshot`
+    panes don't count: their command prints and exits, leaving the shell the
+    restore already brought back, so they get replayed rather than rebuilt.
     """
 
     def starts_something(node: dict) -> bool:
         if node.get("type") == "split":
             return starts_something(node["first"]) or starts_something(node["second"])
+        if node.get("oneshot"):
+            return False
         return bool(node.get("run") or node.get("command"))
 
     return starts_something(spec_tab["layout"])
+
+
+def oneshot_panes(node: dict, primary: bool | None) -> dict[str, str]:
+    """Pane label -> command, for the panes whose program prints and exits."""
+    if node.get("type") == "split":
+        return {
+            **oneshot_panes(node["first"], primary),
+            **oneshot_panes(node["second"], primary),
+        }
+
+    if not (node.get("oneshot") and node.get("run") and node.get("label")):
+        return {}
+    if not in_scope(node, primary):
+        return {}
+    return {node["label"]: node["run"]}
 
 
 def apply_tab(
@@ -248,11 +272,12 @@ def apply_tab(
     repo: str | None,
     tab_id: str | None = None,
     workspace_id: str | None = None,
+    primary: bool | None = None,
 ) -> str:
     """Build one tab from its layout spec, replacing tab_id when given."""
     params: dict = {
         "tab_label": spec_tab["label"],
-        "root": to_layout_node(spec_tab["layout"], cwd, repo),
+        "root": to_layout_node(spec_tab["layout"], cwd, repo, primary),
         "focus": False,
     }
     # tab_id and workspace_id are mutually exclusive: replacing a tab already
@@ -282,6 +307,7 @@ def apply_layout(snap: dict, workspace_id: str, primary: bool | None = True) -> 
             repo,
             tab_id=replace_tab_id if index == 0 else None,
             workspace_id=workspace_id,
+            primary=primary,
         )
         created.append(tab_id)
         print(f"tab {index + 1}: {tab['label']} -> {tab_id}")
@@ -494,6 +520,36 @@ def cmd_apply_if_new() -> int:
     return 0
 
 
+def replay_oneshots(
+    snap: dict,
+    tab_id: str,
+    spec_tab: dict,
+    primary: bool | None,
+    settle_seconds: float,
+) -> int:
+    """Re-run the print-and-exit commands in a restored tab's idle shells.
+
+    Rebuilding the tab to get a banner back would throw away the cwds the
+    restore just recovered, so type the command into the shell already sitting
+    there instead. Panes doing something else are left alone.
+    """
+    wanted = oneshot_panes(spec_tab["layout"], primary)
+    if not wanted:
+        return 0
+
+    replayed = 0
+    for pane in tab_panes(snap, tab_id):
+        command = wanted.get(pane.get("label"))
+        if not command:
+            continue
+        if not settles_to_idle_shell(pane["pane_id"], settle_seconds):
+            continue
+        call("pane.send_text", {"pane_id": pane["pane_id"], "text": f"{command}\n"})
+        replayed += 1
+
+    return replayed
+
+
 def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) -> int:
     """Relaunch the programs in one restored space, tab by tab.
 
@@ -506,9 +562,8 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
     workspace_id = space["workspace_id"]
     cwd = space_root_cwd(snap, workspace_id)
     repo = repo_cwd(cwd, spec)
-    by_label = {
-        tab["label"]: tab for tab in wanted_tabs(spec, is_primary(snap, workspace_id))
-    }
+    primary = is_primary(snap, workspace_id)
+    by_label = {tab["label"]: tab for tab in wanted_tabs(spec, primary)}
     relaunched = 0
 
     for index, tab in enumerate(space_tabs(snap, workspace_id)):
@@ -521,7 +576,11 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
             continue
 
         if not tab_runs_programs(spec_tab):
-            print(f"{where}: only shells, nothing to relaunch")
+            replayed = replay_oneshots(snap, tab_id, spec_tab, primary, settle_seconds)
+            if replayed:
+                print(f"{where}: replayed {replayed} command(s) in place")
+            else:
+                print(f"{where}: only shells, nothing to relaunch")
             continue
 
         reason = in_use_reason(tab_panes(snap, tab_id), settle_seconds)
@@ -535,7 +594,7 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
 
         print(f"{where}: relaunching")
         try:
-            rebuilt_id = apply_tab(spec_tab, cwd, repo, tab_id=tab_id)
+            rebuilt_id = apply_tab(spec_tab, cwd, repo, tab_id=tab_id, primary=primary)
             # replacing a tab hands back a new id, so put it back where the old
             # one sat rather than leaving it wherever herdr appended it
             if rebuilt_id != tab_id:
