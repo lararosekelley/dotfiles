@@ -5,8 +5,8 @@ Wants=network-online.target
 
 [Service]
 Type=simple
-ExecStart="/home/lara/.local/bin/navi" run --config "/home/lara/.config/navi/config.toml"
-EnvironmentFile=-/home/lara/.config/navi/navi.env
+ExecStart="%h/.local/bin/navi" run --config "%h/.config/navi/config.toml"
+EnvironmentFile=-%h/.config/navi/navi.env
 Restart=on-failure
 RestartSec=10
 

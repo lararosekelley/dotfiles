@@ -110,10 +110,10 @@ path_prepend_if_missing "$HOME/.config/yarn/global/node_modules/.bin"
 path_prepend_if_missing "$HOME/.yarn/bin"
 
 # Added by higharc setup
-path_prepend_if_missing "/home/lara/Code/work/product/bin"
+path_prepend_if_missing "$HOME/Code/work/product/bin"
 
 # higharc shell completion
-[ -f /home/lara/.higharc/completion.bash ] && source /home/lara/.higharc/completion.bash
+[ -f "$HOME/.higharc/completion.bash" ] && source "$HOME/.higharc/completion.bash"
 
 path_dedup
 

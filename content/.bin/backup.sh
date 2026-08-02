@@ -9,7 +9,7 @@ if command -v systemd-inhibit >/dev/null 2>&1 && [ "${BACKUP_INHIBITED:-0}" != "
 fi
 
 BACKUP_MOUNT="/run/media/lara/Backups 8TB"
-LOG_DIR="/home/lara/.local/state"
+LOG_DIR="$HOME/.local/state"
 LOG_FILE="$LOG_DIR/backup.log"
 RATE_FILE="$LOG_DIR/backup-rate-bytes-per-second"
 MAX_LOG_SIZE_BYTES=$((20 * 1024 * 1024))
@@ -17,10 +17,10 @@ KEEP_LOG_FILES=5
 PROGRESS_INTERVAL_SECONDS=60
 
 export RESTIC_REPOSITORY="$BACKUP_MOUNT/restic-repo"
-export RESTIC_PASSWORD_FILE="/home/lara/.config/restic/password"
-EXCLUDE_FILE="/home/lara/.config/restic/excludes.txt"
+export RESTIC_PASSWORD_FILE="$HOME/.config/restic/password"
+EXCLUDE_FILE="$HOME/.config/restic/excludes.txt"
 
-SRC1="/home/lara"
+SRC1="$HOME"
 SRC2="/run/media/lara/Storage"
 ACTION="run"
 DRY_RUN=0

@@ -23,3 +23,7 @@ node_modules/
 __pycache__/
 .claude/
 !content/.claude
+
+# herdr regenerates this manifest cache on `herdr plugin link`, and it stores
+# resolved absolute plugin roots that no other machine can use
+content/.config/herdr/plugins.json
