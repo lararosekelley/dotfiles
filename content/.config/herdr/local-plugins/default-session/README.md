@@ -149,6 +149,16 @@ the restore just recovered. Instead the command is typed into the shell already
 sitting in the pane, over `pane.send_text`, and only when that pane settles to
 an idle prompt. A pane you left something running in keeps it.
 
+Replaying has to know the banner hasn't already printed, because the startup
+hook and `workspace.created` both reach the `~` space on a fresh `herd`: one
+builds it, and the other then finds a space that is no longer new. The tell is
+in the pane itself. A pane built from the layout keeps the command it was
+launched with, visible through `layout.export`; a pane brought back by a restore
+has none, because `session.json` persists cwds and labels but never commands.
+So a pane herdr started is left alone and a pane the restore left bare gets the
+banner typed into it, which is the difference between greeting the space once
+and greeting it twice.
+
 Rebuilding is not free. `layout.apply` against an existing tab hands back a
 _new_ tab id, so the `~` space came out of a `herd --reset` with `shell` sitting
 on `w1:t9` while `agents` through `system` kept `t3`–`t8`, putting it last in

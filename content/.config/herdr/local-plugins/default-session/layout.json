@@ -19,6 +19,8 @@
     "An `oneshot` pane prints something and hands the pane straight back, so it",
     "is a banner rather than a program: it does not make its tab worth rebuilding",
     "on restore, and rehydrate types the command into the restored shell instead.",
+    "A pane herdr just launched with the command is skipped, so a space that was",
+    "built moments ago is not greeted a second time.",
     "",
     "A tab marked `primary_only` is skipped in every space but the primary one,",
     "so global monitors exist once instead of once per project. `secondary_only`",

@@ -520,6 +520,32 @@ def cmd_apply_if_new() -> int:
     return 0
 
 
+def panes_herdr_launched(tab_id: str) -> set[str]:
+    """Panes herdr started with a command of its own.
+
+    A pane built from the layout keeps the command it was launched with, while
+    a pane brought back by a restore has none: the session file persists cwds
+    and labels but never commands. That is exactly the difference between a
+    banner that has already printed and one that never ran, so it is what keeps
+    a space built moments ago from being greeted twice.
+    """
+    try:
+        layout = call("layout.export", {"tab_id": tab_id})["layout"]
+    except RuntimeError:
+        # no way to tell whether the banner already ran; assume it did, since a
+        # missing banner is a smaller annoyance than a doubled one
+        return set()
+
+    def walk(node: dict) -> set[str]:
+        if node.get("type") == "split":
+            return walk(node["first"]) | walk(node["second"])
+        if node.get("command") and node.get("pane_id"):
+            return {node["pane_id"]}
+        return set()
+
+    return walk(layout["root"])
+
+
 def replay_oneshots(
     snap: dict,
     tab_id: str,
@@ -531,16 +557,18 @@ def replay_oneshots(
 
     Rebuilding the tab to get a banner back would throw away the cwds the
     restore just recovered, so type the command into the shell already sitting
-    there instead. Panes doing something else are left alone.
+    there instead. Panes doing something else are left alone, and so are panes
+    that herdr launched with the command itself.
     """
     wanted = oneshot_panes(spec_tab["layout"], primary)
     if not wanted:
         return 0
 
+    already_ran = panes_herdr_launched(tab_id)
     replayed = 0
     for pane in tab_panes(snap, tab_id):
         command = wanted.get(pane.get("label"))
-        if not command:
+        if not command or pane["pane_id"] in already_ran:
             continue
         if not settles_to_idle_shell(pane["pane_id"], settle_seconds):
             continue

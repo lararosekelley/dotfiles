@@ -26,6 +26,11 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+# clipboard
+
+alias copy='xclip -selection clipboard'
+alias pbcopy='copy' # old macos habits
+
 # verbose output for file and folder actions
 
 alias mv='mv -v'
