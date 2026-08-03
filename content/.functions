@@ -204,6 +204,7 @@ HERD_REPOS=(
   "$HOME/Code/personal/git-stk"
   "$HOME/Code/personal/navi"
   "$HOME/Code/personal/dotfiles"
+  "$HOME/Code/psorch/members"
 )
 
 # Open herdr with one space per repo, then attach
