@@ -59,6 +59,12 @@ pane_history = true
 
 [keys]
 
+# ctrl+space (no prefix) opens the session navigator. prefix+g stays as a
+# fallback for terminals that swallow the chord. This must live here in [keys]
+# -- putting it after the [[keys.command]] blocks below parses as a key of the
+# last one, and herdr only says "unknown config key ...; ignoring key".
+goto = ["prefix+g", "ctrl+space"]
+
 # shift-left/right move between windows
 previous_tab = ["prefix+p", "shift+left"]
 next_tab = ["prefix+n", "shift+right"]
