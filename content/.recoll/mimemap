@@ -1,0 +1,23 @@
+# Per-entry overrides for recoll's system mimemap
+# (/usr/share/recoll/examples/mimemap). Entries here replace the system value
+# for the same extension; everything else is still inherited, so this file only
+# needs the lines that are wrong.
+#
+# .ts ships as video/MP2T (MPEG-2 transport stream). That is defensible for a
+# media indexer and completely wrong here: ~/Code has 10k+ TypeScript files and
+# zero transport streams. The effect was silent -- filenames still matched, so
+# searches returned the .md files next door and looked merely "thin" rather than
+# broken. Content never got extracted, so no identifier defined in a .ts file
+# was findable.
+#
+# An explicitly wrong mapping is worse than no mapping: unmapped extensions
+# (.tsx, .rs, .toml, ...) fall through to libmagic via usesystemfilecommand=1
+# and get indexed as text anyway. Only an explicit entry suppresses that.
+#
+# After changing this file, mimetypes are not re-derived for already-indexed
+# files -- their mtime has not changed. Force it for the affected subset:
+#   systemctl --user stop recollindex
+#   recollindex -r -Z -p '*.ts' ~/Code
+#   systemctl --user start recollindex
+
+.ts = text/plain
