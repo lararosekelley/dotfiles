@@ -38,7 +38,10 @@ for option in "${options[@]}"; do
   shopt -s "$option"
 done
 
-bind "set show-all-if-ambiguous on"
+if [[ $- == *i* ]]; then
+  # `bind` needs readline, and a non-interactive shell has none
+  bind "set show-all-if-ambiguous on"
+fi
 
 # bash completion
 
