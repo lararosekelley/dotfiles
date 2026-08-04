@@ -125,5 +125,21 @@ export PATH
 # added by git-stk setup
 command -v git-stk >/dev/null && source <(git stk completions bash)
 
+# git-stk wrapper that changes directory to the new branch when using up/down/top/bottom, for worktree support
+#
+# Usage :  stk [up|down|top|bottom|other git-stk commands]
+stk() {
+  case "$1" in
+    up|down|top|bottom)
+      local dest
+      dest=$(git stk "$@" --from-path) || return
+      [ -n "$dest" ] && cd "$dest"
+      ;;
+    *) git stk "$@" ;;
+  esac
+}
+# stk completion (git-stk alias in .functions)
+eval "$(complete -p git-stk | sed 's/ git-stk$/ stk/')"
+
 # added by navi setup
 command -v navi >/dev/null && source <(navi completions bash)
