@@ -122,12 +122,15 @@ path_dedup
 
 export PATH
 
+# added by navi setup
+command -v navi >/dev/null && source <(navi completions bash)
+
 # added by git-stk setup
 command -v git-stk >/dev/null && source <(git stk completions bash)
 
-# git-stk wrapper that changes directory to the new branch when using up/down/top/bottom, for worktree support
-#
-# Usage :  stk [up|down|top|bottom|other git-stk commands]
+# stk wrapper: up/down/top/bottom cd into the worktree holding the branch.
+# A process cannot change its parent shell's directory, so git-stk prints the
+# destination and this moves you. Every other command falls through to git stk.
 stk() {
   case "$1" in
     up|down|top|bottom)
@@ -138,8 +141,5 @@ stk() {
     *) git stk "$@" ;;
   esac
 }
-# stk completion (git-stk alias in .functions)
-eval "$(complete -p git-stk | sed 's/ git-stk$/ stk/')"
-
-# added by navi setup
-command -v navi >/dev/null && source <(navi completions bash)
+complete -p git-stk >/dev/null 2>&1 && eval "$(complete -p git-stk | sed 's/ git-stk$/ stk/')"
+# end git-stk setup
