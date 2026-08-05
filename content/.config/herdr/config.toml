@@ -43,7 +43,7 @@ claude = [["state_icon", "workspace", "tab"], ["terminal_title_stripped"], ["age
 delivery = "herdr"
 
 [ui.sound]
-enabled = true
+enabled = false
 
 # sessions
 # --------
