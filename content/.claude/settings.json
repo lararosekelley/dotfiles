@@ -19,9 +19,24 @@
         ],
         "matcher": "*"
       }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "codegraph prompt-hook"
+          }
+        ]
+      }
     ]
   },
   "model": "opus[1m]",
   "skipWorkflowUsageWarning": true,
-  "tui": "fullscreen"
+  "tui": "fullscreen",
+  "permissions": {
+    "allow": [
+      "mcp__codegraph__*"
+    ]
+  }
 }

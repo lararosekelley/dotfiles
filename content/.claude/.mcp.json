@@ -9,6 +9,10 @@
         "CIRCLECI_BASE_URL": "https://circleci.com"
       }
     },
+    "codspeed": {
+      "type": "http",
+      "url": "https://mcp.codspeed.io/mcp"
+    },
     "magic-patterns": {
       "type": "http",
       "url": "https://mcp.magicpatterns.com/mcp"
@@ -47,6 +51,16 @@
         "clientId": "Ov23lim54jCgx5QRsuz2",
         "callbackPort": 8080
       }
+    },
+    "posthog": {
+      "type": "remote",
+      "enabled": true,
+      "url": "https://mcp.posthog.com/mcp"
+    },
+    "codegraph": {
+      "type": "stdio",
+      "command": "codegraph",
+      "args": ["serve", "--mcp"]
     }
   }
 }

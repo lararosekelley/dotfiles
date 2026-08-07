@@ -71,5 +71,14 @@
         "AWS_REGION": "{env:AWS_REGION}",
       },
     },
+    "codegraph": {
+      "type": "local",
+      "command": [
+        "codegraph",
+        "serve",
+        "--mcp"
+      ],
+      "enabled": true
+    },
   },
 }
