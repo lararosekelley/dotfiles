@@ -68,7 +68,9 @@ format_duration() {
 
 show_preflight_estimate() {
   local total_bytes
-  total_bytes=$(du -sb "$SRC1" "$SRC2" 2>/dev/null | awk '{sum += $1} END {print sum + 0}')
+  # du exits non-zero on unreadable dirs (waydroid, docker) and pipefail would
+  # otherwise abort the whole script here; the partial total is good enough.
+  total_bytes=$({ du -sb "$SRC1" "$SRC2" 2>/dev/null || true; } | awk '{sum += $1} END {print sum + 0}')
 
   if [ "$total_bytes" -le 0 ]; then
     echo "Could not estimate source size before backup."
@@ -93,15 +95,14 @@ show_preflight_estimate() {
 }
 
 run_backup_with_progress() {
-  local summary_file
+  local summary_file filter_script
   summary_file=$(mktemp)
+  filter_script=$(mktemp --suffix=.py)
 
-  if command -v python3 >/dev/null 2>&1; then
-    restic backup "$SRC1" "$SRC2" \
-      --exclude-caches \
-      --exclude-file "$EXCLUDE_FILE" \
-      --one-file-system \
-      --json | python3 -u - "$PROGRESS_INTERVAL_SECONDS" "$summary_file" <<'PY'
+  # The filter must live in a file, not a heredoc: a heredoc on the python3
+  # command replaces the stdin it should be reading restic's --json from, so
+  # the filter sees EOF and restic dies of SIGPIPE once the pipe buffer fills.
+  cat > "$filter_script" <<'PY'
 import json
 import sys
 import time
@@ -209,12 +210,29 @@ elif last_status is not None:
     with open(summary_path, "w", encoding="utf-8") as fh:
         fh.write(f"{bytes_done} {elapsed}\n")
 PY
+
+  # errexit is suspended so an exit-3 backup (unreadable source files, snapshot
+  # still created) can be triaged below instead of aborting before retention.
+  local -a pipe_status
+  set +e
+  if command -v python3 >/dev/null 2>&1; then
+    restic backup "$SRC1" "$SRC2" \
+      --exclude-caches \
+      --exclude-file "$EXCLUDE_FILE" \
+      --one-file-system \
+      --json | python3 -u "$filter_script" "$PROGRESS_INTERVAL_SECONDS" "$summary_file"
+    pipe_status=("${PIPESTATUS[@]}")
   else
     restic backup "$SRC1" "$SRC2" \
       --exclude-caches \
       --exclude-file "$EXCLUDE_FILE" \
       --one-file-system
+    pipe_status=("$?" 0)
   fi
+  set -e
+
+  local backup_status=${pipe_status[0]}
+  local filter_status=${pipe_status[1]:-0}
 
   if [ -s "$summary_file" ]; then
     local processed_bytes
@@ -225,7 +243,25 @@ PY
     fi
   fi
 
-  rm -f "$summary_file"
+  rm -f "$summary_file" "$filter_script"
+
+  if [ "$filter_status" -ne 0 ]; then
+    echo "Progress filter failed (status=$filter_status)"
+    return "$filter_status"
+  fi
+
+  case "$backup_status" in
+    0)
+      ;;
+    3)
+      echo "WARNING: some source files could not be read (restic exit 3); an incomplete snapshot was created."
+      echo "See the 'error:' lines above. Continuing with retention and check."
+      ;;
+    *)
+      echo "restic backup failed (exit $backup_status)"
+      return "$backup_status"
+      ;;
+  esac
 }
 
 rotate_logs() {
