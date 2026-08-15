@@ -9,6 +9,56 @@ Dotfiles live under the `content/` directory.
 
 Only tested on Fedora as of 2026, confirmed to work with Fedora 40+.
 
+## System dependencies
+
+### Required
+
+- `git` - cloning, the `oh-my-git` submodule, the prompt
+- `rust` - builds and runs the sync CLI
+- `mold` - linker selected in `content/.cargo/config.toml`; every cargo build fails without it
+- `pyenv`, `nodenv`, `rbenv` - `.bashrc` evals each unguarded, so a missing one errors on every shell
+- `bash-completion` - sourced by `.bashrc`
+- `nvim` - `$EDITOR` and the `vim`/`vi` aliases
+
+### Optional
+
+Repo tooling:
+
+- `just` - runs every recipe in this README
+- `node`/`npm` - husky hooks, commitlint, markdownlint-cli2
+- `pipx` - installs black and flake8 for `just lint-python`
+
+Shell:
+
+- `rg` - the `rgs`/`rgf` aliases and the `sub` function
+- `autojump` - directory jumping, wired into `PROMPT_COMMAND`
+- `keychain` - loads the ssh key once per login
+- `xclip` - the `copy`/`pbcopy` aliases
+- `tmux` + `tpm` - `.tmux.conf` and the `mux` function
+- `python3` - the `serve` function and the herdr default-session plugin
+- `awscli` - the `aws-work`/`aws-personal`/`aws-current` helpers
+- `figlet` - the `big` alias
+- `youtube-dl` - the `dl` alias
+- `ffmpeg`, `gifsicle` - the `flac2mp3`/`vid2mp4`/`vidslice`/`mov2gif` functions
+
+Git:
+
+- `diff-so-fancy` - git pager
+- `git-lfs` - the lfs filters in `.gitconfig`
+- `git-stk` - stacked branches; the `stk` wrapper and `[stk]` config
+
+Tools with config here:
+
+- `herdr` - the `herd` function and `content/.config/herdr` (see the table below for what its layout expects)
+- `restic` - `content/.bin/backup.sh`, keyed off `content/.config/restic`
+- `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill
+- `navi` - PR-review alerts; installed to `~/.local/bin` and run by `navi.service`
+- `claude`, `opencode` - the `ai` function
+- `codegraph` - Claude `SessionStart` hook and MCP server
+- `uvx`, `npx` - run the aws and circleci MCP servers in `.claude/.mcp.json`
+- `gh`, `glab`, `gt` - GitHub, GitLab, and Graphite CLIs
+- `gcalcli`, `fastfetch` - configured under `content/.config`
+
 ## Getting started
 
 Clone the repository:
