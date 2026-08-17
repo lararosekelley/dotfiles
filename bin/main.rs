@@ -1,5 +1,6 @@
 mod cli;
 mod commands;
+mod diff;
 mod fs;
 mod model;
 mod ui;

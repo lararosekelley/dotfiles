@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Result};
+use std::collections::HashSet;
 use std::path::PathBuf;
 
 use crate::cli::SyncOptions;
@@ -52,6 +53,7 @@ fn apply_sync(
     let mut skipped = 0;
     let mut missing_source = 0;
     let mut conflicts = 0;
+    let mut created_dirs = HashSet::new();
 
     for record in records {
         let action = action_for_status(&record.status, mode);
@@ -94,7 +96,19 @@ fn apply_sync(
             }
         }
 
-        ensure_parent_dir(&record.dest_path)?;
+        if options.dry_run {
+            // a dry run must not touch the filesystem, so report the parent
+            // directories that would be created instead of creating them.
+            // nothing is created, so track what has been reported to keep a
+            // shared parent from being announced once per file inside it.
+            if let Some(parent) = record.dest_path.parent() {
+                if !parent.exists() && created_dirs.insert(parent.to_path_buf()) {
+                    println!("mkdir -p {}", parent.display());
+                }
+            }
+        } else {
+            ensure_parent_dir(&record.dest_path)?;
+        }
 
         match mode {
             SyncMode::Copy => {

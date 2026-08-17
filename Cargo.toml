@@ -12,9 +12,11 @@ path = "bin/main.rs"
 anyhow = "1"
 blake3 = "1"
 clap = { version = "4", features = ["derive"] }
+console = "0.15"
 dialoguer = "0.11"
 dirs = "5"
 globset = "0.4"
+similar = "3"
 walkdir = "2"
 
 [dev-dependencies]

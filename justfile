@@ -56,6 +56,14 @@ run *args:
 status:
   cargo run -- status
 
+# same as status, plus a unified diff of every file whose contents differ
+
+diff:
+  cargo run -- status --diff
+
+diff-to-repo:
+  cargo run -- status --direction to-repo --diff
+
 sync-to-home:
   cargo run -- sync to-home
 
@@ -64,6 +72,14 @@ sync-to-home-symlink:
 
 sync-to-repo:
   cargo run -- sync to-repo
+
+# --yes is needed for a non-interactive preview, otherwise each file prompts
+
+sync-to-home-dry-run:
+  cargo run -- sync to-home --dry-run --yes
+
+sync-to-repo-dry-run:
+  cargo run -- sync to-repo --dry-run --yes
 
 test:
   cargo test

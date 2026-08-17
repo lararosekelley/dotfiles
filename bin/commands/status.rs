@@ -1,7 +1,8 @@
 use anyhow::{anyhow, Result};
 use std::path::PathBuf;
 
-use crate::cli::{DirectionArg, StatusOptions};
+use crate::cli::{ColorArg, DirectionArg, StatusOptions};
+use crate::diff;
 use crate::fs::{build_records, collect_files, Filters};
 use crate::model::{Direction, Status, SyncMode};
 
@@ -16,12 +17,20 @@ pub fn run(options: StatusOptions) -> Result<()> {
         SyncMode::Copy
     };
 
+    // auto leaves console to check the terminal and NO_COLOR for itself
+    match options.color {
+        ColorArg::Auto => {}
+        ColorArg::Always => console::set_colors_enabled(true),
+        ColorArg::Never => console::set_colors_enabled(false),
+    }
+
     let (src_root, home_root) = resolve_paths(options.root, options.home)?;
     let filters = Filters::new(&options.only, &options.exclude)?;
     let rel_paths = collect_files(&src_root, &filters)?;
     let records = build_records(&rel_paths, &src_root, &home_root, direction, mode)?;
 
-    print_records(&records);
+    // symlink mode never rewrites contents, so there is nothing to diff there
+    print_records(&records, options.diff && mode == SyncMode::Copy)?;
     print_summary(&records);
     Ok(())
 }
@@ -39,7 +48,7 @@ fn resolve_paths(root: Option<PathBuf>, home: Option<PathBuf>) -> Result<(PathBu
     Ok((src_root, home_root))
 }
 
-fn print_records(records: &[crate::model::FileRecord]) {
+fn print_records(records: &[crate::model::FileRecord], show_diff: bool) -> Result<()> {
     for record in records {
         match record.status {
             Status::Same | Status::SymlinkOk => continue,
@@ -47,8 +56,22 @@ fn print_records(records: &[crate::model::FileRecord]) {
                 let label = status_label(&record.status);
                 let path = record.rel_path.to_string_lossy();
                 println!("{label: <16} {path}");
+                if show_diff {
+                    print!("{}", record_diff(record)?);
+                }
             }
         }
+    }
+    Ok(())
+}
+
+/// Diffs are only meaningful where both sides are regular files whose contents
+/// differ; every other status is described by its label alone.
+fn record_diff(record: &crate::model::FileRecord) -> Result<String> {
+    match record.status {
+        Status::Different => diff::render(&record.src_path, &record.dest_path),
+        Status::MissingDest => diff::render_new_file(&record.src_path),
+        _ => Ok(String::new()),
     }
 }
 

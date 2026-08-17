@@ -76,10 +76,26 @@ pub struct StatusOptions {
 
     #[arg(long)]
     pub symlink: bool,
+
+    /// Show a unified diff of the contents that would change
+    #[arg(long)]
+    pub diff: bool,
+
+    /// Colourise diff output
+    #[arg(long, value_enum, default_value = "auto")]
+    pub color: ColorArg,
 }
 
 #[derive(ValueEnum, Debug, Clone, Copy)]
 pub enum DirectionArg {
     ToHome,
     ToRepo,
+}
+
+#[derive(ValueEnum, Debug, Clone, Copy)]
+pub enum ColorArg {
+    /// Colour when stdout is a terminal and NO_COLOR is unset
+    Auto,
+    Always,
+    Never,
 }
