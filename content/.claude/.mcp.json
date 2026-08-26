@@ -53,7 +53,7 @@
       }
     },
     "posthog": {
-      "type": "remote",
+      "type": "http",
       "enabled": true,
       "url": "https://mcp.posthog.com/mcp"
     },
