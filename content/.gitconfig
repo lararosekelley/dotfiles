@@ -196,3 +196,5 @@
 	mergeStrategy = rebase
   mergeWait = true
   fetchBeforeRestack = true
+  cleanClosed = true
+  githubStacks = false
