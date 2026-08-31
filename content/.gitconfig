@@ -197,4 +197,4 @@
   mergeWait = true
   fetchBeforeRestack = true
   cleanClosed = true
-  githubStacks = false
+  githubStacks = true
