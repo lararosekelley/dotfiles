@@ -201,11 +201,11 @@ HERD_REPOS=(
   "$HOME/Code/work/product"
   "$HOME/Code/work/devops"
   "$HOME/Code/personal/larakelley.com"
+  "$HOME/Code/personal/dotfiles"
   "$HOME/Code/personal/git-stk"
   "$HOME/Code/personal/navi"
-  "$HOME/Code/personal/dotfiles"
+  "$HOME/Code/personal/callie"
   "$HOME/Code/personal/woodshed"
-  "$HOME/Code/psorch/members"
 )
 
 # Open herdr with one space per repo, then attach
