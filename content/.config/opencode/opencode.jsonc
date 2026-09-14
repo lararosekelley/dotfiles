@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "openrouter/z-ai/glm-5.2",
+  "model": "openai/gpt-6-astra",
   "autoupdate": true,
   "mcp": {
     "posthog": {
@@ -73,12 +73,8 @@
     },
     "codegraph": {
       "type": "local",
-      "command": [
-        "codegraph",
-        "serve",
-        "--mcp"
-      ],
-      "enabled": true
+      "command": ["codegraph", "serve", "--mcp"],
+      "enabled": true,
     },
   },
 }
