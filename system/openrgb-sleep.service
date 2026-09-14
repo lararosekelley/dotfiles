@@ -1,0 +1,17 @@
+[Unit]
+Description=Turn RGB off before sleep
+Before=sleep.target
+PartOf=sleep.target
+
+[Service]
+Type=oneshot
+# User=root is load-bearing: systemd only sets HOME when User= is set,
+# and openrgb resolves its profile directory from HOME.
+User=root
+# Applies through the running openrgb.service SDK server, so no SMBus re-detection.
+# Failures are tolerated and the timeout is short so RGB can never block a suspend.
+ExecStart=-/usr/bin/openrgb --profile off.orp
+TimeoutStartSec=15
+
+[Install]
+WantedBy=sleep.target

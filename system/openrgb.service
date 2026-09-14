@@ -1,0 +1,12 @@
+[Unit]
+Description=OpenRGB profile loader
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=-/usr/bin/openrgb --server --profile pink.orp
+User=root
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

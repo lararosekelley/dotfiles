@@ -1,0 +1,11 @@
+[Unit]
+Description=Restarts OpenRGB after system wakes from sleep
+After=suspend.target
+PartOf=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "systemctl restart openrgb.service"
+
+[Install]
+WantedBy=suspend.target
