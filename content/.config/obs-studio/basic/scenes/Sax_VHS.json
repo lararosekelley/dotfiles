@@ -1216,17 +1216,41 @@
                     "private_settings": {}
                 },
                 {
+                    "prev_ver": 536936449,
                     "name": "04a - Isolate portrait for CRT edges",
+                    "uuid": "d47a0597-95ea-4d88-9ae1-b860008a25f8",
                     "id": "crop_filter",
                     "versioned_id": "crop_filter",
+                    "settings": {
+                        "left": 1312,
+                        "right": 1313,
+                        "top": 0,
+                        "bottom": 0,
+                        "relative": true
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
                     "enabled": true,
-                    "settings": {"relative": true, "left": 1312, "right": 1313, "top": 0, "bottom": 0}
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
                 },
                 {
+                    "prev_ver": 536936449,
                     "name": "04b - CRT portrait glass and edges",
+                    "uuid": "8347b2bf-4a5f-4bd6-8712-242476d83ab9",
                     "id": "obs_retro_effects_filter",
                     "versioned_id": "obs_retro_effects_filter",
-                    "enabled": true,
                     "settings": {
                         "filter_type": 6,
                         "crt_phosphor_type": 17,
@@ -1239,14 +1263,53 @@
                         "crt_vignette": 22.0,
                         "crt_black_level": 8.0,
                         "crt_white_level": 235.0
-                    }
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
                 },
                 {
+                    "prev_ver": 536936449,
                     "name": "04c - Restore landscape preview padding",
+                    "uuid": "9842d8bd-c309-40b4-a835-837be02b1223",
                     "id": "crop_filter",
                     "versioned_id": "crop_filter",
+                    "settings": {
+                        "left": -1312,
+                        "right": -1313,
+                        "top": 0,
+                        "bottom": 0,
+                        "relative": true
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
                     "enabled": true,
-                    "settings": {"relative": true, "left": -1312, "right": -1313, "top": 0, "bottom": 0}
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
                 },
                 {
                     "prev_ver": 536936449,
@@ -1311,6 +1374,9 @@
     "scaling_level": -16,
     "scaling_off_x": 0.0,
     "scaling_off_y": 0.0,
+    "virtual-camera": {
+        "type2": 3
+    },
     "modules": {
         "scripts-tool": [],
         "output-timer": {

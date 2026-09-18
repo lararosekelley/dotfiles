@@ -64,6 +64,31 @@ Source padlocks prevent moving or resizing sources; they do not lock filter sett
 
 The locks can stay enabled while you adjust filters.
 
+## Using the retro video in Zoom
+
+OBS Virtual Camera makes the finished scene, including its video filters, available to Zoom as a webcam. Recording or streaming is not required.
+
+### Fedora prerequisite
+
+Linux requires the **v4l2loopback** kernel module for OBS Virtual Camera. Install a package compatible with your Fedora release and running kernel, then load the module. With Secure Boot enabled, the module also needs an accepted signature. This setup has not yet been completed here; the earlier OBS log reported `v4l2loopback not installed, virtual camera not registered`.
+
+After installing and loading the module, restart OBS. If Virtual Camera is unavailable, check **Help → Log Files → View Current Log** for v4l2loopback errors.
+
+### Start a call
+
+1. Open OBS and choose the scene to send to Zoom. The widescreen master gives a milder look; the 4:3 reference gives the stronger VHS/TV look. The phone reference includes large side bars in the landscape output.
+2. In **Controls**, click **Start Virtual Camera**.
+3. In Zoom, open **Settings → Video → Camera** and select the OBS virtual camera device. Its displayed name may depend on the v4l2loopback configuration. If it is missing, restart Zoom after starting Virtual Camera.
+4. Turn off Zoom backgrounds and appearance filters initially so they do not interfere with the retro treatment.
+5. Keep OBS and Virtual Camera running for the call, then click **Stop Virtual Camera** when finished.
+
+By default, Virtual Camera sends OBS's program output: changing scenes changes what the call sees. Use the settings/gear beside **Start Virtual Camera** to select a specific **Scene** as the output when you want a fixed call composition.
+
+### Audio and call quality
+
+- Virtual Camera sends **video only**. In **Zoom → Settings → Audio**, select the Scarlett microphone directly. This bypasses OBS's compressor and limiter; sending processed OBS audio would require separate virtual-audio routing.
+- Heavy noise and scanlines can become blocky under Zoom's compression. For regular work calls, consider a dedicated landscape call scene with milder NTSC/VHS effects. Such a scene is not included yet.
+
 ## Plugin dependency
 
 Install [OBS Retro Effects](https://github.com/lararosekelley/obs-retro-effects) separately. The fork's README documents Fedora build and user-local installation. Compiled plugins, credentials, logs, and backups are excluded from this directory's versioned configuration.
