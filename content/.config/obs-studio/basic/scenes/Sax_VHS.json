@@ -1,0 +1,1304 @@
+{
+    "name": "Sax VHS",
+    "sources": [
+        {
+            "prev_ver": 536936449,
+            "name": "Sax Camera - MX Brio 4K",
+            "uuid": "feef5f7b-84d1-4781-bb7a-0def91900c1a",
+            "id": "v4l2_input",
+            "versioned_id": "v4l2_input",
+            "settings": {
+                "device_id": "/dev/video0",
+                "input": 0,
+                "pixelformat": 1196444237,
+                "resolution": 16492674418800,
+                "framerate": 4294967326,
+                "color_range": 0,
+                "buffering": true
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {},
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "private_settings": {},
+            "filters": [
+                {
+                    "prev_ver": 536936449,
+                    "name": "01 - NTSC gentle color bleed",
+                    "uuid": "f1ae4756-2bfa-486f-993c-7f0c87178d99",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "filter_type": 7,
+                        "ntsc_tuning_offset": 0.0,
+                        "ntsc_luma_noise": 2.0,
+                        "ntsc_luma_band_size": 10.0,
+                        "ntsc_luma_band_strength": 8.0,
+                        "ntsc_luma_band_trail": 100.0,
+                        "ntsc_luma_band_count": 1,
+                        "ntsc_chroma_bleed_size": 20.0,
+                        "ntsc_chroma_bleed_strength": 25.0,
+                        "ntsc_chroma_bleed_steps": 8,
+                        "ntsc_chroma_bleed_over_saturation": 0.0,
+                        "ntsc_chroma_bleed_hue_shift": 0.0,
+                        "ntsc_chroma_bleed_directionality": 100.0,
+                        "ntsc_brightness": 100.0,
+                        "ntsc_saturation": 90.0,
+                        "ntsc_dot_crawl_speed": 50.0,
+                        "ntsc_dot_crawl_amount": 5.0,
+                        "ntsc_comb_filter_strength": 100.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "02 - VHS light tape wear",
+                    "uuid": "f859685b-a58f-480d-9d88-5b1104517ad6",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "vhs_wrinkle_occurrence": -20.0,
+                        "filter_type": 11,
+                        "vhs_wrinkle_occurrence_prob": -20.0,
+                        "vhs_wrinkle_size": 1.0,
+                        "vhs_wrinkle_duration": 0.5,
+                        "vhs_jitter_min_size": 0.0,
+                        "vhs_jitter_max_size": 1.0,
+                        "vhs_jitter_min_period": 0.10000000000000001,
+                        "vhs_jitter_max_period": 0.20000000000000001,
+                        "vhs_jitter_min_interval": 8.0,
+                        "vhs_jitter_max_interval": 20.0,
+                        "vhs_pop_lines_amount": 1.0,
+                        "vhs_head_switch_primary_thickness": 2.0,
+                        "vhs_head_switch_primary_offset": 3.0,
+                        "vhs_head_switch_secondary_thickness": 0.0,
+                        "vhs_head_switch_secondary_horiz_offset": 0.0,
+                        "vhs_head_switch_secondary_vert_amount": 0.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                }
+            ]
+        },
+        {
+            "prev_ver": 536936449,
+            "name": "Sax Mic - Scarlett Input 1",
+            "uuid": "4a77cddd-dfdb-44e0-a404-631657d83259",
+            "id": "pulse_input_capture",
+            "versioned_id": "pulse_input_capture",
+            "settings": {
+                "device_id": "alsa_input.usb-Focusrite_Scarlett_2i2_USB-00.HiFi__Mic1__source"
+            },
+            "mixers": 1,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {
+                "libobs.mute": [],
+                "libobs.unmute": [],
+                "libobs.push-to-mute": [],
+                "libobs.push-to-talk": []
+            },
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "private_settings": {},
+            "filters": [
+                {
+                    "prev_ver": 536936449,
+                    "name": "Compressor",
+                    "uuid": "aa52d270-15c7-4277-bbc5-bc18b55e8083",
+                    "id": "compressor_filter",
+                    "versioned_id": "compressor_filter",
+                    "settings": {
+                        "ratio": 1.5,
+                        "attack_time": 30,
+                        "release_time": 250,
+                        "output_gain": 2.0
+                    },
+                    "mixers": 63,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "Limiter",
+                    "uuid": "f5d14765-ce3b-4235-b860-9cad7eecabfd",
+                    "id": "limiter_filter",
+                    "versioned_id": "limiter_filter",
+                    "settings": {
+                        "threshold": -1.0
+                    },
+                    "mixers": 63,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                }
+            ]
+        },
+        {
+            "prev_ver": 536936449,
+            "name": "Sax - Record widescreen master",
+            "uuid": "eb252c4f-92aa-4b2b-b8aa-42bea0f6f5e8",
+            "id": "scene",
+            "versioned_id": "scene",
+            "settings": {
+                "id_counter": 2,
+                "custom_size": false,
+                "items": [
+                    {
+                        "name": "Sax Camera - MX Brio 4K",
+                        "source_uuid": "feef5f7b-84d1-4781-bb7a-0def91900c1a",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 1,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -1.7777777910232544,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "Sax Mic - Scarlett Input 1",
+                        "source_uuid": "4a77cddd-dfdb-44e0-a404-631657d83259",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 2,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -1.7777777910232544,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    }
+                ]
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [],
+                "libobs.show_scene_item.1": [],
+                "libobs.hide_scene_item.1": [],
+                "libobs.show_scene_item.2": [],
+                "libobs.hide_scene_item.2": []
+            },
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "canvas_uuid": "6c69626f-6273-4c00-9d88-c5136d61696e",
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 536936449,
+            "name": "Sax - 4x3 VHS tape",
+            "uuid": "c61cb45e-edb0-404e-9c59-2a2738b2a82d",
+            "id": "scene",
+            "versioned_id": "scene",
+            "settings": {
+                "id_counter": 2,
+                "custom_size": false,
+                "items": [
+                    {
+                        "name": "Sax Camera - MX Brio 4K",
+                        "source_uuid": "feef5f7b-84d1-4781-bb7a-0def91900c1a",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 480,
+                        "crop_top": 0,
+                        "crop_right": 480,
+                        "crop_bottom": 0,
+                        "id": 1,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 480.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -1.3333333730697632,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "Sax Mic - Scarlett Input 1",
+                        "source_uuid": "4a77cddd-dfdb-44e0-a404-631657d83259",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 2,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -1.7777777910232544,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    }
+                ]
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [],
+                "libobs.show_scene_item.1": [],
+                "libobs.hide_scene_item.1": [],
+                "libobs.show_scene_item.2": [],
+                "libobs.hide_scene_item.2": []
+            },
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "canvas_uuid": "6c69626f-6273-4c00-9d88-c5136d61696e",
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 536936449,
+            "name": "Sax - Portrait framing check",
+            "uuid": "468e8760-8ae9-4f8a-9327-5f67f8cdfe04",
+            "id": "scene",
+            "versioned_id": "scene",
+            "settings": {
+                "id_counter": 2,
+                "custom_size": false,
+                "items": [
+                    {
+                        "name": "Sax Camera - MX Brio 4K",
+                        "source_uuid": "feef5f7b-84d1-4781-bb7a-0def91900c1a",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 1312,
+                        "crop_top": 0,
+                        "crop_right": 1312,
+                        "crop_bottom": 0,
+                        "id": 1,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 1312.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -0.56296294927597046,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    },
+                    {
+                        "name": "Sax Mic - Scarlett Input 1",
+                        "source_uuid": "4a77cddd-dfdb-44e0-a404-631657d83259",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "id": 2,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -1.7777777910232544,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    }
+                ]
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [],
+                "libobs.show_scene_item.1": [],
+                "libobs.hide_scene_item.1": [],
+                "libobs.show_scene_item.2": [],
+                "libobs.hide_scene_item.2": []
+            },
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "canvas_uuid": "6c69626f-6273-4c00-9d88-c5136d61696e",
+            "private_settings": {}
+        },
+        {
+            "prev_ver": 536936449,
+            "name": "REFERENCE - 4x3 worn VHS",
+            "uuid": "5c2b4915-d72f-4cb4-8b88-9a38a94ccc7e",
+            "id": "scene",
+            "versioned_id": "scene",
+            "settings": {
+                "id_counter": 1,
+                "custom_size": false,
+                "items": [
+                    {
+                        "name": "Sax - Record widescreen master",
+                        "source_uuid": "eb252c4f-92aa-4b2b-b8aa-42bea0f6f5e8",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 480,
+                        "crop_top": 0,
+                        "crop_right": 480,
+                        "crop_bottom": 0,
+                        "id": 1,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 480.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -1.3333333730697632,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    }
+                ]
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [],
+                "libobs.show_scene_item.1": [],
+                "libobs.hide_scene_item.1": []
+            },
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "canvas_uuid": "6c69626f-6273-4c00-9d88-c5136d61696e",
+            "private_settings": {},
+            "filters": [
+                {
+                    "prev_ver": 536936449,
+                    "name": "00a - SD tape detail (480 lines)",
+                    "uuid": "959f1085-1c13-4158-927f-05701c136afb",
+                    "id": "scale_filter",
+                    "versioned_id": "scale_filter",
+                    "settings": {
+                        "sampling": "area",
+                        "resolution": "854x480"
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "00b - Soft upscale to recording canvas",
+                    "uuid": "e35d8422-6b9a-411a-a2d1-b6a0c5d6798c",
+                    "id": "scale_filter",
+                    "versioned_id": "scale_filter",
+                    "settings": {
+                        "sampling": "bilinear",
+                        "resolution": "3840x2160"
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "01 - NTSC dubbed tape color",
+                    "uuid": "b4dc7e33-16a9-4b02-8ca1-18788ef7f895",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "filter_type": 7,
+                        "ntsc_tuning_offset": 0.59999999999999998,
+                        "ntsc_luma_noise": 9.0,
+                        "ntsc_luma_band_size": 12.0,
+                        "ntsc_luma_band_strength": 35.0,
+                        "ntsc_luma_band_count": 1,
+                        "ntsc_chroma_bleed_size": 65.0,
+                        "ntsc_chroma_bleed_strength": 60.0,
+                        "ntsc_chroma_bleed_steps": 8,
+                        "ntsc_brightness": 100.0,
+                        "ntsc_saturation": 83.0,
+                        "ntsc_dot_crawl_amount": 22.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "02 - Bloom brass highlights",
+                    "uuid": "b323df4b-0f43-46da-841c-0979df9c05cf",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "filter_type": 12,
+                        "bloom_intensity": 30.0,
+                        "bloom_threshold": 70.0,
+                        "bloom_size": 9.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "03 - VHS tracking and dropouts",
+                    "uuid": "dfcd993f-5cb5-4c94-a013-cb3d7eef4de6",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "vhs_wrinkle_occurrence": 4.0,
+                        "filter_type": 11,
+                        "vhs_wrinkle_occurrence_prob": 4.0,
+                        "vhs_wrinkle_size": 3.0,
+                        "vhs_wrinkle_duration": 0.69999999999999996,
+                        "vhs_jitter_min_size": 0.5,
+                        "vhs_jitter_max_size": 5.0,
+                        "vhs_jitter_min_period": 0.10000000000000001,
+                        "vhs_jitter_max_period": 0.29999999999999999,
+                        "vhs_jitter_min_interval": 2.0,
+                        "vhs_jitter_max_interval": 7.0,
+                        "vhs_pop_lines_amount": 9.0,
+                        "vhs_head_switch_primary_thickness": 13.0,
+                        "vhs_head_switch_primary_offset": 20.0,
+                        "vhs_head_switch_secondary_thickness": 3.0,
+                        "vhs_head_switch_secondary_horiz_offset": 8.0,
+                        "vhs_head_switch_secondary_vert_amount": 2.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "04 - CRT curved glass and phosphor",
+                    "uuid": "50170c1a-e723-4ef6-a6d9-0540ce6ee9a3",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "filter_type": 6,
+                        "crt_phosphor_type": 17,
+                        "crt_mask_intensity": 18.0,
+                        "crt_bloom": 5.0,
+                        "crt_bloom_threshold": 80.0,
+                        "crt_bloom_intensity": 12.0,
+                        "crt_corner_radius": 45.0,
+                        "crt_barrel_distort": 1.5,
+                        "crt_vignette": 22.0,
+                        "crt_black_level": 8.0,
+                        "crt_white_level": 235.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "05 - Scanlines TV texture",
+                    "uuid": "aa94ccee-31cc-46d7-b02b-5c38fe4c8d7a",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "scanlines_intensity": 15.0,
+                        "filter_type": 13,
+                        "scanlines_period": 4.5,
+                        "scanlines_speed": 0.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                }
+            ]
+        },
+        {
+            "prev_ver": 536936449,
+            "name": "REFERENCE - Phone vertical retro",
+            "uuid": "98a02eae-cf89-4c4f-85c1-897bac5c728b",
+            "id": "scene",
+            "versioned_id": "scene",
+            "settings": {
+                "id_counter": 1,
+                "custom_size": false,
+                "items": [
+                    {
+                        "name": "Sax - Record widescreen master",
+                        "source_uuid": "eb252c4f-92aa-4b2b-b8aa-42bea0f6f5e8",
+                        "visible": true,
+                        "locked": true,
+                        "rot": 0.0,
+                        "scale_ref": {
+                            "x": 3840.0,
+                            "y": 2160.0
+                        },
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds_crop": false,
+                        "crop_left": 1312,
+                        "crop_top": 0,
+                        "crop_right": 1313,
+                        "crop_bottom": 0,
+                        "id": 1,
+                        "group_item_backup": false,
+                        "pos": {
+                            "x": 1312.0,
+                            "y": 0.0
+                        },
+                        "pos_rel": {
+                            "x": -0.56296294927597046,
+                            "y": -1.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_rel": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_rel": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale_filter": "disable",
+                        "blend_method": "default",
+                        "blend_type": "normal",
+                        "show_transition": {
+                            "duration": 0
+                        },
+                        "hide_transition": {
+                            "duration": 0
+                        },
+                        "private_settings": {}
+                    }
+                ]
+            },
+            "mixers": 0,
+            "sync": 0,
+            "flags": 0,
+            "volume": 1.0,
+            "balance": 0.5,
+            "enabled": true,
+            "muted": false,
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [],
+                "libobs.show_scene_item.1": [],
+                "libobs.hide_scene_item.1": []
+            },
+            "deinterlace_mode": 0,
+            "deinterlace_field_order": 0,
+            "monitoring_type": 0,
+            "canvas_uuid": "6c69626f-6273-4c00-9d88-c5136d61696e",
+            "private_settings": {},
+            "filters": [
+                {
+                    "prev_ver": 536936449,
+                    "name": "00a - Soft archived detail (720 lines)",
+                    "uuid": "e6038835-697f-4494-9139-293abc2936c2",
+                    "id": "scale_filter",
+                    "versioned_id": "scale_filter",
+                    "settings": {
+                        "sampling": "area",
+                        "resolution": "1280x720"
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "00b - Soft upscale to recording canvas",
+                    "uuid": "ab70cc6a-f0f5-426e-8642-14670aaf554f",
+                    "id": "scale_filter",
+                    "versioned_id": "scale_filter",
+                    "settings": {
+                        "sampling": "bilinear",
+                        "resolution": "3840x2160"
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "01 - NTSC phone edit color",
+                    "uuid": "35c8e8d1-fef6-499b-9867-3e99f1ddaae6",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "filter_type": 7,
+                        "ntsc_tuning_offset": 0.0,
+                        "ntsc_luma_noise": 6.0,
+                        "ntsc_luma_band_size": 10.0,
+                        "ntsc_luma_band_strength": 24.0,
+                        "ntsc_luma_band_count": 1,
+                        "ntsc_chroma_bleed_size": 40.0,
+                        "ntsc_chroma_bleed_strength": 45.0,
+                        "ntsc_chroma_bleed_steps": 8,
+                        "ntsc_brightness": 102.0,
+                        "ntsc_saturation": 88.0,
+                        "ntsc_dot_crawl_amount": 14.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "02 - Bloom sax glow",
+                    "uuid": "0468631e-93ef-459d-94e1-b1101168c2c4",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "filter_type": 12,
+                        "bloom_intensity": 28.0,
+                        "bloom_threshold": 73.0,
+                        "bloom_size": 7.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "03 - VHS social edit texture",
+                    "uuid": "5b19353d-52f7-4d15-bb1d-b47ccdb36cb7",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "vhs_wrinkle_occurrence": -20.0,
+                        "filter_type": 11,
+                        "vhs_wrinkle_occurrence_prob": -20.0,
+                        "vhs_wrinkle_size": 2.0,
+                        "vhs_wrinkle_duration": 0.5,
+                        "vhs_jitter_min_size": 0.0,
+                        "vhs_jitter_max_size": 3.5,
+                        "vhs_jitter_min_period": 0.10000000000000001,
+                        "vhs_jitter_max_period": 0.20000000000000001,
+                        "vhs_jitter_min_interval": 3.0,
+                        "vhs_jitter_max_interval": 9.0,
+                        "vhs_pop_lines_amount": 6.0,
+                        "vhs_head_switch_primary_thickness": 8.0,
+                        "vhs_head_switch_primary_offset": 12.0,
+                        "vhs_head_switch_secondary_thickness": 0.0,
+                        "vhs_head_switch_secondary_horiz_offset": 0.0,
+                        "vhs_head_switch_secondary_vert_amount": 0.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
+                    "name": "04 - Scanlines optional phone texture",
+                    "uuid": "1423b257-6af8-4a62-a6d9-b6238850390d",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "settings": {
+                        "scanlines_intensity": 5.0,
+                        "filter_type": 13,
+                        "scanlines_period": 4.0,
+                        "scanlines_speed": 0.0
+                    },
+                    "mixers": 0,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": false,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                }
+            ]
+        }
+    ],
+    "groups": [],
+    "scene_order": [
+        {
+            "name": "Sax - Record widescreen master"
+        },
+        {
+            "name": "Sax - 4x3 VHS tape"
+        },
+        {
+            "name": "Sax - Portrait framing check"
+        },
+        {
+            "name": "REFERENCE - 4x3 worn VHS"
+        },
+        {
+            "name": "REFERENCE - Phone vertical retro"
+        }
+    ],
+    "current_scene": "REFERENCE - 4x3 worn VHS",
+    "current_program_scene": "REFERENCE - 4x3 worn VHS",
+    "canvases": [],
+    "current_transition": "Fade",
+    "transition_duration": 300,
+    "transitions": [],
+    "quick_transitions": [],
+    "saved_projectors": [],
+    "preview_locked": true,
+    "scaling_enabled": false,
+    "scaling_level": -16,
+    "scaling_off_x": 0.0,
+    "scaling_off_y": 0.0,
+    "modules": {
+        "scripts-tool": [],
+        "output-timer": {
+            "streamTimerHours": 0,
+            "streamTimerMinutes": 0,
+            "streamTimerSeconds": 0,
+            "recordTimerHours": 0,
+            "recordTimerMinutes": 0,
+            "recordTimerSeconds": 0,
+            "autoStartStreamTimer": false,
+            "autoStartRecordTimer": false,
+            "pauseRecordTimer": false
+        }
+    },
+    "resolution": {
+        "x": 3840,
+        "y": 2160
+    },
+    "migration_resolution": {
+        "x": 3840,
+        "y": 2160
+    },
+    "version": 2
+}

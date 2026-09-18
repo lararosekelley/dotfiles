@@ -41,6 +41,7 @@ module.exports = {
         "security",
         "linux",
         "macos",
+        "obs",
       ],
     ],
   },

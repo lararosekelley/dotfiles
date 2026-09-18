@@ -1,0 +1,12 @@
+# Local credentials, plugin state, and downloaded service metadata
+/plugin_config/
+/plugin_manager/
+/plugins/
+/basic/profiles/*/service.json*
+
+# Runtime data and backups
+/logs/
+/profiler_data/
+/updates/
+/.sentinel/
+*.bak
