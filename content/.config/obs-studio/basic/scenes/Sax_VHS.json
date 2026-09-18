@@ -1216,8 +1216,41 @@
                     "private_settings": {}
                 },
                 {
+                    "name": "04a - Isolate portrait for CRT edges",
+                    "id": "crop_filter",
+                    "versioned_id": "crop_filter",
+                    "enabled": true,
+                    "settings": {"relative": true, "left": 1312, "right": 1313, "top": 0, "bottom": 0}
+                },
+                {
+                    "name": "04b - CRT portrait glass and edges",
+                    "id": "obs_retro_effects_filter",
+                    "versioned_id": "obs_retro_effects_filter",
+                    "enabled": true,
+                    "settings": {
+                        "filter_type": 6,
+                        "crt_phosphor_type": 17,
+                        "crt_mask_intensity": 18.0,
+                        "crt_bloom": 5.0,
+                        "crt_bloom_threshold": 80.0,
+                        "crt_bloom_intensity": 12.0,
+                        "crt_corner_radius": 45.0,
+                        "crt_barrel_distort": 1.5,
+                        "crt_vignette": 22.0,
+                        "crt_black_level": 8.0,
+                        "crt_white_level": 235.0
+                    }
+                },
+                {
+                    "name": "04c - Restore landscape preview padding",
+                    "id": "crop_filter",
+                    "versioned_id": "crop_filter",
+                    "enabled": true,
+                    "settings": {"relative": true, "left": -1312, "right": -1313, "top": 0, "bottom": 0}
+                },
+                {
                     "prev_ver": 536936449,
-                    "name": "04 - Scanlines optional phone texture",
+                    "name": "05 - Scanlines optional phone texture",
                     "uuid": "1423b257-6af8-4a62-a6d9-b6238850390d",
                     "id": "obs_retro_effects_filter",
                     "versioned_id": "obs_retro_effects_filter",
