@@ -167,6 +167,18 @@ just sync-to-home-dry-run
 just sync-to-repo-dry-run
 ```
 
+### Keep the machine awake while coding agents work
+
+[Agent Awake](./content/.local/share/agent-awake/README.md) integrates OpenCode lifecycle events and Claude Code hooks with Linux sleep inhibitors. It releases leases when turns finish or need input, with crash cleanup and independent leases for concurrent sessions.
+
+Install the helper and integrations without replacing unrelated live Claude settings:
+
+```bash
+python3 content/.local/share/agent-awake/install.py
+```
+
+Restart both clients afterward. See the linked guide for Fedora dependencies, verification, uninstall steps, and Claude's permission-approval timing limitation.
+
 ### herdr configuration
 
 [herdr](https://herdr.dev) config lives in `content/.config/herdr`. The startup
