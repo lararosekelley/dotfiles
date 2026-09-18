@@ -3,6 +3,11 @@
   "model": "openai/gpt-6-astra",
   "autoupdate": true,
   "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest", "--extension"],
+      "enabled": true,
+    },
     "posthog": {
       "type": "remote",
       "enabled": true,
