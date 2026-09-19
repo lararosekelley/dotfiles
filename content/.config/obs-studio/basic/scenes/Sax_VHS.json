@@ -182,6 +182,35 @@
                 },
                 {
                     "prev_ver": 536936449,
+                    "name": "Reverb - subtle plate (TAL)",
+                    "uuid": "e7be5c57-8b86-41d2-9390-0e177af441e1",
+                    "id": "vst_filter",
+                    "versioned_id": "vst_filter",
+                    "settings": {
+                        "plugin_path": "/home/lara/.vst/libTAL-Reverb-2.so",
+                        "chunk_hash": "092d9fda5b0f005fe524b6965f4e1255",
+                        "open_when_active_vst_settings": false,
+                        "chunk_data": "VkMyIT0OAAA8P3htbCB2ZXJzaW9uPSIxLjAiIGVuY29kaW5nPSJVVEYtOCI/PiA8dGFsIGN1cnByb2dyYW09IjAiIHZlcnNpb249IjEiPjxwcm9ncmFtcz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iU2F4IC0gU3VidGxlIFBsYXRlIiBkcnk9IjAuNSIgd2V0PSIwLjA1MDAwMDAwMDc0NTA1ODA2IiByb29tc2l6ZT0iMC4zNDk5OTk5OTQwMzk1MzU1IiBwcmVkZWxheT0iMC4xMDAwMDAwMDE0OTAxMTYxIiBsb3dzaGVsZmZyZXF1ZW5jeT0iMC4wMjQwMDAwMDAyMDg2MTYyNiIgaGlnaHNoZWxmZnJlcXVlbmN5PSIxLjAiIHBlYWtmcmVxdWVuY3k9IjAuNDkyMDAwMDEzNTg5ODU5IiBsb3dzaGVsZmdhaW49IjEuMCIgaGlnaHNoZWxmZ2Fpbj0iMS4wIiBwZWFrZ2Fpbj0iMS4wIiBzdGVyZW93aWR0aD0iMS4wIiByZWFsc3RlcmVvbW9kZT0iMC4wIi8+PHByb2dyYW0gcHJvZ3JhbW5hbWU9IjgwJ3MgUGxhdGUiIGRyeT0iMC41IiB3ZXQ9IjAuMjA5MDAwMDA2MzE4MDkyMyIgcm9vbXNpemU9IjAuNjYwMDAwMDI2MjI2MDQzNyIgcHJlZGVsYXk9IjAuMDYwMDAwMDAyMzg0MTg1NzkiIGxvd3NoZWxmZnJlcXVlbmN5PSIwLjUiIGhpZ2hzaGVsZmZyZXF1ZW5jeT0iMC40MjQwMDAwMjQ3OTU1MzIyIiBwZWFrZnJlcXVlbmN5PSIwLjM2ODAwMDAzMDUxNzU3ODEiIGxvd3NoZWxmZ2Fpbj0iMS4wIiBoaWdoc2hlbGZnYWluPSIwLjc4ODAwMDA0NzIwNjg3ODciIHBlYWtnYWluPSIwLjM2ODAwMDAzMDUxNzU3ODEiIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIwLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iQmlnIFdldCBQbGF0ZSAobm8gRVEpIiBkcnk9IjAuNSIgd2V0PSIwLjE2MTAwMDAxMzM1MTQ0MDQiIHJvb21zaXplPSIwLjc1MjAwMDAzMzg1NTQzODIiIHByZWRlbGF5PSIwLjEzMTk5OTk5OTI4NDc0NDMiIGxvd3NoZWxmZnJlcXVlbmN5PSIwLjAyNDAwMDAwMDIwODYxNjI2IiBoaWdoc2hlbGZmcmVxdWVuY3k9IjEuMCIgcGVha2ZyZXF1ZW5jeT0iMC40OTIwMDAwMTM1ODk4NTkiIGxvd3NoZWxmZ2Fpbj0iMS4wIiBoaWdoc2hlbGZnYWluPSIxLjAiIHBlYWtnYWluPSIxLjAiIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIwLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iU21hbGwgRHJ1bSBQbGF0ZSIgZHJ5PSIwLjUiIHdldD0iMC4zMzUwMDAwMDgzNDQ2NTAzIiByb29tc2l6ZT0iMC4zMDgwMDAwMjgxMzMzOTIzIiBwcmVkZWxheT0iMC4xMjAwMDAwMDQ3NjgzNzE2IiBsb3dzaGVsZmZyZXF1ZW5jeT0iMC4xNzYwMDAwMTM5NDc0ODY5IiBoaWdoc2hlbGZmcmVxdWVuY3k9IjAuNDQ0MDAwMDM1NTI0MzY4MyIgcGVha2ZyZXF1ZW5jeT0iMC4zMDAwMDAwMTE5MjA5MjkiIGxvd3NoZWxmZ2Fpbj0iMC43MjQwMDAwMzY3MTY0NjEyIiBoaWdoc2hlbGZnYWluPSIwLjQ4ODAwMDAzNTI4NTk0OTciIHBlYWtnYWluPSIwLjAiIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIxLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iRHVsbCBQbGF0ZSIgZHJ5PSIwLjUiIHdldD0iMC4yNDIwMDAwMTM1ODk4NTkiIHJvb21zaXplPSIwLjYzMjAwMDAyOTA4NzA2NjciIHByZWRlbGF5PSIwLjE2MDAwMDAxMTMyNDg4MjUiIGxvd3NoZWxmZnJlcXVlbmN5PSIwLjMyODAwMDAwOTA1OTkwNiIgaGlnaHNoZWxmZnJlcXVlbmN5PSIwLjcyMDAwMDAyODYxMDIyOTUiIHBlYWtmcmVxdWVuY3k9IjAuNTY4MDAwMDE4NTk2NjQ5MiIgbG93c2hlbGZnYWluPSIxLjAiIGhpZ2hzaGVsZmdhaW49IjAuMjE2MDAwMDA1NjAyODM2NiIgcGVha2dhaW49IjAuMzYwMDAwMDE0MzA1MTE0NyIgc3RlcmVvd2lkdGg9IjEuMCIgcmVhbHN0ZXJlb21vZGU9IjEuMCIvPjxwcm9ncmFtIHByb2dyYW1uYW1lPSJOZWVkIHNvbWUgQWlyIiBkcnk9IjAuNSIgd2V0PSIwLjE0OTAwMDAwMzkzMzkwNjYiIHJvb21zaXplPSIwLjY4ODAwMDAyMzM2NTAyMDgiIHByZWRlbGF5PSIwLjEyMDAwMDAwNDc2ODM3MTYiIGxvd3NoZWxmZnJlcXVlbmN5PSIwLjIxMjAwMDAxMjM5Nzc2NjEiIGhpZ2hzaGVsZmZyZXF1ZW5jeT0iMC41IiBwZWFrZnJlcXVlbmN5PSIwLjUzNjAwMDAxMzM1MTQ0MDQiIGxvd3NoZWxmZ2Fpbj0iMC4yNDgwMDAwMTA4NDgwNDUzIiBoaWdoc2hlbGZnYWluPSIxLjAiIHBlYWtnYWluPSIwLjY0NDAwMDA1MzQwNTc2MTciIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIwLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iTWlkIFBsYXRlIiBkcnk9IjAuNSIgd2V0PSIwLjM3MTAwMDAyMTY5NjA5MDciIHJvb21zaXplPSIwLjYwNDAwMDAzMTk0ODA4OTYiIHByZWRlbGF5PSIwLjIwODAwMDAwNDI5MTUzNDQiIGxvd3NoZWxmZnJlcXVlbmN5PSIwLjMyNDAwMDAwMDk1MzY3NDMiIGhpZ2hzaGVsZmZyZXF1ZW5jeT0iMC4yNzIwMDAwMTQ3ODE5NTE5IiBwZWFrZnJlcXVlbmN5PSIwLjU3NjAwMDAzNDgwOTExMjUiIGxvd3NoZWxmZ2Fpbj0iMC43NjQwMDAwNTgxNzQxMzMzIiBoaWdoc2hlbGZnYWluPSIwLjAiIHBlYWtnYWluPSIwLjExMjAwMDAwMzQ1NzA2OTQiIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIxLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iQWlyeSBNb25vIFBsYXRlIiBkcnk9IjAuNSIgd2V0PSIwLjQ0MTAwMDAxNDU0MzUzMzMiIHJvb21zaXplPSIwLjczMjAwMDA1MjkyODkyNDYiIHByZWRlbGF5PSIwLjA3MjAwMDAwNDM1MTEzOTA3IiBsb3dzaGVsZmZyZXF1ZW5jeT0iMC4xODAwMDAwMDcxNTI1NTc0IiBoaWdoc2hlbGZmcmVxdWVuY3k9IjAuNDI4MDAwMDMyOTAxNzYzOSIgcGVha2ZyZXF1ZW5jeT0iMC4zMjAwMDAwMjI2NDk3NjUiIGxvd3NoZWxmZ2Fpbj0iMC4zNTYwMDAwMDYxOTg4ODMxIiBoaWdoc2hlbGZnYWluPSIwLjM4MDAwMDAyNTAzMzk1MDgiIHBlYWtnYWluPSIwLjAiIHN0ZXJlb3dpZHRoPSIwLjAiIHJlYWxzdGVyZW9tb2RlPSIwLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iMTEwMEh6IFBsYXRlIiBkcnk9IjAuNSIgd2V0PSIwLjQwNDAwMDAxNDA2NjY5NjIiIHJvb21zaXplPSIwLjYwMDAwMDAyMzg0MTg1NzkiIHByZWRlbGF5PSIwLjIxMjAwMDAxMjM5Nzc2NjEiIGxvd3NoZWxmZnJlcXVlbmN5PSIwLjM1MjAwMDAyNzg5NDk3MzgiIGhpZ2hzaGVsZmZyZXF1ZW5jeT0iMC4zNjAwMDAwMTQzMDUxMTQ3IiBwZWFrZnJlcXVlbmN5PSIxLjAiIGxvd3NoZWxmZ2Fpbj0iMC4wIiBoaWdoc2hlbGZnYWluPSIwLjAiIHBlYWtnYWluPSIwLjI2Mzk5OTk5ODU2OTQ4ODUiIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIwLjAiLz48cHJvZ3JhbSBwcm9ncmFtbmFtZT0iU2hvcnQgUGxhdGUiIGRyeT0iMC41IiB3ZXQ9IjAuNDc4MDAwMDE1MDIwMzcwNSIgcm9vbXNpemU9IjAuMTA0MDAwMDAyMTQ1NzY3MiIgcHJlZGVsYXk9IjAuMTM2MDAwMDA3MzkwOTc2IiBsb3dzaGVsZmZyZXF1ZW5jeT0iMC41IiBoaWdoc2hlbGZmcmVxdWVuY3k9IjAuNSIgcGVha2ZyZXF1ZW5jeT0iMC41MzYwMDAwMTMzNTE0NDA0IiBsb3dzaGVsZmdhaW49IjAuNDkyMDAwMDEzNTg5ODU5IiBoaWdoc2hlbGZnYWluPSIwLjM1NjAwMDAwNjE5ODg4MzEiIHBlYWtnYWluPSIwLjE3MjAwMDAwNTg0MTI1NTIiIHN0ZXJlb3dpZHRoPSIxLjAiIHJlYWxzdGVyZW9tb2RlPSIxLjAiLz48L3Byb2dyYW1zPjxtaWRpbWFwLz48L3RhbD4A"
+                    },
+                    "mixers": 63,
+                    "sync": 0,
+                    "flags": 0,
+                    "volume": 1.0,
+                    "balance": 0.5,
+                    "enabled": true,
+                    "muted": false,
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "hotkeys": {},
+                    "deinterlace_mode": 0,
+                    "deinterlace_field_order": 0,
+                    "monitoring_type": 0,
+                    "private_settings": {}
+                },
+                {
+                    "prev_ver": 536936449,
                     "name": "Limiter",
                     "uuid": "f5d14765-ce3b-4235-b860-9cad7eecabfd",
                     "id": "limiter_filter",
@@ -1361,8 +1390,8 @@
             "name": "REFERENCE - Phone vertical retro"
         }
     ],
-    "current_scene": "REFERENCE - 4x3 worn VHS",
-    "current_program_scene": "REFERENCE - 4x3 worn VHS",
+    "current_scene": "Sax - Record widescreen master",
+    "current_program_scene": "Sax - Record widescreen master",
     "canvases": [],
     "current_transition": "Fade",
     "transition_duration": 300,
@@ -1371,7 +1400,7 @@
     "saved_projectors": [],
     "preview_locked": true,
     "scaling_enabled": false,
-    "scaling_level": -16,
+    "scaling_level": -20,
     "scaling_off_x": 0.0,
     "scaling_off_y": 0.0,
     "virtual-camera": {
@@ -1389,6 +1418,13 @@
             "autoStartStreamTimer": false,
             "autoStartRecordTimer": false,
             "pauseRecordTimer": false
+        },
+        "auto-scene-switcher": {
+            "interval": 300,
+            "non_matching_scene": "",
+            "switch_if_not_matching": false,
+            "active": false,
+            "switches": []
         }
     },
     "resolution": {

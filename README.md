@@ -179,6 +179,10 @@ python3 content/.local/share/agent-awake/install.py
 
 Restart both clients afterward. See the linked guide for Fedora dependencies, verification, uninstall steps, and Claude's permission-approval timing limitation.
 
+### Audio plugins and OBS
+
+User audio plugins are synced through `content/.lv2`, `content/.vst`, `content/.vst3`, and `content/.clap`. See the [audio-plugin sync guide](./content/.vst/README.md) for installation and capturing newly installed bundles, and the [OBS guide](./content/.config/obs-studio/README.md) for the sax scenes, retro effects, and TAL reverb settings.
+
 ### herdr configuration
 
 [herdr](https://herdr.dev) config lives in `content/.config/herdr`. The startup
