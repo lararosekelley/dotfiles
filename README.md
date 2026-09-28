@@ -38,7 +38,7 @@ Shell:
 - `python3` - the `serve` function and the herdr default-session plugin
 - `awscli` - the `aws-work`/`aws-personal`/`aws-current` helpers
 - `figlet` - the `big` alias
-- `youtube-dl` - the `dl` alias
+- `yt-dlp` - the `dl` alias
 - `ffmpeg`, `gifsicle` - the `flac2mp3`/`vid2mp4`/`vidslice`/`mov2gif` functions
 
 Git:

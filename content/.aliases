@@ -72,7 +72,7 @@ alias wip='git add -A && git commit -m "work in progress" --no-verify'
 # misc. tools
 
 alias c='clear'
-alias dl='youtube-dl -x'
+alias dl='yt-dlp -x'
 alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
 alias space='df -P -kHl'
