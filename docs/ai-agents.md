@@ -1,5 +1,18 @@
 # AI agents
 
+## Shared global rules
+
+`content/.config/opencode/AGENTS.md` is the shared source for global agent rules.
+OpenCode loads it directly; `content/.claude/CLAUDE.md` imports it using Claude
+Code's native file-import syntax. The relative import works in both `content/`
+and the home directory. Edit the shared file rather than duplicating rules.
+
+Sync both files with `just sync-to-home` and restart both harnesses. In Claude
+Code, use `/context` to check the loaded memory files. The rules require explicit
+confirmation before commits, pushes, and PR/MR comments or replies, and favor
+short messages with plain text and ASCII punctuation. These are agent instructions,
+not tool-level permission enforcement.
+
 ## Interactive reviews and audits
 
 The shared [finalize skill](../content/.claude/skills/finalize/SKILL.md) walks through
