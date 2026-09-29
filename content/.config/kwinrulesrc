@@ -1,0 +1,12 @@
+[82627c1a-e06d-4f2e-9657-8a4b81caa3df]
+Description=Application settings for emacs
+ignoregeometryrule=3
+position=24,56
+positionrule=3
+wmclass=emacs-30.1-pgtk emacs
+wmclasscomplete=true
+wmclassmatch=1
+
+[General]
+count=1
+rules=82627c1a-e06d-4f2e-9657-8a4b81caa3df

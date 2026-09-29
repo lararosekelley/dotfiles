@@ -13,6 +13,15 @@ confirmation before commits, pushes, and PR/MR comments or replies, and favor
 short messages with plain text and ASCII punctuation. These are agent instructions,
 not tool-level permission enforcement.
 
+## OpenCode appearance
+
+`content/.config/opencode/tui.json` sets the Catppuccin theme. OpenCode merges
+`tui.json` followed by `tui.jsonc` in the same directory. The herdr installer owns
+the local `tui.jsonc` plugin registration and `herdr-tui-session.js`; keep those
+generated integration files out of the synced payload. See the
+[herdr setup guide](./herdr.md) to install the integration. Restart OpenCode after
+changing its TUI configuration.
+
 ## Interactive reviews and audits
 
 The shared [finalize skill](../content/.claude/skills/finalize/SKILL.md) walks through

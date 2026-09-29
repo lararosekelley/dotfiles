@@ -96,6 +96,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [AI agents](./docs/ai-agents.md) - `/finalize`, `/audit`, and keeping the machine awake while agents work
 - [herdr](./docs/herdr.md) - plugins, integrations, and the tools the layout expects
 - [Background services](./docs/background-services.md) - user systemd units
+- [Desktop preferences](./docs/desktop-preferences.md) - KDE settings and private hardware-specific configuration
 - [Audio plugins and OBS](./docs/audio-and-obs.md)
 - [RGB lighting](./docs/rgb-lighting.md) - OpenRGB profiles and services
 - [Discover (KDE) backends](./docs/kde-discover.md) - why `snap-backend` is disabled
