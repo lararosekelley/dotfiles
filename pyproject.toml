@@ -1,4 +1,4 @@
-# Python tooling for the scripts under content/
+# Python tooling for runtime helpers, installers, and tests
 #
 # flake8 has no pyproject support, so its half of this lives in .flake8
 

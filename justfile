@@ -1,8 +1,6 @@
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
-# python lives in content/ (the herdr default-session plugin)
-
-python_paths := "content"
+python_paths := "content scripts tests"
 
 # markdownlint-cli2 takes its globs on the command line, not from its config,
 # so quote this to keep bash from expanding it first
@@ -81,5 +79,13 @@ sync-to-home-dry-run:
 sync-to-repo-dry-run:
   cargo run -- sync to-repo --dry-run --yes
 
-test:
-  cargo test
+test: test-rust test-python test-node
+
+test-rust:
+    cargo test
+
+test-python:
+    PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/agent_awake -p 'test_*.py'
+
+test-node:
+    node --test tests/agent_awake/plugin.test.mjs

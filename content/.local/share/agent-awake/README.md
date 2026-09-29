@@ -95,8 +95,10 @@ To uninstall, remove `~/.config/opencode/plugins/agent-awake.js` and only the Cl
 From the repository root:
 
 ```bash
-python3 -m unittest discover -s tests/agent_awake -p 'test_*.py'
-node --test tests/agent_awake/plugin.test.mjs
+just test-python
+just test-node
 ```
+
+`just test` runs these suites and the Rust sync CLI tests.
 
 References: [OpenCode plugins](https://opencode.ai/docs/plugins/) and [Claude Code hooks](https://code.claude.com/docs/en/hooks).
