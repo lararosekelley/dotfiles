@@ -17,6 +17,23 @@ just sync-to-repo
 just status
 ```
 
+## Payload selection
+
+Both directions discover regular files under `content/`; syncing to the repository
+does not discover new paths in home. The same selection policy applies to status,
+copy, and symlink modes, independently of Git tracking or ignore files.
+
+The CLI excludes Python bytecode/cache files, nested Git directories, `.gitkeep`,
+nested `.gitignore` files, `.bak`/numbered backups, herdr's generated plugin registry,
+and OBS runtime/plugin state, logs, updates, and service credentials. The root
+`content/.gitignore` is deliberately installed as `~/.gitignore`. Component READMEs
+and runtime resources remain eligible. The policy is defined in `bin/fs.rs`.
+
+`--only` narrows eligible paths and `--exclude` removes more; neither overrides
+the payload exclusions. Excluded files already installed at home are left alone.
+Empty directories represented only by `.gitkeep` are not created. This policy is
+not a general secret detector; inspect any files you add to `content/`.
+
 ## Previewing changes
 
 Two ways to see what a sync would do, neither of which writes anything:

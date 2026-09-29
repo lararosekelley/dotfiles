@@ -7,23 +7,56 @@ use walkdir::WalkDir;
 
 use crate::model::{Direction, FileRecord, Status, SyncMode};
 
+const PAYLOAD_EXCLUDES: &[&str] = &[
+    "**/__pycache__/**",
+    "**/*.pyc",
+    "**/*.pyo",
+    "**/.pytest_cache/**",
+    "**/.mypy_cache/**",
+    "**/.ruff_cache/**",
+    "**/.git/**",
+    "**/.gitkeep",
+    "**/.gitignore",
+    ".config/herdr/plugins.json",
+    ".config/obs-studio/plugin_config/**",
+    ".config/obs-studio/plugin_manager/**",
+    ".config/obs-studio/plugins/**",
+    ".config/obs-studio/basic/profiles/*/service.json*",
+    ".config/obs-studio/logs/**",
+    ".config/obs-studio/profiler_data/**",
+    ".config/obs-studio/updates/**",
+    ".config/obs-studio/.sentinel/**",
+    "**/*.bak",
+    "**/*.bak[0-9]*",
+];
+
 pub struct Filters {
     only: Option<GlobSet>,
     exclude: Option<GlobSet>,
+    payload_exclude: GlobSet,
 }
 
 impl Filters {
     pub fn new(only: &[String], exclude: &[String]) -> Result<Self> {
         let only_set = build_globset(only)?;
         let exclude_set = build_globset(exclude)?;
+        let mut payload_exclude = GlobSetBuilder::new();
+        for pattern in PAYLOAD_EXCLUDES {
+            payload_exclude.add(Glob::new(pattern)?);
+        }
         Ok(Self {
             only: only_set,
             exclude: exclude_set,
+            payload_exclude: payload_exclude.build()?,
         })
     }
 
     pub fn is_included(&self, rel_path: &Path) -> bool {
         let path_str = path_to_slash(rel_path);
+        // The root .gitignore is the user's installed global ignore file.
+        if path_str != ".gitignore" && self.payload_exclude.is_match(&path_str) {
+            return false;
+        }
         if let Some(ref exclude) = self.exclude {
             if exclude.is_match(&path_str) {
                 return false;
