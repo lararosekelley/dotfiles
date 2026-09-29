@@ -13,5 +13,4 @@ extend-ignore = E203
 extend-exclude =
     .git,
     node_modules,
-    oh-my-git,
     target

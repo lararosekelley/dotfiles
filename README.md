@@ -13,7 +13,7 @@ Only tested on Fedora as of 2026, confirmed to work with Fedora 40+.
 
 ### Required
 
-- `git` - cloning, the `oh-my-git` submodule, the prompt
+- `git` - cloning and the prompt
 - `rust` - builds and runs the sync CLI
 - `mold` - linker selected in `content/.cargo/config.toml`; every cargo build fails without it
 - `pyenv`, `nodenv`, `rbenv` - `.bashrc` evals each unguarded, so a missing one errors on every shell
@@ -68,14 +68,7 @@ Clone the repository:
 git clone git@github.com:lararosekelley/dotfiles
 ```
 
-Add the `oh-my-git` submodule:
-
-```bash
-git submodule init
-ln -s oh-my-git $HOME/.git_prompt
-```
-
-Next, sync files to your home directory using the Rust CLI:
+Sync files to your home directory using the Rust CLI:
 
 ```bash
 cargo run -- sync to-home
@@ -88,6 +81,9 @@ just sync-to-home
 ```
 
 It will prompt you to copy each file individually, so that no unexpected changes are made.
+
+The sync installs `content/.git_prompt` as `~/.git_prompt`, which `.bashrc` sources
+for Git prompt support. No separate prompt installation is needed.
 
 See the [sync CLI guide](./docs/sync-cli.md) for symlinks, status, and previewing changes.
 
