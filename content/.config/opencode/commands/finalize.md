@@ -1,5 +1,5 @@
 ---
-description: "[code|comments|docs|commits|pr|help] [target] — Review current work one chunk at a time."
+description: "[code|comments|docs|commits|pr|help] [target] - Review current work one chunk at a time."
 ---
 
 Load the `finalize` skill and follow it in this conversation.

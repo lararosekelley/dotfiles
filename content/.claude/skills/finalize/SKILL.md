@@ -94,20 +94,20 @@ recovered, mark it pending and briefly explain the uncertainty.
 
 Choose semantic units: a small function, a related group of edits, one comment
 with the code it explains, a documentation section, or one commit message.
-Group related low-risk material into one decision. Aim for roughly 15–40 lines
+Group related low-risk material into one decision. Aim for roughly 15-40 lines
 of code or prose per turn. Split larger units at sensible boundaries; show
 additional context when requested rather than dumping files.
 
 Use this shape:
 
 ````text
-**2/7 · src/sync.rs:80–94 · replacement handling**
+2/7 - src/sync.rs:80-94 - replacement handling
 
 ```diff
 <focused diff or current text>
 ```
 
-**Suggestion:** <one sentence, only if useful>
+Suggestion: <one sentence, only if useful>
 
 Keep, edit, remove, skip, or stop?
 ````
@@ -120,10 +120,17 @@ only when asked. End the turn and wait for the user's decision; do not review
 the next chunk or apply your own suggestion before they respond.
 
 Offer suggestions only when they materially improve correctness, clarity, or
-maintenance; a chunk does not need a suggestion. Follow
-local writing rules. Comments should explain non-obvious constraints; docs should
+maintenance; a chunk does not need a suggestion. Follow local writing rules.
+Comments should explain non-obvious constraints; docs should
 describe current behavior. Commit messages and PR/MR descriptions should explain
 the problem and resulting change, with claims supported by the actual work.
+
+For prose, cut filler, vague claims, inflated vocabulary, and repeated explanations.
+Prefer concrete mechanisms and complete sentences to slogans or compressed
+fragments. Use plain text and ASCII punctuation in authored prose; preserve exact
+identifiers and quotations. Keep useful constraint comments rather than treating
+all comments as defects. Propose changes within the current chunk, not a silent
+cleanup of all pending material.
 
 ## Apply decisions
 

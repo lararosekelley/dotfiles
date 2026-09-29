@@ -48,14 +48,57 @@ reference, and plain-language scope guidance:
 /audit docs content/.config/herdr/
 /audit comments src/
 /audit 'recent changes to the feature flag system'
-/audit docs packages/sdk/ — focus on examples; skip generated API docs
+/audit docs packages/sdk/ - focus on examples; skip generated API docs
+/audit 'my agent configuration'
 /audit help
 ```
 
-Both commands accept `help`, `--help`, or `-h` to print usage without starting a
-review. Audit starts read-only; finalize applies requested edits chunk by chunk.
+Audit starts read-only; finalize applies requested edits chunk by chunk. Audit can
+also check agent configurations for conflicting rules, stale references, loading
+behavior, and context overhead. It distinguishes estimates from harness measurements.
 
-Claude Code discovers both skills under `~/.claude/skills/`. OpenCode reads the
+The `pr` scope reviews a PR/MR description using an available forge CLI, MCP,
+or tool such as git-stk, with pasted text or a draft as a fallback. Publishing
+description edits and rewriting commit messages require explicit direction.
+
+## Understanding and improving workflows
+
+| Command | Purpose |
+| --- | --- |
+| [`/how`](../content/.claude/skills/how/SKILL.md) | Trace current code behavior with source references |
+| [`/why`](../content/.claude/skills/why/SKILL.md) | Investigate historical rationale, separating evidence from inference |
+| [`/teach`](../content/.claude/skills/teach/SKILL.md) | Explain a concept through a mental model and worked example |
+| [`/reflect`](../content/.claude/skills/reflect/SKILL.md) | Propose up to three durable instruction changes for approval |
+| [`/handoff`](../content/.claude/skills/handoff/SKILL.md) | Save or inspect private, cross-harness task context |
+
+```text
+/how does sync select files?
+/why does sync discover paths from the repo in both directions?
+/teach worktrees step by step, assume I know branches
+/reflect the repeated corrections during review
+/handoff save finish the sync tests
+/handoff resume /path/to/handoff.md
+```
+
+How, why, and teach stay read-only. Teach gives a compact explanation by default;
+"step by step" pauses after each concept. Reflect starts from the current
+conversation and waits for approval before editing instructions. It does not
+automatically mine other chats, file issues, or launch reviewer panels.
+
+Handoff writes a short Markdown note under `$XDG_STATE_HOME/agent-handoffs/`
+(default `~/.local/state/agent-handoffs/`), using private directory/file permissions.
+Keep this state out of dotfiles sync and version control. Resume requires the
+explicit file path, checks the checkout state, and proposes the next action without
+automatically executing it. A note does not transfer uncommitted code or approval
+to publish; use the same checkout or supply changes separately.
+
+## Installing the shared commands
+
+All seven commands accept `help`, `--help`, or `-h` before doing any work. `stop`
+returns to normal conversation with completed edits preserved. They follow the
+user's existing permission and delegation rules.
+
+Claude Code discovers the skills under `~/.claude/skills/`. OpenCode reads the
 same skills through thin commands in `~/.config/opencode/commands/`.
 Sync the skill and command files with `just sync-to-home`, then restart OpenCode.
 Claude Code reloads skill changes; restart it if a command is not listed.
@@ -65,10 +108,11 @@ from `content/` into your home directory:
 
 | Source under `content/` | Destination | Used by |
 | --- | --- | --- |
-| `.claude/skills/finalize/` | `~/.claude/skills/finalize/` | Both harnesses |
-| `.claude/skills/audit/` | `~/.claude/skills/audit/` | Both harnesses |
-| `.config/opencode/commands/finalize.md` | `~/.config/opencode/commands/finalize.md` | OpenCode |
-| `.config/opencode/commands/audit.md` | `~/.config/opencode/commands/audit.md` | OpenCode |
+| `.claude/skills/<name>/` | `~/.claude/skills/<name>/` | Both harnesses |
+| `.config/opencode/commands/<name>.md` | `~/.config/opencode/commands/<name>.md` | OpenCode |
+
+Use `finalize`, `audit`, `how`, `why`, `teach`, `reflect`, and `handoff` as names.
+Each skill is self-contained; install only the ones you want.
 
 The command files load the shared skill definitions; there is no second copy of
 the workflow to maintain. OpenCode must have access to external Claude skills,
@@ -76,10 +120,6 @@ or the wrapper must be allowed to read the shared file at its fallback path.
 After installation, try `/finalize help` and `/audit help` in each harness, then
 `/finalize docs README.md` to check argument handling and the one-chunk pause;
 reply `stop` to return to normal conversation.
-
-The `pr` scope reviews a PR/MR description using an available forge CLI, MCP,
-or tool such as git-stk, with pasted text or a draft as a fallback. Publishing
-description edits and rewriting commit messages require explicit direction.
 
 These skills guide the agent rather than enforce a review state machine; completing
 a review covers the selected material and reported checks, not a guarantee of correctness.

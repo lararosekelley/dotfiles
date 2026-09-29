@@ -1,5 +1,5 @@
 ---
-description: "[code|comments|docs|commits|pr|help] [folder, ref, or question] — Audit older or larger work."
+description: "[code|comments|docs|commits|pr|help] [folder, ref, or question] - Audit older or larger work."
 ---
 
 Load the `audit` skill and follow it in this conversation.

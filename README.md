@@ -93,7 +93,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 
 - [Sync CLI](./docs/sync-cli.md) - syncing, status, and previewing changes
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
-- [AI agents](./docs/ai-agents.md) - `/finalize`, `/audit`, and keeping the machine awake while agents work
+- [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [herdr](./docs/herdr.md) - plugins, integrations, and the tools the layout expects
 - [Background services](./docs/background-services.md) - user systemd units
 - [Desktop preferences](./docs/desktop-preferences.md) - KDE settings and private hardware-specific configuration
