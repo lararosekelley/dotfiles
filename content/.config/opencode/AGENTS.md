@@ -10,6 +10,14 @@ even if the initial task asks you to commit, push, or reply. One confirmation ca
 cover an explicitly listed batch; it does not authorize later or changed actions.
 Approval to edit code or wording is not permission to publish it.
 
+## Branches and worktrees
+
+Use git-stk for stacked branch workflows and its built-in worktree management
+for creating, switching, and removing worktrees. Check `git stk --help` and the
+relevant subcommand help before using unfamiliar commands. If git-stk is
+unavailable or cannot handle the operation, ask before using another workflow.
+The confirmation requirements above still apply to git-stk operations.
+
 ## Writing style
 
 Keep commit messages short: one lowercase subject matching the repo's
