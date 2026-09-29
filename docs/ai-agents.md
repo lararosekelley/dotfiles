@@ -77,12 +77,6 @@ a review covers the selected material and reported checks, not a guarantee of co
 
 ## Keep the machine awake while agents work
 
-[Agent Awake](../content/.local/share/agent-awake/README.md) integrates OpenCode lifecycle events and Claude Code hooks with Linux sleep inhibitors. It releases leases when turns finish or need input, with crash cleanup and independent leases for concurrent sessions.
-
-Install the helper and integrations without replacing unrelated live Claude settings:
-
-```bash
-python3 scripts/install-agent-awake.py
-```
-
-Restart both clients afterward. See the linked guide for Fedora dependencies, verification, uninstall steps, and Claude's permission-approval timing limitation.
+[Agent Awake](./agent-awake.md) integrates OpenCode lifecycle events and Claude Code
+hooks with Linux sleep inhibitors. See its guide for installation, verification,
+uninstall steps, and lifecycle limitations.

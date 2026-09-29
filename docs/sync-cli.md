@@ -51,6 +51,18 @@ the payload exclusions. Excluded files already installed at home are left alone.
 Empty directories represented only by `.gitkeep` are not created. This policy is
 not a general secret detector; inspect any files you add to `content/`.
 
+## Documentation boundary
+
+Machine setup and operating guides live in `docs/` and are not installed. Files
+under `content/` should be useful at their home destination. The herdr local
+plugin keeps its README beside its code so the installed plugin is self-contained;
+agent skills likewise keep their runtime instructions in `SKILL.md`.
+
+The sync policy deliberately permits component READMEs rather than excluding all
+Markdown files. Move checkout-only guides to `docs/` instead of maintaining two
+copies. Sync does not remove obsolete installed files; any copies of guides or
+checkout installers already at home can be removed manually.
+
 ## Previewing changes
 
 Two ways to see what a sync would do, neither of which writes anything:

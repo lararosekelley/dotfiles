@@ -16,13 +16,13 @@ All scenes output to the same 3840x2160 landscape canvas. The phone scenes previ
 
 The camera source expects an MX Brio at `/dev/video0`, using MJPEG at 3840x2160/30 fps. The shared microphone explicitly selects Scarlett 2i2 Input 1 through PulseAudio/PipeWire. Re-select devices in source properties if their names differ on another machine.
 
-The microphone keeps the sax-tested compressor/limiter settings, with a subtle reverb added between them:
+The microphone chain uses a compressor, subtle reverb, and limiter:
 
 1. Compressor: 1.5:1 ratio, 30 ms attack, 250 ms release, +2 dB output gain; other settings use OBS defaults.
-2. **Reverb - subtle plate (TAL)**: TAL-Reverb-2 VST2 with the custom **Sax - Subtle Plate** program. Saved normalized controls: dry 0.50 (unity gain), wet 0.05, room size 0.35, pre-delay 0.10. These are plugin parameter positions, not a 5% wet/dry crossfade or physical decay/delay units. This is a starting point to audition with the sax, not part of the previously tested dry chain.
+2. **Reverb - subtle plate (TAL)**: TAL-Reverb-2 VST2 with the custom **Sax - Subtle Plate** program. Saved normalized controls: dry 0.50 (unity gain), wet 0.05, room size 0.35, pre-delay 0.10. These are plugin parameter positions, not a 5% wet/dry crossfade or physical decay/delay units. Audition these settings with the sax before recording.
 3. Limiter: -1 dB threshold; other settings use OBS defaults.
 
-Recording uses H.264/AAC in MKV at 48 kHz. Choose a local recording directory in **Settings → Output** after installing these dotfiles; the machine-specific path is omitted here.
+Recording uses H.264/AAC in MKV at 48 kHz. Choose a local recording directory in **Settings > Output** after installing these dotfiles; the machine-specific path is omitted here.
 
 ## Editing in the OBS UI
 
@@ -46,13 +46,13 @@ For the phone reference's rounded corners, curvature, and vignette, edit **04b -
 
 In TAL, adjust **Wet** for the amount of reverb, **Room Size** for the reverb's size/tail, and **Pre Delay** for separation from note attacks. Keep **Dry** at its saved setting initially. Toggle the reverb filter's eye icon for a dry/wet comparison. Selecting another preset replaces the custom settings. Reverb is baked into OBS recordings.
 
-The TAL editor was confirmed working with OBS launched through XWayland on Fedora/KDE:
+Launch OBS through XWayland on Fedora/KDE to edit TAL controls:
 
 ```bash
 QT_QPA_PLATFORM=xcb obs
 ```
 
-Close OBS before using that command. Use this launch when editing VST controls. Dragonfly's editor crashed under native Wayland and remained black with XWayland, so it was replaced and its installed plugins removed.
+Close OBS before using that command.
 
 These adjustments apply to all five sax scenes because they share the microphone.
 
@@ -71,7 +71,7 @@ Source padlocks prevent moving or resizing sources; they do not lock filter sett
 
 - Click the padlock beside a source in the **Sources** panel to unlock its transform.
 - If the preview is also locked, right-click the preview and uncheck **Lock Preview**.
-- For precise framing, right-click the source and choose **Transform → Edit Transform**.
+- For precise framing, right-click the source and choose **Transform > Edit Transform**.
 
 The locks can stay enabled while you adjust filters.
 
@@ -81,15 +81,15 @@ OBS Virtual Camera makes the finished scene, including its video filters, availa
 
 ### Fedora prerequisite
 
-Linux requires the **v4l2loopback** kernel module for OBS Virtual Camera. Install a package compatible with your Fedora release and running kernel, then load the module. With Secure Boot enabled, the module also needs an accepted signature. This setup has not yet been completed here; the earlier OBS log reported `v4l2loopback not installed, virtual camera not registered`.
+Linux requires the **v4l2loopback** kernel module for OBS Virtual Camera. Install a package compatible with your Fedora release and running kernel, then load the module. With Secure Boot enabled, the module also needs an accepted signature.
 
-After installing and loading the module, restart OBS. If Virtual Camera is unavailable, check **Help → Log Files → View Current Log** for v4l2loopback errors.
+After installing and loading the module, restart OBS. If Virtual Camera is unavailable, check **Help > Log Files > View Current Log** for v4l2loopback errors.
 
 ### Start a call
 
 1. Open OBS and choose the scene to send to Zoom. The widescreen master gives a milder look; the 4:3 reference gives the stronger VHS/TV look. The phone reference includes large side bars in the landscape output.
 2. In **Controls**, click **Start Virtual Camera**.
-3. In Zoom, open **Settings → Video → Camera** and select the OBS virtual camera device. Its displayed name may depend on the v4l2loopback configuration. If it is missing, restart Zoom after starting Virtual Camera.
+3. In Zoom, open **Settings > Video > Camera** and select the OBS virtual camera device. Its displayed name may depend on the v4l2loopback configuration. If it is missing, restart Zoom after starting Virtual Camera.
 4. Turn off Zoom backgrounds and appearance filters initially so they do not interfere with the retro treatment.
 5. Keep OBS and Virtual Camera running for the call, then click **Stop Virtual Camera** when finished.
 
@@ -97,11 +97,11 @@ By default, Virtual Camera sends OBS's program output: changing scenes changes w
 
 ### Audio and call quality
 
-- Virtual Camera sends **video only**. In **Zoom → Settings → Audio**, select the Scarlett microphone directly. This bypasses OBS's compressor, reverb, and limiter; sending processed OBS audio would require separate virtual-audio routing.
+- Virtual Camera sends **video only**. In **Zoom > Settings > Audio**, select the Scarlett microphone directly. This bypasses OBS's compressor, reverb, and limiter; sending processed OBS audio would require separate virtual-audio routing.
 - Heavy noise and scanlines can become blocky under Zoom's compression. For regular work calls, consider a dedicated landscape call scene with milder NTSC/VHS effects. Such a scene is not included yet.
 
 ## Plugin dependency
 
-Install [OBS Retro Effects](https://github.com/lararosekelley/obs-retro-effects) separately. The fork's README documents Fedora build and user-local installation. Compiled plugins, credentials, logs, and backups are excluded from this directory's versioned configuration.
+Install [OBS Retro Effects](https://github.com/lararosekelley/obs-retro-effects) separately. The fork's README documents Fedora build and user-local installation. OBS plugin binaries, credentials, logs, and backups are excluded from the versioned configuration and normal sync.
 
-Audio additionally uses [TAL-Reverb-2](https://tal-software.com/products/tal-reverb), the Linux VST2 build. Its binary is included at `content/.vst/libTAL-Reverb-2.so`; see the [audio-plugin sync guide](../../.vst/README.md). OBS's VST filter stores an absolute path (currently `/home/lara/.vst/libTAL-Reverb-2.so`); on another account, re-select the plugin in the reverb filter. The saved state is tied to the installed binary's hash. If a different TAL build resets it, adjust its interface and let OBS save the new state.
+Audio additionally uses [TAL-Reverb-2](https://tal-software.com/products/tal-reverb), the Linux VST2 build. Its binary is included at `content/.vst/libTAL-Reverb-2.so`; see the [audio-plugin sync guide](./audio-plugins.md). OBS's VST filter stores an absolute path (currently `/home/lara/.vst/libTAL-Reverb-2.so`); on another account, re-select the plugin in the reverb filter. The saved state is tied to the installed binary's hash. If a different TAL build resets it, adjust its interface and let OBS save the new state.

@@ -1,3 +1,6 @@
 # Audio plugins and OBS
 
-User audio plugins are synced through `content/.lv2`, `content/.vst`, `content/.vst3`, and `content/.clap`. See the [audio-plugin sync guide](../content/.vst/README.md) for installation and capturing newly installed bundles, and the [OBS guide](../content/.config/obs-studio/README.md) for the sax scenes, retro effects, and TAL reverb settings.
+User audio plugins are synced through `content/.lv2`, `content/.vst`, `content/.vst3`, and `content/.clap`.
+
+- [Audio plugins](./audio-plugins.md): installation and capturing newly installed bundles.
+- [OBS](./obs-studio.md): sax scenes, retro effects, TAL reverb settings, and virtual camera setup.

@@ -1,4 +1,4 @@
-# Activity-based sleep inhibition
+# Agent Awake
 
 Keeps Linux awake while OpenCode or Claude Code is working, rather than for the entire lifetime of an open terminal. Uses Python's standard library and `systemd-inhibit`; no always-running service, npm package, or sudo access is needed at runtime.
 

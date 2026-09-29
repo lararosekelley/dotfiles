@@ -9,7 +9,7 @@ The dotfiles repository includes the user plugin directories:
 | `content/.vst3/` | `~/.vst3/` | VST3 bundles |
 | `content/.clap/` | `~/.clap/` | CLAP plugins |
 
-Currently `.vst/` contains the Linux x86-64 binaries for **TAL-Reverb-2** and **TAL-Reverb-4** (about 7 MB total). The other three directories have placeholders because no plugins were installed there when this setup was captured. Dragonfly was removed after its editor crashed or rendered black in OBS.
+`.vst/` contains the Linux x86-64 binaries for **TAL-Reverb-2** and **TAL-Reverb-4** (about 7 MB total). The other three directories contain repository placeholders, which are not installed by sync. Directories are created when they contain eligible plugin files.
 
 The OBS sax collection uses **TAL-Reverb-2**, between its compressor and limiter. TAL-Reverb-4 is retained as an additional installed plugin. OBS's built-in VST 2.x filter uses VST2; keeping LV2, VST3, or CLAP plugins here does not add support for those formats to OBS.
 
