@@ -11,7 +11,7 @@ sudo dnf install python3 systemd
 From the dotfiles repository root:
 
 ```bash
-python3 content/.local/share/agent-awake/install.py
+python3 scripts/install-agent-awake.py
 ```
 
 The installer:

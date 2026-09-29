@@ -16,15 +16,15 @@ CONTENT = REPO / "content"
 SOURCE = CONTENT / ".local/share/agent-awake"
 
 
-def module(name):
-    spec = importlib.util.spec_from_file_location(name, SOURCE / f"{name}.py")
+def module(name, path):
+    spec = importlib.util.spec_from_file_location(name, path)
     result = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(result)
     return result
 
 
-awake = module("agent_awake")
-installer = module("install")
+awake = module("agent_awake", SOURCE / "agent_awake.py")
+installer = module("install", REPO / "scripts/install-agent-awake.py")
 
 
 def wait_for(predicate):
@@ -147,6 +147,29 @@ class Leases(unittest.TestCase):
 
 
 class HooksAndInstall(unittest.TestCase):
+    def test_install_cli_resolves_checkout_outside_working_directory(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            home = Path(tmp) / "home"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(REPO / "scripts/install-agent-awake.py"),
+                    "--home",
+                    str(home),
+                ],
+                cwd=tmp,
+                capture_output=True,
+                text=True,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(
+                (home / ".local/share/agent-awake/agent_awake.py").read_bytes(),
+                (SOURCE / "agent_awake.py").read_bytes(),
+            )
+            settings = json.loads((home / ".claude/settings.json").read_text())
+            self.assertEqual(set(settings), {"hooks"})
+            self.assertFalse((home / ".local/share/agent-awake/install.py").exists())
+
     def test_claude_lifecycle(self):
         for event in [
             "UserPromptSubmit",

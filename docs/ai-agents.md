@@ -82,7 +82,7 @@ a review covers the selected material and reported checks, not a guarantee of co
 Install the helper and integrations without replacing unrelated live Claude settings:
 
 ```bash
-python3 content/.local/share/agent-awake/install.py
+python3 scripts/install-agent-awake.py
 ```
 
 Restart both clients afterward. See the linked guide for Fedora dependencies, verification, uninstall steps, and Claude's permission-approval timing limitation.

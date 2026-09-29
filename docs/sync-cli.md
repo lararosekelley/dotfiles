@@ -17,6 +17,23 @@ just sync-to-repo
 just status
 ```
 
+## Settings ownership and integration installers
+
+Normal sync treats each selected file as fully managed: accepting an update to
+`.claude/settings.json` replaces the whole file, including local preferences and
+hooks. Sync never merges structured settings. Decline that file, or exclude it,
+when the home copy contains settings you want to retain:
+
+```bash
+cargo run -- sync to-home --exclude '.claude/settings.json'
+python3 scripts/install-agent-awake.py
+```
+
+The checkout-only Agent Awake installer copies its runtime files and merges only
+its hooks into live Claude settings, backing up replacements. It can be run from
+any working directory using its full path. Runtime files belong in `content/`;
+checkout installation tools belong in `scripts/` and are not synced to home.
+
 ## Payload selection
 
 Both directions discover regular files under `content/`; syncing to the repository
