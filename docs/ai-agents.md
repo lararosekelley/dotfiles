@@ -13,6 +13,10 @@ confirmation before commits, pushes, and PR/MR comments or replies, and favor
 short messages with plain text and ASCII punctuation. These are agent instructions,
 not tool-level permission enforcement.
 
+The repository's root [AGENTS.md](../AGENTS.md) covers dotfiles layout, sync
+behavior, and checks. Root `CLAUDE.md` imports those project instructions; the
+files under `content/` supply personal rules across repositories.
+
 ## OpenCode appearance
 
 `content/.config/opencode/tui.json` sets the Catppuccin theme. OpenCode merges
@@ -70,6 +74,8 @@ description edits and rewriting commit messages require explicit direction.
 | [`/teach`](../content/.claude/skills/teach/SKILL.md) | Explain a concept through a mental model and worked example |
 | [`/reflect`](../content/.claude/skills/reflect/SKILL.md) | Propose up to three durable instruction changes for approval |
 | [`/handoff`](../content/.claude/skills/handoff/SKILL.md) | Save or inspect private, cross-harness task context |
+| [`/discuss`](../content/.claude/skills/discuss/SKILL.md) | Settle a plan through short rounds of informed questions |
+| [`/verify`](../content/.claude/skills/verify/SKILL.md) | Run existing project checks and report what they establish |
 
 ```text
 /how does sync select files?
@@ -78,6 +84,8 @@ description edits and rewriting commit messages require explicit direction.
 /reflect the repeated corrections during review
 /handoff save finish the sync tests
 /handoff resume /path/to/handoff.md
+/discuss whether this CLI needs a daemon
+/verify the worktree cleanup change
 ```
 
 How, why, and teach stay read-only. Teach gives a compact explanation by default;
@@ -92,9 +100,15 @@ explicit file path, checks the checkout state, and proposes the next action with
 automatically executing it. A note does not transfer uncommitted code or approval
 to publish; use the same checkout or supply changes separately.
 
+Discuss inspects before asking and recommends an answer to each question. It
+stays read-only until implementation is explicitly requested. Verify reuses local
+test recipes and project-specific verification guides; it does not automatically
+fix failures or run live-provider tests. Keep exact project commands in that
+project rather than duplicating them in this shared skill.
+
 ## Installing the shared commands
 
-All seven commands accept `help`, `--help`, or `-h` before doing any work. `stop`
+All nine commands accept `help`, `--help`, or `-h` before doing any work. `stop`
 returns to normal conversation with completed edits preserved. They follow the
 user's existing permission and delegation rules.
 
@@ -111,8 +125,13 @@ from `content/` into your home directory:
 | `.claude/skills/<name>/` | `~/.claude/skills/<name>/` | Both harnesses |
 | `.config/opencode/commands/<name>.md` | `~/.config/opencode/commands/<name>.md` | OpenCode |
 
-Use `finalize`, `audit`, `how`, `why`, `teach`, `reflect`, and `handoff` as names.
+Use `finalize`, `audit`, `how`, `why`, `teach`, `reflect`, `handoff`, `discuss`, and
+`verify` as names.
 Each skill is self-contained; install only the ones you want.
+
+On Claude Code versions with a bundled `/verify`, installing this personal skill
+replaces that command. Use the project-local `/verify-git-stk` name for the git-stk
+recipe when working in its checkout.
 
 The command files load the shared skill definitions; there is no second copy of
 the workflow to maintain. OpenCode must have access to external Claude skills,
