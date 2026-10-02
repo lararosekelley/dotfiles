@@ -634,6 +634,16 @@ aws-personal() {
   aws sts get-caller-identity --query 'Account' --output text
 }
 
+# Switch AWS_PROFILE to personal-root
+#
+# Usage: aws-personal-root
+aws-personal-root() {
+  export AWS_PROFILE=personal-root
+  export AWS_REGION=us-east-1
+  echo "Switched to AWS profile: $AWS_PROFILE"
+  aws sts get-caller-identity --query 'Account' --output text
+}
+
 # Check current AWS_PROFILE
 #
 # Usage: aws-current
