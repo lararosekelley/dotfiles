@@ -8,6 +8,11 @@
       "command": ["npx", "-y", "@playwright/mcp@latest", "--extension"],
       "enabled": true,
     },
+    "todoist": {
+      "type": "remote",
+      "enabled": true,
+      "url": "https://ai.todoist.net/mcp",
+    },
     "posthog": {
       "type": "remote",
       "enabled": true,
