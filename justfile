@@ -79,6 +79,48 @@ sync-to-home-dry-run:
 sync-to-repo-dry-run:
   cargo run -- sync to-repo --dry-run --yes
 
+# times an interactive shell sourcing the installed ~/.bashrc, then breaks one
+# traced startup down by file and line (self time, so a `source` line excludes
+# the file it loads)
+
+profile runs="10":
+  #!/usr/bin/env bash
+  set -euo pipefail
+  total=0
+  for _ in $(seq {{runs}}); do
+    start=$EPOCHREALTIME
+    bash -i -c exit </dev/null >/dev/null 2>&1
+    total=$(echo "$total + $EPOCHREALTIME - $start" | bc)
+  done
+  printf 'mean startup over %d runs: %.0f ms\n\n' {{runs}} "$(echo "$total * 1000 / {{runs}}" | bc -l)"
+  trace=$(mktemp)
+  trap 'rm -f "$trace"' EXIT
+  bash --norc --noprofile -i -c '
+    exec {fd}>"$1"
+    BASH_XTRACEFD=$fd
+    PS4="+ \${EPOCHREALTIME} \${BASH_SOURCE[0]:-}:\${LINENO} "
+    set -x
+    source ~/.bashrc
+    set +x
+  ' _ "$trace" </dev/null >/dev/null 2>&1
+  awk -v home="$HOME" '
+    $2 ~ /^[0-9]+\.[0-9]+$/ {
+      t = $2
+      if (prev != "") { d = t - pt; line[prev] += d; file[pf] += d }
+      split($3, a, ":"); pf = a[1]; sub("^" home, "~", pf)
+      prev = pf ":" a[2]; pt = t
+      if (!(prev in cmd)) { c = $0; sub(/^[^ ]+ [^ ]+ [^ ]+ /, "", c); cmd[prev] = substr(c, 1, 60) }
+      if (start == "") start = t
+    }
+    END {
+      printf "traced startup: %.0f ms\n\nby file:\n", (pt - start) * 1000
+      for (f in file) printf "%8.1f ms  %s\n", file[f] * 1000, f | "sort -rn | head -10"
+      close("sort -rn | head -10")
+      printf "\nslowest lines:\n"
+      for (l in line) printf "%8.1f ms  %-40s %s\n", line[l] * 1000, l, cmd[l] | "sort -rn | head -15"
+    }
+  ' "$trace"
+
 test: test-rust test-python test-node
 
 test-rust:

@@ -76,7 +76,7 @@ fi
 # pyenv
 
 eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+eval "$(pyenv init - --no-rehash bash)"
 eval "$(pyenv virtualenv-init -)"
 
 # nodenv
