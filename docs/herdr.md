@@ -32,7 +32,8 @@ The layout expects these on `PATH`:
 | ------------ | ------------------------------------------------ |
 | `python3`    | the default-session plugin                       |
 | `git`        | repo detection for the git, review, and prs tabs |
-| `opencode`   | `agents` tab                                     |
+| `claude`     | `agents` tab, with `herd --agent claude`         |
+| `opencode`   | `agents` tab, the default                        |
 | `nvim`       | `editor` tab                                     |
 | `lazygit`    | `git` tab and the `prefix+alt+g` popup           |
 | `glances`    | `system` tab                                     |

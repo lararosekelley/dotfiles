@@ -197,6 +197,8 @@ function mux() {
 #
 # Sourced before ~/.exports and ~/.environment, so either can override this.
 
+HERD_AGENTS=(claude opencode)
+
 HERD_REPOS=(
   "$HOME/Code/work/product"
   "$HOME/Code/work/devops"
@@ -218,18 +220,34 @@ HERD_REPOS=(
 # State files are moved aside as .bak, not deleted.
 #
 # Params:
+#     --agent - Agent harness for new spaces' agents tab, saved for later runs
 #     --repos - Repos to open, instead of $HERD_REPOS
 #     --reset - Move the saved session aside, then rebuild from scratch
 #     --yes   - Skip the reset confirmation
 #
-# Usage: herd [--repos path ...] [--reset] [--yes]
+# Usage: herd [--agent name] [--repos path ...] [--reset] [--yes]
 function herd() {
-  local reset=false confirmed=false collecting=false
+  local reset=false confirmed=false collecting=false expecting_agent=false
+  local agent=""
   local repos=()
   local arg
 
   for arg in "$@"; do
+    if [[ "$expecting_agent" == true ]]; then
+      agent="$arg"
+      expecting_agent=false
+      continue
+    fi
+
     case "$arg" in
+      --agent)
+        collecting=false
+        expecting_agent=true
+        ;;
+      --agent=*)
+        collecting=false
+        agent="${arg#--agent=}"
+        ;;
       --repos)
         collecting=true
         ;;
@@ -247,12 +265,14 @@ function herd() {
         ;;
       -h | --help)
         cat << EOF
-usage: herd [--repos path ...] [--reset] [--yes]
+usage: herd [--agent name] [--repos path ...] [--reset] [--yes]
 
 Opens a herdr space per repo and attaches. Spaces already open are left alone,
 so this is safe to re-run. Tabs, splits, and the programs in them come from the
 default-session plugin.
 
+  --agent name      Agent for the agents tab: ${HERD_AGENTS[*]}. Saved for
+                    later runs; spaces already built keep theirs
   --repos path ...  Repos to open, instead of \$HERD_REPOS
   --reset           Move the saved session aside as .bak, then rebuild
   -y, --yes         Skip the reset confirmation
@@ -265,7 +285,7 @@ EOF
         ;;
       -*)
         echo "fatal: unknown option: $arg"
-        echo "usage: herd [--repos path ...] [--reset] [--yes]"
+        echo "usage: herd [--agent name] [--repos path ...] [--reset] [--yes]"
         return 1
         ;;
       *)
@@ -279,6 +299,16 @@ EOF
     esac
   done
 
+  if [[ "$expecting_agent" == true ]]; then
+    echo "fatal: --agent needs one of: ${HERD_AGENTS[*]}"
+    return 1
+  fi
+
+  if [[ -n "$agent" && " ${HERD_AGENTS[*]} " != *" $agent "* ]]; then
+    echo "fatal: unknown agent: $agent (expected one of: ${HERD_AGENTS[*]})"
+    return 1
+  fi
+
   if [[ ${#repos[@]} -eq 0 ]]; then
     repos=("${HERD_REPOS[@]}")
   fi
@@ -286,6 +316,15 @@ EOF
   if ! command -v herdr &> /dev/null; then
     echo "fatal: herdr must be installed"
     return 1
+  fi
+
+  # the plugin reads this whenever it builds an agents tab, so it outlives this
+  # run and also covers rehydrate
+  if [[ -n "$agent" ]]; then
+    local config_dir
+    config_dir="$(herdr plugin config-dir default-session)" || return 1
+    mkdir -p "$config_dir" && printf '%s\n' "$agent" > "$config_dir/agent"
+    echo "agent: $agent"
   fi
 
   if [[ "$reset" == true ]]; then
@@ -411,9 +450,15 @@ EOF
 # Usage: complete -F _herd herd
 function _herd() {
   local current="${COMP_WORDS[COMP_CWORD]}"
-  local flags="--repos --reset --yes --help"
+  local flags="--agent --repos --reset --yes --help"
   local collecting=false
   local word
+
+  if [[ "${COMP_WORDS[COMP_CWORD - 1]}" == --agent ]]; then
+    # shellcheck disable=SC2207
+    COMPREPLY=($(compgen -W "${HERD_AGENTS[*]}" -- "$current"))
+    return 0
+  fi
 
   for word in "${COMP_WORDS[@]:1:COMP_CWORD-1}"; do
     case "$word" in

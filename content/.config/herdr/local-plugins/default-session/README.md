@@ -27,7 +27,7 @@ all came back as bare shells (see [After a reboot](#after-a-reboot))):
 | tab      | panes                                         | where           |
 | -------- | --------------------------------------------- | --------------- |
 | `shell`  | main shell, plus scratch/watch shells stacked | everywhere      |
-| `agents` | `claude`, beside a spare pane for codex       | repo spaces     |
+| `agents` | the `herd --agent` pick, beside a spare pane  | repo spaces     |
 | `editor` | full screen `nvim`                            | everywhere      |
 | `git`    | `lazygit` beside a git shell                  | repo spaces     |
 | `review` | full screen `tuicr`                           | repo spaces     |
@@ -224,8 +224,14 @@ are skipped, so it is safe to re-run.
 herd                                          # $HERD_REPOS
 herd --repos ~/Code/work/product ~/Code/oss/x # or an explicit list
 herd --reset                                  # throw the saved session away first
+herd --agent claude                           # claude or opencode, saved for later runs
 herd --help                                   # flags and the default list
 ```
+
+`--agent` writes the pick to the plugin's config dir (`herdr plugin config-dir
+default-session`), where `{agent}` in `layout.json` reads it from then on,
+including on rehydrate. Spaces already built keep their agent. Without a saved
+pick, `default_agent` in `layout.json` applies.
 
 `HERD_REPOS` in `~/.functions` holds the default list; `~/.exports` or
 `~/.environment` can override it, since both load after. Tab completion offers

@@ -113,9 +113,21 @@ def tab_panes(snap: dict, tab_id: str) -> list[dict]:
 # --------
 
 
+def chosen_agent() -> str:
+    """The agent harness `herd --agent` last saved, else the layout default."""
+    config_dir = os.environ.get("HERDR_PLUGIN_CONFIG_DIR")
+    if config_dir:
+        saved = Path(config_dir) / "agent"
+        if saved.is_file() and saved.read_text().strip():
+            return saved.read_text().strip()
+    return load_layout()["default_agent"]
+
+
 def shell_wrap(command: str, requires_repo: bool = False) -> list[str]:
     """Run a program, then fall back to an interactive shell instead of dying."""
     command = command.replace("{plugin_root}", str(PLUGIN_ROOT))
+    if "{agent}" in command:
+        command = command.replace("{agent}", chosen_agent())
     if requires_repo:
         # lazygit/tuicr/ghzinga only make sense inside a checkout; outside one,
         # say so once and leave a usable shell behind

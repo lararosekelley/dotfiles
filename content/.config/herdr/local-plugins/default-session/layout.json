@@ -10,7 +10,8 @@
     "",
     "`run` commands are wrapped so the pane drops back to an interactive shell",
     "when the program exits, instead of the tab going dead.",
-    "`{plugin_root}` in a `run` string expands to this directory.",
+    "`{plugin_root}` in a `run` string expands to this directory, and `{agent}`",
+    "to the harness `herd --agent` last saved, else default_agent.",
     "Panes with no `run` are plain shells rooted at the space cwd.",
     "",
     "`requires_repo` panes use the space cwd when it is a checkout, and fall back",
@@ -35,6 +36,7 @@
   ],
   "focus_tab": 1,
   "default_repo": "~/Code/personal/larakelley.com",
+  "default_agent": "opencode",
   "rehydrate_on_startup": true,
   "tabs": [
     {
@@ -66,7 +68,7 @@
         "type": "split",
         "direction": "right",
         "ratio": 0.5,
-        "first": { "type": "pane", "label": "agent 1", "run": "opencode" },
+        "first": { "type": "pane", "label": "agent 1", "run": "{agent}" },
         "second": { "type": "pane", "label": "agent 2" }
       }
     },
