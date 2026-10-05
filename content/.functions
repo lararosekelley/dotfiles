@@ -202,12 +202,16 @@ HERD_AGENTS=(claude opencode)
 HERD_REPOS=(
   "$HOME/Code/work/product"
   "$HOME/Code/work/devops"
+  "$HOME/Code/work/gitops"
+  "$HOME/Code/work/infra"
+  "$HOME/Code/work/higharc.tools"
   "$HOME/Code/personal/larakelley.com"
   "$HOME/Code/personal/dotfiles"
   "$HOME/Code/personal/git-stk"
   "$HOME/Code/personal/navi"
   "$HOME/Code/personal/callie"
   "$HOME/Code/personal/woodshed"
+  "$HOME/Code/personal/review-bot"
 )
 
 # Open herdr with one space per repo, then attach
