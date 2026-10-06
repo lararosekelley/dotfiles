@@ -10,6 +10,8 @@ even if the initial task asks you to commit, push, or reply. One confirmation ca
 cover an explicitly listed batch; it does not authorize later or changed actions.
 Approval to edit code or wording is not permission to publish it.
 
+Conform to the constraints in `commitlint` config if the repo uses it.
+
 ## Branches and worktrees
 
 Use git-stk for stacked branch workflows and its built-in worktree management
@@ -42,6 +44,7 @@ when requested or needed by the document, template, or code presentation.
 Preserve exact identifiers, quoted source text, and non-English content.
 
 <!-- CODEGRAPH_START -->
+
 ## CodeGraph
 
 In repositories indexed by CodeGraph (a `.codegraph/` directory exists at the repo root), reach for it BEFORE grep/find or reading files when you need to understand or locate code:
