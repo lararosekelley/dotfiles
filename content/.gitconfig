@@ -198,3 +198,5 @@
   fetchBeforeRestack = true
   cleanClosed = true
   githubStacks = true
+  tourStyle = agentTour
+  tourAgent = claude -p --model claude-sonnet-5-5 --effort high
