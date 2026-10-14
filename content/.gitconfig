@@ -198,5 +198,6 @@
   fetchBeforeRestack = true
   cleanClosed = true
   githubStacks = true
-  tourStyle = agentTour
+  tourStyle = agentReview
   tourAgent = claude -p --model claude-sonnet-5-5 --effort high
+  inboxBots = higharcbuildbot

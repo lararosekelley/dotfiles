@@ -20,6 +20,13 @@ relevant subcommand help before using unfamiliar commands. If git-stk is
 unavailable or cannot handle the operation, ask before using another workflow.
 The confirmation requirements above still apply to git-stk operations.
 
+Open and update stacked pull requests only with `git stk submit --stack`, run from
+the branch you are changing. Never pass `--no-stack` for a branch with a stack parent
+or children: it skips registering the stack with GitHub. `--title`, `--desc`, and
+`--desc-file` still apply only to the current branch in stack mode. To repair a stack
+submitted piecemeal, run `git stk submit --stack --dry-run`, then without
+`--dry-run`.
+
 ## Existing work and verification
 
 Inspect existing changes before editing. Preserve unrelated work and staging
