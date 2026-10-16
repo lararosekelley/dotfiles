@@ -26,6 +26,9 @@ copy_on_select = true
 # agent panel ordering: "spaces" groups by space, "priority" is the attention queue
 agent_panel_sort = "priority"
 
+# dots vs dedicated emojis
+status_indicators = "dots"
+
 [theme]
 name = "catppuccin"
 
