@@ -123,6 +123,8 @@ but never rewrite pending chunks on your own.
 
 After the walk or on stop, run the checks covering edited text: unit tests that
 pinned wording, golden recording or verification, and the repository's lint for
-edited files. Report edits made, pinned files updated, skipped chunks, copies left
-to reconcile, and what remains unverified. Invoking this skill does not authorize
+edited files. Re-record goldens only for chunks the user edited, and list every
+golden file the recording changed so none are accepted silently. Report edits
+made, pinned files updated, skipped chunks, copies left to reconcile, and what
+remains unverified. Invoking this skill does not authorize
 staging, committing, or publishing listings or releases.

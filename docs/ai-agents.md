@@ -61,8 +61,22 @@ Audit starts read-only; finalize applies requested edits chunk by chunk. Audit c
 also check agent configurations for conflicting rules, stale references, loading
 behavior, and context overhead. It distinguishes estimates from harness measurements.
 
-The `pr` scope reviews a PR/MR description using an available forge CLI, MCP,
-or tool such as git-stk, with pasted text or a draft as a fallback. Publishing
+The shared [reword skill](../content/.claude/skills/reword/SKILL.md) walks through
+a repository's user-facing text, such as UI strings, CLI help, website pages, store
+listings, release notes, and docs, so you can replace the wording with your own.
+It lists text surfaces first, shows text as written, and updates tests that pin
+the old wording. Use finalize for current diffs and audit for documentation accuracy.
+
+```text
+/reword
+/reword app
+/reword www/index.html
+/reword help
+```
+
+The `pr` scope of finalize and audit reviews a PR/MR description using an
+available forge CLI, MCP, or tool such as git-stk, with pasted text or a draft as
+a fallback. Publishing
 description edits and rewriting commit messages require explicit direction.
 
 ## Understanding and improving workflows
@@ -76,7 +90,6 @@ description edits and rewriting commit messages require explicit direction.
 | [`/handoff`](../content/.claude/skills/handoff/SKILL.md) | Save or inspect private, cross-harness task context |
 | [`/discuss`](../content/.claude/skills/discuss/SKILL.md) | Settle a plan through short rounds of informed questions |
 | [`/verify`](../content/.claude/skills/verify/SKILL.md) | Run existing project checks and report what they establish |
-| [`/reword`](../content/.claude/skills/reword/SKILL.md) | Walk through user-facing text and replace the wording with your own |
 
 ```text
 /how does sync select files?
@@ -87,7 +100,6 @@ description edits and rewriting commit messages require explicit direction.
 /handoff resume /path/to/handoff.md
 /discuss whether this CLI needs a daemon
 /verify the worktree cleanup change
-/reword app
 ```
 
 How, why, and teach stay read-only. Teach gives a compact explanation by default;
@@ -138,8 +150,8 @@ recipe when working in its checkout.
 The command files load the shared skill definitions; there is no second copy of
 the workflow to maintain. OpenCode must have access to external Claude skills,
 or the wrapper must be allowed to read the shared file at its fallback path.
-After installation, try `/finalize help` and `/audit help` in each harness, then
-`/finalize docs README.md` to check argument handling and the one-chunk pause;
+After installation, try `/finalize help`, `/audit help`, and `/reword help` in each
+harness, then `/finalize docs README.md` to check argument handling and the one-chunk pause;
 reply `stop` to return to normal conversation.
 
 These skills guide the agent rather than enforce a review state machine; completing

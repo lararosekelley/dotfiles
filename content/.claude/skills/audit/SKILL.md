@@ -184,8 +184,9 @@ actionable shortlist. Keep additional findings queued rather than dumping them.
 
 Track the queue in conversation, not new repository files. Revalidate findings
 affected by subsequent edits. If the user requests a chunk-by-chunk walkthrough,
-use the finalize skill when available and carry over the selected scope; otherwise
-show one chunk and wait for keep/edit/remove/skip/stop decisions here. On resume
+use the finalize skill when available, or the reword skill when they want to
+rewrite user-facing text in their own words, and carry over the selected scope;
+otherwise show one chunk and wait for keep/edit/remove/skip/stop decisions here. On resume
 or context loss, reconstruct the queue from the conversation and current material;
 do not invent decisions that cannot be recovered.
 

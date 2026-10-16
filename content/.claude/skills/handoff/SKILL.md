@@ -50,8 +50,10 @@ one short question. Use `/reflect` to propose permanent instruction changes.
      later edits mean those results need repeating.
    - Decisions and constraints, linked to canonical instructions where possible.
    - Unresolved questions, blockers, and the next concrete action.
-   - Review progress, if applicable: stable chunk IDs, accepted/skipped items,
-     next pending chunk, and remaining verification. Do not infer approvals.
+   - Review progress, if applicable: the skill in use, stable chunk or finding
+     IDs with each recorded decision in that skill's terms (such as accepted,
+     edited, skipped, or deferred), the next pending item, and remaining
+     verification. Do not infer approvals.
 4. Keep facts separate from plans and attempts. Never claim that the note contains
    uncommitted code; the next harness needs the same working tree or a separately
    supplied patch. Do not embed transcripts, credentials, sensitive personal data,
