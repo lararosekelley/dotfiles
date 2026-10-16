@@ -76,6 +76,7 @@ description edits and rewriting commit messages require explicit direction.
 | [`/handoff`](../content/.claude/skills/handoff/SKILL.md) | Save or inspect private, cross-harness task context |
 | [`/discuss`](../content/.claude/skills/discuss/SKILL.md) | Settle a plan through short rounds of informed questions |
 | [`/verify`](../content/.claude/skills/verify/SKILL.md) | Run existing project checks and report what they establish |
+| [`/reword`](../content/.claude/skills/reword/SKILL.md) | Walk through user-facing text and replace the wording with your own |
 
 ```text
 /how does sync select files?
@@ -86,6 +87,7 @@ description edits and rewriting commit messages require explicit direction.
 /handoff resume /path/to/handoff.md
 /discuss whether this CLI needs a daemon
 /verify the worktree cleanup change
+/reword app
 ```
 
 How, why, and teach stay read-only. Teach gives a compact explanation by default;
@@ -125,8 +127,8 @@ from `content/` into your home directory:
 | `.claude/skills/<name>/` | `~/.claude/skills/<name>/` | Both harnesses |
 | `.config/opencode/commands/<name>.md` | `~/.config/opencode/commands/<name>.md` | OpenCode |
 
-Use `finalize`, `audit`, `how`, `why`, `teach`, `reflect`, `handoff`, `discuss`, and
-`verify` as names.
+Use `finalize`, `audit`, `how`, `why`, `teach`, `reflect`, `handoff`, `discuss`,
+`verify`, and `reword` as names.
 Each skill is self-contained; install only the ones you want.
 
 On Claude Code versions with a bundled `/verify`, installing this personal skill
