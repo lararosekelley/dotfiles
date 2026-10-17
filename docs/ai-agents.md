@@ -19,7 +19,9 @@ files under `content/` supply personal rules across repositories.
 
 ## OpenCode appearance
 
-`content/.config/opencode/tui.json` sets the Catppuccin theme. OpenCode merges
+`content/.config/opencode/tui.json` sets the Callie theme, from
+`content/.config/opencode/themes/callie.json`, a copy of
+[greylocklabs/themes](https://github.com/greylocklabs/themes)' `ports/opencode/callie.json`. OpenCode merges
 `tui.json` followed by `tui.jsonc` in the same directory. The herdr installer owns
 the local `tui.jsonc` plugin registration and `herdr-tui-session.js`; keep those
 generated integration files out of the synced payload. See the

@@ -1,5 +1,5 @@
 [ui]
-theme = "catppuccin"
+theme = "terminal"
 symbols = "emoji"
 spacing = "comfortable"
 width_mode = "fixed"

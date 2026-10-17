@@ -4,12 +4,13 @@
 # local themes go in ~/.config/tuicr/themes
 # --------
 
-# catppuccin mocha, same palette as herdr, tmux, and kitty
+# callie, from https://github.com/greylocklabs/themes, as in kitty and tmux;
+# themes/callie.toml is a copy of its ports/tuicr/callie.toml
 #
 # an explicit theme wins over `appearance`, which tuicr warns about if both are
 # set, so appearance is left out on purpose
 
-theme = "catppuccin-mocha"
+theme = "callie"
 
 # diffs side by side, with the file tree visible
 
