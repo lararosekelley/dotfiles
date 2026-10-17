@@ -1,86 +1,79 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "model": "openai/gpt-6-astra",
-  "autoupdate": true,
+  "update": "auto",
   "mcp": {
-    "playwright": {
-      "type": "local",
-      "command": ["npx", "-y", "@playwright/mcp@latest", "--extension"],
-      "enabled": true,
-    },
-    "todoist": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://ai.todoist.net/mcp",
-    },
-    "posthog": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.posthog.com/mcp",
-    },
-    "circleci": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.circleci.com/v1/mcp",
-    },
-    "magic-patterns": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.magicpatterns.com/mcp",
-    },
-    "codspeed": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.codspeed.io/mcp",
-    },
-    "linear": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.linear.app/mcp",
-    },
-    "notion": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.notion.com/mcp",
-    },
-    "github": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://api.githubcopilot.com/mcp",
-      "oauth": {
-        "clientId": "{env:GITHUB_OPENCODE_CLIENT_ID}",
-        "clientSecret": "{env:GITHUB_OPENCODE_CLIENT_SECRET}",
-        "scope": "tools:read tools:execute",
+    "servers": {
+      "playwright": {
+        "type": "local",
+        "command": ["npx", "-y", "@playwright/mcp@latest", "--extension"],
       },
-    },
-    "sentry": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.sentry.dev/mcp",
-      "oauth": {},
-    },
-    "datadog": {
-      "type": "remote",
-      "enabled": true,
-      "url": "https://mcp.us5.datadoghq.com/v1/mcp",
-      "oauth": {},
-    },
-    "aws": {
-      "type": "local",
-      "enabled": true,
-      "command": [
-        "uvx",
-        "mcp-proxy-for-aws@latest",
-        "https://aws-mcp.us-east-1.api.aws/mcp",
-      ],
-      "environment": {
-        "AWS_REGION": "{env:AWS_REGION}",
+      "todoist": {
+        "type": "remote",
+        "url": "https://ai.todoist.net/mcp",
       },
-    },
-    "codegraph": {
-      "type": "local",
-      "command": ["codegraph", "serve", "--mcp"],
-      "enabled": true,
+      "posthog": {
+        "type": "remote",
+        "url": "https://mcp.posthog.com/mcp",
+      },
+      "circleci": {
+        "type": "remote",
+        "url": "https://mcp.circleci.com/v1/mcp",
+      },
+      "magic-patterns": {
+        "type": "remote",
+        "url": "https://mcp.magicpatterns.com/mcp",
+      },
+      "codspeed": {
+        "type": "remote",
+        "url": "https://mcp.codspeed.io/mcp",
+      },
+      "linear": {
+        "type": "remote",
+        "url": "https://mcp.linear.app/mcp",
+      },
+      "notion": {
+        "type": "remote",
+        "url": "https://mcp.notion.com/mcp",
+      },
+      "github": {
+        "type": "remote",
+        "url": "https://api.githubcopilot.com/mcp",
+        "oauth": {
+          "client_id": "{env:GITHUB_OPENCODE_CLIENT_ID}",
+          "client_secret": "{env:GITHUB_OPENCODE_CLIENT_SECRET}",
+          "scope": "tools:read tools:execute",
+        },
+      },
+      "sentry": {
+        "type": "remote",
+        "url": "https://mcp.sentry.dev/mcp",
+        "oauth": {},
+      },
+      "datadog": {
+        "type": "remote",
+        "url": "https://mcp.us5.datadoghq.com/v1/mcp",
+        "oauth": {},
+      },
+      "aws": {
+        "type": "local",
+        "command": [
+          "uvx",
+          "mcp-proxy-for-aws@latest",
+          "https://aws-mcp.us-east-1.api.aws/mcp",
+        ],
+        "environment": {
+          "AWS_REGION": "{env:AWS_REGION}",
+        },
+      },
+      "porkbun": {
+        "type": "remote",
+        "url": "https://mcp.porkbun.com/mcp",
+      },
+      "codegraph": {
+        "type": "local",
+        "command": ["codegraph", "serve", "--mcp"],
+      },
     },
   },
 }

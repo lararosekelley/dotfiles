@@ -43,6 +43,10 @@
         "AWS_REGION": "us-east-1"
       }
     },
+    "porkbun": {
+      "type": "http",
+      "url": "https://mcp.porkbun.com/mcp"
+    },
     "github": {
       "type": "http",
       "url": "https://api.githubcopilot.com/mcp",
