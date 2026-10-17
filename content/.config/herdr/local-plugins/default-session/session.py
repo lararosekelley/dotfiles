@@ -129,7 +129,7 @@ def shell_wrap(command: str, requires_repo: bool = False) -> list[str]:
     if "{agent}" in command:
         command = command.replace("{agent}", chosen_agent())
     if requires_repo:
-        # lazygit/tuicr/ghzinga only make sense inside a checkout; outside one,
+        # lazygit/tuicr/gh-dash only make sense inside a checkout; outside one,
         # say so once and leave a usable shell behind
         script = (
             "if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then "
@@ -156,7 +156,7 @@ def repo_cwd(space_cwd: str | None, spec: dict) -> str | None:
     """Where the repo-bound tools should run.
 
     A space opened on a checkout wins; otherwise fall back to default_repo so
-    lazygit/tuicr/ghzinga have something to chew on from a ~-rooted space.
+    lazygit/tuicr/gh-dash have something to chew on from a ~-rooted space.
     """
     if is_git_repo(space_cwd):
         return space_cwd

@@ -87,8 +87,8 @@ to cross one.
 
 The toolchain is `rustup`. Crates installed with `cargo install` (or
 `cargo binstall`): cargo-binstall, cargo-dist, cargo-release, cargo-watch,
-cargo-nextest, emacs-lsp-booster, ghzinga, git-cliff, just, rustlings, selene,
-sqlx-cli, stylua, viu.
+cargo-nextest, emacs-lsp-booster, git-cliff, just, rustlings, selene, sqlx-cli,
+stylua, viu.
 
 ```bash
 rustup update
@@ -118,6 +118,14 @@ These install outside a package manager and update themselves or by re-downloadi
 | `aws`                                      | `/usr/local/bin` | re-run the AWS installer |
 | `circleci`, `ollama`, `railway`, `mailpit` | `/usr/local/bin` | re-run each installer    |
 | `terraform`                                | `~/.bin`         | re-download a release    |
+
+`gh` extensions: dlvhdr/gh-dash and dlvhdr/gh-enhance, for herdr's `github` tab.
+
+```bash
+gh extension install dlvhdr/gh-dash
+gh extension install dlvhdr/gh-enhance
+gh extension upgrade --all
+```
 
 AppImages live in `~/Applications` (Joplin, MuseScore, Slippi) and are managed by
 AppImageLauncher.
