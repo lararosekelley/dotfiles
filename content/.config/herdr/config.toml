@@ -30,7 +30,7 @@ agent_panel_sort = "priority"
 status_indicators = "dots"
 
 [theme]
-name = "catppuccin"
+name = "terminal"
 
 # sidebar rows (branch and dirty state)
 [ui.sidebar.spaces]
