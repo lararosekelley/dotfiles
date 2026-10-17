@@ -69,8 +69,14 @@ fi
 
 # keychain
 
+# id_ed25519
 if command -v keychain &> /dev/null && [ -f "$HOME/.ssh/id_ed25519" ]; then
   eval "$(keychain --eval --quiet --lockwait 30 id_ed25519)"
+fi
+
+# id_rsa
+if command -v keychain &> /dev/null && [ -f "$HOME/.ssh/id_rsa" ]; then
+  eval "$(keychain --eval --quiet --lockwait 30 id_rsa)"
 fi
 
 # pyenv
