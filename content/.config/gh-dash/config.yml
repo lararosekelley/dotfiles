@@ -13,11 +13,31 @@ prSections:
   - title: Review requested
     filters: is:open review-requested:@me
 
-issueSections:
+issuesSections:
   - title: Open
     filters: is:open
   - title: Assigned
     filters: is:open assignee:@me
+
+defaults:
+  preview:
+    open: true
+    width: 0.5
+  prsLimit: 30
+  issuesLimit: 30
+  refetchIntervalMinutes: 5
+
+# d shows a pull request's diff here: read-only nvim with diff highlighting
+pager:
+  diff: nvim -R -c 'setlocal filetype=diff buftype=nofile' -
+
+# where checkouts live, so checking out a pull request (space or C) uses them
+repoPaths:
+  greylocklabs/callie: ~/Code/personal/callie
+  greylocklabs/jot: ~/Code/personal/jot
+  greylocklabs/woodshed: ~/Code/personal/woodshed
+  greylocklabs/*: ~/Code/greylocklabs/*
+  lararosekelley/*: ~/Code/personal/*
 
 keybindings:
   prs:
