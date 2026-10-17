@@ -31,7 +31,7 @@ all came back as bare shells (see [After a reboot](#after-a-reboot))):
 | `editor` | full screen `nvim`                            | everywhere      |
 | `git`    | `lazygit` beside a git shell                  | repo spaces     |
 | `review` | full screen `tuicr`                           | repo spaces     |
-| `prs`    | full screen `ghzinga`, via `prs.sh`           | repo spaces     |
+| `github` | full screen `gh-dash`, via `github.sh`        | repo spaces     |
 | `system` | `glances` stacked over `journalctl -f`        | `~` space only  |
 
 The `~` space's main shell opens on a `fastfetch` banner; see
@@ -47,7 +47,7 @@ the primary (`~`) space:
 - `primary_only` tabs are skipped everywhere else, so global monitors exist once
   rather than once per project. `system` is one.
 - `secondary_only` tabs are skipped in the primary space. `agents`, `git`,
-  `review`, and `prs` are all repo-oriented, and `~` is not a checkout, so the
+  `review`, and `github` are all repo-oriented, and `~` is not a checkout, so the
   `~` space gets `shell`, `editor`, and `system` and nothing else.
 
 Both flags also work on a single **pane**, where they scope its `run` rather
@@ -61,7 +61,7 @@ Details worth knowing:
 
 - Panes inherit the space's cwd, so launching herdr from a checkout gives every
   tab the right repo.
-- Panes marked `requires_repo` (`lazygit`, `tuicr`, `ghzinga`, and the git
+- Panes marked `requires_repo` (`lazygit`, `tuicr`, `gh-dash`, and the git
   shell) need a checkout. When the space is rooted somewhere that isn't one (such as `~`),
   they fall back to `default_repo` in `layout.json`. If that is also
   missing they print a hint instead of an error.
@@ -69,12 +69,10 @@ Details worth knowing:
   exits, so quitting nvim leaves a usable pane instead of a dead tab. A pane
   marked `oneshot` leans on that: `fastfetch` prints and hands the pane back
   right away, so the banner is scrollback above an ordinary prompt.
-- The `prs` tab goes through [`prs.sh`](./prs.sh), which pins ghzinga to a
-  session named after the repo. Left to itself ghzinga scores saved herdr pane
-  ids as "strong" anchors and cwd or git remote as "weak", so a bare launch
-  reopens whatever you last looked at in some other repo. The script opens the
-  PR for the current branch, else the newest open PR, else the repo's own
-  session.
+- The `github` tab goes through [`github.sh`](./github.sh), which checks that `gh` and
+  the gh-dash extension are installed before opening `gh dash`. Opened inside a
+  checkout, gh-dash's smart filtering scopes every section to that repo. `T` on a
+  pull request opens its checks in gh-enhance.
 - All splits are even. `prefix+=` puts them back that way after resizing.
 - Tabs holding a running program or an agent are never rebuilt on startup, and
   neither are the spaces they live in.
@@ -111,7 +109,7 @@ A restore brings back spaces, tabs, splits, and cwds, but every pane comes back
 as a bare shell. herdr does not relaunch programs the way tmux-resurrect's
 `@resurrect-processes` did. The startup hook fills that gap: every tab whose
 panes are _all_ idle shells is rebuilt from its entry in `layout.json`, so nvim,
-lazygit, glances, journalctl, tuicr, ghzinga, and claude come back where they
+lazygit, glances, journalctl, tuicr, gh-dash, and claude come back where they
 belong. That makes launching herdr the equivalent of
 `@continuum-restore 'on'`.
 
@@ -209,7 +207,7 @@ restored shell instead, which is what makes the `fastfetch` banner cheap.
 
 `default_repo` at the top of the file is where `requires_repo` panes land when
 the space itself isn't a checkout. `{plugin_root}` inside a `run` string expands
-to this directory, which is how the `prs` tab finds `prs.sh`.
+to this directory, which is how the `github` tab finds `github.sh`.
 
 No restart needed. The file is read on each run, so `prefix+d` in a fresh
 space is enough to see a change.
@@ -240,7 +238,7 @@ the flags, then those repos plus directory completion after `--repos`.
 Each new space triggers the `workspace.created` hook, so it arrives with tabs
 already built, and `herd` puts focus back on the space you started in before
 attaching. Note the cost: every project space starts its own `nvim`, `lazygit`,
-`tuicr`, `ghzinga`, and `claude`. Marking more tabs `primary_only` trims that.
+`tuicr`, `gh-dash`, and `claude`. Marking more tabs `primary_only` trims that.
 
 ## Editing the plugin manifest
 

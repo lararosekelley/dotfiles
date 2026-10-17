@@ -28,19 +28,18 @@ hook, so it points at a file that only exists once the command above has run.
 
 The layout expects these on `PATH`:
 
-| tool         | used by                                          |
-| ------------ | ------------------------------------------------ |
-| `python3`    | the default-session plugin                       |
-| `git`        | repo detection for the git, review, and prs tabs |
-| `claude`     | `agents` tab, with `herd --agent claude`         |
-| `opencode`   | `agents` tab, the default                        |
-| `nvim`       | `editor` tab                                     |
-| `lazygit`    | `git` tab and the `prefix+alt+g` popup           |
-| `glances`    | `system` tab                                     |
-| `journalctl` | `system` tab (systemd)                           |
-| `tuicr`      | `review` tab                                     |
-| `ghzinga`    | `prs` tab (`cargo install ghzinga`)              |
-| `gh`         | picking which PR the `prs` tab opens             |
+| tool         | used by                                                  |
+| ------------ | -------------------------------------------------------- |
+| `python3`    | the default-session plugin                               |
+| `git`        | repo detection for the git, review, and github tabs      |
+| `claude`     | `agents` tab, with `herd --agent claude`                 |
+| `opencode`   | `agents` tab, the default                                |
+| `nvim`       | `editor` tab                                             |
+| `lazygit`    | `git` tab and the `prefix+alt+g` popup                   |
+| `glances`    | `system` tab                                             |
+| `journalctl` | `system` tab (systemd)                                   |
+| `tuicr`      | `review` tab                                             |
+| `gh`         | `github` tab, with the gh-dash and gh-enhance extensions |
 
 Anything missing degrades rather than breaks: the pane reports the failure and
 drops back to an interactive shell.

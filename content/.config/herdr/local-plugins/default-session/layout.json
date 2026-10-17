@@ -104,12 +104,12 @@
       }
     },
     {
-      "label": "prs",
+      "label": "github",
       "secondary_only": true,
       "layout": {
         "type": "pane",
-        "label": "ghzinga",
-        "run": "bash {plugin_root}/prs.sh",
+        "label": "gh-dash",
+        "run": "bash {plugin_root}/github.sh",
         "requires_repo": true
       }
     },

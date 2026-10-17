@@ -1,0 +1,52 @@
+# gh-dash config
+#
+# github dashboard for the current repo, opened by herdr's github tab. Launched
+# inside a checkout, smart filtering adds repo:<this repo> to every section.
+# T on a pull request opens its checks in gh-enhance.
+# --------
+
+prSections:
+  - title: Open
+    filters: is:open
+  - title: Mine
+    filters: is:open author:@me
+  - title: Review requested
+    filters: is:open review-requested:@me
+
+issueSections:
+  - title: Open
+    filters: is:open
+  - title: Assigned
+    filters: is:open assignee:@me
+
+keybindings:
+  prs:
+    # gh-enhance only takes bubbletint themes; rose_pine is the closest to callie
+    - key: T
+      command: ENHANCE_THEME=rose_pine gh enhance -R {{.RepoName}} {{.PrNumber}}
+
+# callie, from https://github.com/greylocklabs/themes (ports/gh-dash/callie.yml)
+theme:
+  colors:
+    text:
+      primary: "#e0d3df"
+      secondary: "#c9b7c6"
+      inverted: "#2e0f20"
+      faint: "#9a8797"
+      warning: "#d6ba86"
+      success: "#9dcca3"
+      error: "#eaaba8"
+      actor: "#e5aac1"
+    background:
+      selected: "#33243a"
+    border:
+      primary: "#f08fb8"
+      secondary: "#3d2c42"
+      faint: "#2c2031"
+    icon:
+      newcontributor: "#82cdcd"
+      contributor: "#a4beef"
+      collaborator: "#e5aac1"
+      member: "#e5aac1"
+      owner: "#f08fb8"
+      unknownrole: "#9a8797"
