@@ -1,0 +1,33 @@
+# lazygit config
+#
+# callie, from https://github.com/greylocklabs/themes (ports/lazygit/callie.yml)
+# --------
+
+gui:
+  theme:
+    activeBorderColor:
+      - "#f08fb8"
+      - "bold"
+    inactiveBorderColor:
+      - "#3d2c42"
+    searchingActiveBorderColor:
+      - "#d6ba86"
+      - "bold"
+    optionsTextColor:
+      - "#a4beef"
+    selectedLineBgColor:
+      - "#33243a"
+    inactiveViewSelectedLineBgColor:
+      - "#261a2a"
+    cherryPickedCommitFgColor:
+      - "#2e0f20"
+    cherryPickedCommitBgColor:
+      - "#82cdcd"
+    markedBaseCommitFgColor:
+      - "#2e0f20"
+    markedBaseCommitBgColor:
+      - "#d6ba86"
+    unstagedChangesColor:
+      - "#eaaba8"
+    defaultFgColor:
+      - "#e0d3df"

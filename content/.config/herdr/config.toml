@@ -29,8 +29,31 @@ agent_panel_sort = "priority"
 # dots vs dedicated emojis
 status_indicators = "dots"
 
+# callie, from https://github.com/greylocklabs/themes (ports/herdr/callie.toml):
+# herdr's terminal theme with Callie's pink accent and rows
 [theme]
 name = "terminal"
+
+[theme.custom]
+accent = "#f08fb8"
+text = "#e0d3df"
+subtext0 = "#c9b7c6"
+panel_bg = "reset"
+sidebar_bg = "#1c1220"
+active_row_bg = "#33243a"
+selection_bg = "#3d2c42"
+surface0 = "#33243a"
+surface1 = "#3d2c42"
+surface_dim = "#261a2a"
+overlay0 = "#5b4c5c"
+overlay1 = "#7a6a79"
+mauve = "#e5aac1"
+green = "#9dcca3"
+yellow = "#d6ba86"
+red = "#eaaba8"
+blue = "#a4beef"
+teal = "#82cdcd"
+peach = "#d6ba86"
 
 # sidebar rows (branch and dirty state)
 [ui.sidebar.spaces]

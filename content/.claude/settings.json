@@ -233,5 +233,6 @@
   },
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
-  "editorMode": "vim"
+  "editorMode": "vim",
+  "theme": "custom:callie"
 }
