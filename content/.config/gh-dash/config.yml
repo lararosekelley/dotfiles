@@ -41,9 +41,10 @@ repoPaths:
 
 keybindings:
   prs:
-    # gh-enhance only takes bubbletint themes; rose_pine is the closest to callie
+    # gh-enhance only takes bubbletint's own themes, and none is callie; dracula_plus
+    # keeps its focus lavender rather than rose_pine's teal
     - key: T
-      command: ENHANCE_THEME=rose_pine gh enhance -R {{.RepoName}} {{.PrNumber}}
+      command: ENHANCE_THEME=dracula_plus gh enhance -R {{.RepoName}} {{.PrNumber}}
 
 # callie, from https://github.com/greylocklabs/themes (ports/gh-dash/callie.yml)
 theme:
