@@ -214,6 +214,19 @@ function ssh_prompt() {
   fi
 }
 
+# the visible width of a prompt part: its \u, \h and \w expanded, its escapes dropped
+
+function prompt_width() {
+  local text="$1"
+
+  text="${text//\\u/$USER}"
+  text="${text//\\h/${HOSTNAME%%.*}}"
+  text="${text//\\w/${PWD/#$HOME/\~}}"
+  text="$(sed -E 's/\\\[[^]]*\\\]//g' <<< "$text")"
+
+  echo "${#text}"
+}
+
 # set prompt
 
 function set_prompt() {
@@ -227,15 +240,35 @@ function set_prompt() {
     prompt_icon="➜"
   fi
 
-  PS1="\[${bold}\]\[${user_color}\]\u\[${reset}\]" # battery, user
-  PS1+="\[${white}\] at \[${bold}\]\[${host_color}\]\h\[${reset}\]" # host
-  PS1+="$(ssh_prompt)" # connected over ssh?
-  PS1+="\[${white}\] in \[${bold}\]\[${dir_color}\]\w\[${reset}\]" # cwd
+  local identity dir_part git_part env_part part width part_width
 
-  PS1+="$(git_branch)\[${reset}\]" # git branch
-  PS1+="\[${bold}\]\[${diff_color}\]$(git_diff)\[${reset}\]" # git diff & pushable commits
+  identity="\[${bold}\]\[${user_color}\]\u\[${reset}\]" # user
+  identity+="\[${white}\] at \[${bold}\]\[${host_color}\]\h\[${reset}\]" # host
+  identity+="$(ssh_prompt)" # connected over ssh?
 
-  PS1+="\[${bold}\]\[${virtualenv_color}\]$(python_env)\[${node_color}\]$(node_env)\[${reset}\]" # python virtualenv and NODE_ENV
+  dir_part="\[${white}\] in \[${bold}\]\[${dir_color}\]\w\[${reset}\]" # cwd
+
+  git_part="$(git_branch)\[${reset}\]" # git branch
+  git_part+="\[${bold}\]\[${diff_color}\]$(git_diff)\[${reset}\]" # git diff & pushable commits
+
+  env_part="\[${bold}\]\[${virtualenv_color}\]$(python_env)\[${node_color}\]$(node_env)\[${reset}\]" # python virtualenv and NODE_ENV
+
+  # a part that would wrap mid-word starts its own line instead, without its leading space
+  PS1="$identity"
+  width="$(prompt_width "$identity")"
+  for part in "$dir_part" "$git_part" "$env_part"; do
+    part_width="$(prompt_width "$part")"
+    if [ "$part_width" -eq 0 ]; then
+      continue
+    fi
+    if ((width + part_width > ${COLUMNS:-80})); then
+      PS1+="\n${part/ /}"
+      width=$((part_width - 1))
+    else
+      PS1+="$part"
+      width=$((width + part_width))
+    fi
+  done
 
   PS1+="\n\[${time_color}\](\@) \[${prompt_color}\]${prompt_icon}\[${reset}\]  "
 }
