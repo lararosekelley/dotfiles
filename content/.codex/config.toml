@@ -1,0 +1,76 @@
+# Codex config
+#
+# The MCP servers match Claude Code's (~/.claude/.mcp.json) and opencode's
+# (~/.config/opencode/opencode.jsonc). Sign in to the remote ones with
+# `codex mcp login <name>`.
+#
+# The theme is callie, from https://github.com/greylocklabs/themes
+# (ports/tmtheme); Codex uses it for code blocks and diffs.
+# --------
+
+[tui]
+theme = "callie"
+screen_reader_detection_done = true
+
+[tui.model_availability_nux]
+"gpt-6.1-sol" = 1
+
+[projects."/home/lara/Code/personal/git-stk"]
+trust_level = "trusted"
+
+[mcp_servers.todoist]
+url = "https://ai.todoist.net/mcp"
+
+[mcp_servers.circleci]
+url = "https://mcp.circleci.com/v1/mcp"
+
+[mcp_servers.codspeed]
+url = "https://mcp.codspeed.io/mcp"
+
+[mcp_servers.resend]
+url = "https://mcp.resend.com/mcp"
+
+[mcp_servers.magic-patterns]
+url = "https://mcp.magicpatterns.com/mcp"
+
+[mcp_servers.linear]
+url = "https://mcp.linear.app/mcp"
+
+[mcp_servers.notion]
+url = "https://mcp.notion.com/mcp"
+
+[mcp_servers.sentry]
+url = "https://mcp.sentry.dev/mcp"
+
+[mcp_servers.datadog]
+url = "https://mcp.us5.datadoghq.com/v1/mcp"
+
+[mcp_servers.porkbun]
+url = "https://mcp.porkbun.com/mcp"
+
+[mcp_servers.posthog]
+url = "https://mcp.posthog.com/mcp"
+
+# GitHub's server has no dynamic client registration, so this uses the same
+# pre-registered OAuth app as Claude Code
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp"
+
+[mcp_servers.github.oauth]
+client_id = "Ov23lim54jCgx5QRsuz2"
+callback_port = 8080
+
+[mcp_servers.aws]
+command = "uvx"
+args = ["mcp-proxy-for-aws@latest", "https://aws-mcp.us-east-1.api.aws/mcp"]
+
+[mcp_servers.aws.env]
+AWS_REGION = "us-east-1"
+
+[mcp_servers.codegraph]
+command = "codegraph"
+args = ["serve", "--mcp"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest", "--extension"]
