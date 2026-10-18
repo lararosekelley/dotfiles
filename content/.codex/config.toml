@@ -74,3 +74,6 @@ args = ["serve", "--mcp"]
 [mcp_servers.playwright]
 command = "npx"
 args = ["-y", "@playwright/mcp@latest", "--extension"]
+
+[features]
+hooks = true
