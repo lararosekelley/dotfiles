@@ -26,12 +26,12 @@ user_color="$red"
 host_color="$orange"
 dir_color="$yellow"
 branch_color="$green"
-diff_color="$aqua"
+diff_color="$purple"
 time_color="$purple"
-ssh_color="$blue"
+ssh_color="$purple"
 
-virtualenv_color="$blue"
-node_color="$blue"
+virtualenv_color="$purple"
+node_color="$purple"
 
 # git diff
 

@@ -120,7 +120,7 @@
   current = yellow bold reverse
   local = yellow
   remote = green
-  upstream = cyan
+  upstream = magenta
 [color "diff"]
   plain = white
   meta = yellow
@@ -139,7 +139,7 @@
   branch = white bold
   added = yellow bold
   changed = green bold
-  untracked = cyan bold reverse
+  untracked = magenta bold
   nobranch = red bold
 [core]
   # custom .gitignore and .gitattributes
