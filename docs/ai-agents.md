@@ -7,6 +7,9 @@ OpenCode loads it directly; `content/.claude/CLAUDE.md` imports it using Claude
 Code's native file-import syntax. The relative import works in both `content/`
 and the home directory. Edit the shared file rather than duplicating rules.
 
+Codex reads `~/.codex/AGENTS.md`. The sync tool skips symlinks, so link it to the
+shared file once: `ln -s ../.config/opencode/AGENTS.md ~/.codex/AGENTS.md`.
+
 Sync both files with `just sync-to-home` and restart both harnesses. In Claude
 Code, use `/context` to check the loaded memory files. The rules require explicit
 confirmation before commits, pushes, and PR/MR comments or replies, and favor
@@ -27,6 +30,18 @@ the local `tui.jsonc` plugin registration and `herdr-tui-session.js`; keep those
 generated integration files out of the synced payload. See the
 [herdr setup guide](./herdr.md) to install the integration. Restart OpenCode after
 changing its TUI configuration.
+
+## Codex
+
+`content/.codex/config.toml` gives Codex the same MCP servers as Claude Code's
+`content/.claude/.mcp.json` and OpenCode's `opencode.jsonc`; add a server to all
+three. Sign in to the remote ones once with `codex mcp login <name>`. GitHub's
+server uses the same pre-registered OAuth app as Claude Code. Codex also writes
+project trust and notices into this file, so sync it back with `just sync-to-repo`.
+
+Codex colors code blocks and diffs with the Callie theme in `content/.codex/themes`,
+copies of [greylocklabs/themes](https://github.com/greylocklabs/themes)'
+`ports/tmtheme`. `/theme` switches to Callie Light.
 
 ## Interactive reviews and audits
 
