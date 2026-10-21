@@ -12,6 +12,27 @@ Approval to edit code or wording is not permission to publish it.
 
 Conform to the constraints in `commitlint` config if the repo uses it.
 
+## Machine responsiveness
+
+I keep using this computer while you work. Keeping it responsive is a higher
+priority than finishing faster.
+
+- Before heavy work such as builds, full test suites, indexing, or containers,
+  check what is already running, including other agent sessions, and do not
+  stack heavy jobs on top of each other.
+- Run one heavy job at a time. Do not fan out parallel builds, suites, or
+  subagents that each start them. Prefer focused tests over full suites.
+- Cap parallelism at about half the cores (`-j`, `--jobs`, `-n`,
+  `--max-workers`) and run long jobs under `nice -n 19 ionice -c3`. For jobs that
+  can balloon in memory, use `systemd-run --user --scope -p MemoryMax=...`.
+- Scope searches and output: skip `node_modules`, `target`, and similar trees,
+  and do not load huge files or outputs into memory.
+- Track every background shell, watcher, server, or container you start. Stop
+  it once it is no longer needed and before finishing, unless I asked to keep it
+  running. Do not poll in tight loops; add timeouts to commands that may hang.
+- If the system is already under load or memory pressure, or a job grows
+  unexpectedly, stop it and tell me instead of pushing through.
+
 ## Branches and worktrees
 
 Use git-stk for stacked branch workflows and its built-in worktree management
