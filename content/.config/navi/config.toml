@@ -17,7 +17,7 @@ token_env = "NAVI_GITHUB_TOKEN"
 
 [gitlab]
 # Off by default. Enable to get review-request and mention alerts from GitLab.
-enabled = false
+enabled = true
 # Env var holding a GitLab PAT with `read_api` scope.
 token_env = "NAVI_GITLAB_TOKEN"
 # For self-hosted, set api_base = "https://gitlab.example.com/api/v4"
@@ -28,12 +28,19 @@ enabled = false
 token_env = "NAVI_GITEA_TOKEN"
 # For your instance, set api_base = "https://gitea.example.com/api/v1"
 
-[slack]
+[slack.higharc]
 enabled = true
 # Env var holding a Slack bot token (xoxb-...). Needs chat:write + im:write.
-token_env = "NAVI_SLACK_TOKEN"
+token_env = "NAVI_SLACK_TOKEN_HIGHARC"
 # "self" DMs whoever the token authenticates as; or set a Slack user id like "U0123".
 dm_to = "U01HYL76WR0"
+
+[slack.greylock_labs]
+enabled = true
+# Env var holding a Slack bot token (xoxb-...). Needs chat:write + im:write.
+token_env = "NAVI_SLACK_TOKEN_GREYLOCK_LABS"
+# "self" DMs whoever the token authenticates as; or set a Slack user id like "U0123".
+dm_to = "C0CBZVD8UCA"
 
 [discord]
 # Off by default. dm_to is either a webhook URL (simplest, no token) or a user id.
@@ -98,10 +105,20 @@ mute_authors = ["linear-code[bot]"]
 # to slack, or github to discord:
 [[routes]]
 source = "github"
-destination = "slack"
+destination = "slack.higharc"
 repos = ["higharc/*"]
 
 [[routes]]
 source = "github"
+destination = "slack.greylock_labs"
+repos = ["lararosekelley/*", "greylocklabs/*"]
+
+[[routes]]
+source = "github"
 destination = "email"
-repos = ["lararosekelley/*", "greylocklabs/*", "jazzband/*", "ltrainbrass/*", "psorch/*"]
+fallback = true
+
+[[routes]]
+source = "gitlab"
+destination = "email"
+fallback = true

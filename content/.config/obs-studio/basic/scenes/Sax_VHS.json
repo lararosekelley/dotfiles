@@ -8,11 +8,11 @@
             "id": "v4l2_input",
             "versioned_id": "v4l2_input",
             "settings": {
-                "device_id": "/dev/video0",
+                "device_id": "/dev/video1",
                 "input": 0,
                 "pixelformat": 1196444237,
                 "resolution": 16492674418800,
-                "framerate": 4294967326,
+                "framerate": -1,
                 "color_range": 0,
                 "buffering": true
             },
