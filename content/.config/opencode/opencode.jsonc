@@ -20,6 +20,10 @@
         "type": "remote",
         "url": "https://mcp.circleci.com/v1/mcp",
       },
+      "gcloud": {
+        "type": "local",
+        "command": ["npx", "-y", "@google-cloud/gcloud-mcp"],
+      },
       "resend": {
         "type": "remote",
         "url": "https://mcp.resend.com/mcp",

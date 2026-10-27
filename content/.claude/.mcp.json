@@ -20,6 +20,11 @@
       "type": "http",
       "url": "https://mcp.magicpatterns.com/mcp"
     },
+    "gcloud": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@google-cloud/gcloud-mcp"]
+    },
     "linear": {
       "type": "http",
       "url": "https://mcp.linear.app/mcp"

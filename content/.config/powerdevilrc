@@ -1,5 +1,2 @@
 [AC][SuspendAndShutdown]
 AutoSuspendIdleTimeoutSec=600
-
-[Inhibitions]
-BlockedInhibitions=app.zen_browser.zen:Playing video
