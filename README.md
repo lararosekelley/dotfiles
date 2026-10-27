@@ -51,7 +51,7 @@ Tools with config here:
 
 - `herdr` - the `herd` function and `content/.config/herdr` (see [herdr](./docs/herdr.md) for what its layout expects)
 - `restic` - `content/.bin/backup.sh`, keyed off `content/.config/restic`
-- `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill
+- `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill. Needs `perl-JSON` for image metadata (Fedora's package does not pull it in)
 - `navi` - PR-review alerts; installed to `~/.local/bin` and run by `navi.service`
 - `claude`, `opencode` - the `ai` function
 - `codegraph` - Claude `SessionStart` hook and MCP server
