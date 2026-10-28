@@ -65,6 +65,22 @@
     { fill: "#000", box: "#fff" },
   ];
 
+  // One color is a solid fill; more make a diagonal gradient.
+  const BACKGROUNDS = [
+    ["#000000"],
+    ["#ffffff"],
+    ["#e1306c"],
+    ["#405de6"],
+    ["#fcaf45"],
+    ["#2e8b57"],
+    ["#833ab4", "#fd1d1d", "#fcb045"],
+    ["#405de6", "#c13584"],
+    ["#ff9a9e", "#fecfef"],
+    ["#0f2027", "#2c5364"],
+    ["#f7971e", "#ffd200"],
+    ["#00c6ff", "#0072ff"],
+  ];
+
   // Instagram's own fonts are not reachable from the page, so these use fonts
   // installed locally, falling back to generic families elsewhere.
   const FONTS = [
@@ -148,8 +164,26 @@
       font: inherit;
       resize: none;
     }
+    .swatches {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 12px 16px 0;
+    }
+    .swatch {
+      flex: none;
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      border: 2px solid #555;
+      border-radius: 50%;
+    }
+    .swatch.selected {
+      border-color: #fff;
+    }
     .bar {
       display: flex;
+      flex-wrap: wrap;
       gap: 8px;
       justify-content: center;
       padding: 16px;
@@ -182,38 +216,70 @@
     return Object.assign(document.createElement(tag), properties);
   }
 
-  function drawCentered(context, video, fit, scale = 1) {
-    const ratios = [
-      STORY.width / video.videoWidth,
-      STORY.height / video.videoHeight,
-    ];
-    const factor = (fit === "cover" ? Math.max : Math.min)(...ratios) * scale;
-    const width = video.videoWidth * factor;
-    const height = video.videoHeight * factor;
+  function fitScale(image, fit) {
+    return (fit === "cover" ? Math.max : Math.min)(
+      STORY.width / image.width,
+      STORY.height / image.height,
+    );
+  }
+
+  function drawScaled(context, image, scale, x = 0, y = 0) {
+    const width = image.width * scale;
+    const height = image.height * scale;
     context.drawImage(
-      video,
-      (STORY.width - width) / 2,
-      (STORY.height - height) / 2,
+      image,
+      (STORY.width - width) / 2 + x,
+      (STORY.height - height) / 2 + y,
       width,
       height,
     );
   }
 
-  function capture(video, fill) {
-    const canvas = element("canvas", STORY);
+  // Draws the photo over a blurred copy of itself, so any part of the frame it
+  // does not cover still looks intentional.
+  function drawPhoto(context, { image, zoom, x, y }) {
+    context.save();
+    context.filter = "blur(60px) brightness(0.7)";
+    drawScaled(context, image, fitScale(image, "cover") * 1.1);
+    context.restore();
+    drawScaled(context, image, fitScale(image, "contain") * zoom, x, y);
+  }
+
+  function captureFrame(video) {
+    const canvas = element("canvas", {
+      width: video.videoWidth,
+      height: video.videoHeight,
+    });
     const context = canvas.getContext("2d");
     // Match the mirrored preview.
-    context.translate(STORY.width, 0);
+    context.translate(canvas.width, 0);
     context.scale(-1, 1);
-    if (fill) {
-      drawCentered(context, video, "cover");
-    } else {
-      context.filter = "blur(60px) brightness(0.7)";
-      drawCentered(context, video, "cover", 1.1);
-      context.filter = "none";
-      drawCentered(context, video, "contain");
-    }
+    context.drawImage(video, 0, 0);
     return canvas;
+  }
+
+  function cssBackground(colors) {
+    return colors.length === 1
+      ? colors[0]
+      : `linear-gradient(135deg, ${colors.join(", ")})`;
+  }
+
+  function drawBackground(context, colors) {
+    if (colors.length === 1) {
+      context.fillStyle = colors[0];
+    } else {
+      const gradient = context.createLinearGradient(
+        0,
+        0,
+        STORY.width,
+        STORY.height,
+      );
+      colors.forEach((color, index) =>
+        gradient.addColorStop(index / (colors.length - 1), color),
+      );
+      context.fillStyle = gradient;
+    }
+    context.fillRect(0, 0, STORY.width, STORY.height);
   }
 
   function wrapLines(context, value, maxWidth) {
@@ -289,11 +355,9 @@
     };
   }
 
-  function attach(input, blob) {
+  function attach(input, file) {
     const transfer = new DataTransfer();
-    transfer.items.add(
-      new File([blob], `webcam-${Date.now()}.jpg`, { type: "image/jpeg" }),
-    );
+    transfer.items.add(file);
     input.files = transfer.files;
     input.dispatchEvent(new Event("input", { bubbles: true }));
     input.dispatchEvent(new Event("change", { bubbles: true }));
@@ -328,6 +392,7 @@
     navigation.addEventListener("navigate", removeOnHome);
   }
 
+
   async function showCamera(input) {
     const host = element("div");
     const root = host.attachShadow({ mode: "closed" });
@@ -347,10 +412,39 @@
       className: "message",
       textContent: "Starting camera...",
     });
+    const fileInput = element("input", {
+      type: "file",
+      accept: "image/*,video/*",
+      hidden: true,
+    });
+
+    const swatches = element("div", { className: "swatches", hidden: true });
+    const swatchButtons = BACKGROUNDS.map((background) => {
+      const swatch = element("button", { className: "swatch" });
+      swatch.style.background = cssBackground(background);
+      swatch.onclick = () => pickBackground(swatch, background);
+      return swatch;
+    });
+    swatches.append(...swatchButtons);
+
+    const zoomInput = element("input", {
+      type: "range",
+      min: 0.5,
+      max: 5,
+      step: 0.01,
+      value: 1,
+    });
+    const moveButton = element("button");
+    const photoRow = element("div", { className: "row", hidden: true });
+    photoRow.append(
+      element("span", { textContent: "Zoom" }),
+      zoomInput,
+      moveButton,
+    );
 
     const textInput = element("textarea", {
       rows: 2,
-      placeholder: "Add text, then drag on the photo to place it",
+      placeholder: "Add text, then drag on the image to place it",
     });
     const sizeInput = element("input", {
       type: "range",
@@ -361,12 +455,18 @@
     const fontButton = element("button", { textContent: FONTS[0].name });
     const styleButton = element("button", { textContent: "Style" });
     const sizeRow = element("div", { className: "row" });
-    sizeRow.append(sizeInput, fontButton, styleButton);
+    sizeRow.append(
+      element("span", { textContent: "Text" }),
+      sizeInput,
+      fontButton,
+      styleButton,
+    );
     const controls = element("div", { className: "controls", hidden: true });
-    controls.append(textInput, sizeRow);
+    controls.append(photoRow, textInput, sizeRow);
 
     const cancel = element("button", { textContent: "Cancel" });
     const choose = element("button", { textContent: "Choose file" });
+    const colors = element("button", { textContent: "Colors" });
     const framing = element("button", { textContent: "Crop" });
     const take = element("button", {
       className: "primary",
@@ -374,23 +474,26 @@
       disabled: true,
     });
     const cameraBar = element("div", { className: "bar" });
-    cameraBar.append(cancel, choose, framing, take);
+    cameraBar.append(cancel, choose, colors, framing, take);
 
-    const retake = element("button", { textContent: "Retake" });
-    const use = element("button", {
+    const back = element("button");
+    const done = element("button", {
       className: "primary",
-      textContent: "Use photo",
+      textContent: "Done",
     });
     const reviewBar = element("div", { className: "bar", hidden: true });
-    reviewBar.append(retake, use);
+    reviewBar.append(back, done);
 
     const overlay = element("div", { className: "overlay" });
-    overlay.append(stage, message, controls, cameraBar, reviewBar);
-    root.append(overlay);
+    overlay.append(stage, message, swatches, controls, cameraBar, reviewBar);
+    root.append(overlay, fileInput);
     document.documentElement.append(host);
 
     let stream;
-    let photo;
+    // Either { colors } or { image, zoom, x, y }.
+    let base;
+    let dragTarget = "text";
+    let lastPoint;
     const text = {
       value: "",
       x: STORY.width / 2,
@@ -402,48 +505,121 @@
 
     const render = () => {
       const context = review.getContext("2d");
-      context.drawImage(photo, 0, 0);
+      if (base.colors) {
+        drawBackground(context, base.colors);
+      } else {
+        drawPhoto(context, base);
+      }
       drawText(context, text);
     };
-    const setReviewing = (reviewing) => {
-      backdrop.hidden = video.hidden = cameraBar.hidden = reviewing;
-      review.hidden = controls.hidden = reviewBar.hidden = !reviewing;
+    const showMessage = (value) => {
+      message.textContent = value;
+      message.hidden = !value;
+    };
+    // "camera" shows the live view; "photo" and "colors" are the editor.
+    const setMode = (mode, backLabel = "Back") => {
+      const editing = mode !== "camera";
+      backdrop.hidden = video.hidden = cameraBar.hidden = editing;
+      review.hidden = controls.hidden = reviewBar.hidden = !editing;
+      message.hidden = editing || !message.textContent;
+      swatches.hidden = mode !== "colors";
+      photoRow.hidden = mode !== "photo";
+      back.textContent = backLabel;
+    };
+    const setDragTarget = (target) => {
+      dragTarget = target;
+      moveButton.textContent =
+        target === "photo" ? "Moving photo" : "Moving text";
+    };
+    const setZoom = (zoom) => {
+      base.zoom = Math.min(
+        Math.max(zoom, Number(zoomInput.min)),
+        Number(zoomInput.max),
+      );
+      zoomInput.value = base.zoom;
+      render();
+    };
+    const editPhoto = (image, fill, backLabel) => {
+      const fillZoom = fitScale(image, "cover") / fitScale(image, "contain");
+      zoomInput.max = Math.max(5, fillZoom);
+      base = { image, zoom: 1, x: 0, y: 0 };
+      setZoom(fill ? fillZoom : 1);
+      setDragTarget("photo");
+      setMode("photo", backLabel);
+    };
+    const pickBackground = (swatch, background) => {
+      swatchButtons.forEach((button) =>
+        button.classList.toggle("selected", button === swatch),
+      );
+      base = { colors: background };
+      render();
     };
     const close = () => {
       stream?.getTracks().forEach((track) => track.stop());
       host.remove();
     };
+    const handOff = (file) => {
+      close();
+      attach(input, file);
+      showDiscard();
+    };
 
     cancel.onclick = close;
-    choose.onclick = () => {
-      close();
-      openPicker(input);
+    choose.onclick = () => openPicker(fileInput);
+    fileInput.onchange = async () => {
+      const [file] = fileInput.files;
+      fileInput.value = "";
+      if (!file) {
+        return;
+      }
+      if (!file.type.startsWith("image/")) {
+        handOff(file);
+        return;
+      }
+      try {
+        editPhoto(await createImageBitmap(file), false, "Back");
+      } catch (error) {
+        showMessage(`Could not open ${file.name}: ${error.message}`);
+      }
     };
     framing.onclick = () => {
       const fill = stage.classList.toggle("fill");
       framing.textContent = fill ? "Whole" : "Crop";
     };
-    take.onclick = () => {
-      photo = capture(video, stage.classList.contains("fill"));
-      render();
-      setReviewing(true);
+    colors.onclick = () => {
+      const selected =
+        swatchButtons.find((swatch) => swatch.classList.contains("selected")) ??
+        swatchButtons[0];
+      pickBackground(selected, BACKGROUNDS[swatchButtons.indexOf(selected)]);
+      setDragTarget("text");
+      setMode("colors");
     };
-    retake.onclick = () => setReviewing(false);
-    use.onclick = () =>
+    take.onclick = () =>
+      editPhoto(
+        captureFrame(video),
+        stage.classList.contains("fill"),
+        "Retake",
+      );
+    back.onclick = () => setMode("camera");
+    done.onclick = () =>
       review.toBlob(
-        (blob) => {
-          close();
-          attach(input, blob);
-          showDiscard();
-        },
+        (blob) =>
+          handOff(
+            new File([blob], `story-${Date.now()}.jpg`, { type: "image/jpeg" }),
+          ),
         "image/jpeg",
         0.92,
       );
+
+    zoomInput.oninput = () => setZoom(Number(zoomInput.value));
+    moveButton.onclick = () =>
+      setDragTarget(dragTarget === "photo" ? "text" : "photo");
 
     // Keep Instagram's keyboard shortcuts from reacting to typing.
     textInput.addEventListener("keydown", (event) => event.stopPropagation());
     textInput.oninput = () => {
       text.value = textInput.value;
+      setDragTarget("text");
       render();
     };
     sizeInput.oninput = () => {
@@ -460,19 +636,36 @@
       render();
     };
 
-    const moveText = (event) => {
-      Object.assign(text, storyPoint(review, event));
+    const drag = (point) => {
+      if (dragTarget === "photo" && base.image) {
+        base.x += point.x - lastPoint.x;
+        base.y += point.y - lastPoint.y;
+      } else {
+        Object.assign(text, point);
+      }
+      lastPoint = point;
       render();
     };
     review.addEventListener("pointerdown", (event) => {
       review.setPointerCapture(event.pointerId);
-      moveText(event);
+      lastPoint = storyPoint(review, event);
+      drag(lastPoint);
     });
     review.addEventListener("pointermove", (event) => {
       if (review.hasPointerCapture(event.pointerId)) {
-        moveText(event);
+        drag(storyPoint(review, event));
       }
     });
+    review.addEventListener(
+      "wheel",
+      (event) => {
+        if (base.image) {
+          event.preventDefault();
+          setZoom(base.zoom * Math.exp(-event.deltaY * 0.002));
+        }
+      },
+      { passive: false },
+    );
 
     try {
       stream = await navigator.mediaDevices.getUserMedia({
@@ -480,7 +673,7 @@
         audio: false,
       });
     } catch (error) {
-      message.textContent = `Camera unavailable: ${error.message}`;
+      showMessage(`Camera unavailable: ${error.message}`);
       return;
     }
     if (!host.isConnected) {
@@ -489,7 +682,7 @@
     }
     video.srcObject = stream;
     backdrop.srcObject = stream;
-    message.remove();
+    showMessage("");
     take.disabled = false;
   }
 })();

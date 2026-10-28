@@ -29,14 +29,21 @@ touch support, and touchscreen answers to pointer and hover media queries.
 Instagram will not add to a story from a landscape viewport, so the extension
 also resizes the app window to phone proportions.
 
-In the app, choosing a photo opens a webcam view instead of the file picker.
-"Take photo" captures a mirrored 1080x1920 image. By default it shows the whole
-webcam frame over a blurred backdrop; "Crop" switches to filling the frame
-instead. The review step that follows can add text, which is drawn into the
-image because Instagram's mobile web editor has no text tool. "Use photo" hands
-the JPEG to Instagram as if it were picked from disk. "Choose file" opens the
-normal picker, which is also the way to pick videos. Chrome asks for camera
-access for Instagram the first time.
+In the app, choosing a photo opens a webcam view instead of the file picker,
+with three ways to start a story:
+
+- "Take photo" captures a mirrored webcam frame, fitted whole by default or
+  filling the frame after "Crop".
+- "Choose file" opens a picker. Images go to the editor fitted whole; videos go
+  straight to Instagram.
+- "Colors" starts from a solid or gradient background, picked from swatches.
+
+The editor composes a 1080x1920 image, filling any uncovered space with a
+blurred copy of the photo. The zoom slider or scroll wheel zooms the photo, and
+dragging moves either the photo or the text, as the toggle next to the zoom
+slider shows. Text is drawn into the image because Instagram's mobile web
+editor has no text tool. "Done" hands the JPEG to Instagram as if it were
+picked from disk. Chrome asks for camera access for Instagram the first time.
 
 Text fonts come from the local machine: "Elegant" uses P052 italic and "Script"
 uses Z003, both from the URW base fonts.
