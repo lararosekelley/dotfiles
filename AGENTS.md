@@ -5,6 +5,7 @@
 - `content/` mirrors paths under home and contains the installed payload.
 - `system/` holds configuration requiring separate system-level installation.
 - `scripts/` holds checkout-only installers; `docs/` holds operating/setup guides.
+- `extensions/` holds unpacked browser extensions, loaded manually.
 - `bin/` is the Rust sync CLI. Rust integration tests and Agent Awake tests live
   under `tests/`.
 - Global agent rules live in `content/.config/opencode/AGENTS.md`;
