@@ -83,6 +83,141 @@ async function handleOpenTabs() {
   await Promise.all(tabs.map(handleTab));
 }
 
+const PICKER_API = "https://photospicker.googleapis.com/v1";
+const PICKER_WINDOW = { width: 1000, height: 800 };
+// The story is 1080x1920, so this leaves room to zoom without fetching originals.
+const PHOTO_SIZE = "=w3840-h3840";
+
+class PickerError extends Error {
+  constructor(path, status) {
+    super(`Google Photos request ${path} failed with ${status}`);
+    this.status = status;
+  }
+}
+
+async function authToken() {
+  const { token } = await chrome.identity.getAuthToken({ interactive: true });
+  return token;
+}
+
+async function pickerRequest(token, path, options = {}) {
+  const response = await fetch(`${PICKER_API}/${path}`, {
+    ...options,
+    headers: { Authorization: `Bearer ${token}`, ...options.headers },
+  });
+  if (!response.ok) {
+    throw new PickerError(path, response.status);
+  }
+  const body = await response.text();
+  return body ? JSON.parse(body) : null;
+}
+
+function createSession(token) {
+  return pickerRequest(token, "sessions", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ pickingConfig: { maxItemCount: "1" } }),
+  });
+}
+
+// Durations arrive as strings such as "5s" or "3.5s".
+function milliseconds(duration, fallback) {
+  const seconds = parseFloat(duration);
+  return Number.isFinite(seconds) ? seconds * 1000 : fallback;
+}
+
+// Resolves true once the picker reports a selection, or false if its window
+// closes or the session expires without one.
+async function waitForPick(token, session, windowId) {
+  const interval = milliseconds(session.pollingConfig?.pollInterval, 5000);
+  const deadline =
+    Date.now() + milliseconds(session.pollingConfig?.timeoutIn, 600000);
+  while (Date.now() < deadline) {
+    // Check the window first: it closes itself right after a selection.
+    const open = await chrome.windows.get(windowId).then(
+      () => true,
+      () => false,
+    );
+    const { mediaItemsSet } = await pickerRequest(
+      token,
+      `sessions/${session.id}`,
+    );
+    if (mediaItemsSet) {
+      return true;
+    }
+    if (!open) {
+      return false;
+    }
+    await new Promise((resolve) => setTimeout(resolve, interval));
+  }
+  chrome.windows.remove(windowId).catch(() => {});
+  return false;
+}
+
+async function download(token, { baseUrl, mimeType, filename }) {
+  const video = mimeType.startsWith("video/");
+  const response = await fetch(baseUrl + (video ? "=dv" : PHOTO_SIZE), {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!response.ok) {
+    throw new PickerError("download", response.status);
+  }
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  return {
+    data: bytes.toBase64(),
+    type: response.headers.get("content-type") ?? mimeType,
+    name: filename,
+  };
+}
+
+// Returns the picked photo or video as base64, or null if nothing was picked.
+async function pickGooglePhoto() {
+  let token = await authToken();
+  let session;
+  try {
+    session = await createSession(token);
+  } catch (error) {
+    if (error.status !== 401) {
+      throw error;
+    }
+    // Chrome can hand back a cached token that Google has since revoked.
+    await chrome.identity.removeCachedAuthToken({ token });
+    token = await authToken();
+    session = await createSession(token);
+  }
+  try {
+    const window = await chrome.windows.create({
+      url: `${session.pickerUri}/autoclose`,
+      type: "popup",
+      ...PICKER_WINDOW,
+    });
+    if (!(await waitForPick(token, session, window.id))) {
+      return null;
+    }
+    const {
+      mediaItems: [item],
+    } = await pickerRequest(
+      token,
+      `mediaItems?sessionId=${session.id}&pageSize=1`,
+    );
+    return await download(token, item.mediaFile);
+  } finally {
+    pickerRequest(token, `sessions/${session.id}`, { method: "DELETE" }).catch(
+      () => {},
+    );
+  }
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "pickGooglePhoto") {
+    pickGooglePhoto().then(
+      (photo) => sendResponse({ photo }),
+      (error) => sendResponse({ error: error.message }),
+    );
+    return true;
+  }
+});
+
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "loading") {
     handleTab(tab);

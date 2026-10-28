@@ -30,12 +30,14 @@ Instagram will not add to a story from a landscape viewport, so the extension
 also resizes the app window to phone proportions.
 
 In the app, choosing a photo opens a webcam view instead of the file picker,
-with three ways to start a story:
+with four ways to start a story:
 
 - "Take photo" captures a mirrored webcam frame, fitted whole by default or
   filling the frame after "Crop".
 - "Choose file" opens a picker. Images go to the editor fitted whole; videos go
   straight to Instagram.
+- "Google Photos" opens Google's picker in a popup. Photos go to the editor
+  like chosen files; videos go straight to Instagram.
 - "Colors" starts from a solid or gradient background, picked from swatches.
 
 The editor composes a 1080x1920 image, filling any uncovered space with a
@@ -47,6 +49,19 @@ picked from disk. Chrome asks for camera access for Instagram the first time.
 
 Text fonts come from the local machine: "Elegant" uses P052 italic and "Script"
 uses Z003, both from the URW base fonts.
+
+## Google Photos
+
+The picker signs in with the Google account the Chrome profile uses, through
+the OAuth client in `manifest.json`. That client belongs to a Google Cloud
+project with the Photos Picker API enabled and is of type "Chrome Extension",
+bound to the extension ID. Chrome derives an unpacked extension's ID from its
+folder path, so moving this folder breaks sign-in until the client is updated.
+
+While the consent screen is in testing mode, only its listed test users can
+sign in.
+
+## Discard
 
 Instagram's composer has no way to back out, so a "Discard" button in the top
 left returns to the feed.
