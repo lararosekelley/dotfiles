@@ -392,6 +392,34 @@
     navigation.addEventListener("navigate", removeOnHome);
   }
 
+  // Resolves to the picked File, or null if nothing was picked. bridge.js
+  // passes the request on to background.js.
+  function pickGooglePhoto() {
+    const id = crypto.randomUUID();
+    return new Promise((resolve, reject) => {
+      const onMessage = (event) => {
+        const { data } = event;
+        if (
+          event.source !== window ||
+          data?.type !== "ig-stories:google-photo" ||
+          data.id !== id
+        ) {
+          return;
+        }
+        window.removeEventListener("message", onMessage);
+        if (data.error) {
+          reject(new Error(data.error));
+        } else {
+          resolve(data.file);
+        }
+      };
+      window.addEventListener("message", onMessage);
+      window.postMessage(
+        { type: "ig-stories:pick-google-photo", id },
+        location.origin,
+      );
+    });
+  }
 
   async function showCamera(input) {
     const host = element("div");
@@ -466,6 +494,7 @@
 
     const cancel = element("button", { textContent: "Cancel" });
     const choose = element("button", { textContent: "Choose file" });
+    const googlePhotos = element("button", { textContent: "Google Photos" });
     const colors = element("button", { textContent: "Colors" });
     const framing = element("button", { textContent: "Crop" });
     const take = element("button", {
@@ -474,7 +503,7 @@
       disabled: true,
     });
     const cameraBar = element("div", { className: "bar" });
-    cameraBar.append(cancel, choose, colors, framing, take);
+    cameraBar.append(cancel, choose, googlePhotos, colors, framing, take);
 
     const back = element("button");
     const done = element("button", {
@@ -564,14 +593,7 @@
       showDiscard();
     };
 
-    cancel.onclick = close;
-    choose.onclick = () => openPicker(fileInput);
-    fileInput.onchange = async () => {
-      const [file] = fileInput.files;
-      fileInput.value = "";
-      if (!file) {
-        return;
-      }
+    const openFile = async (file) => {
       if (!file.type.startsWith("image/")) {
         handOff(file);
         return;
@@ -580,6 +602,31 @@
         editPhoto(await createImageBitmap(file), false, "Back");
       } catch (error) {
         showMessage(`Could not open ${file.name}: ${error.message}`);
+      }
+    };
+
+    cancel.onclick = close;
+    choose.onclick = () => openPicker(fileInput);
+    fileInput.onchange = () => {
+      const [file] = fileInput.files;
+      fileInput.value = "";
+      if (file) {
+        openFile(file);
+      }
+    };
+    googlePhotos.onclick = async () => {
+      googlePhotos.disabled = true;
+      showMessage("Pick a photo in the Google Photos window");
+      try {
+        const file = await pickGooglePhoto();
+        showMessage("");
+        if (file && host.isConnected) {
+          openFile(file);
+        }
+      } catch (error) {
+        showMessage(`Google Photos failed: ${error.message}`);
+      } finally {
+        googlePhotos.disabled = false;
       }
     };
     framing.onclick = () => {
