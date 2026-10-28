@@ -102,6 +102,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Discover (KDE) backends](./docs/kde-discover.md) - why `snap-backend` is disabled
 - [KDE Connect (Android)](./docs/kde-connect-android.md) - phone-to-desktop clipboard and staying connected
 - [Formatting and linting](./docs/formatting-and-linting.md)
+- [IG Stories](./extensions/ig-stories/README.md) - Chrome extension for posting Instagram stories from desktop
 
 Neovim, Emacs, and Kitty configs live in their own repos:
 [nvim](https://github.com/lararosekelley/nvim),

@@ -42,6 +42,7 @@ module.exports = {
         "linux",
         "macos",
         "obs",
+        "extensions",
       ],
     ],
   },

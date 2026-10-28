@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "IG Stories",
+  "version": "0.7.0",
+  "description": "Makes the installed Instagram app emulate mobile Safari, so stories can be posted from desktop.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://*.instagram.com/*"],
+      "js": ["camera.js"],
+      "world": "MAIN",
+      "run_at": "document_start"
+    }
+  ],
+  "permissions": ["debugger"],
+  "host_permissions": ["https://*.instagram.com/*"]
+}
