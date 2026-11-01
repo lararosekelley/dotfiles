@@ -13,7 +13,7 @@
 #
 # Usage: loop n args
 function loop() {
-  for (( n=0; n<$1; n++ )); do
+  for ((n = 0; n < $1; n++)); do
     # shellcheck disable=SC2048
     ${*:2}
   done
@@ -40,7 +40,7 @@ function update() {
 
   # rust
   # shellcheck disable=SC2046
-  cargo install $(cargo install --list | egrep '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+  cargo install $(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
 
   # go
   # requires go-global-update (see https://github.com/Gelio/go-global-update)
@@ -549,17 +549,17 @@ function sub() {
 #
 # Ref: https://github.com/akermu/emacs-libvterm?tab=readme-ov-file#shell-side-configuration
 function vterm_printf() {
-    if [ -n "$TMUX" ] \
-        && { [ "${TERM%%-*}" = "tmux" ] \
-            || [ "${TERM%%-*}" = "screen" ]; }; then
-        # Tell tmux to pass the escape sequences through
-        printf "\ePtmux;\e\e]%s\007\e\\" "$1"
-    elif [ "${TERM%%-*}" = "screen" ]; then
-        # GNU screen (screen, screen-256color, screen-256color-bce)
-        printf "\eP\e]%s\007\e\\" "$1"
-    else
-        printf "\e]%s\e\\" "$1"
-    fi
+  if [ -n "$TMUX" ] \
+    && { [ "${TERM%%-*}" = "tmux" ] \
+      || [ "${TERM%%-*}" = "screen" ]; }; then
+    # Tell tmux to pass the escape sequences through
+    printf "\ePtmux;\e\e]%s\007\e\\" "$1"
+  elif [ "${TERM%%-*}" = "screen" ]; then
+    # GNU screen (screen, screen-256color, screen-256color-bce)
+    printf "\eP\e]%s\007\e\\" "$1"
+  else
+    printf "\e]%s\e\\" "$1"
+  fi
 }
 
 # Handle unknown commands using PackageKit
@@ -717,7 +717,7 @@ ai() {
   local profile=$2
 
   case "$harness" in
-    claude|opencode) ;;
+    claude | opencode) ;;
     *)
       echo "Usage: ai harness [profile]" >&2
       echo "  harness: claude, opencode" >&2

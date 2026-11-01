@@ -7,6 +7,16 @@ python_paths := "content scripts tests"
 
 markdown_paths := "**/*.md"
 
+# oxfmt also formats JSON, YAML and Markdown, so keep it to JavaScript; synced
+# configs in content/ keep their own style
+
+js_paths := "**/*.{js,mjs,cjs}"
+
+# shell dotfiles have no .sh extension, so they are listed here; .git_prompt
+# is git's own git-prompt.sh, and .inputrc is readline config
+
+shell_paths := "content/.aliases content/.bash_profile content/.bash_prompt content/.bashrc content/.exports content/.functions"
+
 default:
   @just --list
 
@@ -15,7 +25,7 @@ build:
 
 format-lint: format lint check
 
-format: format-rust format-python format-markdown
+format: format-rust format-python format-js format-shell format-markdown
 
 format-rust:
   cargo fmt
@@ -23,10 +33,18 @@ format-rust:
 format-python:
   black {{python_paths}}
 
+format-js:
+  npx --no -- oxfmt "{{js_paths}}"
+
+# shfmt reads its settings from .editorconfig
+
+format-shell:
+  shfmt -w {{shell_paths}} $(git ls-files '*.sh')
+
 format-markdown:
   npx --no -- markdownlint-cli2 --fix "{{markdown_paths}}"
 
-lint: lint-rust lint-python lint-markdown
+lint: lint-rust lint-python lint-js lint-shell lint-markdown
 
 lint-rust:
   cargo fmt --check
@@ -35,6 +53,19 @@ lint-rust:
 lint-python:
   black --check --diff {{python_paths}}
   flake8 {{python_paths}}
+
+lint-js:
+  npx --no -- oxfmt --check "{{js_paths}}"
+  npx --no -- oxlint
+
+lint-shell:
+  shfmt -d {{shell_paths}} $(git ls-files '*.sh')
+  shellcheck {{shell_paths}} $(git ls-files '*.sh')
+
+# checks commit messages in a range, as CI does for a push or pull request
+
+lint-commits from="origin/main" to="HEAD":
+  npx --no -- commitlint --from {{from}} --to {{to}} --verbose
 
 lint-markdown:
   npx --no -- markdownlint-cli2 "{{markdown_paths}}"

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if command -v systemd-inhibit >/dev/null 2>&1 && [ "${BACKUP_INHIBITED:-0}" != "1" ]; then
+if command -v systemd-inhibit > /dev/null 2>&1 && [ "${BACKUP_INHIBITED:-0}" != "1" ]; then
   exec env BACKUP_INHIBITED=1 systemd-inhibit \
     --what=sleep \
     --why="restic backup" \
@@ -28,13 +28,13 @@ ARG_ERROR=0
 
 for arg in "$@"; do
   case "$arg" in
-    run|check|prune)
+    run | check | prune)
       ACTION="$arg"
       ;;
-    --dry-run|-n)
+    --dry-run | -n)
       DRY_RUN=1
       ;;
-    -h|--help|help)
+    -h | --help | help)
       ACTION="help"
       ;;
     *)
@@ -46,7 +46,7 @@ for arg in "$@"; do
 done
 
 usage() {
-  cat <<'EOF'
+  cat << 'EOF'
 Usage: backup.sh [run|check|prune] [--dry-run]
 
   run   Perform backup, retention prune, and repository check (default)
@@ -70,7 +70,7 @@ show_preflight_estimate() {
   local total_bytes
   # du exits non-zero on unreadable dirs (waydroid, docker) and pipefail would
   # otherwise abort the whole script here; the partial total is good enough.
-  total_bytes=$({ du -sb "$SRC1" "$SRC2" 2>/dev/null || true; } | awk '{sum += $1} END {print sum + 0}')
+  total_bytes=$({ du -sb "$SRC1" "$SRC2" 2> /dev/null || true; } | awk '{sum += $1} END {print sum + 0}')
 
   if [ "$total_bytes" -le 0 ]; then
     echo "Could not estimate source size before backup."
@@ -83,7 +83,7 @@ show_preflight_estimate() {
 
   if [ -f "$RATE_FILE" ]; then
     local last_rate
-    last_rate=$(cat "$RATE_FILE" 2>/dev/null || printf '0')
+    last_rate=$(cat "$RATE_FILE" 2> /dev/null || printf '0')
     if [[ "$last_rate" =~ ^[0-9]+$ ]] && [ "$last_rate" -gt 0 ]; then
       local eta_seconds=$((total_bytes / last_rate))
       local rate_human
@@ -102,7 +102,7 @@ run_backup_with_progress() {
   # The filter must live in a file, not a heredoc: a heredoc on the python3
   # command replaces the stdin it should be reading restic's --json from, so
   # the filter sees EOF and restic dies of SIGPIPE once the pipe buffer fills.
-  cat > "$filter_script" <<'PY'
+  cat > "$filter_script" << 'PY'
 import json
 import sys
 import time
@@ -215,7 +215,7 @@ PY
   # still created) can be triaged below instead of aborting before retention.
   local -a pipe_status
   set +e
-  if command -v python3 >/dev/null 2>&1; then
+  if command -v python3 > /dev/null 2>&1; then
     restic backup "$SRC1" "$SRC2" \
       --exclude-caches \
       --exclude-file "$EXCLUDE_FILE" \
@@ -270,13 +270,13 @@ rotate_logs() {
   fi
 
   local size
-  size=$(stat -c%s "$LOG_FILE" 2>/dev/null || printf '0')
+  size=$(stat -c%s "$LOG_FILE" 2> /dev/null || printf '0')
   if [ "$size" -lt "$MAX_LOG_SIZE_BYTES" ]; then
     return
   fi
 
   local i
-  for ((i=KEEP_LOG_FILES; i>=1; i--)); do
+  for ((i = KEEP_LOG_FILES; i >= 1; i--)); do
     if [ -f "$LOG_FILE.$i" ]; then
       if [ "$i" -eq "$KEEP_LOG_FILES" ]; then
         rm -f "$LOG_FILE.$i"
@@ -304,7 +304,7 @@ log_end() {
 trap log_end EXIT
 
 case "$ACTION" in
-  run|check|prune)
+  run | check | prune)
     ;;
   help)
     usage
@@ -331,7 +331,7 @@ if [ "$ACTION" = "run" ] && [ "$DRY_RUN" -eq 1 ]; then
   exit 0
 fi
 
-if ! command -v restic >/dev/null 2>&1; then
+if ! command -v restic > /dev/null 2>&1; then
   echo "restic is not installed. Install it with: sudo dnf install restic"
   exit 1
 fi

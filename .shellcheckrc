@@ -1,0 +1,3 @@
+# Sourced files such as /etc/bashrc and ~/.extra exist only on the machine
+# the dotfiles are installed on.
+disable=SC1091
