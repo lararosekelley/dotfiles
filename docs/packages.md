@@ -8,13 +8,21 @@ out; ask the package manager.
 Most CLI tools and desktop apps come from Fedora and RPM Fusion. `dnf history list`
 shows what was installed explicitly, as opposed to pulled in as a dependency.
 
+Fedora packages that config in `content/` depends on:
+
+- `azure-cli`, configured by `.azure/`
+- `mold`, which `.cargo/config.toml` links Rust builds with
+- `obs-studio`, configured by `.config/obs-studio/`
+
 Third-party repos in use:
 
 | repo                      | provides                      |
 | ------------------------- | ----------------------------- |
 | `docker-ce-stable`        | Docker Engine and plugins     |
+| `Dropbox`                 | Dropbox (`nautilus-dropbox`)  |
 | `google-chrome`           | Chrome                        |
 | `google-cloud-cli`        | `gcloud`                      |
+| `greylocklabs`            | Callie and Jot                |
 | `protonvpn-fedora-stable` | Proton VPN                    |
 | `tableplus`               | TablePlus                     |
 | `copr:dejan/lazygit`      | `lazygit`                     |
@@ -26,7 +34,10 @@ never updates them. Download the new RPM and `dnf install ./file.rpm` it:
 - Zoom, Proton Pass, Proton Mail Bridge, Plex Media Server
 - Docker Desktop, GitKraken, balenaEtcher, AppImageLauncher
 - Muse Sounds Manager, sfizz, AWS `session-manager-plugin`
-- Morgen (installs to `/opt/Morgen`)
+
+Callie and Jot install with their own `install.sh` scripts, which add the
+`greylocklabs` repo. An install script may leave its RPM marked as from a file,
+but `dnf upgrade` still updates it from the repo.
 
 `kmod-v4l2loopback` is built locally by akmods for each kernel and needs no action.
 
@@ -38,8 +49,7 @@ dnf list --installed | awk '$3 == "@commandline"'  # the file-installed RPMs abo
 ## Flatpak
 
 GUI apps, mostly from Flathub: Zen, Slack, Discord, Signal, Thunderbird, Obsidian,
-Todoist, Calibre, Bitwig, Reaper, Ardour, FreeCAD, RetroArch, Bottles, GitHub
-Desktop, ZAP, Steam ROM Manager.
+Todoist, Calibre, Reaper, Ardour, RetroArch, GitHub Desktop.
 
 ```bash
 flatpak update
@@ -127,5 +137,19 @@ gh extension install dlvhdr/gh-enhance
 gh extension upgrade --all
 ```
 
-AppImages live in `~/Applications` (Joplin, MuseScore, Slippi) and are managed by
-AppImageLauncher.
+## AppImages
+
+AppImages live in `~/Applications`: MuseScore, Slippi, and the Craft suite
+(artcraft-launcher, cadcraft, deckcraft, designcraft, effectcraft, figcraft,
+filmcraft, gridcraft, lightcraft, pdfcraft, photocraft, soundcraft, vectorcraft,
+wordcraft).
+
+[AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher), installed
+from its RPM above, integrates them: opening an AppImage offers to move it to
+`~/Applications` and add a menu entry. Its `ail-cli` does the same from a
+terminal. Update an AppImage by downloading the new release and integrating it.
+
+```bash
+ail-cli integrate ~/Downloads/<app>.AppImage
+ail-cli unintegrate ~/Applications/<app>.AppImage  # before deleting one
+```
