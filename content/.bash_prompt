@@ -14,8 +14,10 @@ bold=$(tput bold)
 red=$(tput setaf 9)
 green=$(tput setaf 10)
 yellow=$(tput setaf 11)
+# shellcheck disable=SC2034 # unused, but kept with the rest of the palette
 blue=$(tput setaf 12)
 purple=$(tput setaf 13)
+# shellcheck disable=SC2034 # unused, but kept with the rest of the palette
 aqua=$(tput setaf 14)
 white=$(tput setaf 15)
 orange=$(tput setaf 208)
@@ -242,13 +244,13 @@ function set_prompt() {
 
   local identity dir_part git_part env_part part width part_width
 
-  identity="\[${bold}\]\[${user_color}\]\u\[${reset}\]" # user
+  identity="\[${bold}\]\[${user_color}\]\u\[${reset}\]"                  # user
   identity+="\[${white}\] at \[${bold}\]\[${host_color}\]\h\[${reset}\]" # host
-  identity+="$(ssh_prompt)" # connected over ssh?
+  identity+="$(ssh_prompt)"                                              # connected over ssh?
 
   dir_part="\[${white}\] in \[${bold}\]\[${dir_color}\]\w\[${reset}\]" # cwd
 
-  git_part="$(git_branch)\[${reset}\]" # git branch
+  git_part="$(git_branch)\[${reset}\]"                            # git branch
   git_part+="\[${bold}\]\[${diff_color}\]$(git_diff)\[${reset}\]" # git diff & pushable commits
 
   env_part="\[${bold}\]\[${virtualenv_color}\]$(python_env)\[${node_color}\]$(node_env)\[${reset}\]" # python virtualenv and NODE_ENV

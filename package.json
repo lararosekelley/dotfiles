@@ -8,6 +8,8 @@
     "@commitlint/cli": "^21.0.0",
     "@commitlint/config-conventional": "^21.0.0",
     "husky": "^9.1.7",
-    "markdownlint-cli2": "^0.21.0"
+    "markdownlint-cli2": "^0.21.0",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0"
   }
 }

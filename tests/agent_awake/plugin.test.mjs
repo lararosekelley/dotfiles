@@ -17,11 +17,19 @@ test("OpenCode leases follow activity, pending requests, sessions and disposal",
     return { unref() {} };
   });
   t.mock.method(globalThis, "clearInterval", () => {});
-  const source = await readFile(new URL(
-    "../../content/.config/opencode/plugins/agent-awake.js", import.meta.url), "utf8");
-  const { default: plugin } = await import(`data:text/javascript;base64,${Buffer.from(source).toString("base64")}`);
+  const source = await readFile(
+    new URL(
+      "../../content/.config/opencode/plugins/agent-awake.js",
+      import.meta.url,
+    ),
+    "utf8",
+  );
+  const { default: plugin } = await import(
+    `data:text/javascript;base64,${Buffer.from(source).toString("base64")}`
+  );
   const hooks = await plugin({ client: { app: { log: async () => {} } } });
-  const event = (type, properties) => hooks.event({ event: { type, properties } });
+  const event = (type, properties) =>
+    hooks.event({ event: { type, properties } });
   const last = () => calls.at(-1);
   await event("session.status", { sessionID: "a", status: { type: "busy" } });
   assert.deepEqual(last(), ["on", "a"]);

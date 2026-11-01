@@ -3,5 +3,5 @@
 
 # Get the aliases and functions
 if [ -f ~/.bashrc ]; then
-    source "$HOME/.bashrc"
+  source "$HOME/.bashrc"
 fi

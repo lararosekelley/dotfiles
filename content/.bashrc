@@ -129,23 +129,25 @@ path_dedup
 export PATH
 
 # added by navi setup
-command -v navi >/dev/null && source <(navi completions bash)
+# shellcheck source=/dev/null
+command -v navi > /dev/null && source <(navi completions bash)
 
 # added by git-stk setup
-command -v git-stk >/dev/null && source <(git stk completions bash)
+# shellcheck source=/dev/null
+command -v git-stk > /dev/null && source <(git stk completions bash)
 
 # stk wrapper: up/down/top/bottom cd into the worktree holding the branch.
 # A process cannot change its parent shell's directory, so git-stk prints the
 # destination and this moves you. Every other command falls through to git stk.
 stk() {
   case "$1" in
-    up|down|top|bottom)
+    up | down | top | bottom)
       local dest
       dest=$(git stk "$@" --from-path) || return
-      [ -n "$dest" ] && cd "$dest"
+      [ -n "$dest" ] && { cd "$dest" || return; }
       ;;
     *) git stk "$@" ;;
   esac
 }
-complete -p git-stk >/dev/null 2>&1 && eval "$(complete -p git-stk | sed 's/ git-stk$/ stk/')"
+complete -p git-stk > /dev/null 2>&1 && eval "$(complete -p git-stk | sed 's/ git-stk$/ stk/')"
 # end git-stk setup

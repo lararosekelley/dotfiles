@@ -1,0 +1,11 @@
+root = true
+
+# shfmt reads its settings from here. Scoped to shell files so other files
+# keep each editor's defaults.
+[{*.sh,.aliases,.bash_profile,.bash_prompt,.bashrc,.exports,.functions}]
+indent_style = space
+indent_size = 2
+shell_variant = bash
+switch_case_indent = true
+space_redirects = true
+binary_next_line = true
