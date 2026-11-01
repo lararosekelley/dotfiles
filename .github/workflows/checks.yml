@@ -1,0 +1,99 @@
+name: checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+# Each job runs the same just recipes as the pre-commit hook.
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: just lint-rust
+      - run: just test-rust
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: pip install black flake8
+      - run: just lint-python
+      - run: just test-python
+
+  javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: npm ci
+      - run: just lint-js
+      - run: just lint-markdown
+      - run: just test-node
+
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just,shfmt
+      # shellcheck comes preinstalled on GitHub's Ubuntu runners.
+      - run: just lint-shell
+
+  commits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: just
+      - run: npm ci
+      - name: Lint pull request commits
+        if: github.event_name == 'pull_request'
+        env:
+          FROM: ${{ github.event.pull_request.base.sha }}
+          TO: ${{ github.event.pull_request.head.sha }}
+        run: just lint-commits "$FROM" "$TO"
+      # A new branch has no previous commit to start from.
+      - name: Lint pushed commits
+        if: >-
+          github.event_name == 'push' &&
+          github.event.before != '0000000000000000000000000000000000000000'
+        env:
+          FROM: ${{ github.event.before }}
+          TO: ${{ github.sha }}
+        run: just lint-commits "$FROM" "$TO"

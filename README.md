@@ -25,8 +25,9 @@ Only tested on Fedora as of 2026, confirmed to work with Fedora 40+.
 Repo tooling:
 
 - `just` - runs the recipes in these docs
-- `node`/`npm` - husky hooks, commitlint, markdownlint-cli2
+- `node`/`npm` - husky hooks, commitlint, markdownlint-cli2, oxfmt, oxlint
 - `pipx` - installs black and flake8 for `just lint-python`
+- `shellcheck`, `shfmt` - `just lint-shell`
 
 Shell:
 
