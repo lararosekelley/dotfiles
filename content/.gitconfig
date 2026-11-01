@@ -7,6 +7,9 @@
   # the most important alias
   fuckit = push -f --no-verify
 
+  # p for pull
+  p = pull
+
   # b for branch
   b = branch
 
