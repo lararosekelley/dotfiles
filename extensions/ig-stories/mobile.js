@@ -63,7 +63,12 @@
 
   // Answer pointer and hover queries as a touchscreen would by asking the
   // opposite question of the real mouse-driven device.
-  const OPPOSITE = { fine: "coarse", coarse: "fine", hover: "none", none: "hover" };
+  const OPPOSITE = {
+    fine: "coarse",
+    coarse: "fine",
+    hover: "none",
+    none: "hover",
+  };
   const nativeMatchMedia = window.matchMedia;
   window.matchMedia = function (query) {
     return nativeMatchMedia.call(

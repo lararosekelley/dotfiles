@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "IG Stories",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "Makes the installed Instagram app present as mobile Safari, so stories can be posted from desktop.",
   "background": {
     "service_worker": "background.js"
@@ -9,7 +9,7 @@
   "content_scripts": [
     {
       "matches": ["https://*.instagram.com/*"],
-      "js": ["mobile.js", "camera.js"],
+      "js": ["mobile.js", "audience.js", "camera.js"],
       "world": "MAIN",
       "run_at": "document_start"
     },
@@ -17,6 +17,12 @@
       "matches": ["https://*.instagram.com/*"],
       "js": ["bridge.js"],
       "run_at": "document_start"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/Nunito-Variable.ttf"],
+      "matches": ["https://*.instagram.com/*"]
     }
   ],
   "oauth2": {
