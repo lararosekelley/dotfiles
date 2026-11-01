@@ -83,7 +83,7 @@ uv tool upgrade --all
 Interpreters come from `nodenv`, with the global set to `system` (Fedora's
 `nodejs`). Global packages install to `/usr/local/lib`: eask, prettierd,
 mermaid-cli, linear-cli, graphite-cli, ccusage, diff-so-fancy, eslint,
-firebase-tools, joplin-mcp-server, markdownlint-cli, neovim, pm2, yarn.
+firebase-tools, markdownlint-cli, neovim, pm2, yarn.
 
 ```bash
 npm outdated -g
