@@ -27,7 +27,12 @@ Run commands from the repository root:
 
 - `just test`: Rust, Python, and Node suites.
 - `just test-rust`, `just test-python`, `just test-node`: focused suites.
-- `just lint`: Rust formatting/Clippy, Python formatting/lint, and Markdown lint.
+- `just lint`: Rust formatting/Clippy, Python formatting/lint, JavaScript
+  formatting/lint (oxfmt, oxlint), shell formatting/lint (shfmt, shellcheck), and
+  Markdown lint.
+
+CI runs the same lint and test recipes, plus commitlint, on pushes to `main` and
+on pull requests.
 
 For sync changes, cover both directions and file selection. For integration
 installers, verify unrelated live settings are preserved using a temporary home.
