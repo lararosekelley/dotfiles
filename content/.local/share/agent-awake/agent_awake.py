@@ -22,6 +22,17 @@ def process_identity(pid):
         return None
 
 
+def directory(pid):
+    try:
+        path = os.readlink(f"/proc/{int(pid)}/cwd")
+    except (OSError, ValueError):
+        return None
+    home = os.path.expanduser("~")
+    if path == home or path.startswith(home + "/"):
+        return "~" + path[len(home) :]
+    return path
+
+
 def claude_owner():
     pid = os.getppid()
     while pid > 1:
@@ -104,10 +115,13 @@ def lease(root, client, owner, session, actor, action):
             save(path, state)
             return
         token = uuid.uuid4().hex
+        cwd = directory(owner)
+        who = f"{client}, {cwd}" if cwd else client
         state = {
             "scope": scope,
             "client": client,
             "owner": owner,
+            "directory": cwd,
             "owner_start": identity,
             "token": token,
             "expires": time.monotonic() + ttl,
@@ -122,7 +136,7 @@ def lease(root, client, owner, session, actor, action):
                         "systemd-inhibit",
                         "--what=idle:sleep",
                         "--mode=block",
-                        f"--who=Agent Awake ({client})",
+                        f"--who=Agent Awake ({who})",
                         "--why=Coding agent actively working",
                         sys.executable,
                         str(Path(__file__).resolve()),
@@ -249,6 +263,7 @@ def main():
                                 "lease": path.stem,
                                 "client": state.get("client"),
                                 "owner": state.get("owner"),
+                                "directory": state.get("directory"),
                                 "worker_alive": alive,
                                 "seconds_left": max(
                                     0, round(state.get("expires", 0) - time.monotonic())

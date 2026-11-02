@@ -139,6 +139,18 @@ class Leases(unittest.TestCase):
         self.assertEqual(len(states), 1)
         self.assertNotEqual(states[0]["worker"], old_worker)
 
+    def test_label_names_owner_directory(self):
+        project = Path.home() / "project"
+        with patch.object(awake.os, "readlink", return_value=str(project)):
+            with patch.object(
+                awake.subprocess, "Popen", wraps=subprocess.Popen
+            ) as spawn:
+                self.change()
+        self.assertIn("--who=Agent Awake (test, ~/project)", spawn.call_args.args[0])
+        self.assertEqual(
+            awake.load(next(self.root.glob("*.json")))["directory"], "~/project"
+        )
+
     def test_missing_inhibitor_cleans_up_request(self):
         with patch.object(awake.subprocess, "Popen", side_effect=FileNotFoundError):
             with self.assertRaises(FileNotFoundError):

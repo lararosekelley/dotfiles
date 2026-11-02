@@ -77,6 +77,7 @@ alias notify='tput bel'
 alias path='echo -e ${PATH//:/\\n}'
 alias space='df -P -kHl'
 alias ports='lsof -n -i -P | grep LISTEN'
+alias agent-awake='python3 ~/.local/share/agent-awake/agent_awake.py'
 
 # rails
 

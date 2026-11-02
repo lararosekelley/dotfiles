@@ -61,7 +61,7 @@ systemd-inhibit --list
 python3 ~/.local/share/agent-awake/agent_awake.py status
 ```
 
-Look for **Agent Awake (opencode)** or **Agent Awake (claude)** with `idle:sleep` in the systemd list. The helper status lists requested leases and watchdog process liveness; **the systemd list is the authoritative check that the lock was acquired**. After a normal finished turn, the corresponding entry should disappear within about half a second. Check again while a permission/question dialog is waiting.
+Look for entries such as **Agent Awake (claude, ~/Code/project)** with `idle:sleep` in the systemd list; the directory is where the owning agent was started. `status` reports it as `directory`. The helper status lists requested leases and watchdog process liveness; **the systemd list is the authoritative check that the lock was acquired**. After a normal finished turn, the corresponding entry should disappear within about half a second. Check again while a permission/question dialog is waiting.
 
 If a lease has `worker_alive: false`, inspect `$XDG_RUNTIME_DIR/agent-awake/inhibit.log` (usually `/run/user/$UID/agent-awake/inhibit.log`). This contains systemd acquisition errors, for example a missing binary or a logind/polkit denial. Do not run the agents as root to work around a denial.
 
