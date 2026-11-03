@@ -197,7 +197,7 @@ function mux() {
 #
 # Sourced before ~/.exports and ~/.environment, so either can override this.
 
-HERD_AGENTS=(claude opencode)
+HERD_AGENTS=(claude codex opencode)
 
 HERD_REPOS=(
   "$HOME/Code/personal/larakelley.com"
@@ -708,33 +708,35 @@ aws-current() {
 # Start an LLM harness with seeded AWS credentials
 #
 # Params:
-#   harness - Harness to use (opencode, claude)
+#   harness - Harness to use (claude, codex, opencode)
 #   profile - AWS profile to use (work or personal, optional)
+#   args    - Passed through to the harness
 #
-# Usage: ai harness [profile]
+# Usage: ai harness [profile] [args...]
 ai() {
   local harness=$1
-  local profile=$2
+  shift
 
   case "$harness" in
-    claude | opencode) ;;
+    claude | codex | opencode) ;;
     *)
-      echo "Usage: ai harness [profile]" >&2
-      echo "  harness: claude, opencode" >&2
+      echo "Usage: ai harness [profile] [args...]" >&2
+      echo "  harness: claude, codex, opencode" >&2
       echo "  profile: work, personal (optional)" >&2
       return 1
       ;;
   esac
 
-  case "$profile" in
-    "") ;;
-    work) aws-work || return 1 ;;
-    personal) aws-personal || return 1 ;;
-    *)
-      echo "ai: unknown profile '$profile' (expected work or personal)" >&2
-      return 1
+  case "$1" in
+    work)
+      aws-work || return 1
+      shift
+      ;;
+    personal)
+      aws-personal || return 1
+      shift
       ;;
   esac
 
-  command "$harness" "${@:3}"
+  command "$harness" "$@"
 }

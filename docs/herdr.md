@@ -19,6 +19,7 @@ The agent integrations need installing too, so they are deliberately not synced:
 
 ```bash
 herdr integration install claude
+herdr integration install codex
 herdr integration install opencode
 ```
 
@@ -33,6 +34,7 @@ The layout expects these on `PATH`:
 | `python3`    | the default-session plugin                               |
 | `git`        | repo detection for the git, review, and github tabs      |
 | `claude`     | `agents` tab, with `herd --agent claude`                 |
+| `codex`      | `agents` tab, with `herd --agent codex`                  |
 | `opencode`   | `agents` tab, the default                                |
 | `nvim`       | `editor` tab                                             |
 | `lazygit`    | `git` tab and the `prefix+alt+g` popup                   |

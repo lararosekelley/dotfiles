@@ -222,7 +222,7 @@ are skipped, so it is safe to re-run.
 herd                                          # $HERD_REPOS
 herd --repos ~/Code/work/product ~/Code/oss/x # or an explicit list
 herd --reset                                  # throw the saved session away first
-herd --agent claude                           # claude or opencode, saved for later runs
+herd --agent claude                           # claude, codex, or opencode, saved for later runs
 herd --help                                   # flags and the default list
 ```
 

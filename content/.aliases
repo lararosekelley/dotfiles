@@ -19,7 +19,7 @@ alias sudo='sudo '
 
 alias up='cd ..'
 alias ~='cd ~'
-alias -- -='cd -'
+alias back='cd -'
 
 alias ..='cd ..'
 alias ...='cd ../..'
