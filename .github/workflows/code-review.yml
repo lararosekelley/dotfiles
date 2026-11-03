@@ -1,0 +1,31 @@
+# The review bot itself lives in lararosekelley/review-bot; this file only
+# supplies the trigger and this repo's settings. The generic review prompt is
+# the action's, so it is not vendored here.
+name: "Code Review Bot"
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+  pull_request_review_comment:
+    types: [created]
+  issue_comment:
+    types: [created]
+
+# Required here, not in the called workflow: a called workflow can never hold
+# more permission than its caller.
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: code-review-${{ github.event.pull_request.number || github.event.issue.number }}-${{ github.event_name }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  review:
+    uses: lararosekelley/review-bot/.github/workflows/review.yml@v2
+    secrets:
+      anthropic-api-key: ${{ secrets.ANTHROPIC_API_KEY }}
