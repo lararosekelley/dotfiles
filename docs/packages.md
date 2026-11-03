@@ -27,6 +27,7 @@ Third-party repos in use:
 | `tableplus`               | TablePlus                     |
 | `copr:dejan/lazygit`      | `lazygit`                     |
 | `rpmfusion-*`             | Steam, codecs, NVIDIA, akmods |
+| `home:justkidding`        | `ueberzugpp`                  |
 
 Some RPMs are installed from a downloaded file and have no repo, so `dnf upgrade`
 never updates them. Download the new RPM and `dnf install ./file.rpm` it:
