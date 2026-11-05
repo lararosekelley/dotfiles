@@ -174,6 +174,11 @@ second click to confirm.
 Load this directory unpacked as above. After editing files, click the reload
 icon on the extension's card, then reopen the app or phone window.
 
+For the Chrome Web Store, `just build-ig-plus-chrome` writes
+`target/ig-plus-chrome.zip` without the manifest `key`. The store assigns its
+own item ID, so Google Photos there needs a Chrome Extension client for that
+ID in `oauth2.client_id`.
+
 ### Firefox
 
 Chrome and Firefox need different manifests, so Firefox loads a build of this

@@ -164,5 +164,11 @@ test-python:
 build-ig-plus-firefox:
     node scripts/build-ig-plus-firefox.mjs
 
+# Chrome Web Store upload: target/ig-plus-chrome.zip
+build-ig-plus-chrome:
+    node scripts/build-ig-plus-chrome.mjs
+    rm -f target/ig-plus-chrome.zip
+    cd target/ig-plus-chrome && zip -qrX ../ig-plus-chrome.zip .
+
 test-node:
     node --test tests/agent_awake/plugin.test.mjs tests/ig_plus/*.test.mjs
