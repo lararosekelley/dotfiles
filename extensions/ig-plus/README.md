@@ -125,8 +125,11 @@ done
 ## Google Photos
 
 Google Photos needs a Google sign-in through an OAuth client in a Google Cloud
-project. The clients in this folder only accept the accounts their owner lists
-as test users, so anyone else makes their own:
+project. The clients in this folder, and the released `.xpi`, only accept the
+Google accounts their owner lists as test users. Anyone else sees "Access
+blocked" when signing in, while the rest of IG Plus works. To use Google
+Photos, ask the owner to add your account as a test user, or make your own
+clients:
 
 1. Create a project in the [Google Cloud console](https://console.cloud.google.com/)
    and enable the
