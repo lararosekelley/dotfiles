@@ -48,12 +48,44 @@ async function isMobileTab(tabId) {
   return rules.some((rule) => rule.id === tabId);
 }
 
-async function isInstagramApp(tab) {
-  if (!tab.url || !new URL(tab.url).hostname.endsWith("instagram.com")) {
+// Phone tabs are Instagram in the installed app or in a phone window, which is
+// a popup. Firefox for Android has no windows, and no need for either.
+async function isPhoneTab(tab) {
+  if (
+    !chrome.windows ||
+    !tab.url ||
+    !new URL(tab.url).hostname.endsWith("instagram.com")
+  ) {
     return false;
   }
   const window = await chrome.windows.get(tab.windowId);
-  return window.type === "app";
+  return window.type === "app" || window.type === "popup";
+}
+
+// Opens Instagram in a phone-sized window, or focuses the one already open.
+// The marker hash tells mobile.js the tab is a phone.
+async function openPhoneWindow() {
+  for (const rule of await chrome.declarativeNetRequest.getSessionRules()) {
+    const tab = await chrome.tabs.get(rule.id).catch(() => null);
+    const window = tab && (await chrome.windows.get(tab.windowId));
+    if (window?.type === "popup") {
+      await chrome.windows.update(window.id, { focused: true });
+      return;
+    }
+  }
+  const window = await chrome.windows.create({
+    url: "about:blank",
+    type: "popup",
+    ...PHONE_WINDOW,
+  });
+  const [tab] = window.tabs;
+  // Rewrite headers before the first request, so no reload is needed.
+  await chrome.declarativeNetRequest.updateSessionRules({
+    addRules: [mobileRule(tab.id)],
+  });
+  await chrome.tabs.update(tab.id, {
+    url: "https://www.instagram.com/#ig-plus-phone",
+  });
 }
 
 async function handleTab(tab) {
@@ -62,7 +94,7 @@ async function handleTab(tab) {
   }
   pending.add(tab.id);
   try {
-    if ((await isInstagramApp(tab)) && !(await isMobileTab(tab.id))) {
+    if ((await isPhoneTab(tab)) && !(await isMobileTab(tab.id))) {
       await chrome.windows.update(tab.windowId, PHONE_WINDOW);
       await chrome.declarativeNetRequest.updateSessionRules({
         addRules: [mobileRule(tab.id)],
@@ -95,9 +127,90 @@ class PickerError extends Error {
   }
 }
 
+// Firefox has no getAuthToken, so it signs in through a "Web application"
+// OAuth client instead, whose redirect URI is chrome.identity.getRedirectURL().
+const WEB_CLIENT_ID =
+  "786075768307-qfv51n3gdonfhvvotqk5cm4dv0pn8e3d.apps.googleusercontent.com";
+const PICKER_SCOPE =
+  "https://www.googleapis.com/auth/photospicker.mediaitems.readonly";
+let webToken = null;
+
+// Reads the token from the redirect URL of Google's implicit flow.
+function tokenFromRedirect(url, now = Date.now()) {
+  const params = new URLSearchParams(new URL(url).hash.slice(1));
+  const token = params.get("access_token");
+  if (!token) {
+    throw new Error(params.get("error") ?? "Google sign-in returned no token");
+  }
+  const lifetime = Number(params.get("expires_in")) * 1000 || 3600000;
+  // Renew a minute early rather than fail mid-pick.
+  return { token, expires: now + lifetime - 60000 };
+}
+
+async function webAuthToken() {
+  if (webToken && webToken.expires > Date.now()) {
+    return webToken.token;
+  }
+  if (!WEB_CLIENT_ID) {
+    throw new Error("Google Photos is not set up for this browser yet");
+  }
+  const url = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  url.search = new URLSearchParams({
+    client_id: WEB_CLIENT_ID,
+    response_type: "token",
+    redirect_uri: chrome.identity.getRedirectURL(),
+    scope: PICKER_SCOPE,
+  });
+  webToken = tokenFromRedirect(
+    await chrome.identity.launchWebAuthFlow({
+      url: url.href,
+      interactive: true,
+    }),
+  );
+  return webToken.token;
+}
+
 async function authToken() {
+  if (!chrome.identity?.launchWebAuthFlow) {
+    throw new Error("This browser cannot sign in to Google Photos");
+  }
+  if (!chrome.identity.getAuthToken) {
+    return webAuthToken();
+  }
   const { token } = await chrome.identity.getAuthToken({ interactive: true });
   return token;
+}
+
+async function forgetToken(token) {
+  webToken = null;
+  await chrome.identity.removeCachedAuthToken?.({ token });
+}
+
+const exists = (lookup) =>
+  lookup.then(
+    () => true,
+    () => false,
+  );
+
+// Shows Google's picker in a popup window, or a tab where there are no
+// windows. Resolves to whether it is still open, and a way to close it.
+async function showPicker(url) {
+  if (chrome.windows) {
+    const { id } = await chrome.windows.create({
+      url,
+      type: "popup",
+      ...PICKER_WINDOW,
+    });
+    return {
+      isOpen: () => exists(chrome.windows.get(id)),
+      close: () => chrome.windows.remove(id).catch(() => {}),
+    };
+  }
+  const { id } = await chrome.tabs.create({ url });
+  return {
+    isOpen: () => exists(chrome.tabs.get(id)),
+    close: () => chrome.tabs.remove(id).catch(() => {}),
+  };
 }
 
 async function pickerRequest(token, path, options = {}) {
@@ -126,18 +239,15 @@ function milliseconds(duration, fallback) {
   return Number.isFinite(seconds) ? seconds * 1000 : fallback;
 }
 
-// Resolves true once the picker reports a selection, or false if its window
-// closes or the session expires without one.
-async function waitForPick(token, session, windowId) {
+// Resolves true once the picker reports a selection, or false if it closes
+// or the session expires without one.
+async function waitForPick(token, session, picker) {
   const interval = milliseconds(session.pollingConfig?.pollInterval, 5000);
   const deadline =
     Date.now() + milliseconds(session.pollingConfig?.timeoutIn, 600000);
   while (Date.now() < deadline) {
-    // Check the window first: it closes itself right after a selection.
-    const open = await chrome.windows.get(windowId).then(
-      () => true,
-      () => false,
-    );
+    // Check the picker first: it closes itself right after a selection.
+    const open = await picker.isOpen();
     const { mediaItemsSet } = await pickerRequest(
       token,
       `sessions/${session.id}`,
@@ -150,7 +260,7 @@ async function waitForPick(token, session, windowId) {
     }
     await new Promise((resolve) => setTimeout(resolve, interval));
   }
-  chrome.windows.remove(windowId).catch(() => {});
+  picker.close();
   return false;
 }
 
@@ -180,18 +290,14 @@ async function pickGooglePhoto() {
     if (error.status !== 401) {
       throw error;
     }
-    // Chrome can hand back a cached token that Google has since revoked.
-    await chrome.identity.removeCachedAuthToken({ token });
+    // A cached token may have been revoked by Google since.
+    await forgetToken(token);
     token = await authToken();
     session = await createSession(token);
   }
   try {
-    const window = await chrome.windows.create({
-      url: `${session.pickerUri}/autoclose`,
-      type: "popup",
-      ...PICKER_WINDOW,
-    });
-    if (!(await waitForPick(token, session, window.id))) {
+    const picker = await showPicker(`${session.pickerUri}/autoclose`);
+    if (!(await waitForPick(token, session, picker))) {
       return null;
     }
     const {
@@ -212,6 +318,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "pickGooglePhoto") {
     pickGooglePhoto().then(
       (photo) => sendResponse({ photo }),
+      (error) => sendResponse({ error: error.message }),
+    );
+    return true;
+  }
+  if (message.type === "openPhoneWindow") {
+    openPhoneWindow().then(
+      () => sendResponse({}),
       (error) => sendResponse({ error: error.message }),
     );
     return true;

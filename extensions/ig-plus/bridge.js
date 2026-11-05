@@ -1,10 +1,6 @@
 // camera.js runs in the page's world, where it cannot reach the extension, so
 // this answers its requests on the extension's behalf.
 (() => {
-  if (!matchMedia("(display-mode: standalone)").matches) {
-    return;
-  }
-
   const toFile = ({ data, type, name }) =>
     new File([Uint8Array.fromBase64(data)], name, { type });
 
@@ -30,6 +26,8 @@
     const { data } = event;
     if (
       event.source !== window ||
+      // Checked per request, since this may load before mobile.js marks the tab.
+      !document.documentElement.dataset.igPlusPhone ||
       data?.type !== "ig-plus:ask" ||
       !Object.hasOwn(answers, data.request)
     ) {

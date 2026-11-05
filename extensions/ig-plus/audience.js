@@ -3,7 +3,8 @@
 // no audience setting, but the endpoint it shares through accepts the one the
 // phone apps send.
 (() => {
-  if (!matchMedia("(display-mode: standalone)").matches) {
+  // mobile.js marks phone tabs before this runs.
+  if (!document.documentElement.dataset.igPlusPhone) {
     return;
   }
 

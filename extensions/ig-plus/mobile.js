@@ -1,9 +1,38 @@
-// Runs in the page's main world before Instagram's scripts, so the installed app
-// looks like a phone to them. Request headers are rewritten by background.js.
+// Runs in the page's main world before Instagram's scripts, so phone tabs look
+// like a phone to them. Request headers are rewritten by background.js.
+//
+// Phone tabs are the installed Instagram app, the phone window background.js
+// opens, and real phones. The phone window's first page carries a marker hash,
+// remembered in sessionStorage because that lasts as long as the tab.
+// audience.js and camera.js read the outcome from <html data-ig-plus-phone>.
 (() => {
-  if (!matchMedia("(display-mode: standalone)").matches) {
+  const { dataset } = document.documentElement;
+  // Firefox can inject again into an open page, and a second pass would undo
+  // the media query swap below.
+  if (dataset.igPlusPhone) {
     return;
   }
+  const MARKER = "#ig-plus-phone";
+  if (location.hash === MARKER) {
+    sessionStorage.setItem("ig-plus:phone", "1");
+    history.replaceState(
+      history.state,
+      "",
+      location.pathname + location.search,
+    );
+  }
+  // Checked before the user agent, which Firefox already reports as the
+  // iPhone background.js sends.
+  if (
+    !matchMedia("(display-mode: standalone)").matches &&
+    !sessionStorage.getItem("ig-plus:phone")
+  ) {
+    if (/Android.+Mobile|iPhone/.test(navigator.userAgent)) {
+      dataset.igPlusPhone = "native";
+    }
+    return;
+  }
+  dataset.igPlusPhone = "emulated";
 
   // Keep in sync with background.js.
   const MOBILE_UA =

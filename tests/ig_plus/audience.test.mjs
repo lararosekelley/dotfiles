@@ -16,7 +16,7 @@ const SHARE_BODY =
 
 // Loads audience.js against a stand-in page whose share endpoint echoes the
 // audience it receives, the way Instagram's response reports it.
-function loadPage({ standalone = true } = {}) {
+function loadPage({ phone = true } = {}) {
   const window = new EventTarget();
   const sent = [];
   window.fetch = async (url, options = {}) => {
@@ -41,7 +41,9 @@ function loadPage({ standalone = true } = {}) {
   }
   vm.runInNewContext(source, {
     window,
-    matchMedia: () => ({ matches: standalone }),
+    document: {
+      documentElement: { dataset: phone ? { igPlusPhone: "emulated" } : {} },
+    },
     XMLHttpRequest,
     URLSearchParams,
     Request,
@@ -125,8 +127,8 @@ test("amends shares sent with XMLHttpRequest", async () => {
   assert.equal(await status, "close-friends");
 });
 
-test("does nothing outside the installed app", async () => {
-  const page = loadPage({ standalone: false });
+test("does nothing outside phone tabs", async () => {
+  const page = loadPage({ phone: false });
   page.handOff(true);
   await page.window.fetch(SHARE_URL, { method: "POST", body: SHARE_BODY });
   assert.equal(page.sent[0].body, SHARE_BODY);
