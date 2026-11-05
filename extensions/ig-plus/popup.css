@@ -45,9 +45,16 @@ body {
   font: 13px/1.4 Nunito, system-ui, sans-serif;
 }
 h1 {
+  display: flex;
+  gap: 8px;
+  align-items: center;
   margin: 0 0 6px;
   font-size: 16px;
   font-weight: 900;
+}
+h1 img {
+  width: 22px;
+  height: 22px;
 }
 button {
   margin-top: 10px;

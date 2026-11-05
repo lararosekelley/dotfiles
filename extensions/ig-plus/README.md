@@ -111,6 +111,16 @@ The editor and settings use the colors, shapes and type of
 Text fonts come from the local machine: "Elegant" uses P052 italic and "Script"
 uses Z003, both from the URW base fonts.
 
+`icons/icon.svg` is the source of the icon. After editing it, render the PNGs
+Chrome needs from this directory:
+
+```bash
+for size in 16 32 48 128; do
+  magick -background none -density 600 icons/icon.svg -resize ${size}x${size} \
+    -depth 8 PNG32:icons/icon-$size.png
+done
+```
+
 ## Google Photos
 
 Google Photos needs a Google sign-in through an OAuth client in a Google Cloud
