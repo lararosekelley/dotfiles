@@ -30,7 +30,7 @@
     const { data } = event;
     if (
       event.source !== window ||
-      data?.type !== "ig-stories:ask" ||
+      data?.type !== "ig-plus:ask" ||
       !Object.hasOwn(answers, data.request)
     ) {
       return;
@@ -42,7 +42,7 @@
       reply = { error: error.message };
     }
     window.postMessage(
-      { type: "ig-stories:answer", id: data.id, ...reply },
+      { type: "ig-plus:answer", id: data.id, ...reply },
       location.origin,
     );
   });

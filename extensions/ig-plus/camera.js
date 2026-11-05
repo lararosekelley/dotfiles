@@ -767,7 +767,7 @@
   };
 
   // audience.js reports how a close friends share went.
-  window.addEventListener("ig-stories:shared", (event) => {
+  window.addEventListener("ig-plus:shared", (event) => {
     const { status } = event.detail;
     const host = element("div");
     const root = host.attachShadow({ mode: "closed" });
@@ -794,7 +794,7 @@
         const { data } = event;
         if (
           event.source !== window ||
-          data?.type !== "ig-stories:answer" ||
+          data?.type !== "ig-plus:answer" ||
           data.id !== id
         ) {
           return;
@@ -807,10 +807,7 @@
         }
       };
       window.addEventListener("message", onMessage);
-      window.postMessage(
-        { type: "ig-stories:ask", id, request },
-        location.origin,
-      );
+      window.postMessage({ type: "ig-plus:ask", id, request }, location.origin);
     });
   }
 
@@ -828,7 +825,7 @@
       });
       document.fonts.add(await font.load());
     } catch (error) {
-      console.warn("IG Stories could not load Nunito:", error);
+      console.warn("IG Plus could not load Nunito:", error);
     }
   }
 
@@ -1087,7 +1084,7 @@
       attach(input, file);
       const closeFriends = audienceInput.checked;
       window.dispatchEvent(
-        new CustomEvent("ig-stories:handoff", { detail: { closeFriends } }),
+        new CustomEvent("ig-plus:handoff", { detail: { closeFriends } }),
       );
       showDiscard(closeFriends);
     };

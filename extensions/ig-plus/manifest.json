@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "IG Stories",
+  "name": "IG Plus",
   "version": "0.10.0",
   "description": "Makes the installed Instagram app present as mobile Safari, so stories can be posted from desktop.",
   "background": {

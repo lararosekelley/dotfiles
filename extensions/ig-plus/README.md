@@ -1,4 +1,4 @@
-# IG Stories
+# IG Plus
 
 Chrome extension for posting Instagram stories from desktop. Instagram web only
 offers story upload to mobile browsers, so this makes the installed Instagram

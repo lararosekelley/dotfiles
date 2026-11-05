@@ -34,7 +34,7 @@ just install-python-tools
 ## Tests
 
 `just test` runs all suites: Rust unit/integration tests, Agent Awake Python tests,
-and the Node tests for the Agent Awake plugin and the IG Stories extension. Run a single language with `just test-rust`,
+and the Node tests for the Agent Awake plugin and the IG Plus extension. Run a single language with `just test-rust`,
 `just test-python`, or `just test-node`. These require Rust, Python 3, and Node;
 the Python and Node suites use their standard-library test runners.
 

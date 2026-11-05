@@ -11,7 +11,7 @@
 
   // camera.js says whether the story it hands off is for close friends.
   let closeFriends = false;
-  window.addEventListener("ig-stories:handoff", (event) => {
+  window.addEventListener("ig-plus:handoff", (event) => {
     closeFriends = event.detail.closeFriends;
   });
 
@@ -44,7 +44,7 @@
       status = media.audience === "besties" ? "close-friends" : "public";
     }
     window.dispatchEvent(
-      new CustomEvent("ig-stories:shared", { detail: { status } }),
+      new CustomEvent("ig-plus:shared", { detail: { status } }),
     );
   }
 
@@ -61,9 +61,9 @@
     closeFriends = false;
     const amended = amend(body);
     if (!amended) {
-      console.warn("IG Stories could not read the share request:", body);
+      console.warn("IG Plus could not read the share request:", body);
       window.dispatchEvent(
-        new CustomEvent("ig-stories:shared", { detail: { status: "blocked" } }),
+        new CustomEvent("ig-plus:shared", { detail: { status: "blocked" } }),
       );
       return "block";
     }

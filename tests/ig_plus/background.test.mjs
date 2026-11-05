@@ -5,7 +5,7 @@ import vm from "node:vm";
 
 const read = (name) =>
   readFile(
-    new URL(`../../extensions/ig-stories/${name}`, import.meta.url),
+    new URL(`../../extensions/ig-plus/${name}`, import.meta.url),
     "utf8",
   );
 
