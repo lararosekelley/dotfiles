@@ -1,0 +1,5 @@
+/* hide.js sets these attributes from the popup's settings. */
+html[data-ig-plus-hide-feed][data-ig-plus-home] [data-ig-plus-feed],
+html[data-ig-plus-hide-reels] a[href="/reels/"] {
+  display: none !important;
+}
