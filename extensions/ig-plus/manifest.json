@@ -1,8 +1,21 @@
 {
   "manifest_version": 3,
   "name": "IG Plus",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Posts Instagram stories from desktop, and hides the home feed and Reels.",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsldBiqllPOiGFQfnmBD15CWYLNqcKI8QS3Dx86gFHAfXgprucHmwKufQUsdKioBjqmLRTY83HFVXbBeGUrFJK4dEFJDE0PZWxBZlnnjDPpY/iCaO8hTH3DYyxIjV/LHPA2y1dnYezGNIJ/PXSPH6mO5x507Q6Ci/P+K3ar/5yr1kuyH5D+o9rZ545FvoXin5ZWntHF7cuj7uL/WdfJMJxtxZiAO6n+J6IXSl2Dk/9pSGr0yyL5HCnYpdO3bcTBFpCD0jccVjzqJ2hOe0pnbaE3QVBud9EkTV0vOtT2ZTvrs0YgQtznYgtPir5ZrExvoIfPXd439T1ASyUMUZO2zQ3wIDAQAB",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "ig-plus@larakelley.com",
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    },
+    "gecko_android": {
+      "strict_min_version": "140.0"
+    }
+  },
   "background": {
     "service_worker": "background.js"
   },

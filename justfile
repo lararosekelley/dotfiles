@@ -160,5 +160,9 @@ test-rust:
 test-python:
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/agent_awake -p 'test_*.py'
 
+# Firefox needs its own manifest; load or sign target/ig-plus-firefox
+build-ig-plus-firefox:
+    node scripts/build-ig-plus-firefox.mjs
+
 test-node:
     node --test tests/agent_awake/plugin.test.mjs tests/ig_plus/*.test.mjs

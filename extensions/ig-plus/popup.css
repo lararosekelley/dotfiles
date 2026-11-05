@@ -6,17 +6,27 @@
 }
 :root {
   --background: #fbf5f8;
+  --surface-alt: #f3e7ee;
   --text: #2b1a26;
   --text-muted: #6b5562;
   --accent: #c2407a;
+  --accent-text: #fffafc;
+  --edge: #dcc8d3;
+  --accent-edge: #8e2c5a;
+  --danger: #c93c45;
   --done: #3f7b4a;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #1c1220;
+    --surface-alt: #33243a;
     --text: #f6eef5;
     --text-muted: #c9b7c6;
     --accent: #f08fb8;
+    --accent-text: #2e0f20;
+    --edge: #140c17;
+    --accent-edge: #a64b7a;
+    --danger: #e66e6d;
     --done: #9dcca3;
   }
 }
@@ -38,6 +48,31 @@ h1 {
   margin: 0 0 6px;
   font-size: 16px;
   font-weight: 900;
+}
+button {
+  margin-top: 10px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 11px;
+  background: var(--surface-alt);
+  box-shadow: 0 3px 0 var(--edge);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 140ms,
+    box-shadow 140ms;
+}
+button:active {
+  transform: translateY(3px);
+  box-shadow: 0 0 0 var(--edge);
+}
+button.primary {
+  background: var(--accent);
+  box-shadow: 0 3px 0 var(--accent-edge);
+  color: var(--accent-text);
+  font-weight: 800;
 }
 /* Like the git-stk tour's checkboxes: a ring that fills when checked. */
 .check {
@@ -87,4 +122,9 @@ h1 {
 .check input:focus-visible + .box {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+.message {
+  margin: 8px 0 0;
+  color: var(--danger);
+  font-weight: 700;
 }

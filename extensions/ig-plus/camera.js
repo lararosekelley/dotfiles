@@ -1,6 +1,7 @@
 // Runs in the page's main world so it can intercept Instagram's file inputs.
 (() => {
-  if (!matchMedia("(display-mode: standalone)").matches) {
+  // mobile.js marks phone tabs before this runs.
+  if (!document.documentElement.dataset.igPlusPhone) {
     return;
   }
 
