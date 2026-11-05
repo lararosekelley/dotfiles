@@ -4,7 +4,7 @@ import test from "node:test";
 import vm from "node:vm";
 
 const source = await readFile(
-  new URL("../../extensions/ig-stories/audience.js", import.meta.url),
+  new URL("../../extensions/ig-plus/audience.js", import.meta.url),
   "utf8",
 );
 
@@ -51,12 +51,12 @@ function loadPage({ standalone = true } = {}) {
   });
   const handOff = (closeFriends) =>
     window.dispatchEvent(
-      new CustomEvent("ig-stories:handoff", { detail: { closeFriends } }),
+      new CustomEvent("ig-plus:handoff", { detail: { closeFriends } }),
     );
   const shared = () =>
     new Promise((resolve) =>
       window.addEventListener(
-        "ig-stories:shared",
+        "ig-plus:shared",
         (event) => resolve(event.detail.status),
         { once: true },
       ),
