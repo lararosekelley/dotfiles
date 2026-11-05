@@ -2,9 +2,13 @@
   "manifest_version": 3,
   "name": "IG Plus",
   "version": "0.10.0",
-  "description": "Makes the installed Instagram app present as mobile Safari, so stories can be posted from desktop.",
+  "description": "Posts Instagram stories from desktop, and hides the home feed and Reels.",
   "background": {
     "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "IG Plus",
+    "default_popup": "popup.html"
   },
   "content_scripts": [
     {
@@ -15,7 +19,8 @@
     },
     {
       "matches": ["https://*.instagram.com/*"],
-      "js": ["bridge.js"],
+      "js": ["bridge.js", "hide.js"],
+      "css": ["hide.css"],
       "run_at": "document_start"
     }
   ],
@@ -31,7 +36,7 @@
       "https://www.googleapis.com/auth/photospicker.mediaitems.readonly"
     ]
   },
-  "permissions": ["declarativeNetRequest", "identity"],
+  "permissions": ["declarativeNetRequest", "identity", "storage"],
   "host_permissions": [
     "https://*.instagram.com/*",
     "https://photospicker.googleapis.com/*",

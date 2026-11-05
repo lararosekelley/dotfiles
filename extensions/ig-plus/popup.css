@@ -1,0 +1,90 @@
+/* Callie and Callie Light, as in camera.js. */
+@font-face {
+  font-family: Nunito;
+  src: url("fonts/Nunito-Variable.ttf");
+  font-weight: 200 1000;
+}
+:root {
+  --background: #fbf5f8;
+  --text: #2b1a26;
+  --text-muted: #6b5562;
+  --accent: #c2407a;
+  --done: #3f7b4a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1c1220;
+    --text: #f6eef5;
+    --text-muted: #c9b7c6;
+    --accent: #f08fb8;
+    --done: #9dcca3;
+  }
+}
+[hidden] {
+  display: none !important;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 220px;
+  margin: 0;
+  padding: 14px 16px 16px;
+  background: var(--background);
+  color: var(--text);
+  font: 13px/1.4 Nunito, system-ui, sans-serif;
+}
+h1 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 900;
+}
+/* Like the git-stk tour's checkboxes: a ring that fills when checked. */
+.check {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 0;
+  color: var(--text-muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+.check input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.check .box {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--text-muted);
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.check svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: var(--background);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  visibility: hidden;
+}
+.check input:checked + .box {
+  border-color: var(--done);
+  background: var(--done);
+}
+.check input:checked + .box svg {
+  visibility: visible;
+}
+.check input:checked ~ span {
+  color: var(--text);
+}
+.check input:focus-visible + .box {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}

@@ -18,6 +18,16 @@ with mobile request headers. Keep the window taller than it is wide.
 After editing files, click the reload icon on the extension's card, then
 reopen the app.
 
+## Settings
+
+The toolbar button opens the settings. Both are on by default, in every
+Instagram tab:
+
+- "Hide home feed posts" hides posts on the home page. The stories tray stays,
+  and no more posts load.
+- "Hide Reels" hides links to the Reels tab and sends `/reels/` to messages.
+  Single reels, such as ones sent in messages, still open.
+
 ## How it works
 
 The extension watches for Instagram pages in app windows. For each one, a
