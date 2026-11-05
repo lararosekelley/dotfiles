@@ -558,13 +558,19 @@
     );
   }
 
-  // Draws the photo over a blurred copy of itself, so any part of the frame it
-  // does not cover still looks intentional.
-  function drawPhoto(context, { image, zoom, x, y }) {
-    context.save();
+  // A blurred copy of the photo filling the frame, so any part of it the photo
+  // does not cover still looks intentional. Made once per photo: Firefox blurs
+  // canvases on the CPU, too slowly to repeat while dragging.
+  function blurredBackdrop(image) {
+    const canvas = element("canvas", STORY);
+    const context = canvas.getContext("2d");
     context.filter = "blur(60px) brightness(0.7)";
     drawScaled(context, image, fitScale(image, "cover") * 1.1);
-    context.restore();
+    return canvas;
+  }
+
+  function drawPhoto(context, { image, backdrop, zoom, x, y }) {
+    context.drawImage(backdrop, 0, 0);
     drawScaled(context, image, fitScale(image, "contain") * zoom, x, y);
   }
 
@@ -1010,7 +1016,7 @@
       font: 0,
     };
 
-    const render = () => {
+    const draw = () => {
       const context = review.getContext("2d");
       if (base.colors) {
         drawBackground(context, base.colors);
@@ -1019,6 +1025,21 @@
       }
       drawStrokes(context, strokes);
       drawText(context, text);
+    };
+    // Input can arrive several times a frame, so draw at most once a frame.
+    let frame = 0;
+    const render = () => {
+      frame ||= requestAnimationFrame(() => {
+        frame = 0;
+        draw();
+      });
+    };
+    const flush = () => {
+      if (frame) {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        draw();
+      }
     };
     const showMessage = (value) => {
       message.textContent = value;
@@ -1063,7 +1084,7 @@
     const editPhoto = (image, fill, backLabel) => {
       const fillZoom = fitScale(image, "cover") / fitScale(image, "contain");
       zoomInput.max = Math.max(5, fillZoom);
-      base = { image, zoom: 1, x: 0, y: 0 };
+      base = { image, backdrop: blurredBackdrop(image), zoom: 1, x: 0, y: 0 };
       strokes.length = 0;
       setZoom(fill ? fillZoom : 1);
       setTool("photo");
@@ -1153,7 +1174,8 @@
         "Retake",
       );
     back.onclick = () => setMode("camera");
-    done.onclick = () =>
+    done.onclick = () => {
+      flush();
       review.toBlob(
         (blob) =>
           handOff(
@@ -1162,6 +1184,7 @@
         "image/jpeg",
         0.92,
       );
+    };
 
     const updateArrows = () => {
       previous.disabled = swatchList.scrollLeft <= 0;
