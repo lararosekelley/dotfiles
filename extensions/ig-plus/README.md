@@ -22,16 +22,17 @@ the install icon in Chrome's address bar, and tap Story there.
 
 ### Firefox
 
-1. Get a signed `.xpi` from whoever signed one, or sign your own (see
-   Development). Open it in Firefox, by dragging it into a window or with
-   File, Open File, and click "Add".
+1. Download the signed `.xpi` from the newest
+   [IG Plus release](https://github.com/lararosekelley/dotfiles/releases?q=ig-plus),
+   or sign your own (see Development). Open it in Firefox, by dragging it into
+   a window or with File, Open File, and click "Add".
 2. Firefox grants site access only when asked. Open `about:addons`, then IG
    Plus, then Permissions, and allow all three sites. Reload Instagram.
 3. Pin IG Plus from the Extensions menu and open the phone window from it.
 
 ### Firefox for Android
 
-1. Download the same signed `.xpi` onto the phone.
+1. Download the same signed `.xpi` from the release onto the phone.
 2. In Firefox, open Settings, About Firefox, and tap the Firefox logo five
    times to enable the debug menu.
 3. In Settings, tap "Install extension from file" and choose the `.xpi`.
@@ -198,8 +199,8 @@ npx web-ext run -t firefox-android --android-device <device-id> \
 To make an `.xpi` anyone can install, sign the build as an unlisted add-on with
 [web-ext](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/#web-ext-sign)
 and AMO API keys. The signed file lands in `web-ext-artifacts/` and works on
-desktop and Android. Unlisted add-ons do not update themselves, so sign and
-share each new version:
+desktop and Android. Unlisted add-ons do not update themselves, so sign each
+new version and attach it to a release tagged `ig-plus@v<version>`:
 
 ```bash
 npx web-ext sign --channel=unlisted --source-dir target/ig-plus-firefox \
