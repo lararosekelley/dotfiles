@@ -19,8 +19,6 @@
 # End of https://www.gitignore.io/api/linux
 
 target/
-# signed Firefox builds of extensions/ig-plus
-web-ext-artifacts/
 node_modules/
 __pycache__/
 .claude/
