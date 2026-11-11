@@ -5,6 +5,17 @@
 # useful utility functions
 # --------
 
+# Jump to notes directory, set by $NOTES_DIR
+# in ~/.environment
+#
+# Params:
+#     none
+#
+# Usage: notes
+function notes() {
+  cd "$NOTES_DIR" || return
+}
+
 # Run something n times
 #
 # Params:
