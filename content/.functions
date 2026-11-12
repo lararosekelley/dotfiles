@@ -677,10 +677,18 @@ function path_append_if_missing() {
   esac
 }
 
+# Drop exported session credentials, which would override AWS_PROFILE
+#
+# Usage: aws-clear-session
+aws-clear-session() {
+  unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_CREDENTIAL_EXPIRATION
+}
+
 # Switch AWS_PROFILE to work
 #
 # Usage: aws-work
 aws-work() {
+  aws-clear-session
   export AWS_PROFILE=work
   export AWS_REGION=us-east-1
   echo "Switched to AWS profile: $AWS_PROFILE"
@@ -691,19 +699,25 @@ aws-work() {
 #
 # Usage: aws-personal
 aws-personal() {
+  aws-clear-session
   export AWS_PROFILE=personal
   export AWS_REGION=us-east-1
   echo "Switched to AWS profile: $AWS_PROFILE"
   aws sts get-caller-identity --query 'Account' --output text
 }
 
-# Switch AWS_PROFILE to personal-root
+# Assume the MFA-gated personal-admin role and export its session
+# credentials, since Terraform and other SDK tools can't prompt for MFA
 #
-# Usage: aws-personal-root
-aws-personal-root() {
-  export AWS_PROFILE=personal-root
+# Usage: aws-personal-admin
+aws-personal-admin() {
+  local creds
+  aws-clear-session
+  creds=$(aws configure export-credentials --profile personal-admin --format env) || return 1
+  unset AWS_PROFILE
+  eval "$creds"
   export AWS_REGION=us-east-1
-  echo "Switched to AWS profile: $AWS_PROFILE"
+  echo "Switched to AWS role: personal-admin (expires $AWS_CREDENTIAL_EXPIRATION)"
   aws sts get-caller-identity --query 'Account' --output text
 }
 
