@@ -69,14 +69,18 @@ fi
 
 # keychain
 
-# id_ed25519
-if command -v keychain &> /dev/null && [ -f "$HOME/.ssh/id_ed25519" ]; then
-  eval "$(keychain --eval --quiet --lockwait 30 id_ed25519)"
-fi
+# Only prompt for passphrases in interactive shells; display manager login
+# shells have no visible terminal, so ssh-add would block the session.
+if [[ $- == *i* ]] && command -v keychain &> /dev/null; then
+  # id_ed25519
+  if [ -f "$HOME/.ssh/id_ed25519" ]; then
+    eval "$(keychain --eval --quiet --lockwait 30 id_ed25519)"
+  fi
 
-# id_rsa
-if command -v keychain &> /dev/null && [ -f "$HOME/.ssh/id_rsa" ]; then
-  eval "$(keychain --eval --quiet --lockwait 30 id_rsa)"
+  # id_rsa
+  if [ -f "$HOME/.ssh/id_rsa" ]; then
+    eval "$(keychain --eval --quiet --lockwait 30 id_rsa)"
+  fi
 fi
 
 # pyenv
