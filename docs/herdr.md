@@ -45,24 +45,3 @@ The layout expects these on `PATH`:
 
 Anything missing degrades rather than breaks: the pane reports the failure and
 drops back to an interactive shell.
-
-## Herdr app
-
-The desktop app (`herdr-app`) and its terminal server, herdr-core (`hc`), are
-separate from the `herdr` TUI above: they share no config, plugins, or sessions.
-Only `keys.json` and `settings.json` from `~/.config/herdr-app` are tracked. The
-app writes everything else there itself.
-
-The window uses the [World of Codecraft](https://github.com/kevinpardo/world-of-codecraft)
-layout, installed from its repo rather than synced:
-
-```bash
-git clone https://github.com/kevinpardo/world-of-codecraft
-world-of-codecraft/tools/install.sh
-herdr-app do layout.switch '{"name":"World-of-Codecraft"}'
-```
-
-The tracked `keys.json` already has the layout's keys. For the activity scenes,
-run `world-of-codecraft/tools/install.sh --integrations`. It links
-`~/.claude/hooks/wocc-activity.py`, which the tracked `.claude/settings.json`
-already registers.
