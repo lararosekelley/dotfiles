@@ -13,6 +13,8 @@ Fedora packages that config in `content/` depends on:
 - `azure-cli`, configured by `.azure/`
 - `mold`, which `.cargo/config.toml` links Rust builds with
 - `obs-studio`, configured by `.config/obs-studio/`
+- `k9s`, configured by `.config/k9s/`, with `kubernetes1.34-client` and `helm`
+  (see [Kubernetes](./kubernetes.md))
 
 Third-party repos in use:
 
@@ -129,6 +131,8 @@ These install outside a package manager and update themselves or by re-downloadi
 | `aws`                                      | `/usr/local/bin` | re-run the AWS installer |
 | `circleci`, `ollama`, `railway`, `mailpit` | `/usr/local/bin` | re-run each installer    |
 | `terraform`                                | `~/.bin`         | re-download a release    |
+| `k3d`                                      | `/usr/local/bin` | re-run the k3d installer |
+| `krew` and its `ctx`, `ns`, `stern`        | `~/.krew/bin`    | `kubectl krew upgrade`   |
 
 `gh` extensions: dlvhdr/gh-dash and dlvhdr/gh-enhance, for herdr's `github` tab.
 

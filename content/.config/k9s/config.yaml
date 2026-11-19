@@ -1,0 +1,10 @@
+k9s:
+  refreshRate: 2
+  ui:
+    skin: callie
+    logoless: true
+    reactive: true
+  logger:
+    tail: 200
+    buffer: 5000
+    sinceSeconds: -1

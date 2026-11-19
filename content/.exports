@@ -87,6 +87,7 @@ path_prepend_if_missing "$PYENV_ROOT/bin"
 path_prepend_if_missing "$NODENV_PATH"
 path_prepend_if_missing "$RBENV_PATH"
 path_prepend_if_missing "$HOME/.poetry/bin"
+path_prepend_if_missing "${KREW_ROOT:-$HOME/.krew}/bin"
 path_prepend_if_missing "$HOME/.local/bin"
 path_prepend_if_missing "$HOME/.bin"
 

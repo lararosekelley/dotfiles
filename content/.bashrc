@@ -58,6 +58,20 @@ if [ -f /usr/share/bash-completion/completions/git ]; then
   __git_complete g __git_main
 fi
 
+# kubernetes completion
+
+if command -v kubectl > /dev/null; then
+  # shellcheck source=/dev/null
+  source <(kubectl completion bash)
+  complete -o default -F __start_kubectl k
+fi
+
+for tool in helm k3d; do
+  # shellcheck source=/dev/null
+  command -v "$tool" > /dev/null && source <("$tool" completion bash)
+done
+unset tool
+
 # autojump
 
 if [ -f /usr/share/autojump/autojump.bash ]; then
