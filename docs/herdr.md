@@ -62,5 +62,7 @@ world-of-codecraft/tools/install.sh
 herdr-app do layout.switch '{"name":"World-of-Codecraft"}'
 ```
 
-The tracked `keys.json` already has the layout's keys. Its optional activity
-integrations (`install.sh --integrations`) are not installed.
+The tracked `keys.json` already has the layout's keys. For the activity scenes,
+run `world-of-codecraft/tools/install.sh --integrations`. It links
+`~/.claude/hooks/wocc-activity.py`, which the tracked `.claude/settings.json`
+already registers.

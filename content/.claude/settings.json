@@ -41,6 +41,15 @@
             "timeout": 10
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "UserPromptSubmit": [
@@ -60,6 +69,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PreToolUse": [
@@ -68,6 +86,15 @@
           {
             "type": "command",
             "command": "python3 \"$HOME/.local/share/agent-awake/agent_awake.py\" claude",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
             "timeout": 5
           }
         ]
@@ -82,6 +109,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PostToolUseFailure": [
@@ -90,6 +126,15 @@
           {
             "type": "command",
             "command": "python3 \"$HOME/.local/share/agent-awake/agent_awake.py\" claude",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
             "timeout": 5
           }
         ]
@@ -115,6 +160,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "StopFailure": [
@@ -137,6 +191,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SubagentStart": [
@@ -145,6 +208,15 @@
           {
             "type": "command",
             "command": "python3 \"$HOME/.local/share/agent-awake/agent_awake.py\" claude",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
             "timeout": 5
           }
         ]
@@ -159,6 +231,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "PreCompact": [
@@ -167,6 +248,15 @@
           {
             "type": "command",
             "command": "python3 \"$HOME/.local/share/agent-awake/agent_awake.py\" claude",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$HOME/.claude/hooks/wocc-activity.py\" 2>/dev/null || true",
             "timeout": 5
           }
         ]
