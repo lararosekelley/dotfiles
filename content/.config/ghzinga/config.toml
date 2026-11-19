@@ -1,0 +1,7 @@
+[ui]
+theme = "catppuccin"
+symbols = "emoji"
+spacing = "comfortable"
+width_mode = "fixed"
+fixed_width = 118
+scrollbar = "on-scroll"
