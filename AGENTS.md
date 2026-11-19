@@ -39,3 +39,5 @@ Docs-only edits need applicable formatting and link checks, not the full test su
 
 Commits require a lowercase `type(scope): description` subject. Valid scopes are
 listed in `commitlint.config.cjs`. Run hooks normally; do not bypass them.
+Husky takes any argument to `npx husky` as a hooks directory and repoints
+`core.hooksPath` there; never run it with `--help`, `--version`, or other flags.
