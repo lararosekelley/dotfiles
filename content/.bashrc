@@ -67,20 +67,11 @@ elif [ -f "$HOME/.autojump/etc/profile.d/autojump.sh" ]; then
   source "$HOME/.autojump/etc/profile.d/autojump.sh"
 fi
 
-# keychain
+# ssh-agent
 
-# Only prompt for passphrases in interactive shells; display manager login
-# shells have no visible terminal, so ssh-add would block the session.
-if [[ $- == *i* ]] && command -v keychain &> /dev/null; then
-  # id_ed25519
-  if [ -f "$HOME/.ssh/id_ed25519" ]; then
-    eval "$(keychain --eval --quiet --lockwait 30 id_ed25519)"
-  fi
-
-  # id_rsa
-  if [ -f "$HOME/.ssh/id_rsa" ]; then
-    eval "$(keychain --eval --quiet --lockwait 30 id_rsa)"
-  fi
+# Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs.
+if [ -z "${SSH_AUTH_SOCK:-}" ] && [ -S "${XDG_RUNTIME_DIR:-}/ssh-agent.socket" ]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
 
 # pyenv
