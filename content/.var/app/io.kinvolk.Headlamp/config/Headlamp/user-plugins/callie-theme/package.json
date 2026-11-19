@@ -1,0 +1,9 @@
+{
+  "name": "callie-theme",
+  "version": "0.1.0",
+  "description": "Callie and Callie Light themes for Headlamp",
+  "main": "main.js",
+  "devDependencies": {
+    "@kinvolk/headlamp-plugin": ">=0.8.0"
+  }
+}
