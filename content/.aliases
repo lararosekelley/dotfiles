@@ -69,6 +69,13 @@ alias localip="ipconfig getifaddr en0"
 alias g='git'
 alias wip='git add -A && git commit -m "work in progress" --no-verify'
 
+# kubernetes
+
+alias k='kubectl'
+alias kx='kubectl ctx'
+alias kn='kubectl ns'
+alias tsw='tailscale switch'
+
 # misc. tools
 
 alias c='clear'

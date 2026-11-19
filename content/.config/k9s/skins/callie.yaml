@@ -1,0 +1,95 @@
+# callie, ported by hand from the palette in https://github.com/greylocklabs/themes
+# (palettes/callie.toml), which has no k9s port
+
+foreground: &foreground "#e0d3df"
+background: &background "default"
+current_line: &current_line "#33243a"
+selection: &selection "#3d2c42"
+comment: &comment "#9a8797"
+ink: &ink "#2e0f20"
+pink: &pink "#f08fb8"
+mauve: &mauve "#e5aac1"
+red: &red "#e66e6d"
+green: &green "#9dcca3"
+yellow: &yellow "#d6ba86"
+blue: &blue "#a4beef"
+cyan: &cyan "#82cdcd"
+
+k9s:
+  body:
+    fgColor: *foreground
+    bgColor: *background
+    logoColor: *pink
+  prompt:
+    fgColor: *foreground
+    bgColor: *background
+    suggestColor: *comment
+  info:
+    fgColor: *pink
+    sectionColor: *foreground
+  dialog:
+    fgColor: *foreground
+    bgColor: *background
+    buttonFgColor: *ink
+    buttonBgColor: *mauve
+    buttonFocusFgColor: *ink
+    buttonFocusBgColor: *pink
+    labelFgColor: *yellow
+    fieldFgColor: *foreground
+  frame:
+    border:
+      fgColor: *selection
+      focusColor: *pink
+    menu:
+      fgColor: *foreground
+      keyColor: *pink
+      numKeyColor: *pink
+    crumbs:
+      fgColor: *ink
+      bgColor: *mauve
+      activeColor: *pink
+    status:
+      newColor: *cyan
+      modifyColor: *blue
+      addColor: *green
+      errorColor: *red
+      highlightColor: *yellow
+      killColor: *comment
+      completedColor: *comment
+    title:
+      fgColor: *foreground
+      bgColor: *background
+      highlightColor: *pink
+      counterColor: *blue
+      filterColor: *green
+  views:
+    charts:
+      bgColor: *background
+      defaultDialColors: [*pink, *red]
+      defaultChartColors: [*pink, *red]
+    table:
+      fgColor: *foreground
+      bgColor: *background
+      cursorFgColor: *ink
+      cursorBgColor: *pink
+      markColor: *yellow
+      header:
+        fgColor: *foreground
+        bgColor: *background
+        sorterColor: *cyan
+    xray:
+      fgColor: *foreground
+      bgColor: *background
+      cursorColor: *current_line
+      graphicColor: *pink
+      showIcons: false
+    yaml:
+      keyColor: *pink
+      colonColor: *comment
+      valueColor: *foreground
+    logs:
+      fgColor: *foreground
+      bgColor: *background
+      indicator:
+        fgColor: *foreground
+        bgColor: *current_line

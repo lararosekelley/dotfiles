@@ -96,6 +96,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [herdr](./docs/herdr.md) - plugins, integrations, and the tools the layout expects
+- [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
 - [Desktop preferences](./docs/desktop-preferences.md) - KDE settings and private hardware-specific configuration
 - [Audio plugins and OBS](./docs/audio-and-obs.md)
