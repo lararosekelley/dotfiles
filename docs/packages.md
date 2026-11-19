@@ -15,6 +15,7 @@ Fedora packages that config in `content/` depends on:
 - `obs-studio`, configured by `.config/obs-studio/`
 - `k9s`, configured by `.config/k9s/`, with `kubernetes1.34-client` and `helm`
   (see [Kubernetes](./kubernetes.md))
+- `vernnobile-nunito-fonts`, the Nunito family the Headlamp Callie theme uses
 
 Third-party repos in use:
 
@@ -52,7 +53,7 @@ dnf list --installed | awk '$3 == "@commandline"'  # the file-installed RPMs abo
 ## Flatpak
 
 GUI apps, mostly from Flathub: Zen, Slack, Discord, Signal, Thunderbird, Obsidian,
-Todoist, Calibre, Reaper, Ardour, RetroArch, GitHub Desktop.
+Todoist, Calibre, Reaper, Ardour, RetroArch, GitHub Desktop, Headlamp.
 
 ```bash
 flatpak update

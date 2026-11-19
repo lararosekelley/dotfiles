@@ -87,3 +87,25 @@ k3d adds a `k3d-dev` context and makes it current.
 
 `.config/k9s` sets the Callie skin and hides the logo. k9s keeps per-cluster
 state under `~/.local/share/k9s`, which is not tracked.
+
+## Headlamp
+
+[Headlamp](https://headlamp.dev) is a GUI alternative to k9s, from Flathub:
+
+```bash
+flatpak install flathub io.kinvolk.Headlamp
+```
+
+It reads the same `~/.kube/config` contexts. Its sandbox can read that file and
+reach the network, so tailnet and k3d contexts work, but a context whose auth runs
+a local program (an `exec` credential plugin such as `aws eks get-token`) fails
+inside it.
+
+The tracked `callie-theme` plugin adds Callie and Callie Light themes, picked in
+Settings > Appearance after a restart. The Flatpak loads hand-installed plugins
+from `~/.var/app/io.kinvolk.Headlamp/config/Headlamp/user-plugins`. The themes
+use Nunito, which Flatpak apps pick up from the system fonts:
+
+```bash
+sudo dnf install vernnobile-nunito-fonts
+```
