@@ -23,6 +23,7 @@ import socket
 import subprocess
 import sys
 import time
+from fnmatch import fnmatch
 from pathlib import Path
 
 PLUGIN_ROOT = Path(
@@ -123,9 +124,13 @@ def chosen_agent() -> str:
     return load_layout()["default_agent"]
 
 
+def expand(command: str) -> str:
+    return command.replace("{plugin_root}", str(PLUGIN_ROOT))
+
+
 def shell_wrap(command: str, requires_repo: bool = False) -> list[str]:
     """Run a program, then fall back to an interactive shell instead of dying."""
-    command = command.replace("{plugin_root}", str(PLUGIN_ROOT))
+    command = expand(command)
     if "{agent}" in command:
         command = command.replace("{agent}", chosen_agent())
     if requires_repo:
@@ -167,6 +172,19 @@ def repo_cwd(space_cwd: str | None, spec: dict) -> str | None:
         if is_git_repo(expanded):
             return expanded
     return space_cwd
+
+
+def repo_slug(path: str | None) -> str | None:
+    """The `owner/name` of a checkout's origin remote, lowercased."""
+    if not is_git_repo(path):
+        return None
+    result = subprocess.run(
+        ["git", "-C", path, "remote", "get-url", "origin"],
+        capture_output=True,
+        text=True,
+    )
+    match = re.search(r"[:/]([^/:]+/[^/]+?)(?:\.git)?/?$", result.stdout.strip())
+    return match.group(1).lower() if match else None
 
 
 def to_layout_node(
@@ -238,9 +256,27 @@ def in_scope(spec: dict, primary: bool | None) -> bool:
     return not spec.get("secondary_only" if primary else "primary_only")
 
 
-def wanted_tabs(spec: dict, primary: bool | None) -> list[dict]:
+def matches_repo(spec_tab: dict, slug: str | None) -> bool:
+    """Whether a tab limited to some repos belongs in a space on this one.
+
+    `repos` holds `owner/name` globs matched against the space's own checkout,
+    never default_repo, so a space outside a checkout gets none of these tabs.
+    """
+    patterns = spec_tab.get("repos")
+    if not patterns:
+        return True
+    return slug is not None and any(fnmatch(slug, p.lower()) for p in patterns)
+
+
+def wanted_tabs(
+    spec: dict, primary: bool | None, slug: str | None = None
+) -> list[dict]:
     """The layout tabs a space should have."""
-    return [tab for tab in spec["tabs"] if in_scope(tab, primary)]
+    return [
+        tab
+        for tab in spec["tabs"]
+        if in_scope(tab, primary) and matches_repo(tab, slug)
+    ]
 
 
 def tab_runs_programs(spec_tab: dict) -> bool:
@@ -312,7 +348,7 @@ def apply_layout(snap: dict, workspace_id: str, primary: bool | None = True) -> 
     replace_tab_id = tabs[0]["tab_id"] if tabs else None
     created: list[str] = []
 
-    for index, tab in enumerate(wanted_tabs(spec, primary)):
+    for index, tab in enumerate(wanted_tabs(spec, primary, repo_slug(cwd))):
         tab_id = apply_tab(
             tab,
             cwd,
@@ -584,7 +620,10 @@ def replay_oneshots(
             continue
         if not settles_to_idle_shell(pane["pane_id"], settle_seconds):
             continue
-        call("pane.send_text", {"pane_id": pane["pane_id"], "text": f"{command}\n"})
+        call(
+            "pane.send_text",
+            {"pane_id": pane["pane_id"], "text": f"{expand(command)}\n"},
+        )
         replayed += 1
 
     return replayed
@@ -603,7 +642,8 @@ def rehydrate_space(snap: dict, space: dict, spec: dict, settle_seconds: float) 
     cwd = space_root_cwd(snap, workspace_id)
     repo = repo_cwd(cwd, spec)
     primary = is_primary(snap, workspace_id)
-    by_label = {tab["label"]: tab for tab in wanted_tabs(spec, primary)}
+    wanted = wanted_tabs(spec, primary, repo_slug(cwd))
+    by_label = {tab["label"]: tab for tab in wanted}
     relaunched = 0
 
     for index, tab in enumerate(space_tabs(snap, workspace_id)):
