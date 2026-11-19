@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#
+# k8s.sh        open k9s on the current kubectl context, read-only on a tailnet
+#               API proxy, where access is usually view-only anyway
+# k8s.sh status print the active tailnet and kubectl context
+#
+# Setup lives in docs/kubernetes.md in the dotfiles repo.
+
+set -uo pipefail
+
+context=$(kubectl config current-context 2> /dev/null)
+
+if [[ "${1:-}" == "status" ]]; then
+  tailnet=$(tailscale status --json 2> /dev/null | jq -r '.CurrentTailnet.Name // empty')
+  namespace=$(kubectl config view --minify -o jsonpath='{..namespace}' 2> /dev/null)
+  printf 'tailnet    %s\n' "${tailnet:-not connected}"
+  printf 'context    %s\n' "${context:-none}"
+  printf 'namespace  %s\n' "${namespace:-default}"
+  exit 0
+fi
+
+if ! command -v k9s &> /dev/null; then
+  echo "fatal: k9s must be installed: sudo dnf install k9s"
+  exit 1
+fi
+
+if [[ -z "$context" ]]; then
+  echo "fatal: no kubectl context: add one with tailscale configure kubeconfig or k3d"
+  exit 1
+fi
+
+args=()
+[[ "$context" == *.ts.net ]] && args+=(--readonly)
+exec k9s "${args[@]}"

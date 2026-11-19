@@ -24,15 +24,16 @@ On startup it builds every space that has nothing running in it, from
 [`layout.json`](./layout.json) (a fresh session, or a restored one whose panes
 all came back as bare shells (see [After a reboot](#after-a-reboot))):
 
-| tab      | panes                                         | where           |
-| -------- | --------------------------------------------- | --------------- |
-| `shell`  | main shell, plus scratch/watch shells stacked | everywhere      |
-| `agents` | the `herd --agent` pick, beside a spare pane  | repo spaces     |
-| `editor` | full screen `nvim`                            | everywhere      |
-| `git`    | `lazygit` beside a git shell                  | repo spaces     |
-| `review` | full screen `tuicr`                           | repo spaces     |
-| `github` | full screen `gh-dash`, via `github.sh`        | repo spaces     |
-| `system` | `glances` stacked over `journalctl -f`        | `~` space only  |
+| tab      | panes                                          | where                   |
+| -------- | ---------------------------------------------- | ----------------------- |
+| `shell`  | main shell, plus scratch/watch shells stacked  | everywhere              |
+| `agents` | the `herd --agent` pick, beside a spare pane   | repo spaces             |
+| `editor` | full screen `nvim`                             | everywhere              |
+| `git`    | `lazygit` beside a git shell                   | repo spaces             |
+| `k8s`    | `k9s` beside a kubectl shell over a logs shell | gitops and infra spaces |
+| `review` | full screen `tuicr`                            | repo spaces             |
+| `github` | full screen `gh-dash`, via `github.sh`         | repo spaces             |
+| `system` | `glances` stacked over `journalctl -f`         | `~` space only          |
 
 The `~` space's main shell opens on a `fastfetch` banner; see
 [the pane flags](#editing-the-layout) for why the repo spaces skip it.
@@ -57,6 +58,13 @@ shell. The `shell` tab's main pane uses that to greet the `~` space with
 
 An explicit `apply` ignores both flags and builds the whole set.
 
+A tab can also be limited to particular repos with `repos`, a list of
+`owner/name` globs matched against the space's own checkout's `origin` remote.
+`k8s` uses it to appear only in the gitops and infra spaces, where the cluster
+work happens. A space outside a checkout never matches, `default_repo` is not
+consulted, and `apply` respects it too, since a tab that is irrelevant to a repo
+stays irrelevant when asked for by hand.
+
 Details worth knowing:
 
 - Panes inherit the space's cwd, so launching herdr from a checkout gives every
@@ -73,6 +81,11 @@ Details worth knowing:
   the gh-dash extension are installed before opening `gh dash`. Opened inside a
   checkout, gh-dash's smart filtering scopes every section to that repo. `T` on a
   pull request opens its checks in gh-enhance.
+- The `k8s` tab goes through [`k8s.sh`](./k8s.sh), which opens `k9s` on the
+  current kubectl context, read-only when that context is a tailnet API proxy
+  (`*.ts.net`), and prints a hint instead when k9s or a context is missing. Its
+  kubectl shell opens on `k8s.sh status`: the active tailnet, context, and
+  namespace. Setup is in `docs/kubernetes.md` in the dotfiles repo.
 - All splits are even. `prefix+=` puts them back that way after resizing.
 - Tabs holding a running program or an agent are never rebuilt on startup, and
   neither are the spaces they live in.
@@ -198,7 +211,8 @@ python3 session.py balance
   where direction is `right` or `down` and ratio is between 0 and 1
 
 Each tab also takes an optional `primary_only` or `secondary_only` flag, which
-decide whether it lands in the `~` space, the repo spaces, or both. On a pane
+decide whether it lands in the `~` space, the repo spaces, or both, and an
+optional `repos` list that limits it to matching checkouts. On a pane
 the same flags scope its `run`, leaving the pane itself in every space.
 
 `oneshot` marks a `run` that prints and exits rather than owning the pane. It
