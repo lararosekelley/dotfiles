@@ -3,6 +3,7 @@ k9s:
   ui:
     skin: callie
     logoless: true
+    noIcons: true
     reactive: true
   logger:
     tail: 200

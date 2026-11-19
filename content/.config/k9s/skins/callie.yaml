@@ -12,8 +12,6 @@ mauve: &mauve "#e5aac1"
 red: &red "#e66e6d"
 green: &green "#9dcca3"
 yellow: &yellow "#d6ba86"
-blue: &blue "#a4beef"
-cyan: &cyan "#82cdcd"
 
 k9s:
   body:
@@ -24,9 +22,20 @@ k9s:
     fgColor: *foreground
     bgColor: *background
     suggestColor: *comment
+    border:
+      command: *pink
+      default: *mauve
+  help:
+    fgColor: *foreground
+    bgColor: *background
+    sectionColor: *pink
+    keyColor: *pink
+    numKeyColor: *mauve
   info:
     fgColor: *pink
     sectionColor: *foreground
+    cpuColor: *green
+    memColor: *mauve
   dialog:
     fgColor: *foreground
     bgColor: *background
@@ -49,24 +58,27 @@ k9s:
       bgColor: *mauve
       activeColor: *pink
     status:
-      newColor: *cyan
-      modifyColor: *blue
+      newColor: *mauve
+      modifyColor: *foreground
       addColor: *green
+      pendingColor: *yellow
       errorColor: *red
-      highlightColor: *yellow
+      highlightColor: *pink
       killColor: *comment
       completedColor: *comment
     title:
       fgColor: *foreground
       bgColor: *background
       highlightColor: *pink
-      counterColor: *blue
+      counterColor: *mauve
       filterColor: *green
   views:
     charts:
       bgColor: *background
-      defaultDialColors: [*pink, *red]
-      defaultChartColors: [*pink, *red]
+      defaultDialColors: [*green, *red]
+      defaultChartColors: [*green, *red]
+      focusFgColor: *ink
+      focusBgColor: *pink
     table:
       fgColor: *foreground
       bgColor: *background
@@ -76,13 +88,13 @@ k9s:
       header:
         fgColor: *foreground
         bgColor: *background
-        sorterColor: *cyan
+        sorterColor: *pink
+        selectedSortColumnColor: *pink
     xray:
       fgColor: *foreground
       bgColor: *background
       cursorColor: *current_line
       graphicColor: *pink
-      showIcons: false
     yaml:
       keyColor: *pink
       colonColor: *comment
@@ -93,3 +105,9 @@ k9s:
       indicator:
         fgColor: *foreground
         bgColor: *current_line
+        toggleOnColor: *green
+        toggleOffColor: *comment
+    picker:
+      mainColor: *foreground
+      focusColor: *pink
+      shortcutColor: *pink
