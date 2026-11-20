@@ -83,8 +83,9 @@ fi
 
 # ssh-agent
 
-# Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs.
-if [ -z "${SSH_AUTH_SOCK:-}" ] && [ -S "${XDG_RUNTIME_DIR:-}/ssh-agent.socket" ]; then
+# Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs
+# and when an inherited socket is dead (herdr's agent symlink can dangle).
+if [ ! -S "${SSH_AUTH_SOCK:-}" ] && [ -S "${XDG_RUNTIME_DIR:-}/ssh-agent.socket" ]; then
   export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
 
