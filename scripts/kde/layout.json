@@ -1,0 +1,271 @@
+{
+  "desktops": [],
+  "panels": [
+    {
+      "alignment": "left",
+      "applets": [
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.appmenu"
+        }
+      ],
+      "config": {
+        "/": {
+          "formfactor": "2",
+          "immutability": "1",
+          "wallpaperplugin": "org.kde.image"
+        }
+      },
+      "floating": true,
+      "floatingApplets": false,
+      "height": 1.5,
+      "hiding": "dodgewindows",
+      "lengthMode": "custom",
+      "location": "top",
+      "maximumLength": 28.444444444444443,
+      "minimumLength": 22.444444444444443,
+      "offset": 0,
+      "opacity": "adaptive"
+    },
+    {
+      "alignment": "right",
+      "applets": [
+        {
+          "config": {
+            "/": {
+              "CurrentPreset": "org.kde.plasma.systemmonitor"
+            },
+            "/Appearance": {
+              "chartFace": "org.kde.ksysguard.piechart",
+              "title": "Memory Usage"
+            },
+            "/SensorColors": {
+              "memory/physical/used": "134,88,161"
+            },
+            "/Sensors": {
+              "highPrioritySensorIds": "[\"memory/physical/used\"]",
+              "lowPrioritySensorIds": "[\"memory/physical/total\"]",
+              "totalSensors": "[\"memory/physical/usedPercent\"]"
+            }
+          },
+          "plugin": "org.kde.plasma.systemmonitor.memory"
+        },
+        {
+          "config": {
+            "/": {
+              "CurrentPreset": "org.kde.plasma.systemmonitor"
+            },
+            "/Appearance": {
+              "chartFace": "org.kde.ksysguard.barchart",
+              "title": "Individual Core Usage"
+            },
+            "/SensorColors": {
+              "cpu/cpu.*/usage": "134,88,161",
+              "cpu/cpu0/usage": "134,88,161",
+              "cpu/cpu1/usage": "161,88,161",
+              "cpu/cpu10/usage": "88,161,116",
+              "cpu/cpu11/usage": "88,161,143",
+              "cpu/cpu12/usage": "88,151,161",
+              "cpu/cpu13/usage": "88,124,161",
+              "cpu/cpu14/usage": "88,97,161",
+              "cpu/cpu15/usage": "107,88,161",
+              "cpu/cpu2/usage": "161,88,133",
+              "cpu/cpu3/usage": "161,88,106",
+              "cpu/cpu4/usage": "161,98,88",
+              "cpu/cpu5/usage": "161,125,88",
+              "cpu/cpu6/usage": "161,152,88",
+              "cpu/cpu7/usage": "142,161,88",
+              "cpu/cpu8/usage": "115,161,88",
+              "cpu/cpu9/usage": "88,161,88"
+            },
+            "/Sensors": {
+              "highPrioritySensorIds": "[\"cpu/cpu.*/usage\"]",
+              "totalSensors": "[\"cpu/all/usage\"]"
+            }
+          },
+          "plugin": "org.kde.plasma.systemmonitor.cpucore"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.panelspacer"
+        },
+        {
+          "config": {
+            "/": {
+              "CurrentPreset": "org.kde.plasma.systemmonitor"
+            },
+            "/Appearance": {
+              "chartFace": "org.kde.ksysguard.textonly",
+              "title": "Network Speed"
+            },
+            "/SensorColors": {
+              "network/all/download": "134,88,161",
+              "network/all/upload": "115,161,88"
+            },
+            "/SensorLabels": {
+              "network/all/download": "Down",
+              "network/all/upload": "Up"
+            },
+            "/Sensors": {
+              "highPrioritySensorIds": "[\"network/all/download\",\"network/all/upload\"]"
+            }
+          },
+          "plugin": "org.kde.plasma.systemmonitor.net"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.panelspacer"
+        },
+        {
+          "config": {
+            "/Appearance": {
+              "enableDangerColor": "true"
+            },
+            "/General": {
+              "sensors": "[{\"name\":\"CPU\",\"sensorId\":\"cpu/all/averageTemperature\"},{\"name\":\"GPU\",\"sensorId\":\"gpu/gpu0/temperature\"}]"
+            }
+          },
+          "plugin": "org.kde.olib.thermalmonitor"
+        }
+      ],
+      "config": {
+        "/": {
+          "formfactor": "2",
+          "immutability": "1",
+          "wallpaperplugin": "org.kde.image"
+        }
+      },
+      "floating": true,
+      "floatingApplets": false,
+      "height": 1.5,
+      "hiding": "dodgewindows",
+      "lengthMode": "custom",
+      "location": "top",
+      "maximumLength": 28.166666666666668,
+      "minimumLength": 19,
+      "offset": 0,
+      "opacity": "adaptive"
+    },
+    {
+      "alignment": "center",
+      "applets": [
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.panelspacer"
+        },
+        {
+          "config": {
+            "/Appearance": {
+              "customDateFormat": "MMMM d, yyyy",
+              "dateDisplayFormat": "BesideTime",
+              "dateFormat": "custom"
+            }
+          },
+          "plugin": "org.kde.plasma.digitalclock"
+        },
+        {
+          "config": {
+            "/Appearance": {
+              "showTemperatureInCompactMode": "true"
+            },
+            "/Units": {
+              "pressureUnit": "5028",
+              "speedUnit": "9002",
+              "temperatureUnit": "6002",
+              "visibilityUnit": "2024"
+            }
+          },
+          "plugin": "org.kde.plasma.weather"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.panelspacer"
+        }
+      ],
+      "config": {
+        "/": {
+          "formfactor": "2",
+          "immutability": "1",
+          "wallpaperplugin": "org.kde.image"
+        }
+      },
+      "floating": true,
+      "floatingApplets": false,
+      "height": 1.5,
+      "hiding": "dodgewindows",
+      "lengthMode": "custom",
+      "location": "top",
+      "maximumLength": 28.444444444444443,
+      "minimumLength": 22.444444444444443,
+      "offset": 0,
+      "opacity": "adaptive"
+    },
+    {
+      "alignment": "center",
+      "applets": [
+        {
+          "config": {
+            "/General": {
+              "favoritesDisplay": "1",
+              "favoritesPortedToKAstats": "true",
+              "icon": "rosegarden",
+              "systemFavorites": "suspend\\,hibernate\\,reboot\\,shutdown"
+            }
+          },
+          "plugin": "org.kde.plasma.kickoff"
+        },
+        {
+          "config": {
+            "/General": {
+              "expanding": "false",
+              "length": "40"
+            }
+          },
+          "plugin": "org.kde.plasma.panelspacer"
+        },
+        {
+          "config": {
+            "/General": {
+              "launchers": "applications:ai.storyteller.artcraft-launcher.desktop,applications:chrome-bfhhgkbefeegpcomnekbgheelhdokijo-Default.desktop,applications:org.callieapp.Callie.desktop,applications:chrome-kinpkbniadkppecjaginbegiljofpcfc-Default.desktop,file:///var/lib/flatpak/exports/share/applications/com.discordapp.Discord.desktop,preferred://filemanager,applications:org.kde.elisa.desktop,applications:org.kde.plasma.emojier.desktop,applications:chrome-pmcngklofgngifnoceehmchjlildnhkj-Default.desktop,applications:chrome-mnhkaebcjjhencmpkapnbdaogjamfbcj-Default.desktop,applications:chrome-ncmjhecbjeaamljdfahankockkkdmedg-Default.desktop,applications:chrome-akpamiohjfcnimfljfndmaldlcfphjmp-Default.desktop,applications:org.callieapp.Jot.desktop,applications:org.kde.kcalc.desktop,applications:kitty.desktop,applications:chrome-ccjggjlodaagkmmolmheffbbpjhmjckc-Default.desktop,applications:chrome-bgdbmehlmdmddlgneophbcddadgknlpm-Default.desktop,applications:chrome-hpfldicfbfomlpcikngkocigghgafkph-Default.desktop,applications:chrome-bbdeiblfgdokhlblpgeaokenkfknecgl-Default.desktop,applications:appimagekit_3ae7fea33c6a3a7e38b7f2b393851923-MuseScore_Studio_4.7_Portable.desktop,applications:chrome-jckefckfcliebokdngmnnokkdfgfcdag-Default.desktop,applications:com.obsproject.Studio.desktop,applications:chrome-jmgeaplnnaeknlbjehamikebleaoefda-Default.desktop,applications:Proton Authenticator.desktop,applications:proton-pass.desktop,applications:proton.vpn.app.gtk.desktop,file:///var/lib/flatpak/exports/share/applications/org.signal.Signal.desktop,applications:com.slack.Slack.desktop,applications:chrome-hobpejnjibhbilbfehpejjpdakanjanp-Default.desktop,applications:steam.desktop,applications:systemsettings.desktop,file:///var/lib/flatpak/exports/share/applications/net.thunderbird.Thunderbird.desktop,applications:chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default.desktop,applications:chrome-agimnkijcaahngcdmfeangaknmldooml-Default.desktop,applications:chrome-cinhimbnkkaeohfgghhklpknlkffjgod-Default.desktop,preferred://browser,applications:Zoom.desktop"
+            }
+          },
+          "plugin": "org.kde.plasma.icontasks"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.marginsseparator"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.systemtray"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.digitalclock"
+        },
+        {
+          "config": {},
+          "plugin": "org.kde.plasma.showdesktop"
+        }
+      ],
+      "config": {
+        "/": {
+          "formfactor": "2",
+          "immutability": "1",
+          "wallpaperplugin": "org.kde.image"
+        }
+      },
+      "floating": true,
+      "floatingApplets": false,
+      "height": 2.2222222222222223,
+      "hiding": "normal",
+      "lengthMode": "fill",
+      "location": "bottom",
+      "maximumLength": 149.33333333333334,
+      "minimumLength": 149.33333333333334,
+      "offset": 0,
+      "opacity": "adaptive"
+    }
+  ],
+  "serializationFormatVersion": "1"
+}

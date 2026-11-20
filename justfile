@@ -110,6 +110,16 @@ sync-to-home-dry-run:
 sync-to-repo-dry-run:
   cargo run -- sync to-repo --dry-run --yes
 
+# pass --dry-run to preview, or --layout to also replace every panel
+
+kde-apply *args:
+  python3 scripts/install-kde.py apply {{args}}
+
+# pass --dry-run to print the layout diff without saving
+
+kde-capture *args:
+  python3 scripts/install-kde.py capture {{args}}
+
 # times an interactive shell sourcing the installed ~/.bashrc, then breaks one
 # traced startup down by file and line (self time, so a `source` line excludes
 # the file it loads)
@@ -160,6 +170,7 @@ test-rust:
 test-python:
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/agent_awake -p 'test_*.py'
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/default_session -p 'test_*.py'
+    PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/kde -p 'test_*.py'
 
 test-node:
     node --test tests/agent_awake/plugin.test.mjs

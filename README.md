@@ -33,7 +33,6 @@ Shell:
 
 - `rg` - the `rgs`/`rgf` aliases and the `sub` function
 - `autojump` - directory jumping, wired into `PROMPT_COMMAND`
-- `keychain` - loads the ssh key once per login
 - `xclip` - the `copy`/`pbcopy` aliases
 - `tmux` + `tpm` - `.tmux.conf` and the `mux` function
 - `python3` - the `serve` function and the herdr default-session plugin
@@ -98,7 +97,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [herdr](./docs/herdr.md) - plugins, integrations, and the tools the layout expects
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
-- [Desktop preferences](./docs/desktop-preferences.md) - KDE settings and private hardware-specific configuration
+- [Desktop preferences](./docs/desktop-preferences.md) - KDE theme, widgets, panels, and private hardware-specific configuration
 - [Audio plugins and OBS](./docs/audio-and-obs.md)
 - [RGB lighting](./docs/rgb-lighting.md) - OpenRGB profiles and services
 - [Discover (KDE) backends](./docs/kde-discover.md) - why `snap-backend` is disabled

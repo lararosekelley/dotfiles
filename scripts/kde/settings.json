@@ -1,0 +1,66 @@
+{
+  "packages": ["papirus-icon-theme", "plasma-union"],
+  "look_and_feel": "org.kde.breezedark.desktop",
+  "color_scheme": "BreezeDark",
+  "accent_color": "#b875dc",
+  "icon_theme": "Papirus-Dark",
+  "widgets": [
+    {
+      "id": "org.kde.olib.thermalmonitor",
+      "repo": "https://invent.kde.org/olib/thermalmonitor.git",
+      "ref": "v0.2.8",
+      "path": "package"
+    }
+  ],
+  "config": {
+    "kdeglobals": {
+      "General": {
+        "TerminalApplication": "kitty",
+        "TerminalService": "kitty.desktop"
+      },
+      "KDE": {
+        "ShowDeleteCommand": "false",
+        "widgetStyle": "Union"
+      },
+      "PreviewSettings": {
+        "EnableRemoteFolderThumbnail": "false",
+        "MaximumRemoteSize": "0"
+      }
+    },
+    "kwinrc": {
+      "NightColor": {
+        "Active": "true",
+        "Mode": "Constant",
+        "NightTemperature": "3000"
+      }
+    },
+    "kscreenlockerrc": {
+      "Daemon": {
+        "Timeout": "30"
+      }
+    },
+    "krunnerrc": {
+      "General": {
+        "FreeFloating": "true"
+      },
+      "Plugins": {
+        "baloosearchEnabled": "true"
+      }
+    },
+    "dolphinrc": {
+      "General": {
+        "ShowFullPath": "true",
+        "ShowFullPathInTitlebar": "true"
+      },
+      "MainWindow": {
+        "MenuBar": "Disabled"
+      },
+      "Notification Messages": {
+        "warnAboutRisksBeforeActingAsAdmin": "false"
+      },
+      "Search": {
+        "What": "Content"
+      }
+    }
+  }
+}
