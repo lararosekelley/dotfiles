@@ -74,6 +74,41 @@ class Layout(unittest.TestCase):
                 kde.capture(DUMP, target, dry_run=True)
             self.assertIn("is up to date", out.getvalue())
 
+    def test_failed_shell_call_exits_with_stderr(self):
+        error = subprocess.CalledProcessError(
+            1, ["qdbus"], stderr="Service not found\n"
+        )
+        with (
+            patch.object(kde, "qdbus", return_value="qdbus"),
+            patch.object(kde.subprocess, "run", side_effect=error),
+        ):
+            with self.assertRaises(SystemExit) as raised:
+                kde.shell_call("evaluateScript", "x")
+        self.assertEqual(
+            str(raised.exception), "evaluateScript failed: Service not found"
+        )
+        error = subprocess.CalledProcessError(
+            2, ["qdbus"], output="Error: UnknownMethod\n", stderr=""
+        )
+        with (
+            patch.object(kde, "qdbus", return_value="qdbus"),
+            patch.object(kde.subprocess, "run", side_effect=error),
+        ):
+            with self.assertRaises(SystemExit) as raised:
+                kde.shell_call("evaluateScript", "x")
+        self.assertEqual(
+            str(raised.exception), "evaluateScript failed: Error: UnknownMethod"
+        )
+
+    def test_layout_apply_checks_shell_before_changing_anything(self):
+        with (
+            patch.object(kde, "shell_call", side_effect=SystemExit("down")),
+            patch.object(kde, "run") as run,
+        ):
+            with self.assertRaises(SystemExit):
+                kde.apply({"packages": []}, Path("/h"), dry_run=False, layout=True)
+        run.assert_not_called()
+
     def test_committed_layout_is_sanitized(self):
         layout = json.loads((REPO / "scripts/kde/layout.json").read_text())
         self.assertEqual(kde.sanitize(layout), layout)

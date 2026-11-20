@@ -97,15 +97,20 @@ def qdbus():
     raise SystemExit("qdbus not found")
 
 
-def shell_call(method, *args):
-    command = [
-        qdbus(),
-        "org.kde.plasmashell",
-        "/PlasmaShell",
-        f"org.kde.PlasmaShell.{method}",
-        *args,
-    ]
-    return subprocess.run(command, check=True, capture_output=True, text=True).stdout
+def shell_call(*method_and_args):
+    """Call plasmashell over D-Bus; with no method, only check that it answers."""
+    command = [qdbus(), "org.kde.plasmashell", "/PlasmaShell"]
+    if method_and_args:
+        method, *args = method_and_args
+        command += [f"org.kde.PlasmaShell.{method}", *args]
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, text=True)
+    except subprocess.CalledProcessError as err:
+        name = method_and_args[0] if method_and_args else "plasmashell"
+        # qdbus reports some D-Bus errors on stdout rather than stderr.
+        detail = (err.stderr or err.stdout or "").strip()
+        raise SystemExit(f"{name} failed: {detail}")
+    return result.stdout
 
 
 def parse_dump(script):
@@ -153,6 +158,8 @@ def run(command):
 
 
 def apply(settings, home, dry_run, layout):
+    if layout and not dry_run:
+        shell_call()
     missing = missing_packages(settings["packages"])
     if missing:
         print("Install missing packages first: sudo dnf install " + " ".join(missing))
