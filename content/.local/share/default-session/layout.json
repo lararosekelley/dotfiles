@@ -1,16 +1,18 @@
 {
   "$comment": [
     "Default session layout, modeled on the `mux` function in ~/.functions.",
+    "herdr (`herd`, local-plugins/default-session) builds a tab per entry, and",
+    "tuios (`tui`, ~/.config/tuios/default-session) a workspace per entry.",
     "",
-    "Each tab gets a BSP tree handed to the herdr `layout.apply` socket method.",
+    "Each tab is a BSP tree:",
     "  pane   -> { \"label\": name, \"run\": shell command (optional),",
     "              \"requires_repo\": run inside a checkout, see default_repo,",
     "              \"oneshot\": the command prints and exits, see below }",
     "  split  -> { \"direction\": \"right\"|\"down\", \"ratio\": 0-1, \"first\": node, \"second\": node }",
     "",
-    "`run` commands are wrapped so the pane drops back to an interactive shell",
-    "when the program exits, instead of the tab going dead.",
-    "`{plugin_root}` in a `run` string expands to this directory, and `{agent}`",
+    "A pane drops back to an interactive shell when its `run` program exits,",
+    "instead of the tab going dead.",
+    "`{layout_root}` in a `run` string expands to this directory, and `{agent}`",
     "to the harness `herd --agent` last saved, else default_agent.",
     "Panes with no `run` are plain shells rooted at the space cwd.",
     "",
@@ -99,28 +101,7 @@
     {
       "label": "k8s",
       "repos": ["higharc/gitops", "higharc/infra"],
-      "layout": {
-        "type": "split",
-        "direction": "right",
-        "ratio": 0.5,
-        "first": {
-          "type": "pane",
-          "label": "k9s",
-          "run": "bash {plugin_root}/k8s.sh"
-        },
-        "second": {
-          "type": "split",
-          "direction": "down",
-          "ratio": 0.5,
-          "first": {
-            "type": "pane",
-            "label": "kubectl",
-            "run": "bash {plugin_root}/k8s.sh status",
-            "oneshot": true
-          },
-          "second": { "type": "pane", "label": "logs" }
-        }
-      }
+      "layout": { "type": "pane", "label": "k9s", "run": "k8s" }
     },
     {
       "label": "review",
@@ -138,7 +119,7 @@
       "layout": {
         "type": "pane",
         "label": "gh-dash",
-        "run": "bash {plugin_root}/github.sh",
+        "run": "bash {layout_root}/github.sh",
         "requires_repo": true
       }
     },

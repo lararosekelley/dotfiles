@@ -88,6 +88,11 @@ k3d adds a `k3d-dev` context and makes it current.
 `.config/k9s` sets the Callie skin and hides the logo. k9s keeps per-cluster
 state under `~/.local/share/k9s`, which is not tracked.
 
+`k8s` (`.bin/k8s`) opens k9s on the current context, read-only when that context
+is a tailnet API proxy (`*.ts.net`). `k8s status` prints the active tailnet,
+context, and namespace. The `k8s` tab of the herdr and tuios default sessions runs
+it in the gitops and infra repos.
+
 ## Headlamp
 
 [Headlamp](https://headlamp.dev) is a GUI alternative to k9s, from Flathub:

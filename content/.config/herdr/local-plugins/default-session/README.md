@@ -21,19 +21,19 @@ hooks run when a **server** starts, so the layout appears on the next
 ## What it does
 
 On startup it builds every space that has nothing running in it, from
-[`layout.json`](./layout.json) (a fresh session, or a restored one whose panes
+`~/.local/share/default-session/layout.json` (a fresh session, or a restored one whose panes
 all came back as bare shells (see [After a reboot](#after-a-reboot))):
 
-| tab      | panes                                          | where                   |
-| -------- | ---------------------------------------------- | ----------------------- |
-| `shell`  | main shell, plus scratch/watch shells stacked  | everywhere              |
-| `agents` | the `herd --agent` pick, beside a spare pane   | repo spaces             |
-| `editor` | full screen `nvim`                             | everywhere              |
-| `git`    | `lazygit` beside a git shell                   | repo spaces             |
-| `k8s`    | `k9s` beside a kubectl shell over a logs shell | gitops and infra spaces |
-| `review` | full screen `tuicr`                            | repo spaces             |
-| `github` | full screen `gh-dash`, via `github.sh`         | repo spaces             |
-| `system` | `glances` stacked over `journalctl -f`         | `~` space only          |
+| tab      | panes                                         | where                   |
+| -------- | --------------------------------------------- | ----------------------- |
+| `shell`  | main shell, plus scratch/watch shells stacked | everywhere              |
+| `agents` | the `herd --agent` pick, beside a spare pane  | repo spaces             |
+| `editor` | full screen `nvim`                            | everywhere              |
+| `git`    | `lazygit` beside a git shell                  | repo spaces             |
+| `k8s`    | full screen `k9s`, via `k8s`                  | gitops and infra spaces |
+| `review` | full screen `tuicr`                           | repo spaces             |
+| `github` | full screen `gh-dash`, via `github.sh`        | repo spaces             |
+| `system` | `glances` stacked over `journalctl -f`        | `~` space only          |
 
 The `~` space's main shell opens on a `fastfetch` banner; see
 [the pane flags](#editing-the-layout) for why the repo spaces skip it.
@@ -77,15 +77,14 @@ Details worth knowing:
   exits, so quitting nvim leaves a usable pane instead of a dead tab. A pane
   marked `oneshot` leans on that: `fastfetch` prints and hands the pane back
   right away, so the banner is scrollback above an ordinary prompt.
-- The `github` tab goes through [`github.sh`](./github.sh), which checks that `gh` and
+- The `github` tab goes through `github.sh` beside `layout.json`, which checks that `gh` and
   the gh-dash extension are installed before opening `gh dash`. Opened inside a
   checkout, gh-dash's smart filtering scopes every section to that repo. `T` on a
   pull request opens its checks in gh-enhance.
-- The `k8s` tab goes through [`k8s.sh`](./k8s.sh), which opens `k9s` on the
+- The `k8s` tab runs the `k8s` command (`~/.bin/k8s`), which opens `k9s` on the
   current kubectl context, read-only when that context is a tailnet API proxy
-  (`*.ts.net`), and prints a hint instead when k9s or a context is missing. Its
-  kubectl shell opens on `k8s.sh status`: the active tailnet, context, and
-  namespace. Setup is in `docs/kubernetes.md` in the dotfiles repo.
+  (`*.ts.net`), and prints a hint instead when k9s or a context is missing.
+  Setup is in `docs/kubernetes.md` in the dotfiles repo.
 - All splits are even. `prefix+=` puts them back that way after resizing.
 - Tabs holding a running program or an agent are never rebuilt on startup, and
   neither are the spaces they live in.
@@ -220,8 +219,13 @@ keeps the tab out of rehydrate's rebuild path and gets replayed into the
 restored shell instead, which is what makes the `fastfetch` banner cheap.
 
 `default_repo` at the top of the file is where `requires_repo` panes land when
-the space itself isn't a checkout. `{plugin_root}` inside a `run` string expands
-to this directory, which is how the `github` tab finds `github.sh`.
+the space itself isn't a checkout. `{layout_root}` inside a `run` string expands
+to the layout's directory, which is how the `github` tab finds `github.sh`.
+
+The layout, `github.sh`, and the tab rules (`layout.py`) live in
+`~/.local/share/default-session` rather than in this plugin, because tuios builds
+the same layout from them through `~/.config/tuios/default-session/session.py`
+and the `tui` function. An edit there changes both.
 
 No restart needed. The file is read on each run, so `prefix+d` in a fresh
 space is enough to see a change.

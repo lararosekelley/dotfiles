@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
-# k8s.sh        open k9s on the current kubectl context, read-only on a tailnet
-#               API proxy, where access is usually view-only anyway
-# k8s.sh status print the active tailnet and kubectl context
+# k8s        open k9s on the current kubectl context, read-only on a tailnet
+#            API proxy, where access is usually view-only anyway
+# k8s status print the active tailnet, kubectl context, and namespace
 #
 # Setup lives in docs/kubernetes.md in the dotfiles repo.
 

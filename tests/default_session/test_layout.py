@@ -6,7 +6,7 @@ import tempfile
 import unittest
 
 REPO = Path(__file__).resolve().parents[2]
-PLUGIN = REPO / "content/.config/herdr/local-plugins/default-session"
+SHARED = REPO / "content/.local/share/default-session"
 
 
 def module(name, path):
@@ -16,8 +16,8 @@ def module(name, path):
     return result
 
 
-session = module("default_session", PLUGIN / "session.py")
-LAYOUT = json.loads((PLUGIN / "layout.json").read_text())
+rules = module("default_session_layout", SHARED / "layout.py")
+LAYOUT = json.loads((SHARED / "layout.json").read_text())
 
 
 def checkout(origin):
@@ -32,7 +32,7 @@ def checkout(origin):
 
 
 def labels(slug, primary=False):
-    return [tab["label"] for tab in session.wanted_tabs(LAYOUT, primary, slug)]
+    return [tab["label"] for tab in rules.wanted_tabs(LAYOUT, primary, slug)]
 
 
 class RepoSlugTest(unittest.TestCase):
@@ -44,12 +44,12 @@ class RepoSlugTest(unittest.TestCase):
             "ssh://git@github.com/higharc/gitops.git",
         ):
             with self.subTest(origin=origin):
-                self.assertEqual(session.repo_slug(checkout(origin)), "higharc/gitops")
+                self.assertEqual(rules.repo_slug(checkout(origin)), "higharc/gitops")
 
     def test_none_outside_a_checkout_or_without_origin(self):
-        self.assertIsNone(session.repo_slug(tempfile.mkdtemp()))
-        self.assertIsNone(session.repo_slug(checkout(None)))
-        self.assertIsNone(session.repo_slug(None))
+        self.assertIsNone(rules.repo_slug(tempfile.mkdtemp()))
+        self.assertIsNone(rules.repo_slug(checkout(None)))
+        self.assertIsNone(rules.repo_slug(None))
 
 
 class RepoScopedTabsTest(unittest.TestCase):
@@ -75,8 +75,21 @@ class RepoScopedTabsTest(unittest.TestCase):
 
     def test_globs_match_case_insensitively(self):
         tab = {"label": "x", "repos": ["Higharc/*"]}
-        self.assertTrue(session.matches_repo(tab, "higharc/anything"))
-        self.assertFalse(session.matches_repo(tab, "other/anything"))
+        self.assertTrue(rules.matches_repo(tab, "higharc/anything"))
+        self.assertFalse(rules.matches_repo(tab, "other/anything"))
+
+
+class MultiplexerScriptsTest(unittest.TestCase):
+    def test_both_scripts_load_the_shared_rules(self):
+        herdr = module(
+            "herdr_session",
+            REPO / "content/.config/herdr/local-plugins/default-session/session.py",
+        )
+        tuios = module(
+            "tuios_session", REPO / "content/.config/tuios/default-session/session.py"
+        )
+        self.assertEqual(herdr.load_layout(), LAYOUT)
+        self.assertEqual(tuios.rules.load_layout(), LAYOUT)
 
 
 if __name__ == "__main__":

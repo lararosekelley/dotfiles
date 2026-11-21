@@ -15,7 +15,7 @@ js_paths := "**/*.{js,mjs,cjs}"
 # shell dotfiles have no .sh extension, so they are listed here; .git_prompt
 # is git's own git-prompt.sh, and .inputrc is readline config
 
-shell_paths := "content/.aliases content/.bash_profile content/.bash_prompt content/.bashrc content/.exports content/.functions"
+shell_paths := "content/.aliases content/.bash_profile content/.bash_prompt content/.bashrc content/.exports content/.functions content/.bin/k8s"
 
 default:
   @just --list
