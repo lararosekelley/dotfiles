@@ -66,7 +66,7 @@ if command -v kubectl > /dev/null; then
   complete -o default -F __start_kubectl k
 fi
 
-for tool in helm k3d; do
+for tool in helm k3d herdr tuios; do
   # shellcheck source=/dev/null
   command -v "$tool" > /dev/null && source <("$tool" completion bash)
 done
