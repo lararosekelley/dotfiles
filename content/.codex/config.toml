@@ -13,9 +13,12 @@ theme = "callie"
 screen_reader_detection_done = true
 
 [tui.model_availability_nux]
-"gpt-6.1-sol" = 1
+"gpt-6.1-sol" = 3
 
 [projects."/home/lara/Code/personal/git-stk"]
+trust_level = "trusted"
+
+[projects."/home/lara/Code/personal/larakelley.com"]
 trust_level = "trusted"
 
 [mcp_servers.todoist]
@@ -77,3 +80,32 @@ args = ["-y", "@playwright/mcp@latest", "--extension"]
 
 [features]
 hooks = true
+
+[hooks.state]
+
+[hooks.state."/home/lara/.codex/hooks.json:pre_tool_use:0:0"]
+trusted_hash = "sha256:2863e93c55ada3320619a62547bea1c51ed16dd6c8edcde44323d1f02ca21fb0"
+
+[hooks.state."/home/lara/.codex/hooks.json:permission_request:0:0"]
+trusted_hash = "sha256:5487b34b172db3787625bd6ffda5dbe903115802895480fe2e9dcc8948f839a6"
+
+[hooks.state."/home/lara/.codex/hooks.json:post_tool_use:0:0"]
+trusted_hash = "sha256:173a80756f09a6e3239ca4a874cfa1a38b9249195e81025489fec9b9b84c516f"
+
+[hooks.state."/home/lara/.codex/hooks.json:session_start:0:0"]
+trusted_hash = "sha256:5d4fabc9ba2c17730461e89ae89a0ee665356612de440c757779548c4aebff45"
+
+[hooks.state."/home/lara/.codex/hooks.json:session_start:1:0"]
+trusted_hash = "sha256:c9d06fbe10afe7512717b7f86f305fd548e2d71ba6c6c0879a7d07a2e78f575f"
+
+[hooks.state."/home/lara/.codex/hooks.json:session_end:0:0"]
+trusted_hash = "sha256:a717c09010f32f7e65c70423afbf0ccbfe047b76b0e563fac3a3abc1be6fcacb"
+
+[hooks.state."/home/lara/.codex/hooks.json:user_prompt_submit:0:0"]
+trusted_hash = "sha256:b2fd3846e87e88313af8e34e8eaacdd880cfad6b87dbfe328b6efa547be686a7"
+
+[hooks.state."/home/lara/.codex/hooks.json:stop:0:0"]
+trusted_hash = "sha256:00fdff3ac0e38a5e03ee6aff6f9cfc7fd294c4fbd20103d8f70544aad9b41882"
+
+[hooks.state."/home/lara/.codex/hooks.json:interrupt:0:0"]
+trusted_hash = "sha256:418e86a9cbe5706b97387825f5c4fae61d1551e9e165344a859064484629be21"
