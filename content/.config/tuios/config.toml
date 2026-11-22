@@ -1,8 +1,7 @@
 # tuios configuration file
 #
 # see `tuios list-options` and `tuios keybinds list`; tuios reloads this file
-# on save. Mirrors herdr's config: herdr spaces are tuios sessions, herdr tabs
-# are tuios workspaces.
+# on save.
 # --------
 
 [startup]
@@ -13,24 +12,32 @@ daemon = true
 # --------
 
 [appearance]
-# callie, converted from the kitty port in https://github.com/greylocklabs/themes
+# converted from the kitty port in https://github.com/greylocklabs/themes
 theme = "callie"
-# let kitty's background show through, like herdr's panel_bg = "reset"
+# let kitty's background show through
 background = "off"
 border_focused_color = "accent"
+
+[appearance.sidebar]
+position = "right"
+width = 22
+sections = "sessions,terminals,agents"
+
+[appearance.sidebar.left]
+enabled = true
+width = 22
+sections = "files,git"
 
 # ctrl+h/j/k/l cross nvim splits and tuios panes
 # (https://github.com/Tim4c/tuios-nvim-navigator)
 nvim_navigation = true
 
 [daemon]
-# like herdr's resume_agents_on_restore
 resume_agents = "auto"
-# hold off sleep while any agent pane works; agent-awake covers only claude
-# and opencode, this adds codex
+# hold off sleep while any agent pane works
 keep_awake = "agents"
 
-# alerts stay in the tuios dock rather than going out through kitty
+# alerts stay in the tuios dock
 [notifications.agent]
 notify = false
 
@@ -41,7 +48,7 @@ notify = false
 # hand ctrl+p back to nvim and shell history
 command_palette = ["ctrl+shift+p"]
 
-# shift+left/right walks workspaces, shift+up/down walks sessions, as in herdr.
+# shift+left/right walks workspaces, shift+up/down walks sessions
 # Bound per mode rather than globally so the inbox keeps shift+arrows.
 [keybindings.terminal_mode]
 # replaces alt+arrows so readline keeps alt+left/right for word motion
@@ -64,7 +71,7 @@ prev_session = ["shift+up", "alt+shift+p"]
 next_session = ["shift+down", "alt+shift+n"]
 
 [keybindings.prefix_mode]
-# prefix+\ jumps back to the last pane, as in herdr; | still splits
+# prefix+\ jumps back to the last pane, | still splits
 split_vertical = ["|"]
 last_pane = ["\\"]
 
@@ -89,3 +96,9 @@ key = "prefix+ctrl+d"
 type = "shell"
 command = "python3 ~/.config/tuios/default-session/session.py rehydrate"
 description = "relaunch programs in sessions restored as bare shells"
+
+[spotlight]
+enabled = false
+
+[debug]
+show_key_events = false
