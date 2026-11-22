@@ -1,0 +1,8 @@
+theme = "callie"
+[ytmusic]
+enabled = true
+cookies_from = "chrome"
+
+[plex]
+url = "http://localhost:32400"
+token = "$PLEX_TOKEN"
