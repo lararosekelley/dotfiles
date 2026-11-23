@@ -90,6 +90,18 @@ def matches_repo(spec_tab: dict, slug: str | None) -> bool:
     return slug is not None and any(fnmatch(slug, p.lower()) for p in patterns)
 
 
+def display_name(tab: dict) -> str:
+    """A tab's name with its icon in front, as the multiplexer shows it."""
+    icon = tab.get("icon")
+    return f"{icon} {tab['label']}" if icon else tab["label"]
+
+
+def tabs_by_name(tabs: list[dict]) -> dict[str, dict]:
+    """Tabs keyed by both their label and their display name, so a workspace
+    named before icons existed still matches its tab."""
+    return {name: tab for tab in tabs for name in (tab["label"], display_name(tab))}
+
+
 def for_space(node: dict, primary: bool | None) -> dict:
     """A layout tree with each pane's `in_primary` stand-in swapped in when the
     space is the primary one, and dropped otherwise."""

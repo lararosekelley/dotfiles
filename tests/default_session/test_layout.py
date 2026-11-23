@@ -103,6 +103,22 @@ class PrimaryPanesTest(unittest.TestCase):
                 self.assertFalse(any("in_primary" in p for p in panes))
 
 
+class TabIconTest(unittest.TestCase):
+    def test_every_tab_has_an_icon_before_its_name(self):
+        for tab in LAYOUT["tabs"]:
+            with self.subTest(tab=tab["label"]):
+                self.assertEqual(
+                    rules.display_name(tab), f"{tab['icon']} {tab['label']}"
+                )
+
+    def test_names_from_before_icons_still_match(self):
+        tab = {"label": "git", "icon": "x"}
+        by_name = rules.tabs_by_name([tab])
+        self.assertIs(by_name["git"], tab)
+        self.assertIs(by_name["x git"], tab)
+        self.assertEqual(rules.display_name({"label": "plain"}), "plain")
+
+
 class MultiplexerScriptsTest(unittest.TestCase):
     def test_both_scripts_load_the_shared_rules(self):
         herdr = module(

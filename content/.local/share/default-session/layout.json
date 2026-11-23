@@ -31,6 +31,7 @@
     "have no repo to point at from ~. An explicit `apply` builds the whole set.",
     "The same two flags on a *pane* scope its `run` rather than the pane itself:",
     "the pane is still there in every space, just as a plain shell.",
+    "A tab's `icon` is a Nerd Font glyph tuios puts before the workspace name.",
     "A pane's `in_primary` is a pane that takes its place in the primary space",
     "only. An explicit `apply` builds the pane itself.",
     "",
@@ -48,6 +49,7 @@
   "tabs": [
     {
       "label": "shell",
+      "icon": "󰆍",
       "layout": {
         "type": "split",
         "direction": "right",
@@ -78,6 +80,7 @@
     },
     {
       "label": "agents",
+      "icon": "󰚩",
       "secondary_only": true,
       "layout": {
         "type": "split",
@@ -89,11 +92,13 @@
     },
     {
       "label": "editor",
+      "icon": "",
       "primary_only": true,
       "layout": { "type": "pane", "label": "nvim", "run": "nvim" }
     },
     {
       "label": "git",
+      "icon": "󰊢",
       "secondary_only": true,
       "layout": {
         "type": "split",
@@ -110,11 +115,13 @@
     },
     {
       "label": "k8s",
+      "icon": "󱃾",
       "repos": ["higharc/gitops", "higharc/infra"],
       "layout": { "type": "pane", "label": "k9s", "run": "k8s" }
     },
     {
       "label": "review",
+      "icon": "󰈈",
       "secondary_only": true,
       "layout": {
         "type": "pane",
@@ -125,6 +132,7 @@
     },
     {
       "label": "github",
+      "icon": "󰊤",
       "secondary_only": true,
       "layout": {
         "type": "pane",
@@ -135,6 +143,7 @@
     },
     {
       "label": "system",
+      "icon": "󰍛",
       "primary_only": true,
       "layout": {
         "type": "split",

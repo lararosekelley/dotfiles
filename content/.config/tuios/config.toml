@@ -18,6 +18,10 @@ theme = "callie"
 background = "off"
 border_focused_color = "accent"
 
+# ctrl+h/j/k/l cross nvim splits and tuios panes
+# (https://github.com/Tim4c/tuios-nvim-navigator)
+nvim_navigation = true
+
 [appearance.sidebar]
 position = "right"
 width = 22
@@ -28,9 +32,61 @@ enabled = true
 width = 22
 sections = "files,git"
 
-# ctrl+h/j/k/l cross nvim splits and tuios panes
-# (https://github.com/Tim4c/tuios-nvim-navigator)
-nvim_navigation = true
+# top bar; workspace names carry their icons (default-session layout.json)
+[dock]
+right = [
+  "transfers",
+  "notifications",
+  "copy-help",
+  "cpu",
+  "ram",
+  "custom/now-playing",
+  "custom/weather",
+  "custom/battery",
+  "custom/volume",
+  "custom/ip",
+  "custom/clock",
+]
+
+# the active tab is already bold in the accent colour
+[dock.tabs]
+active_underline = false
+
+[dock.custom.now-playing]
+command = "sh ~/.config/tuios/dock/now-playing.sh"
+refresh = "5s"
+max-width = 28
+fg = "bg"
+bg = "accent"
+bold = true
+cap_left = ""
+cap_right = ""
+
+[dock.custom.weather]
+command = "sh ~/.config/tuios/dock/weather.sh"
+fg = "cyan"
+refresh = "30m"
+
+[dock.custom.battery]
+command = "sh ~/.config/tuios/dock/battery.sh"
+fg = "green"
+refresh = "60s"
+
+[dock.custom.volume]
+command = "sh ~/.config/tuios/dock/volume.sh"
+fg = "yellow"
+refresh = "2s"
+
+[dock.custom.ip]
+command = "sh ~/.config/tuios/dock/ip.sh"
+fg = "blue"
+refresh = "60s"
+
+# md-calendar-clock, then e.g. "Sun 7:46PM"
+[dock.custom.clock]
+command = "date '+󰃰 %a %-I:%M%p'"
+fg = "red"
+refresh = "10s"
 
 [daemon]
 resume_agents = "auto"

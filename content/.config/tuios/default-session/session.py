@@ -254,7 +254,11 @@ def build_tabs(
         )
         call(
             "set-workspace-name",
-            {"session": session, "workspace": workspace, "name": tab["label"]},
+            {
+                "session": session,
+                "workspace": workspace,
+                "name": rules.display_name(tab),
+            },
         )
         built.append(workspace)
         print(f"{session}: workspace {workspace} {tab['label']}")
@@ -318,7 +322,7 @@ def cmd_apply(session: str) -> int:
     missing = [
         tab
         for tab in rules.wanted_tabs(spec, None, rules.repo_slug(cwd))
-        if tab["label"] not in have
+        if tab["label"] not in have and rules.display_name(tab) not in have
     ]
     if not missing:
         print(f"{session}: every layout tab is already open")
@@ -332,12 +336,14 @@ def rehydrate_session(session: str, spec: dict) -> int:
     """Type each pane's program back into its restored shell."""
     primary = is_primary(session)
     names = workspace_names(session)
-    by_label = {tab["label"]: rules.resolve_tab(tab, primary) for tab in spec["tabs"]}
+    by_name = rules.tabs_by_name(
+        [rules.resolve_tab(tab, primary) for tab in spec["tabs"]]
+    )
     restored = wait_for_prompts(session, {w["window_id"] for w in windows(session)})
     relaunched = 0
 
     for window in restored.values():
-        tab = by_label.get(names.get(window["workspace"], ""))
+        tab = by_name.get(names.get(window["workspace"], ""))
         label = window.get("custom_name") or ""
         panes = (
             {node.get("label"): node for node in leaves(tab["layout"])} if tab else {}
