@@ -49,6 +49,7 @@ The inhibitor covers idle and sleep requests, not screen brightness or a screen 
 - **Claude permission approval gap:** the documented hooks do not provide an immediate approval-completed event. After `PermissionRequest`, inhibition resumes on `PostToolUse`/`PostToolUseFailure` or the next activity hook. A long newly approved tool can therefore run without an inhibitor. This integration never auto-approves permissions to work around that gap.
 - Claude interrupt/cancel paths do not all emit `Stop`. Notification hooks provide additional cleanup, but a missed event can leave a lease until expiry. An actor's lease expires after **two hours without an activity hook**. A single Claude tool or model call longer than that can lose protection. Set `AGENT_AWAKE_TTL` to a larger number of seconds before launching the client if needed.
 - OpenCode renews leases while its status is busy, including long tools. Multiple pending questions/permissions are tracked separately. Background shell jobs are not independently tracked after the agent turn finishes; use `systemd-inhibit` around a deliberately detached long-running job if needed.
+- A subagent's last tool hooks can arrive after its `SubagentStop`. Stopped subagents are remembered for a day, and their activity is ignored until a `SubagentStart` resumes them, so a late event cannot hold the lease for the full TTL. Claude's idle recaps send only a `SubagentStop`.
 - Claude lifecycle hooks are best-effort around parallel tools and third-party hooks that block completion. A later tool event can reactivate a lease while a different tool waits for input; a blocked `Stop` may briefly release it until the next activity event.
 - Claude process discovery supports the native `claude` executable and the standard `@anthropic-ai/claude-code` Node installation. An unrecognized wrapper fails open with a diagnostic rather than attaching to an unrelated shell.
 
@@ -62,6 +63,8 @@ python3 ~/.local/share/agent-awake/agent_awake.py status
 ```
 
 Look for entries such as **Agent Awake (claude, ~/Code/project)** with `idle:sleep` in the systemd list; the directory is where the owning agent was started. `status` reports it as `directory`. The helper status lists requested leases and watchdog process liveness; **the systemd list is the authoritative check that the lock was acquired**. After a normal finished turn, the corresponding entry should disappear within about half a second. Check again while a permission/question dialog is waiting.
+
+`$XDG_RUNTIME_DIR/agent-awake/events.log` records each Claude hook event with its agent id and the action taken, never prompt or tool content. It rotates to `events.log.1` past 256 KB. Read it to see which event took or kept a lease.
 
 If a lease has `worker_alive: false`, inspect `$XDG_RUNTIME_DIR/agent-awake/inhibit.log` (usually `/run/user/$UID/agent-awake/inhibit.log`). This contains systemd acquisition errors, for example a missing binary or a logind/polkit denial. Do not run the agents as root to work around a denial.
 

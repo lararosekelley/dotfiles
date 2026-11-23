@@ -109,6 +109,18 @@ class Leases(unittest.TestCase):
         self.change(action="end")
         self.assertEqual(len(list(self.root.glob("*.json"))), 1)
 
+    def test_activity_after_subagent_stop_does_not_reacquire(self):
+        self.change(actor="child", action="start")
+        self.change(actor="child", action="stop")
+        self.change(actor="child")
+        self.assertEqual(list(self.root.glob("*.json")), [])
+
+        self.change(actor="child", action="start")
+        self.assertEqual(len(list(self.root.glob("*.json"))), 1)
+        self.change(actor="child", action="off")
+        self.change(actor="child")
+        self.assertEqual(len(list(self.root.glob("*.json"))), 1)
+
     def test_owner_exit_releases_lock(self):
         self.change()
         self.owner.terminate()
@@ -182,12 +194,43 @@ class HooksAndInstall(unittest.TestCase):
             self.assertEqual(set(settings), {"hooks"})
             self.assertFalse((home / ".local/share/agent-awake/install.py").exists())
 
+    def test_event_log_names_hooks_without_content_and_rotates(self):
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.root = Path(temp.name)
+        event = {
+            "hook_event_name": "PreToolUse",
+            "session_id": "abcdef1234",
+            "agent_id": "sub",
+            "tool_name": "Bash",
+            "tool_input": {"command": "secret"},
+            "prompt": "secret",
+        }
+        awake.log_event(self.root, event, "on")
+        line = json.loads((self.root / "events.log").read_text())
+        self.assertEqual(
+            {k: line[k] for k in ("event", "session", "agent", "detail", "action")},
+            {
+                "event": "PreToolUse",
+                "session": "abcdef12",
+                "agent": "sub",
+                "detail": "Bash",
+                "action": "on",
+            },
+        )
+        self.assertNotIn("secret", (self.root / "events.log").read_text())
+
+        with patch.object(awake, "EVENT_LOG_BYTES", 10):
+            awake.log_event(self.root, {"hook_event_name": "Stop"}, "off")
+        self.assertTrue((self.root / "events.log.1").exists())
+        rotated = json.loads((self.root / "events.log").read_text())
+        self.assertEqual(rotated["event"], "Stop")
+
     def test_claude_lifecycle(self):
         for event in [
             "UserPromptSubmit",
             "PostToolUse",
             "PostToolUseFailure",
-            "SubagentStart",
             "PreCompact",
             "ElicitationResult",
         ]:
@@ -195,12 +238,17 @@ class HooksAndInstall(unittest.TestCase):
         for event in [
             "Stop",
             "StopFailure",
-            "SubagentStop",
             "PermissionRequest",
             "Elicitation",
         ]:
             self.assertEqual(awake.claude_action({"hook_event_name": event}), "off")
         self.assertEqual(awake.claude_action({"hook_event_name": "SessionEnd"}), "end")
+        self.assertEqual(
+            awake.claude_action({"hook_event_name": "SubagentStart"}), "start"
+        )
+        self.assertEqual(
+            awake.claude_action({"hook_event_name": "SubagentStop"}), "stop"
+        )
         for tool in ["AskUserQuestion", "ExitPlanMode", "Agent"]:
             self.assertEqual(
                 awake.claude_action(

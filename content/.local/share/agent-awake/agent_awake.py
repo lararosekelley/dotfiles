@@ -87,21 +87,47 @@ def scope_id(client, owner, session):
     return hashlib.sha256(f"{client}:{owner}:{session}".encode()).hexdigest()
 
 
+STOPPED_KEEP_SECONDS = 24 * 3600
+
+
 def lease(root, client, owner, session, actor, action):
+    """Apply on, off, or end; start and stop are on and off for a subagent.
+
+    A subagent's tool hooks can land after its SubagentStop, which would take
+    its lease back for the full TTL. Stopped subagents are remembered, and
+    activity from one is ignored until a SubagentStart resumes it.
+    """
     scope = scope_id(client, owner, session)
     key = hashlib.sha256(f"{scope}:{actor}".encode()).hexdigest()
     path = root / f"{key}.json"
+    stopped_path = root / "stopped.state"
     with locked(root):
+        stopped = load(stopped_path)
         if action == "end":
             for item in root.glob("*.json"):
                 if load(item).get("scope") == scope:
                     item.unlink(missing_ok=True)
             return
-        if action == "off":
+        if action in {"off", "stop"}:
             path.unlink(missing_ok=True)
+            if action == "stop":
+                now = time.time()
+                stopped = {
+                    k: at
+                    for k, at in stopped.items()
+                    if now - at < STOPPED_KEEP_SECONDS
+                }
+                stopped[key] = now
+                save(stopped_path, stopped)
+            return
+        if action == "start":
+            if stopped.pop(key, None) is not None:
+                save(stopped_path, stopped)
+            action = "on"
+        elif key in stopped:
             return
         if action != "on":
-            raise ValueError("Expected on, off, or end")
+            raise ValueError("Expected on, off, end, start, or stop")
         identity = process_identity(owner)
         if not identity:
             return
@@ -178,14 +204,40 @@ def hold(root, key, token):
                 path.unlink(missing_ok=True)
 
 
+EVENT_LOG_BYTES = 256 * 1024
+
+
+def log_event(root, event, action):
+    """Record which hook fired and what it did, never prompt or tool content."""
+    path = root / "events.log"
+    entry = {
+        "at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+        "event": event.get("hook_event_name"),
+        "session": (event.get("session_id") or "")[:8],
+        "agent": event.get("agent_id", "main"),
+        "agent_type": event.get("agent_type"),
+        "detail": event.get("tool_name") or event.get("notification_type"),
+        "action": action,
+    }
+    with locked(root):
+        with contextlib.suppress(OSError):
+            if path.stat().st_size > EVENT_LOG_BYTES:
+                path.replace(path.with_suffix(".log.1"))
+        with path.open("a") as log:
+            log.write(json.dumps({k: v for k, v in entry.items() if v}) + "\n")
+
+
 def claude_action(event):
     kind = event.get("hook_event_name")
     if kind == "SessionEnd":
         return "end"
+    if kind == "SubagentStart":
+        return "start"
+    if kind == "SubagentStop":
+        return "stop"
     if kind in {
         "Stop",
         "StopFailure",
-        "SubagentStop",
         "PermissionRequest",
         "Elicitation",
         "SessionStart",
@@ -215,7 +267,6 @@ def claude_action(event):
         "UserPromptSubmit",
         "PostToolUse",
         "PostToolUseFailure",
-        "SubagentStart",
         "PreCompact",
         "PostCompact",
         "ElicitationResult",
@@ -237,6 +288,7 @@ def main():
     elif mode == "claude":
         event = json.load(sys.stdin)
         action = claude_action(event)
+        log_event(root, event, action)
         if action and event.get("session_id"):
             lease(
                 root,
