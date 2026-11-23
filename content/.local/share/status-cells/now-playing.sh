@@ -1,5 +1,5 @@
 #!/bin/sh
-# tuios dock cell: the track cliamp is playing, or nothing while it is not.
+# Status cell: the track cliamp is playing, or nothing while it is not.
 # Long names drop the artist, then get cut, so the bar keeps its other cells.
 
 command -v cliamp > /dev/null 2>&1 || exit 0

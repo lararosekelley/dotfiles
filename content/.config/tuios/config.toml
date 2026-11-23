@@ -53,7 +53,7 @@ right = [
 active_underline = false
 
 [dock.custom.now-playing]
-command = "sh ~/.config/tuios/dock/now-playing.sh"
+command = "sh ~/.local/share/status-cells/now-playing.sh"
 refresh = "5s"
 max-width = 28
 fg = "bg"
@@ -63,22 +63,22 @@ cap_left = ""
 cap_right = ""
 
 [dock.custom.weather]
-command = "sh ~/.config/tuios/dock/weather.sh"
+command = "sh ~/.local/share/status-cells/weather.sh"
 fg = "cyan"
 refresh = "30m"
 
 [dock.custom.battery]
-command = "sh ~/.config/tuios/dock/battery.sh"
+command = "sh ~/.local/share/status-cells/battery.sh"
 fg = "green"
 refresh = "60s"
 
 [dock.custom.volume]
-command = "sh ~/.config/tuios/dock/volume.sh"
+command = "sh ~/.local/share/status-cells/volume.sh"
 fg = "yellow"
 refresh = "2s"
 
 [dock.custom.ip]
-command = "sh ~/.config/tuios/dock/ip.sh"
+command = "sh ~/.local/share/status-cells/ip.sh"
 fg = "blue"
 refresh = "60s"
 

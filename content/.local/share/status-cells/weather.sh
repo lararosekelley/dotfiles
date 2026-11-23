@@ -1,5 +1,5 @@
 #!/bin/sh
-# tuios dock cell: current conditions and temperature from wttr.in, located by
+# Status cell: current conditions and temperature from wttr.in, located by
 # IP. Prints nothing when offline.
 
 report=$(curl -fsS -m 5 'https://wttr.in/?format=%x+%t' 2> /dev/null) || exit 0

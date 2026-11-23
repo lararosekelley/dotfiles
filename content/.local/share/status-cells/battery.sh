@@ -1,5 +1,5 @@
 #!/bin/sh
-# tuios dock cell: battery charge, or nothing on a machine without a battery
+# Status cell: battery charge, or nothing on a machine without a battery
 
 for battery in /sys/class/power_supply/BAT*; do
   [ -r "$battery/capacity" ] || continue

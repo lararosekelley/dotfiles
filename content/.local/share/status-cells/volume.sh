@@ -1,5 +1,5 @@
 #!/bin/sh
-# tuios dock cell: default output volume from PipeWire
+# Status cell: default output volume from PipeWire
 
 command -v wpctl > /dev/null 2>&1 || exit 0
 reading=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2> /dev/null) || exit 0

@@ -1,5 +1,5 @@
 #!/bin/sh
-# tuios dock cell: this machine's LAN address on the default route, or nothing
+# Status cell: this machine's LAN address on the default route, or nothing
 # while offline
 
 address=$(ip -4 route get 1.1.1.1 2> /dev/null \
