@@ -90,12 +90,31 @@ def matches_repo(spec_tab: dict, slug: str | None) -> bool:
     return slug is not None and any(fnmatch(slug, p.lower()) for p in patterns)
 
 
+def for_space(node: dict, primary: bool | None) -> dict:
+    """A layout tree with each pane's `in_primary` stand-in swapped in when the
+    space is the primary one, and dropped otherwise."""
+    if node.get("type") == "split":
+        return {
+            **node,
+            "first": for_space(node["first"], primary),
+            "second": for_space(node["second"], primary),
+        }
+    pane = {key: value for key, value in node.items() if key != "in_primary"}
+    if primary and node.get("in_primary"):
+        return {"type": "pane", **node["in_primary"]}
+    return pane
+
+
+def resolve_tab(tab: dict, primary: bool | None) -> dict:
+    return {**tab, "layout": for_space(tab["layout"], primary)}
+
+
 def wanted_tabs(
     spec: dict, primary: bool | None, slug: str | None = None
 ) -> list[dict]:
-    """The layout tabs a space should have."""
+    """The layout tabs a space should have, resolved for that space."""
     return [
-        tab
+        resolve_tab(tab, primary)
         for tab in spec["tabs"]
         if in_scope(tab, primary) and matches_repo(tab, slug)
     ]

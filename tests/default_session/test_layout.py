@@ -79,6 +79,30 @@ class RepoScopedTabsTest(unittest.TestCase):
         self.assertFalse(rules.matches_repo(tab, "other/anything"))
 
 
+class PrimaryPanesTest(unittest.TestCase):
+    def shell_panes(self, primary):
+        shell = next(
+            t for t in rules.wanted_tabs(LAYOUT, primary) if t["label"] == "shell"
+        )
+        second = shell["layout"]["second"]
+        return [second["first"], second["second"]]
+
+    def test_home_space_gets_calendar_and_music(self):
+        panes = self.shell_panes(True)
+        self.assertEqual(
+            [(p["label"], p.get("run")) for p in panes],
+            [("calendar", "callie"), ("music", "cliamp")],
+        )
+        self.assertTrue(all(p["type"] == "pane" for p in panes))
+
+    def test_repo_spaces_and_apply_keep_scratch_and_watch(self):
+        for primary in (False, None):
+            with self.subTest(primary=primary):
+                panes = self.shell_panes(primary)
+                self.assertEqual([p["label"] for p in panes], ["scratch", "watch"])
+                self.assertFalse(any("in_primary" in p for p in panes))
+
+
 class MultiplexerScriptsTest(unittest.TestCase):
     def test_both_scripts_load_the_shared_rules(self):
         herdr = module(

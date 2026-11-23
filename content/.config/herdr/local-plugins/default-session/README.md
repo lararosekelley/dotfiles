@@ -35,8 +35,9 @@ all came back as bare shells (see [After a reboot](#after-a-reboot))):
 | `github` | full screen `gh-dash`, via `github.sh`        | repo spaces             |
 | `system` | `glances` stacked over `journalctl -f`        | `~` space only          |
 
-The `~` space's main shell opens on a `fastfetch` banner; see
-[the pane flags](#editing-the-layout) for why the repo spaces skip it.
+In the `~` space, the main shell opens on a `fastfetch` banner and the scratch
+and watch shells become `callie` (calendar) and `cliamp` (music); see
+[the pane flags](#editing-the-layout) for why the repo spaces skip them.
 
 That covers what the `mux` function in `~/.functions` set up under tmux.
 `primary`, `editor`, and the logs window, with the repo-oriented TUIs added.
@@ -212,7 +213,8 @@ python3 session.py balance
 Each tab also takes an optional `primary_only` or `secondary_only` flag, which
 decide whether it lands in the `~` space, the repo spaces, or both, and an
 optional `repos` list that limits it to matching checkouts. On a pane
-the same flags scope its `run`, leaving the pane itself in every space.
+the same flags scope its `run`, leaving the pane itself in every space, and
+`in_primary` names a pane that replaces it in the `~` space only.
 
 `oneshot` marks a `run` that prints and exits rather than owning the pane. It
 keeps the tab out of rehydrate's rebuild path and gets replayed into the

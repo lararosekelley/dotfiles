@@ -56,6 +56,26 @@ class BuildTreeTest(unittest.TestCase):
         )
         self.assertEqual(launches, [("main", "fastfetch")])
 
+    def test_home_session_launches_calendar_and_music(self):
+        calls = []
+
+        def fake_call(verb, params):
+            calls.append(params["name"])
+            return {"window_id": params["name"]}
+
+        shell = session.rules.resolve_tab(tab("shell"), True)
+        launches = []
+        with mock.patch.object(session, "call", side_effect=fake_call):
+            session.build_tree(
+                "home", shell["layout"], "main", "/", None, launches, True, LAYOUT
+            )
+
+        self.assertEqual(calls, ["calendar", "music"])
+        self.assertEqual(
+            launches,
+            [("main", "fastfetch"), ("calendar", "callie"), ("music", "cliamp")],
+        )
+
     def test_uneven_ratio_becomes_the_new_panes_percent(self):
         node = {
             "type": "split",

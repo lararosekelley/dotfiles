@@ -332,7 +332,7 @@ def rehydrate_session(session: str, spec: dict) -> int:
     """Type each pane's program back into its restored shell."""
     primary = is_primary(session)
     names = workspace_names(session)
-    by_label = {tab["label"]: tab for tab in spec["tabs"]}
+    by_label = {tab["label"]: rules.resolve_tab(tab, primary) for tab in spec["tabs"]}
     restored = wait_for_prompts(session, {w["window_id"] for w in windows(session)})
     relaunched = 0
 
