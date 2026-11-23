@@ -101,8 +101,11 @@ notify = false
 # --------
 
 [keybindings.global]
-# hand ctrl+p back to nvim and shell history
-command_palette = ["ctrl+shift+p"]
+# ctrl+space, as herdr opens its navigator; ctrl+p stays with nvim and shell
+# history, and kitty holds ctrl+shift+p for its hint shortcuts
+command_palette = ["ctrl+space"]
+# prefix+G without the prefix
+goto_picker = ["ctrl+shift+space"]
 
 # shift+left/right walks workspaces, shift+up/down walks sessions
 # Bound per mode rather than globally so the inbox keeps shift+arrows.
