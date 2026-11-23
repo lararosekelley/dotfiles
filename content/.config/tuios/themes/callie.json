@@ -23,6 +23,8 @@
   "chrome": {
     "accent": "#f08fb8",
     "accent_bright": "#e5aac1",
+    "surface": "#2a1d30",
+    "canvas": "bg",
     "border": { "unfocused": "#3d2c42" },
     "status": { "attention": "#d6ba86" },
     "dock": { "ground": "#140c17" },
