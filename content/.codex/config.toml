@@ -10,6 +10,9 @@
 
 [tui]
 theme = "callie"
+# tuios alerts through the hooks; a terminal notification would also reach the
+# desktop through kitty
+notifications = false
 screen_reader_detection_done = true
 
 [tui.model_availability_nux]

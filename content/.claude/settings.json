@@ -363,5 +363,6 @@
   "skipWorkflowUsageWarning": true,
   "editorMode": "vim",
   "theme": "custom:callie",
-  "idleCompaction": false
+  "idleCompaction": false,
+  "preferredNotifChannel": "notifications_disabled"
 }
