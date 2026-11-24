@@ -94,6 +94,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Sync CLI](./docs/sync-cli.md) - syncing, status, and previewing changes
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
+- [fish](./docs/fish.md) - the fish setup, and what it shares with bash
 - [herdr](./docs/herdr.md) - plugins, integrations, and the tools the layout expects
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units

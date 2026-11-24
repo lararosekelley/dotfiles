@@ -1,0 +1,1 @@
+navi completions fish | source

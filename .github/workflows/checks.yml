@@ -67,6 +67,8 @@ jobs:
           tool: just,shfmt
       # shellcheck comes preinstalled on GitHub's Ubuntu runners.
       - run: just lint-shell
+      - run: sudo apt-get install -y fish
+      - run: just lint-fish
 
   commits:
     runs-on: ubuntu-latest

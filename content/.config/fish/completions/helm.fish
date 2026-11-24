@@ -1,0 +1,1 @@
+helm completion fish | source

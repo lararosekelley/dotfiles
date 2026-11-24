@@ -1,0 +1,64 @@
+# name: 'Callie'
+# url: 'https://github.com/greylocklabs/themes'
+
+[light]
+# preferred_background: fbf5f8
+fish_color_normal 55414e
+fish_color_command 4b6ba6
+fish_color_keyword 985270
+fish_color_param 55414e
+fish_color_option 027c7d
+fish_color_quote 3f7b4a
+fish_color_redirection 027c7d
+fish_color_end e45f97
+fish_color_operator 985270
+fish_color_escape 985270
+fish_color_comment 8f7a87 --italics
+fish_color_error c93c45
+fish_color_gray 8f7a87
+fish_color_autosuggestion 8f7a87
+fish_color_valid_path --underline
+fish_color_selection --background=e0ccd7
+fish_color_search_match --background=e0ccd7
+fish_color_cancel c93c45
+fish_color_cwd 886518
+fish_color_user 9e5251
+fish_color_host e45f97
+fish_color_host_remote 886518
+fish_color_status c93c45
+fish_pager_color_prefix e45f97 --bold
+fish_pager_color_completion 55414e
+fish_pager_color_description 8f7a87
+fish_pager_color_progress 8f7a87
+fish_pager_color_selected_background --background=e0ccd7
+
+[dark]
+# preferred_background: 1c1220
+fish_color_normal e0d3df
+fish_color_command a4beef
+fish_color_keyword e5aac1
+fish_color_param e0d3df
+fish_color_option 82cdcd
+fish_color_quote 9dcca3
+fish_color_redirection 82cdcd
+fish_color_end f08fb8
+fish_color_operator e5aac1
+fish_color_escape e5aac1
+fish_color_comment 9a8797 --italics
+fish_color_error e66e6d
+fish_color_gray 9a8797
+fish_color_autosuggestion 9a8797
+fish_color_valid_path --underline
+fish_color_selection --background=3d2c42
+fish_color_search_match --background=3d2c42
+fish_color_cancel e66e6d
+fish_color_cwd d6ba86
+fish_color_user eaaba8
+fish_color_host f08fb8
+fish_color_host_remote d6ba86
+fish_color_status e66e6d
+fish_pager_color_prefix f08fb8 --bold
+fish_pager_color_completion e0d3df
+fish_pager_color_description 9a8797
+fish_pager_color_progress 9a8797
+fish_pager_color_selected_background --background=3d2c42
