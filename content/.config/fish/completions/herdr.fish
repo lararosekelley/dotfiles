@@ -1,0 +1,1 @@
+herdr completion fish | source

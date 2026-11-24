@@ -25,7 +25,7 @@ build:
 
 format-lint: format lint check
 
-format: format-rust format-python format-js format-shell format-markdown
+format: format-rust format-python format-js format-shell format-fish format-markdown
 
 format-rust:
   cargo fmt
@@ -41,10 +41,13 @@ format-js:
 format-shell:
   shfmt -w {{shell_paths}} $(git ls-files '*.sh')
 
+format-fish:
+  fish_indent -w $(git ls-files '*.fish')
+
 format-markdown:
   npx --no -- markdownlint-cli2 --fix "{{markdown_paths}}"
 
-lint: lint-rust lint-python lint-js lint-shell lint-markdown
+lint: lint-rust lint-python lint-js lint-shell lint-fish lint-markdown
 
 lint-rust:
   cargo fmt --check
@@ -61,6 +64,10 @@ lint-js:
 lint-shell:
   shfmt -d {{shell_paths}} $(git ls-files '*.sh')
   shellcheck {{shell_paths}} $(git ls-files '*.sh')
+
+lint-fish:
+  for f in $(git ls-files '*.fish'); do fish --no-execute "$f"; done
+  fish_indent --check $(git ls-files '*.fish')
 
 # checks commit messages in a range, as CI does for a push or pull request
 

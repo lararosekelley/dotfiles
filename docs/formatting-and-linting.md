@@ -4,7 +4,7 @@
 runs both plus `cargo check`. The per-language recipes are
 `format-rust`/`lint-rust` (rustfmt, clippy), `format-python`/`lint-python`
 (black, flake8), `format-js`/`lint-js` (oxfmt, oxlint), `format-shell`/`lint-shell`
-(shfmt, shellcheck), and `format-markdown`/`lint-markdown` (markdownlint-cli2, whose
+(shfmt, shellcheck), `format-fish`/`lint-fish` (fish_indent, `fish --no-execute`), and `format-markdown`/`lint-markdown` (markdownlint-cli2, whose
 globs are passed on the command line rather than read from
 `.markdownlint-cli2.yaml`).
 
