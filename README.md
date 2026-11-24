@@ -32,7 +32,7 @@ Repo tooling:
 Shell:
 
 - `rg` - the `rgs`/`rgf` aliases and the `sub` function
-- `autojump` - directory jumping, wired into `PROMPT_COMMAND`
+- `zoxide` - directory jumping with `z` and `zi`, hooked into `PROMPT_COMMAND`
 - `xclip` - the `copy`/`pbcopy` aliases
 - `tmux` + `tpm` - `.tmux.conf` and the `mux` function
 - `python3` - the `serve` function and the herdr default-session plugin

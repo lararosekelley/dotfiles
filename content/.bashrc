@@ -72,15 +72,6 @@ for tool in helm k3d herdr tuios; do
 done
 unset tool
 
-# autojump
-
-if [ -f /usr/share/autojump/autojump.bash ]; then
-  # shellcheck disable=SC1091
-  source "/usr/share/autojump/autojump.bash"
-elif [ -f "$HOME/.autojump/etc/profile.d/autojump.sh" ]; then
-  source "$HOME/.autojump/etc/profile.d/autojump.sh"
-fi
-
 # ssh-agent
 
 # Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs
@@ -120,8 +111,13 @@ fi
 if [ -f ~/.bash_prompt ]; then
   source "$HOME/.bash_prompt"
 
-  PROMPT_COMMAND="set_prompt; autojump_add_to_database; history -a; history -c; history -r"
+  PROMPT_COMMAND="set_prompt; history -a; history -c; history -r"
 fi
+
+# zoxide: z and zi jump to visited directories. Initialized after
+# PROMPT_COMMAND is set, since it adds its hook to it.
+
+command -v zoxide > /dev/null && eval "$(zoxide init bash)"
 
 path_prepend_if_missing "$HOME/.config/emacs/bin"
 path_prepend_if_missing "$HOME/.config/yarn/global/node_modules/.bin"
