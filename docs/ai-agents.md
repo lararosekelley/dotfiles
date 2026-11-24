@@ -28,7 +28,7 @@ files under `content/` supply personal rules across repositories.
 `tui.json` followed by `tui.jsonc` in the same directory. The herdr installer owns
 the local `tui.jsonc` plugin registration and `herdr-tui-session.js`; keep those
 generated integration files out of the synced payload. See the
-[herdr setup guide](./herdr.md) to install the integration. Restart OpenCode after
+[herdr config's README](https://github.com/lararosekelley/herdr) to install the integration. Restart OpenCode after
 changing its TUI configuration.
 
 ## Codex
@@ -66,7 +66,7 @@ reference, and plain-language scope guidance:
 
 ```text
 /audit docs
-/audit docs content/.config/herdr/
+/audit docs content/.config/fish/
 /audit comments src/
 /audit 'recent changes to the feature flag system'
 /audit docs packages/sdk/ - focus on examples; skip generated API docs

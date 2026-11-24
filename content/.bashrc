@@ -72,6 +72,14 @@ for tool in helm k3d herdr tuios; do
 done
 unset tool
 
+# herd and tui come from the herdr and tuios config repos
+
+for tool in herd tui; do
+  # shellcheck source=/dev/null
+  command -v "$tool" > /dev/null && source <("$tool" completions bash)
+done
+unset tool
+
 # ssh-agent
 
 # Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs

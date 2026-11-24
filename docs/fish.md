@@ -11,10 +11,8 @@ shell (`chsh -s /usr/bin/fish`).
 - Environment variables: each interactive or login fish session sources
   `~/.functions`, `~/.exports`, and the private `~/.environment` in bash and
   copies the resulting environment, `PATH` included.
-- Functions that do not change the calling shell (`herd`, `tui`, `update`,
-  `mux`, and the media and file helpers) run in bash through thin fish
-  wrappers. The `herd` completion reads `HERD_AGENTS` and `HERD_REPOS` the same
-  way.
+- Functions that do not change the calling shell (`update`, `mux`, and the
+  media and file helpers) run in bash through thin fish wrappers.
 
 Anything that changes the shell itself has a fish version in `functions/`:
 `notes`, `stk`, `loop`, `ai`, and the `aws-*` helpers. Aliases are in

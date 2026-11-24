@@ -24,8 +24,5 @@ __pycache__/
 .claude/
 !content/.claude
 
-# herdr regenerates this manifest cache on `herdr plugin link`
-content/.config/herdr/plugins.json
-
 # codegraph db
 .codegraph/

@@ -25,7 +25,6 @@ fn sync_filters_payload_in_both_directions() {
         ".config/obs-studio/plugin_config/settings.json",
         ".config/obs-studio/basic/profiles/test/service.json",
         ".config/obs-studio/basic/profiles/test/service.json.bak",
-        ".config/herdr/plugins.json",
         ".bashrc.bak",
         ".bashrc.bak1",
     ];

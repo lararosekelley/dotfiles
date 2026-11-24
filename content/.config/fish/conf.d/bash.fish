@@ -36,7 +36,7 @@ end
 
 __bash_import_env
 
-for fn in herd tui update mux flac2mp3 vid2mp4 vidslice mov2gif serve peerdeps sub
+for fn in update mux flac2mp3 vid2mp4 vidslice mov2gif serve peerdeps sub
     function $fn --inherit-variable fn
         bash -c "$__bash_dotfiles; \"\$@\"" bash $fn $argv
     end
