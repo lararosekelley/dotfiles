@@ -91,4 +91,11 @@ path_prepend_if_missing "${KREW_ROOT:-$HOME/.krew}/bin"
 path_prepend_if_missing "$HOME/.local/bin"
 path_prepend_if_missing "$HOME/.bin"
 
+# herd and tui, from the herdr and tuios config repos when they are cloned
+
+for dir in "$HOME/.config/herdr/bin" "$HOME/.config/tuios/bin"; do
+  [ -d "$dir" ] && path_prepend_if_missing "$dir"
+done
+unset dir
+
 export PATH

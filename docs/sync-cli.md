@@ -41,8 +41,7 @@ does not discover new paths in home. The same selection policy applies to status
 copy, and symlink modes, independently of Git tracking or ignore files.
 
 The CLI excludes Python bytecode/cache files, nested Git directories, `.gitkeep`,
-nested `.gitignore` files, `.bak`/numbered backups, herdr's generated plugin registry,
-and OBS runtime/plugin state, logs, updates, and service credentials. The root
+nested `.gitignore` files, `.bak`/numbered backups, and OBS runtime/plugin state, logs, updates, and service credentials. The root
 `content/.gitignore` is deliberately installed as `~/.gitignore`. Component READMEs
 and runtime resources remain eligible. The policy is defined in `bin/fs.rs`.
 
@@ -54,9 +53,8 @@ not a general secret detector; inspect any files you add to `content/`.
 ## Documentation boundary
 
 Machine setup and operating guides live in `docs/` and are not installed. Files
-under `content/` should be useful at their home destination. The herdr local
-plugin keeps its README beside its code so the installed plugin is self-contained;
-agent skills likewise keep their runtime instructions in `SKILL.md`.
+under `content/` should be useful at their home destination. Agent skills keep
+their runtime instructions in `SKILL.md` beside their code.
 
 The sync policy deliberately permits component READMEs rather than excluding all
 Markdown files. Move checkout-only guides to `docs/` instead of maintaining two

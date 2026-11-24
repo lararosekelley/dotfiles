@@ -17,7 +17,6 @@ const PAYLOAD_EXCLUDES: &[&str] = &[
     "**/.git/**",
     "**/.gitkeep",
     "**/.gitignore",
-    ".config/herdr/plugins.json",
     ".config/obs-studio/plugin_config/**",
     ".config/obs-studio/plugin_manager/**",
     ".config/obs-studio/plugins/**",

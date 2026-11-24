@@ -1,1 +1,1 @@
-complete -c tui -w herd
+tui completions fish | source

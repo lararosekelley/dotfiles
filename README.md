@@ -35,7 +35,7 @@ Shell:
 - `zoxide` - directory jumping with `z` and `zi`, hooked into `PROMPT_COMMAND`
 - `xclip` - the `copy`/`pbcopy` aliases
 - `tmux` + `tpm` - `.tmux.conf` and the `mux` function
-- `python3` - the `serve` function and the herdr default-session plugin
+- `python3` - the `serve` function
 - `awscli` - the `aws-work`/`aws-personal`/`aws-current` helpers
 - `figlet` - the `big` alias
 - `yt-dlp` - the `dl` alias
@@ -49,7 +49,7 @@ Git:
 
 Tools with config here:
 
-- `herdr` - the `herd` function and `content/.config/herdr` (see [herdr](./docs/herdr.md) for what its layout expects)
+- `herdr`, `tuios` - terminal multiplexers, configured in their own repos (below)
 - `restic` - `content/.bin/backup.sh`, keyed off `content/.config/restic`
 - `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill. Needs `perl-JSON` for image metadata (Fedora's package does not pull it in)
 - `navi` - PR-review alerts; installed to `~/.local/bin` and run by `navi.service`
@@ -95,7 +95,6 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [fish](./docs/fish.md) - the fish setup, and what it shares with bash
-- [herdr](./docs/herdr.md) - plugins, integrations, and the tools the layout expects
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
 - [Desktop preferences](./docs/desktop-preferences.md) - KDE theme, widgets, panels, and private hardware-specific configuration
@@ -106,10 +105,13 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Formatting and linting](./docs/formatting-and-linting.md)
 - [IG Plus](https://github.com/lararosekelley/ig-plus) - Chrome and Firefox extension for posting Instagram stories from desktop and hiding the feed and Reels
 
-Neovim, Emacs, and Kitty configs live in their own repos:
+Neovim, Emacs, Kitty, herdr, and tuios configs live in their own repos:
 [nvim](https://github.com/lararosekelley/nvim),
-[emacs.d](https://github.com/lararosekelley/emacs.d), and
-[kitty](https://github.com/lararosekelley/kitty).
+[emacs.d](https://github.com/lararosekelley/emacs.d),
+[kitty](https://github.com/lararosekelley/kitty),
+[herdr](https://github.com/lararosekelley/herdr), and
+[tuios](https://github.com/lararosekelley/tuios). The herdr and tuios repos also
+provide the `herd` and `tui` commands; `.exports` puts them on `PATH` once cloned.
 
 ## License
 
