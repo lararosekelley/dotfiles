@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#
+# Clone the configs that live in their own repos (nvim, emacs.d, kitty, herdr,
+# tuios), then install what the nvim config needs with its own install-deps.
+# Anything already at those paths is left alone.
+#
+# Clones use HTTPS, which works before an SSH key is on GitHub, with SSH as the
+# push URL so pushing uses the key once it is set up.
+#
+# chezmoi runs this on apply (see home/run_onchange_after_20-config-repos.sh.tmpl);
+# it is also safe to run by hand.
+#
+# Usage: scripts/setup/config-repos [--dry-run]
+
+set -uo pipefail
+
+# shellcheck source=scripts/setup/lib.sh
+. "$(dirname "$0")/lib.sh"
+
+usage() { echo "usage: scripts/setup/config-repos [--dry-run]"; }
+
+parse_args "$@"
+
+config_repo() {
+  local name=$1 dest=$2
+  local fresh=false
+  [ -e "$dest" ] || fresh=true
+  clone_repo "https://github.com/lararosekelley/$name" "$dest"
+  if $fresh && [ -d "$dest/.git" ]; then
+    run git -C "$dest" remote set-url --push origin "git@github.com:lararosekelley/$name"
+  fi
+}
+
+config_repo nvim "$HOME/.config/nvim"
+config_repo emacs.d "$HOME/.emacs.d"
+config_repo kitty "$HOME/.config/kitty"
+config_repo herdr "$HOME/.config/herdr"
+config_repo tuios "$HOME/.config/tuios"
+
+deps="$HOME/.config/nvim/scripts/install-deps"
+if [ -x "$deps" ]; then
+  say "installing what the nvim config needs:"
+  if $dry_run; then
+    "$deps" --dry-run || failures=$((failures + 1))
+  else
+    run "$deps"
+  fi
+elif $dry_run; then
+  say "  would run: $deps, once nvim is cloned"
+else
+  warn "$deps is missing; install the nvim config's requirements by hand (see its README)"
+fi
+
+finish

@@ -41,6 +41,7 @@ to show its plan. They can be run by hand too:
 | Script | What it does |
 | --- | --- |
 | `scripts/setup/version-managers` | clones pyenv, nodenv, and rbenv with their build plugins |
+| `scripts/setup/config-repos` | clones nvim, emacs.d, kitty, herdr, and tuios, then runs nvim's `install-deps` |
 
 ## Names
 

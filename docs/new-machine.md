@@ -47,23 +47,13 @@ files the repo leaves out, such as `~/.environment`.
 - Reinstall the binaries in
   [Self-updating and standalone binaries](./packages.md#self-updating-and-standalone-binaries),
   including `herdr`, `navi`, `tuicr`, `git-stk`, and `claude` in `~/.local/bin`.
-- Clone the configs that live in their own repos:
-
-  ```bash
-  git clone https://github.com/lararosekelley/nvim ~/.config/nvim
-  git clone https://github.com/lararosekelley/emacs.d ~/.emacs.d
-  git clone https://github.com/lararosekelley/kitty ~/.config/kitty
-  git clone https://github.com/lararosekelley/herdr ~/.config/herdr
-  git clone https://github.com/lararosekelley/tuios ~/.config/tuios
-  ```
+- The configs that live in their own repos (nvim, emacs.d, kitty, herdr, tuios)
+  are cloned by `chezmoi apply` in step 2, which then runs the nvim repo's
+  `scripts/install-deps` for what Neovim needs. It asks before installing system
+  packages and ends with anything left to install by hand.
 
   herdr also needs its plugins linked and agent integrations installed; its
   README lists the commands.
-
-  Expect a lot of errors from Neovim at first, mostly around missing
-  dependencies. Not having `gem`, `npm`, `pip`, etc. will cause a lot of
-  problems. To work through the rest of the Neovim setup, follow the guide in the
-  nvim repo.
 
 - Install `flatpak`, then the GUI apps listed under
   [Flatpak](./packages.md#flatpak), starting with Zen:
