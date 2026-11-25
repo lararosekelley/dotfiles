@@ -7,6 +7,8 @@ desktop and the Arch laptop say so (see [Machines](../README.md#machines)).
 
 Install `git`, Rust (`rustup`, or the distro's `rust`) for the sync CLI, and the
 packages in [Packages](./packages.md#distro-packages-that-config-depends-on).
+`rustup` installs no toolchain at first; run `rustup default stable` once, which
+also brings the `rustfmt` and `clippy` that `just lint` uses.
 
 `.exports` sets `LC_ALL=en_US.UTF-8`. On Arch, uncomment `en_US.UTF-8 UTF-8` in
 `/etc/locale.gen` and run `sudo locale-gen`, or every program warns about the
