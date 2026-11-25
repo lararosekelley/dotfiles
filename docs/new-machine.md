@@ -5,10 +5,11 @@ desktop and the Arch laptop say so (see [Machines](../README.md#machines)).
 
 ## 1. Packages
 
-Install `git`, `chezmoi`, Rust (`rustup`, or the distro's `rust`), and the
-packages in [Packages](./packages.md#distro-packages-that-config-depends-on).
-`rustup` installs no toolchain at first; run `rustup default stable` once, which
-also brings the `rustfmt` and `clippy` that `just lint` uses.
+Install `git`, `chezmoi`, and the packages in
+[Packages](./packages.md#distro-packages-that-config-depends-on). For the Rust
+tools under [Rust](./packages.md#rust), install `rustup` (or the distro's
+`rust`); `rustup` installs no toolchain at first, so run `rustup default stable`
+once.
 
 On Arch, packages outside the official repos come from the AUR. Build the paru
 helper once by hand, then `paru -S <package>` installs from the repos or the AUR,
