@@ -1,0 +1,14 @@
+# caches left by tests and tools, never installed
+**/__pycache__/**
+**/*.pyc
+**/*.pyo
+**/.pytest_cache/**
+**/.mypy_cache/**
+**/.ruff_cache/**
+
+{{ if not .kde }}
+# KDE settings, only where KDE runs
+.config/kwinrulesrc
+.config/powerdevilrc
+.local/share/applications/org.kde.discover.desktop
+{{ end }}

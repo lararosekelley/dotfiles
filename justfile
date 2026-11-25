@@ -1,6 +1,6 @@
 set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
-python_paths := "content scripts tests"
+python_paths := "home scripts tests"
 
 # markdownlint-cli2 takes its globs on the command line, not from its config,
 # so quote this to keep bash from expanding it first
@@ -8,14 +8,14 @@ python_paths := "content scripts tests"
 markdown_paths := "**/*.md"
 
 # oxfmt also formats JSON, YAML and Markdown, so keep it to JavaScript; synced
-# configs in content/ keep their own style
+# configs in home/ keep their own style
 
 js_paths := "**/*.{js,mjs,cjs}"
 
-# shell dotfiles have no .sh extension, so they are listed here; .git_prompt
-# is git's own git-prompt.sh, and .inputrc is readline config
+# shell dotfiles have no .sh extension, so they are listed here; dot_git_prompt
+# is git's own git-prompt.sh, and dot_inputrc is readline config
 
-shell_paths := "content/.aliases content/.bash_profile content/.bash_prompt content/.bashrc content/.exports content/.functions $(git ls-files 'content/.bin/*' ':!:*.sh')"
+shell_paths := "home/dot_aliases home/dot_bash_profile home/dot_bash_prompt home/dot_bashrc home/dot_exports home/dot_functions $(git ls-files 'home/dot_bin/*' ':!:*.sh')"
 
 default:
   @just --list

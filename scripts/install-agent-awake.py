@@ -29,11 +29,12 @@ def merge_hooks(existing, template):
     return existing
 
 
-def install(content, home):
-    source = content / ".local/share/agent-awake/agent_awake.py"
-    plugin = content / ".config/opencode/plugins/agent-awake.js"
+def install(source_root, home):
+    """Install from source_root, the repo's home/ in chezmoi's naming."""
+    source = source_root / "dot_local/share/agent-awake/agent_awake.py"
+    plugin = source_root / "dot_config/opencode/plugins/agent-awake.js"
     target = home / ".claude/settings.json"
-    template = json.loads((content / ".claude/settings.json").read_text())
+    template = json.loads((source_root / "dot_claude/settings.json").read_text())
     current = json.loads(target.read_text()) if target.exists() else {}
     merged = json.dumps(merge_hooks(current, template), indent=2) + "\n"
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S-%f")
@@ -65,4 +66,4 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--home", type=Path, default=Path.home())
     args = parser.parse_args()
-    install(Path(__file__).resolve().parents[1] / "content", args.home)
+    install(Path(__file__).resolve().parents[1] / "home", args.home)
