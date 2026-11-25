@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+# Print the AWS variables for a target as KEY=value lines, with KEY= for a
+# variable to unset. A script cannot change its caller's environment, so the
+# aws-use function in each shell applies them, and ai applies them for the
+# harness it starts.
+#
+# Params:
+#     target - work or personal for that profile, personal-admin to assume the
+#              MFA-gated role and use its session credentials (Terraform and
+#              other SDK tools can't prompt for MFA), or clear to drop session
+#              credentials, which would override AWS_PROFILE
+#
+# Usage: aws-env target
+
+set -uo pipefail
+
+session_vars=(AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_CREDENTIAL_EXPIRATION)
+
+case "${1:-}" in
+  work | personal)
+    printf '%s=\n' "${session_vars[@]}"
+    printf 'AWS_PROFILE=%s\nAWS_REGION=us-east-1\n' "$1"
+    echo "Switched to AWS profile: $1" >&2
+    ;;
+  personal-admin)
+    creds=$(aws configure export-credentials --profile personal-admin --format env-no-export) || exit 1
+    printf '%s=\n' "${session_vars[@]}"
+    printf 'AWS_PROFILE=\n%s\nAWS_REGION=us-east-1\n' "$creds"
+    expiration=$(sed -n 's/^AWS_CREDENTIAL_EXPIRATION=//p' <<< "$creds")
+    echo "Switched to AWS role: personal-admin (expires $expiration)" >&2
+    ;;
+  clear)
+    printf '%s=\n' "${session_vars[@]}"
+    ;;
+  *)
+    echo "usage: aws-env work|personal|personal-admin|clear" >&2
+    exit 1
+    ;;
+esac

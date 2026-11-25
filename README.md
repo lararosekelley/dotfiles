@@ -31,15 +31,15 @@ Repo tooling:
 
 Shell:
 
-- `rg` - the `rgs`/`rgf` aliases and the `sub` function
+- `rg` - the `rgs`/`rgf` aliases and the `sub` script
 - `zoxide` - directory jumping with `z` and `zi`, hooked into `PROMPT_COMMAND`
 - `xclip` - the `copy`/`pbcopy` aliases
-- `tmux` + `tpm` - `.tmux.conf` and the `mux` function
-- `python3` - the `serve` function
+- `tmux` + `tpm` - `.tmux.conf` and the `mux` script
+- `python3` - the `serve` script
 - `awscli` - the `aws-work`/`aws-personal`/`aws-current` helpers
 - `figlet` - the `big` alias
 - `yt-dlp` - the `dl` alias
-- `ffmpeg`, `gifsicle` - the `flac2mp3`/`vid2mp4`/`vidslice`/`mov2gif` functions
+- `ffmpeg`, `gifsicle` - the `flac2mp3`/`vid2mp4`/`vidslice`/`mov2gif` scripts
 
 Git:
 
@@ -53,7 +53,7 @@ Tools with config here:
 - `restic` - `content/.bin/backup.sh`, keyed off `content/.config/restic`
 - `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill. Needs `perl-JSON` for image metadata (Fedora's package does not pull it in)
 - `navi` - PR-review alerts; installed to `~/.local/bin` and run by `navi.service`
-- `claude`, `opencode` - the `ai` function
+- `claude`, `opencode` - the `ai` script
 - `codegraph` - Claude `SessionStart` hook and MCP server
 - `uvx`, `npx` - run the aws and circleci MCP servers in `.claude/.mcp.json`
 - `gh`, `glab`, `gt` - GitHub, GitLab, and Graphite CLIs

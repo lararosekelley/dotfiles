@@ -1,16 +1,15 @@
-# Shares the bash dotfiles with fish: environment variables from ~/.exports and
-# ~/.environment, and the bash functions that do not change the calling shell.
+# Shares the bash environment with fish: the variables ~/.exports and
+# ~/.environment set or unset, PATH included.
 
 status is-interactive; or status is-login; or return
 
-set -g __bash_dotfiles 'for f in ~/.functions ~/.exports ~/.environment; do [ -f "$f" ] && source "$f"; done'
-
 # Copy what sourcing the bash files sets or unsets in the environment.
 function __bash_import_env
+    set -l files 'for f in ~/.functions ~/.exports ~/.environment; do [ -f "$f" ] && source "$f"; done'
     set -l skip _ SHLVL PWD OLDPWD
     set -l seen
 
-    for entry in (bash -c "$__bash_dotfiles; env -0" | string split0)
+    for entry in (bash -c "$files; env -0" | string split0)
         set -l kv (string split -m1 = -- $entry)
         set -l name $kv[1]
 
@@ -35,9 +34,3 @@ function __bash_import_env
 end
 
 __bash_import_env
-
-for fn in update mux flac2mp3 vid2mp4 vidslice mov2gif serve peerdeps sub
-    function $fn --inherit-variable fn
-        bash -c "$__bash_dotfiles; \"\$@\"" bash $fn $argv
-    end
-end

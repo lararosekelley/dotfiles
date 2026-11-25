@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Convert flac files in current directory to mp3
+#
+# Params:
+#     none
+#
+# Usage: flac2mp3
+
+function flac2mp3() {
+  for f in *.flac; do
+    ffmpeg -i "$f" -aq 1 "${f%flac}mp3"
+  done
+}
+
+flac2mp3 "$@"

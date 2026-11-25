@@ -6,26 +6,31 @@ shell (`chsh -s /usr/bin/fish`).
 
 ## What is shared with bash
 
-`conf.d/bash.fish` keeps one copy of these in the bash dotfiles:
+Both shells read one copy of each of these:
 
-- Environment variables: each interactive or login fish session sources
-  `~/.functions`, `~/.exports`, and the private `~/.environment` in bash and
-  copies the resulting environment, `PATH` included.
-- Functions that do not change the calling shell (`update`, `mux`, and the
-  media and file helpers) run in bash through thin fish wrappers.
+- Environment variables: `.exports` and the private `~/.environment`. Each
+  interactive or login fish session sources them in bash and copies the
+  resulting environment, `PATH` included (`conf.d/bash.fish`).
+- Aliases: `.aliases`. fish turns each one into an abbreviation
+  (`conf.d/abbreviations.fish`), so values must work in both shells, and names
+  that are fish builtins, such as `path`, are skipped. Bash-only aliases live in
+  `.bashrc`.
+- Commands: scripts in `content/.bin`, such as `update`, `mux`, `serve`, `sub`,
+  `loop`, `ai`, and `aws-env`.
 
-Anything that changes the shell itself has a fish version in `functions/`:
-`notes`, `stk`, `loop`, `ai`, and the `aws-*` helpers. Aliases are in
-`conf.d/abbreviations.fish`, and the prompt in `functions/fish_prompt.fish`
-mirrors `.bash_prompt`. Edit both versions when changing one of these.
+Each shell keeps its own version of the little that has to change the shell
+itself: `stk` (which changes directory) and `aws-use` (which applies `aws-env`'s
+variables), plus the prompt. `functions/fish_prompt.fish` mirrors
+`.bash_prompt`, so edit both when changing one.
 
 ## Differences from bash
 
 - History is fish's own, and is merged from other sessions before each prompt.
-- `..`, `...`, and so on expand to `cd ../..` style commands. A directory path
-  typed on its own, such as `~`, changes to it.
+- A directory path typed on its own, such as `~`, changes to it.
 - Globs do not match hidden files unless the pattern starts with `.`, and are
   case-sensitive. `**` recurses, as with bash's `globstar`.
+- File completion leaves out hidden files unless the word starts with `.`, and
+  does not color candidates by file type.
 - There is no spelling correction for `cd`.
 - The higharc and Ruby completions are bash-only.
 

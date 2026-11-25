@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+# Check current AWS_PROFILE
+#
+# Usage: aws-current
+
+aws-current() {
+  echo "AWS_PROFILE=${AWS_PROFILE:-<unset>}"
+  echo "AWS_REGION=${AWS_REGION:-<unset>}"
+  aws sts get-caller-identity
+}
+
+aws-current "$@"

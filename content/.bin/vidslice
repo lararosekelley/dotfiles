@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Cuts out a specific time window from an input video
+#
+# Params:
+#     input - Input file
+#     output - Output file name
+#     start - Starting timestamp (format: hh:mm:ss)
+#     duration - Length to slice, starting at start timestamp
+#
+# Usage: vidslice input output start duration
+#
+
+function vidslice() {
+  usage="usage: vidslice input output start duration"
+
+  # check that all args are present, and that input is a file
+  if [ -z "$1" ] || [ ! -f "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+    echo "$usage"
+    return 1
+  elif command -v ffmpeg &> /dev/null; then
+    ffmpeg -ss "$3" -t "$4" -i "$1" -vcodec copy -acodec copy "$2"
+
+    echo -e "\n\nsliced $4 from $1, starting at $3, and saved to $2"
+  else
+    echo "fatal: ffmpeg not installed"
+    return 1
+  fi
+}
+
+vidslice "$@"
