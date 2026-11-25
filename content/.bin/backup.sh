@@ -332,7 +332,7 @@ if [ "$ACTION" = "run" ] && [ "$DRY_RUN" -eq 1 ]; then
 fi
 
 if ! command -v restic > /dev/null 2>&1; then
-  echo "restic is not installed. Install it with: sudo dnf install restic"
+  echo "restic is not installed. Install the restic package."
   exit 1
 fi
 

@@ -7,7 +7,17 @@
 This repository contains the configuration files I use on Linux computers.
 Dotfiles live under the `content/` directory.
 
-Only tested on Fedora as of 2026, confirmed to work with Fedora 40+.
+## Machines
+
+The docs refer to two setups:
+
+- **Fedora desktop**: Fedora 40+ with KDE Plasma, and the only machine with
+  OpenRGB lighting (`system/`, which sync never installs).
+- **Arch laptop**: Arch Linux with sway.
+
+Steps that differ between them name the distro. [Packages](./docs/packages.md)
+maps package names between Fedora and Arch, and
+[New machine](./docs/new-machine.md) is the setup checklist.
 
 ## System dependencies
 
@@ -16,7 +26,6 @@ Only tested on Fedora as of 2026, confirmed to work with Fedora 40+.
 - `git` - cloning and the prompt
 - `rust` - builds and runs the sync CLI
 - `mold` - linker selected in `content/.cargo/config.toml`; every cargo build fails without it
-- `pyenv`, `nodenv`, `rbenv` - `.bashrc` evals each unguarded, so a missing one errors on every shell
 - `bash-completion` - sourced by `.bashrc`
 - `nvim` - `$EDITOR` and the `vim`/`vi` aliases
 
@@ -31,9 +40,10 @@ Repo tooling:
 
 Shell:
 
+- `pyenv` (with `pyenv-virtualenv`), `nodenv`, `rbenv` - language versions, loaded when installed
 - `rg` - the `rgs`/`rgf` aliases and the `sub` script
 - `zoxide` - directory jumping with `z` and `zi`, hooked into `PROMPT_COMMAND`
-- `xclip` - the `copy`/`pbcopy` aliases
+- `wl-clipboard` (Wayland) or `xclip` (X11) - the `copy` script and `pbcopy` alias
 - `tmux` + `tpm` - `.tmux.conf` and the `mux` script
 - `python3` - the `serve` script
 - `awscli` - the `aws-work`/`aws-personal`/`aws-current` helpers
@@ -52,7 +62,7 @@ Tools with config here:
 
 - `herdr`, `tuios` - terminal multiplexers, configured in their own repos (below)
 - `restic` - `content/.bin/backup.sh`, keyed off `content/.config/restic`
-- `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill. Needs `perl-JSON` for image metadata (Fedora's package does not pull it in)
+- `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill. Needs `perl-JSON` (Fedora) or `perl-json` (Arch) for image metadata, which recoll does not pull in
 - `navi` - PR-review alerts; installed to `~/.local/bin` and run by `navi.service`
 - `claude`, `opencode` - the `ai` script
 - `codegraph` - Claude `SessionStart` hook and MCP server
@@ -92,6 +102,7 @@ See the [sync CLI guide](./docs/sync-cli.md) for symlinks, status, and previewin
 
 Setup and management notes for this machine and its devices live in [`docs/`](./docs):
 
+- [New machine](./docs/new-machine.md) - setting up another computer from this repo
 - [Sync CLI](./docs/sync-cli.md) - syncing, status, and previewing changes
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
