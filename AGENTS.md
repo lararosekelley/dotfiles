@@ -7,7 +7,10 @@
   `private_`. `.chezmoiroot` points chezmoi at it.
 - `system/` holds configuration requiring separate system-level installation.
 - `scripts/` holds checkout-only installers; `docs/` holds operating/setup guides.
-- Agent Awake and KDE installer tests live under `tests/`.
+  `scripts/setup/` holds the setup steps `chezmoi apply` runs through the
+  `run_onchange_after_*` wrappers in `home/`.
+- Agent Awake, KDE installer, chezmoi source, and setup script tests live under
+  `tests/`.
 - Global agent rules live in `home/dot_config/opencode/AGENTS.md`;
   `home/dot_claude/CLAUDE.md` imports them. Edit the canonical file.
 
@@ -37,6 +40,9 @@ CI runs the same lint and test recipes, plus commitlint, on pushes to `main` and
 on pull requests.
 
 For changes to what chezmoi installs, check `chezmoi managed` and `chezmoi diff`.
+Setup scripts must be safe to rerun on a partly set-up machine: check before
+acting, never delete or overwrite, ask before `sudo`, support `--dry-run`, and
+come with a test in `tests/setup/` that runs them twice.
 For integration installers, verify unrelated live settings are preserved using a temporary home.
 Docs-only edits need applicable formatting and link checks, not the full test suite.
 

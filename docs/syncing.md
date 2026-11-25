@@ -29,6 +29,19 @@ chezmoi cd                   # open a shell in the repo
 chezmoi remembers what it last installed, so `apply` asks before overwriting a
 file that changed at home since.
 
+## Setup scripts
+
+`chezmoi apply` also runs the scripts in `scripts/setup/`, through the
+`run_onchange_after_*` wrappers in `home/`. A wrapper includes a checksum of its
+script, so chezmoi runs it on a machine's first apply and again whenever the
+script changes. Each script checks before it acts: it leaves anything already in
+place alone, never deletes, warns about what it skips, and accepts `--dry-run`
+to show its plan. They can be run by hand too:
+
+| Script | What it does |
+| --- | --- |
+| `scripts/setup/version-managers` | clones pyenv, nodenv, and rbenv with their build plugins |
+
 ## Names
 
 Source names encode how a file is installed: `dot_config/` becomes `.config/`,

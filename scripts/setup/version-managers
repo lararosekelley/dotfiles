@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# Clone pyenv, nodenv, and rbenv, with the plugins that create virtualenvs and
+# install language versions, into ~/.pyenv, ~/.nodenv, and ~/.rbenv. Anything
+# already at those paths is left alone.
+#
+# chezmoi runs this on apply (see home/run_onchange_after_10-version-managers.sh.tmpl);
+# it is also safe to run by hand.
+#
+# Usage: scripts/setup/version-managers [--dry-run]
+
+set -uo pipefail
+
+# shellcheck source=scripts/setup/lib.sh
+. "$(dirname "$0")/lib.sh"
+
+usage() { echo "usage: scripts/setup/version-managers [--dry-run]"; }
+
+parse_args "$@"
+
+pyenv_root=${PYENV_ROOT:-$HOME/.pyenv}
+nodenv_root=${NODENV_ROOT:-$HOME/.nodenv}
+rbenv_root=${RBENV_ROOT:-$HOME/.rbenv}
+
+clone_repo https://github.com/pyenv/pyenv "$pyenv_root"
+clone_repo https://github.com/pyenv/pyenv-virtualenv "$pyenv_root/plugins/pyenv-virtualenv"
+clone_repo https://github.com/nodenv/nodenv "$nodenv_root"
+clone_repo https://github.com/nodenv/node-build "$nodenv_root/plugins/node-build"
+clone_repo https://github.com/rbenv/rbenv "$rbenv_root"
+clone_repo https://github.com/rbenv/ruby-build "$rbenv_root/plugins/ruby-build"
+
+finish
