@@ -34,7 +34,7 @@ target. A lens alone starts a bounded repository pass if the scope is manageable
 
 ```text
 /audit docs
-/audit docs content/.config/fish/
+/audit docs home/dot_config/private_fish/
 /audit comments src/sync/
 /audit src/sync/
 /audit <PR-or-MR-URL>

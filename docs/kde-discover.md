@@ -1,6 +1,6 @@
 # Discover (KDE) backends
 
-`content/.local/share/applications/org.kde.discover.desktop` shadows the packaged
+`~/.local/share/applications/org.kde.discover.desktop` shadows the packaged
 entry in `/usr/share/applications` so Discover loads every backend except
 `snap-backend`. It is a verbatim copy of the system file with `--backends` added to
 both `Exec` lines, and nothing else changed. Keep the two `Exec` lines in step: one
@@ -33,5 +33,5 @@ If the packaged entry gains options later, diff it and re-apply `--backends`:
 
 ```bash
 diff /usr/share/applications/org.kde.discover.desktop \
-  content/.local/share/applications/org.kde.discover.desktop
+  ~/.local/share/applications/org.kde.discover.desktop
 ```

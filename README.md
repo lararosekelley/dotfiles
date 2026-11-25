@@ -5,7 +5,7 @@
 ---
 
 This repository contains the configuration files I use on Linux computers.
-Dotfiles live under the `content/` directory.
+Dotfiles live under `home/`, which [chezmoi](https://www.chezmoi.io) installs.
 
 ## Machines
 
@@ -24,8 +24,7 @@ maps package names between Fedora and Arch, and
 ### Required
 
 - `git` - cloning and the prompt
-- `rust` - builds and runs the sync CLI
-- `mold` - linker selected in `content/.cargo/config.toml`; every cargo build fails without it
+- `chezmoi` - installs `home/` into the home directory
 - `bash-completion` - sourced by `.bashrc`
 - `nvim` - `$EDITOR` and the `vim`/`vi` aliases
 
@@ -60,15 +59,16 @@ Git:
 
 Tools with config here:
 
+- `rust`, `mold` - `~/.cargo/config.toml` links with mold, so every cargo build fails without it
 - `herdr`, `tuios` - terminal multiplexers, configured in their own repos (below)
-- `restic` - `content/.bin/backup.sh`, keyed off `content/.config/restic`
+- `restic` - `~/.bin/backup.sh`, keyed off `~/.config/restic`
 - `recoll` - full-text index; the `recollindex` unit override and the `recoll-search` Claude skill. Needs `perl-JSON` (Fedora) or `perl-json` (Arch) for image metadata, which recoll does not pull in
 - `navi` - PR-review alerts; installed to `~/.local/bin` and run by `navi.service`
 - `claude`, `opencode` - the `ai` script
 - `codegraph` - Claude `SessionStart` hook and MCP server
 - `uvx`, `npx` - run the aws and circleci MCP servers in `.claude/.mcp.json`
 - `gh`, `glab`, `gt` - GitHub, GitLab, and Graphite CLIs
-- `gcalcli`, `fastfetch` - configured under `content/.config`
+- `gcalcli`, `fastfetch` - configured under `~/.config`
 - `openrgb` - case lighting; see [RGB lighting](./docs/rgb-lighting.md)
 
 ## Getting started
@@ -79,31 +79,23 @@ Clone the repository:
 git clone git@github.com:lararosekelley/dotfiles
 ```
 
-Sync files to your home directory using the Rust CLI:
+Point chezmoi at the checkout and install, confirming each file:
 
 ```bash
-cargo run -- sync to-home
+chezmoi init --source ~/Code/personal/dotfiles
+chezmoi apply --interactive
 ```
 
-Or use the Justfile shortcuts:
-
-```bash
-just sync-to-home
-```
-
-It will prompt you to copy each file individually, so that no unexpected changes are made.
-
-The sync installs `content/.git_prompt` as `~/.git_prompt`, which `.bashrc` sources
-for Git prompt support. No separate prompt installation is needed.
-
-See the [sync CLI guide](./docs/sync-cli.md) for symlinks, status, and previewing changes.
+`.git_prompt` is installed with the rest, and `.bashrc` sources it for Git prompt
+support. See [Syncing](./docs/syncing.md) for previewing changes and copying home
+edits back.
 
 ## Guides
 
 Setup and management notes for this machine and its devices live in [`docs/`](./docs):
 
 - [New machine](./docs/new-machine.md) - setting up another computer from this repo
-- [Sync CLI](./docs/sync-cli.md) - syncing, status, and previewing changes
+- [Syncing](./docs/syncing.md) - installing with chezmoi, previewing, and copying edits back
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [fish](./docs/fish.md) - the fish setup, and what it shares with bash

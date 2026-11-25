@@ -1,6 +1,6 @@
 # fish
 
-`content/.config/fish` sets up fish next to bash. It works as an interactive
+`~/.config/fish` sets up fish next to bash. It works as an interactive
 shell started from bash, a terminal, tmux, tuios, or herdr, and as the login
 shell (`chsh -s /usr/bin/fish`).
 
@@ -15,7 +15,7 @@ Both shells read one copy of each of these:
   (`conf.d/abbreviations.fish`), so values must work in both shells. Names fish
   already defines, such as `path`, `ls`, and `grep`, are skipped. Bash-only
   aliases live in `.bashrc`.
-- Commands: scripts in `content/.bin`, such as `update`, `mux`, `serve`, `sub`,
+- Commands: scripts in `~/.bin`, such as `update`, `mux`, `serve`, `sub`,
   `loop`, `ai`, and `aws-env`.
 
 Each shell keeps its own version of the little that has to change the shell

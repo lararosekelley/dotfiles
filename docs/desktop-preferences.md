@@ -2,9 +2,9 @@
 
 ## Managed settings
 
-- `content/.config/powerdevilrc`: suspend after 600 seconds idle on AC power and
+- `~/.config/powerdevilrc`: suspend after 600 seconds idle on AC power and
   block Zen's video-playback sleep inhibition.
-- `content/.config/kwinrulesrc`: the Emacs window-position rule. Its class match
+- `~/.config/kwinrulesrc`: the Emacs window-position rule. Its class match
   names the Emacs PGTK version, so check it after changing Emacs builds.
 
 Sync replaces these files in full. Review home changes before accepting an update,

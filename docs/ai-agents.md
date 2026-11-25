@@ -2,15 +2,15 @@
 
 ## Shared global rules
 
-`content/.config/opencode/AGENTS.md` is the shared source for global agent rules.
-OpenCode loads it directly; `content/.claude/CLAUDE.md` imports it using Claude
-Code's native file-import syntax. The relative import works in both `content/`
-and the home directory. Edit the shared file rather than duplicating rules.
+`~/.config/opencode/AGENTS.md` is the shared source for global agent rules.
+OpenCode loads it directly; `~/.claude/CLAUDE.md` imports it using Claude Code's
+native file-import syntax. In the repo they are
+`home/dot_config/opencode/AGENTS.md` and `home/dot_claude/CLAUDE.md`, and the
+relative import works in both places. Edit the shared file rather than duplicating rules.
 
-Codex reads `~/.codex/AGENTS.md`. The sync tool skips symlinks, so link it to the
-shared file once: `ln -s ../.config/opencode/AGENTS.md ~/.codex/AGENTS.md`.
+Codex reads `~/.codex/AGENTS.md`. Link it to the shared file once: `ln -s ../.config/opencode/AGENTS.md ~/.codex/AGENTS.md`.
 
-Sync both files with `just sync-to-home` and restart both harnesses. In Claude
+Install both files with `chezmoi apply` and restart both harnesses. In Claude
 Code, use `/context` to check the loaded memory files. The rules require explicit
 confirmation before commits, pushes, and PR/MR comments or replies, and favor
 short messages with plain text and ASCII punctuation. These are agent instructions,
@@ -18,12 +18,12 @@ not tool-level permission enforcement.
 
 The repository's root [AGENTS.md](../AGENTS.md) covers dotfiles layout, sync
 behavior, and checks. Root `CLAUDE.md` imports those project instructions; the
-files under `content/` supply personal rules across repositories.
+files under `home/` supply personal rules across repositories.
 
 ## OpenCode appearance
 
-`content/.config/opencode/tui.json` sets the Callie theme, from
-`content/.config/opencode/themes/callie.json`, a copy of
+`~/.config/opencode/tui.json` sets the Callie theme, from
+`~/.config/opencode/themes/callie.json`, a copy of
 [greylocklabs/themes](https://github.com/greylocklabs/themes)' `ports/opencode/callie.json`. OpenCode merges
 `tui.json` followed by `tui.jsonc` in the same directory. The herdr installer owns
 the local `tui.jsonc` plugin registration and `herdr-tui-session.js`; keep those
@@ -33,19 +33,19 @@ changing its TUI configuration.
 
 ## Codex
 
-`content/.codex/config.toml` gives Codex the same MCP servers as Claude Code's
-`content/.claude/.mcp.json` and OpenCode's `opencode.jsonc`; add a server to all
+`~/.codex/config.toml` gives Codex the same MCP servers as Claude Code's
+`~/.claude/.mcp.json` and OpenCode's `opencode.jsonc`; add a server to all
 three. Sign in to the remote ones once with `codex mcp login <name>`. GitHub's
 server uses the same pre-registered OAuth app as Claude Code. Codex also writes
-project trust and notices into this file, so sync it back with `just sync-to-repo`.
+project trust and notices into this file, so copy it back with `chezmoi re-add`.
 
-Codex colors code blocks and diffs with the Callie theme in `content/.codex/themes`,
+Codex colors code blocks and diffs with the Callie theme in `~/.codex/themes`,
 copies of [greylocklabs/themes](https://github.com/greylocklabs/themes)'
 `ports/tmtheme`. `/theme` switches to Callie Light.
 
 ## Interactive reviews and audits
 
-The shared [finalize skill](../content/.claude/skills/finalize/SKILL.md) walks through
+The shared [finalize skill](../home/dot_claude/skills/finalize/SKILL.md) walks through
 current work one chunk at a time, applying keep/edit/remove decisions as you go.
 It prioritizes relevant uncommitted changes and active branch commits.
 
@@ -59,14 +59,14 @@ It prioritizes relevant uncommitted changes and active branch commits.
 /finalize help
 ```
 
-The shared [audit skill](../content/.claude/skills/audit/SKILL.md) assesses older or
+The shared [audit skill](../home/dot_claude/skills/audit/SKILL.md) assesses older or
 larger work, including merged changes, and presents a short findings list before
 you choose what to inspect or fix. It accepts a lens, an optional folder or Git
 reference, and plain-language scope guidance:
 
 ```text
 /audit docs
-/audit docs content/.config/fish/
+/audit docs home/dot_config/private_fish/
 /audit comments src/
 /audit 'recent changes to the feature flag system'
 /audit docs packages/sdk/ - focus on examples; skip generated API docs
@@ -78,7 +78,7 @@ Audit starts read-only; finalize applies requested edits chunk by chunk. Audit c
 also check agent configurations for conflicting rules, stale references, loading
 behavior, and context overhead. It distinguishes estimates from harness measurements.
 
-The shared [reword skill](../content/.claude/skills/reword/SKILL.md) walks through
+The shared [reword skill](../home/dot_claude/skills/reword/SKILL.md) walks through
 a repository's user-facing text, such as UI strings, CLI help, website pages, store
 listings, release notes, and docs, so you can replace the wording with your own.
 It lists text surfaces first, shows text as written, and updates tests that pin
@@ -100,13 +100,13 @@ description edits and rewriting commit messages require explicit direction.
 
 | Command | Purpose |
 | --- | --- |
-| [`/how`](../content/.claude/skills/how/SKILL.md) | Trace current code behavior with source references |
-| [`/why`](../content/.claude/skills/why/SKILL.md) | Investigate historical rationale, separating evidence from inference |
-| [`/teach`](../content/.claude/skills/teach/SKILL.md) | Explain a concept through a mental model and worked example |
-| [`/reflect`](../content/.claude/skills/reflect/SKILL.md) | Propose up to three durable instruction changes for approval |
-| [`/handoff`](../content/.claude/skills/handoff/SKILL.md) | Save or inspect private, cross-harness task context |
-| [`/discuss`](../content/.claude/skills/discuss/SKILL.md) | Settle a plan through short rounds of informed questions |
-| [`/verify`](../content/.claude/skills/verify/SKILL.md) | Run existing project checks and report what they establish |
+| [`/how`](../home/dot_claude/skills/how/SKILL.md) | Trace current code behavior with source references |
+| [`/why`](../home/dot_claude/skills/why/SKILL.md) | Investigate historical rationale, separating evidence from inference |
+| [`/teach`](../home/dot_claude/skills/teach/SKILL.md) | Explain a concept through a mental model and worked example |
+| [`/reflect`](../home/dot_claude/skills/reflect/SKILL.md) | Propose up to three durable instruction changes for approval |
+| [`/handoff`](../home/dot_claude/skills/handoff/SKILL.md) | Save or inspect private, cross-harness task context |
+| [`/discuss`](../home/dot_claude/skills/discuss/SKILL.md) | Settle a plan through short rounds of informed questions |
+| [`/verify`](../home/dot_claude/skills/verify/SKILL.md) | Run existing project checks and report what they establish |
 
 ```text
 /how does sync select files?
@@ -145,16 +145,16 @@ user's existing permission and delegation rules.
 
 Claude Code discovers the skills under `~/.claude/skills/`. OpenCode reads the
 same skills through thin commands in `~/.config/opencode/commands/`.
-Sync the skill and command files with `just sync-to-home`, then restart OpenCode.
+Install the skill and command files with `chezmoi apply`, then restart OpenCode.
 Claude Code reloads skill changes; restart it if a command is not listed.
 
-To install without the dotfiles sync tool, copy only these directories and files
-from `content/` into your home directory:
+To install without chezmoi, copy only these directories and files from `home/`
+into your home directory:
 
-| Source under `content/` | Destination | Used by |
+| Source under `home/` | Destination | Used by |
 | --- | --- | --- |
-| `.claude/skills/<name>/` | `~/.claude/skills/<name>/` | Both harnesses |
-| `.config/opencode/commands/<name>.md` | `~/.config/opencode/commands/<name>.md` | OpenCode |
+| `dot_claude/skills/<name>/` | `~/.claude/skills/<name>/` | Both harnesses |
+| `dot_config/opencode/commands/<name>.md` | `~/.config/opencode/commands/<name>.md` | OpenCode |
 
 Use `finalize`, `audit`, `how`, `why`, `teach`, `reflect`, `handoff`, `discuss`,
 `verify`, and `reword` as names.

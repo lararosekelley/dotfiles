@@ -5,7 +5,7 @@ desktop and the Arch laptop say so (see [Machines](../README.md#machines)).
 
 ## 1. Packages
 
-Install `git`, Rust (`rustup`, or the distro's `rust`) for the sync CLI, and the
+Install `git`, `chezmoi`, Rust (`rustup`, or the distro's `rust`), and the
 packages in [Packages](./packages.md#distro-packages-that-config-depends-on).
 `rustup` installs no toolchain at first; run `rustup default stable` once, which
 also brings the `rustfmt` and `clippy` that `just lint` uses.
@@ -41,15 +41,14 @@ git clone https://github.com/rbenv/ruby-build ~/.rbenv/plugins/ruby-build
 ## 2. Sync
 
 ```bash
-git clone git@github.com:lararosekelley/dotfiles
-cd dotfiles
-cargo run -- sync to-home
+git clone git@github.com:lararosekelley/dotfiles ~/Code/personal/dotfiles
+chezmoi init --source ~/Code/personal/dotfiles
+chezmoi apply --interactive
 ```
 
-Sync asks about each file. KDE settings are included only in a KDE session, so
-the Arch laptop skips them; see
-[Machine-specific files](./sync-cli.md#machine-specific-files). Copy over the
-private files the repo leaves out, such as `~/.environment`.
+`init` asks whether to install the KDE settings; answer no on the Arch laptop.
+See [Syncing](./syncing.md) for the everyday commands. Copy over the private
+files the repo leaves out, such as `~/.environment`.
 
 ## 3. Tools outside the repo
 
