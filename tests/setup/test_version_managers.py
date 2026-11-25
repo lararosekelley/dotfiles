@@ -1,10 +1,11 @@
 """scripts/setup/version-managers against local stand-ins for the GitHub repos."""
 
-import os
 from pathlib import Path
 import subprocess
 import tempfile
 import unittest
+
+from remotes import config, environment, git, make_remote
 
 REPO = Path(__file__).resolve().parents[2]
 SCRIPT = REPO / "scripts/setup/version-managers"
@@ -18,10 +19,6 @@ REPOS = {
 }
 
 
-def git(*args, cwd=None):
-    subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True)
-
-
 class VersionManagersTest(unittest.TestCase):
     def setUp(self):
         self.tmp = Path(tempfile.mkdtemp())
@@ -30,31 +27,8 @@ class VersionManagersTest(unittest.TestCase):
         self.home.mkdir()
         remotes = self.tmp / "remotes"
         for name in REPOS.values():
-            path = remotes / name
-            path.mkdir(parents=True)
-            git("init", "-q", "-b", "main", cwd=path)
-            (path / "README").write_text(name)
-            git("add", "README", cwd=path)
-            git(
-                "-c",
-                "user.name=t",
-                "-c",
-                "user.email=t@t",
-                "commit",
-                "-qm",
-                "init",
-                cwd=path,
-            )
-        # every https://github.com/ clone comes from the local stand-ins instead
-        self.env = {
-            "PATH": os.environ["PATH"],
-            "HOME": str(self.home),
-            "GIT_CONFIG_NOSYSTEM": "1",
-            "GIT_CONFIG_GLOBAL": "/dev/null",
-            "GIT_CONFIG_COUNT": "1",
-            "GIT_CONFIG_KEY_0": f"url.file://{remotes}/.insteadOf",
-            "GIT_CONFIG_VALUE_0": "https://github.com/",
-        }
+            make_remote(remotes, name)
+        self.env = environment(self.home, remotes)
 
     def run_script(self, *args):
         return subprocess.run(
@@ -62,12 +36,7 @@ class VersionManagersTest(unittest.TestCase):
         )
 
     def origin(self, path):
-        return subprocess.run(
-            ["git", "-C", str(self.home / path), "config", "remote.origin.url"],
-            env=self.env,
-            capture_output=True,
-            text=True,
-        ).stdout.strip()
+        return config(self.env, self.home / path, "remote.origin.url")
 
     def test_a_fresh_home_gets_every_repo(self):
         result = self.run_script()
