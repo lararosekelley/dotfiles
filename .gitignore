@@ -18,7 +18,6 @@
 
 # End of https://www.gitignore.io/api/linux
 
-target/
 node_modules/
 __pycache__/
 .claude/
