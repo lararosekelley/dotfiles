@@ -11,6 +11,8 @@ shows what was installed explicitly, as opposed to pulled in as a dependency.
 Fedora packages that config in `content/` depends on:
 
 - `azure-cli`, configured by `.azure/`
+- `fish`, configured by `.config/fish/`, with `fzf`, `fd-find`, and `bat` for its
+  plugins (see [fish](./fish.md))
 - `mold`, which `.cargo/config.toml` links Rust builds with
 - `obs-studio`, configured by `.config/obs-studio/`
 - `k9s`, configured by `.config/k9s/`, with `kubernetes1.34-client` and `helm`
