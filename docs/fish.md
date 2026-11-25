@@ -12,9 +12,9 @@ Both shells read one copy of each of these:
   interactive or login fish session sources them in bash and copies the
   resulting environment, `PATH` included (`conf.d/bash.fish`).
 - Aliases: `.aliases`. fish turns each one into an abbreviation
-  (`conf.d/abbreviations.fish`), so values must work in both shells, and names
-  that are fish builtins, such as `path`, are skipped. Bash-only aliases live in
-  `.bashrc`.
+  (`conf.d/abbreviations.fish`), so values must work in both shells. Names fish
+  already defines, such as `path`, `ls`, and `grep`, are skipped. Bash-only
+  aliases live in `.bashrc`.
 - Commands: scripts in `content/.bin`, such as `update`, `mux`, `serve`, `sub`,
   `loop`, `ai`, and `aws-env`.
 
