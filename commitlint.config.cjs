@@ -21,6 +21,7 @@ module.exports = {
         "tmux",
         "herdr",
         "terminal",
+        "sway",
         "git",
         "github",
         "ssh",
