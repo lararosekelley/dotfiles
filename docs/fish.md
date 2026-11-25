@@ -23,6 +23,28 @@ itself: `stk` (which changes directory) and `aws-use` (which applies `aws-env`'s
 variables), plus the prompt. `functions/fish_prompt.fish` mirrors
 `.bash_prompt`, so edit both when changing one.
 
+## Plugins
+
+`fish_plugins` lists the plugins, pinned to release tags, for
+[fisher](https://github.com/jorgebucaran/fisher) to install:
+
+- [fzf.fish](https://github.com/PatrickF1/fzf.fish): fzf searches on
+  `Ctrl+Alt+F` (files), `Ctrl+Alt+L` (git log), `Ctrl+Alt+S` (git status),
+  `Ctrl+Alt+P` (processes), `Ctrl+V` (variables, replacing fish's paste), and
+  `Ctrl+R` (history).
+- [fifc](https://github.com/gazorby/fifc): Tab completion in fzf, with fish's
+  own candidates, previews, and colored paths from `fd`. `fifc_editor` is set in
+  `conf.d/plugins.fish`. fifc binds Tab as it loads, before that file runs, and
+  only reads another key from the universal `fifc_keybinding`.
+
+`conf.d/plugins.fish` keeps the installed plugins in step with the list. The
+first interactive shell without fisher downloads it, at the tag in
+`fish_plugins`, and installs everything listed; after that, a changed
+`fish_plugins` is applied by the next shell. Normal startups make no network
+requests. To change plugins, edit `fish_plugins` and open a new shell, or run
+`fisher install`/`fisher remove`, which rewrite the file, and sync it back to
+the repo. Plugin files land in `~/.config/fish` but are not tracked here.
+
 ## Differences from bash
 
 - History is fish's own, and is merged from other sessions before each prompt.

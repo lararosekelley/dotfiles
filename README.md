@@ -40,6 +40,7 @@ Shell:
 - `figlet` - the `big` alias
 - `yt-dlp` - the `dl` alias
 - `ffmpeg`, `gifsicle` - the `flac2mp3`/`vid2mp4`/`vidslice`/`mov2gif` scripts
+- `fish` - the alternative shell (see [fish](./docs/fish.md)); its plugins use `fzf`, `fd`, `bat`, and `curl`
 
 Git:
 
