@@ -26,8 +26,7 @@ alias .....='cd ../../../..'
 
 # clipboard
 
-alias copy='xclip -selection clipboard'
-alias pbcopy='copy' # old macos habits
+alias pbcopy='copy' # old macos habits; copy is in ~/.bin
 
 # verbose output for file and folder actions
 

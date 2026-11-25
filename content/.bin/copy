@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Copy stdin, or the contents of the given files, to the clipboard: wl-copy
+# under Wayland, xclip under X11
+#
+# Usage: copy [file...]
+
+set -uo pipefail
+
+if [ -n "${WAYLAND_DISPLAY:-}" ] && command -v wl-copy > /dev/null; then
+  cat -- "$@" | wl-copy
+elif [ -n "${DISPLAY:-}" ] && command -v xclip > /dev/null; then
+  cat -- "$@" | xclip -selection clipboard
+else
+  echo "copy: needs wl-copy (Wayland) or xclip (X11)" >&2
+  exit 1
+fi
