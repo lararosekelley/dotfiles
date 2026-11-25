@@ -29,24 +29,48 @@ const PAYLOAD_EXCLUDES: &[&str] = &[
     "**/*.bak[0-9]*",
 ];
 
+/// KDE settings, synced only where KDE runs.
+const KDE_PATHS: &[&str] = &[
+    ".config/kwinrulesrc",
+    ".config/powerdevilrc",
+    ".local/share/applications/org.kde.discover.desktop",
+];
+
+pub const KDE_SKIPPED_NOTE: &str = "skipping KDE files (not a KDE session; pass --kde)";
+
+/// Whether to sync the KDE files: in a KDE session, or when `--kde` asks for them.
+pub fn include_kde(flag: bool) -> bool {
+    flag || std::env::var("XDG_CURRENT_DESKTOP")
+        .map(|desktops| desktops.split(':').any(|d| d.eq_ignore_ascii_case("KDE")))
+        .unwrap_or(false)
+}
+
 pub struct Filters {
     only: Option<GlobSet>,
     exclude: Option<GlobSet>,
     payload_exclude: GlobSet,
+    kde_exclude: Option<GlobSet>,
 }
 
 impl Filters {
-    pub fn new(only: &[String], exclude: &[String]) -> Result<Self> {
+    pub fn new(only: &[String], exclude: &[String], include_kde: bool) -> Result<Self> {
         let only_set = build_globset(only)?;
         let exclude_set = build_globset(exclude)?;
         let mut payload_exclude = GlobSetBuilder::new();
         for pattern in PAYLOAD_EXCLUDES {
             payload_exclude.add(Glob::new(pattern)?);
         }
+        let kde_paths: Vec<String> = KDE_PATHS.iter().map(|path| path.to_string()).collect();
+        let kde_exclude = if include_kde {
+            None
+        } else {
+            build_globset(&kde_paths)?
+        };
         Ok(Self {
             only: only_set,
             exclude: exclude_set,
             payload_exclude: payload_exclude.build()?,
+            kde_exclude,
         })
     }
 
@@ -55,6 +79,11 @@ impl Filters {
         // The root .gitignore is the user's installed global ignore file.
         if path_str != ".gitignore" && self.payload_exclude.is_match(&path_str) {
             return false;
+        }
+        if let Some(ref kde) = self.kde_exclude {
+            if kde.is_match(&path_str) {
+                return false;
+            }
         }
         if let Some(ref exclude) = self.exclude {
             if exclude.is_match(&path_str) {
@@ -268,10 +297,19 @@ mod tests {
 
     #[test]
     fn filters_only_and_exclude() -> Result<()> {
-        let filters = Filters::new(&["**/*.sh".to_string()], &["**/skip*".to_string()])?;
+        let filters = Filters::new(&["**/*.sh".to_string()], &["**/skip*".to_string()], true)?;
         assert!(filters.is_included(Path::new("scripts/run.sh")));
         assert!(!filters.is_included(Path::new("scripts/skip.sh")));
         assert!(!filters.is_included(Path::new("README.md")));
+        Ok(())
+    }
+
+    #[test]
+    fn kde_files_are_left_out_unless_included() -> Result<()> {
+        let filters = Filters::new(&[], &[], false)?;
+        assert!(!filters.is_included(Path::new(".config/kwinrulesrc")));
+        assert!(filters.is_included(Path::new(".config/fish/config.fish")));
+        assert!(Filters::new(&[], &[], true)?.is_included(Path::new(".config/kwinrulesrc")));
         Ok(())
     }
 

@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use crate::cli::{ColorArg, DirectionArg, StatusOptions};
 use crate::diff;
-use crate::fs::{build_records, collect_files, Filters};
+use crate::fs::{build_records, collect_files, include_kde, Filters, KDE_SKIPPED_NOTE};
 use crate::model::{Direction, Status, SyncMode};
 
 pub fn run(options: StatusOptions) -> Result<()> {
@@ -25,7 +25,11 @@ pub fn run(options: StatusOptions) -> Result<()> {
     }
 
     let (src_root, home_root) = resolve_paths(options.root, options.home)?;
-    let filters = Filters::new(&options.only, &options.exclude)?;
+    let include_kde = include_kde(options.kde);
+    if !include_kde {
+        println!("{KDE_SKIPPED_NOTE}");
+    }
+    let filters = Filters::new(&options.only, &options.exclude, include_kde)?;
     let rel_paths = collect_files(&src_root, &filters)?;
     let records = build_records(&rel_paths, &src_root, &home_root, direction, mode)?;
 
