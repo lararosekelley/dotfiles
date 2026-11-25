@@ -1,5 +1,7 @@
 {{- $kde := promptBoolOnce . "kde" "Install the KDE settings (kwin rules, power profile, Discover launcher)" (contains "kde" (lower (env "XDG_CURRENT_DESKTOP"))) -}}
+{{- $machine := promptStringOnce . "machine" "Machine name for per-machine settings (framework, thinkpad, desktop)" .chezmoi.hostname -}}
 sourceDir = {{ .chezmoi.workingTree | quote }}
 
 [data]
   kde = {{ $kde }}
+  machine = {{ $machine | quote }}
