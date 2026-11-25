@@ -25,6 +25,10 @@ jobs:
         with:
           tool: just
       - run: pip install black flake8
+      # chezmoi's documented installer, pinned; tests/chezmoi needs it
+      - run: |
+          sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin" -t v2.73.0
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - run: just lint-python
       - run: just test-python
 

@@ -130,6 +130,7 @@ test: test-python test-node
 test-python:
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/agent_awake -p 'test_*.py'
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/kde -p 'test_*.py'
+    PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/chezmoi -p 'test_*.py'
 
 test-node:
     node --test tests/agent_awake/plugin.test.mjs
