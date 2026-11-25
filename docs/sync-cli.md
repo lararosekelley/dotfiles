@@ -61,6 +61,16 @@ Markdown files. Move checkout-only guides to `docs/` instead of maintaining two
 copies. `sync to-home --delete` removes copies already installed at home (see
 [Removing deleted files](#removing-deleted-files)).
 
+## Machine-specific files
+
+The KDE settings (`kwinrulesrc`, `powerdevilrc`, and the Discover launcher, listed
+in `bin/fs.rs`) only make sense under KDE. Sync and status include them when
+`XDG_CURRENT_DESKTOP` names KDE, or with `--kde` from a session that does not set
+it, such as SSH. Otherwise the output starts with a note that they were skipped,
+and `--delete` leaves them alone.
+
+The desktop's OpenRGB files live in `system/`, which sync never installs.
+
 ## Removing deleted files
 
 Sync leaves home files alone when their source leaves `content/`, unless

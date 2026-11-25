@@ -4,7 +4,8 @@ use std::path::PathBuf;
 
 use crate::cli::SyncOptions;
 use crate::fs::{
-    backup_path, build_records, collect_files, ensure_parent_dir, remove_target, Filters,
+    backup_path, build_records, collect_files, ensure_parent_dir, include_kde, remove_target,
+    Filters, KDE_SKIPPED_NOTE,
 };
 use crate::model::{Direction, Status, SyncMode};
 use crate::stale;
@@ -27,7 +28,11 @@ pub fn run_sync(options: SyncOptions, direction: Direction, allow_symlink: bool)
     let root = options.root.clone();
     let home = options.home.clone();
     let (src_root, home_root) = resolve_paths(root, home)?;
-    let filters = Filters::new(&options.only, &options.exclude)?;
+    let include_kde = include_kde(options.kde);
+    if !include_kde {
+        println!("{KDE_SKIPPED_NOTE}");
+    }
+    let filters = Filters::new(&options.only, &options.exclude, include_kde)?;
     let rel_paths = collect_files(&src_root, &filters)?;
     let records = build_records(&rel_paths, &src_root, &home_root, direction, mode)?;
     let stale = if options.delete {

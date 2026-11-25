@@ -14,8 +14,8 @@
 
 Sync replaces selected files in full; it does not merge settings, and deletes
 stale home files only with `sync to-home --delete`. Both directions discover
-paths from `content/`, using the exclusions in `bin/fs.rs`. Git ignore rules do
-not define the sync payload.
+paths from `content/`, using the exclusions and the KDE-only paths in
+`bin/fs.rs`. Git ignore rules do not define the sync payload.
 
 Do not run a live home sync merely to test a change. Use temporary repo/home
 fixtures or `cargo run -- sync to-home --dry-run --yes`. Keep credentials,

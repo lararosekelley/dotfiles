@@ -60,6 +60,9 @@ pub struct SyncOptions {
     /// for each one. With --yes, files edited since they left the repo are kept
     #[arg(long)]
     pub delete: bool,
+    /// Include KDE files outside a KDE session
+    #[arg(long)]
+    pub kde: bool,
 }
 
 #[derive(Args, Debug, Clone)]
@@ -89,6 +92,9 @@ pub struct StatusOptions {
     /// Colourise diff output
     #[arg(long, value_enum, default_value = "auto")]
     pub color: ColorArg,
+    /// Include KDE files outside a KDE session
+    #[arg(long)]
+    pub kde: bool,
 }
 
 #[derive(ValueEnum, Debug, Clone, Copy)]

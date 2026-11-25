@@ -246,3 +246,36 @@ fn delete_leaves_files_inside_other_checkouts() {
     assert!(home.join("nested/removed").exists());
     assert!(!home.join("removed").exists());
 }
+
+#[test]
+fn kde_files_sync_only_in_a_kde_session_or_with_kde() {
+    let kde = ".config/kwinrulesrc";
+    let shared = ".bashrc";
+
+    for (session, flags, want_kde) in [
+        ("sway", vec![], false),
+        ("KDE", vec![], true),
+        ("sway", vec!["--kde"], true),
+    ] {
+        let temp = tempdir().unwrap();
+        let repo = temp.path().join("repo");
+        let home = temp.path().join("home");
+        for path in [kde, shared] {
+            write(&repo.join("content"), path, "repo");
+        }
+        let result = Command::new(env!("CARGO_BIN_EXE_dotfiles"))
+            .args(["sync", "to-home", "--yes", "--root"])
+            .arg(&repo)
+            .arg("--home")
+            .arg(&home)
+            .args(&flags)
+            .env("XDG_CURRENT_DESKTOP", session)
+            .output()
+            .unwrap();
+        assert!(result.status.success(), "{result:?}");
+        assert!(home.join(shared).is_file());
+        assert_eq!(home.join(kde).is_file(), want_kde, "{session} {flags:?}");
+        let output = String::from_utf8(result.stdout).unwrap();
+        assert_eq!(output.contains("--kde"), !want_kde, "{output}");
+    }
+}
