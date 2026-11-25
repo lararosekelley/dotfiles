@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Update various dependencies for different languages
+#
+# Params:
+#     none
+#
+# Usage: update
+
+function update() {
+  # node.js
+  sudo npm update -g
+  yarn global upgrade
+
+  # python
+  pip install --upgrade pip
+  pip --disable-pip-version-check list --outdated --format=json | python -c "import json, sys; print('\n'.join([x['name'] for x in json.load(sys.stdin)]))" | xargs -n1 pip install -U
+  pipx upgrade-all
+
+  # ruby
+  gem update
+
+  # rust
+  # shellcheck disable=SC2046
+  cargo install $(cargo install --list | grep -E '^[a-z0-9_-]+ v[0-9.]+:$' | cut -f1 -d' ')
+
+  # go
+  # requires go-global-update (see https://github.com/Gelio/go-global-update)
+  go-global-update
+}
+
+update "$@"

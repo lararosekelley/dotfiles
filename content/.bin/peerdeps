@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Installs peer dependencies for JavaScript projects, using Yarn
+#
+# Params:
+#     package - Package name
+#
+# Usage: peerdeps package
+
+function peerdeps() {
+  local PKG="$1"
+  npm info "$PKG@latest" peerDependencies --json | command sed 's/[\{\},]//g ; s/: /@/g' | xargs yarn add --dev "$PKG@latest"
+}
+
+peerdeps "$@"

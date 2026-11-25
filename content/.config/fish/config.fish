@@ -1,17 +1,10 @@
 # config.fish
 #
-# Environment variables and the longer shell functions live in the bash
-# dotfiles (see conf.d/bash.fish), so fish and bash share one copy of them.
+# Environment variables come from the bash dotfiles (see conf.d/bash.fish),
+# aliases from ~/.aliases (conf.d/abbreviations.fish), and most commands are
+# scripts in ~/.bin, so fish and bash share one copy of each.
 
 status is-interactive; or status is-login; or return
-
-# ssh-agent
-
-# Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs
-# and when an inherited socket is dead (herdr's agent symlink can dangle).
-if not test -S "$SSH_AUTH_SOCK"; and test -S "$XDG_RUNTIME_DIR/ssh-agent.socket"
-    set -gx SSH_AUTH_SOCK "$XDG_RUNTIME_DIR/ssh-agent.socket"
-end
 
 # language version managers
 
@@ -19,11 +12,6 @@ command -q pyenv; and pyenv init - --no-rehash fish | source
 command -q pyenv; and pyenv virtualenv-init - fish | source
 command -q nodenv; and nodenv init - fish | source
 command -q rbenv; and rbenv init - --no-rehash fish | source
-
-fish_add_path -g $HOME/.config/emacs/bin
-fish_add_path -g $HOME/.config/yarn/global/node_modules/.bin
-fish_add_path -g $HOME/.yarn/bin
-fish_add_path -g $HOME/Code/work/product/bin
 
 # the version manager inits prepend their shims even when PATH already has them
 set -l unique_path

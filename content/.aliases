@@ -3,6 +3,9 @@
 # aliases
 #
 # useful aliases to shorten common commands
+#
+# fish reads this file too, turning each alias into an abbreviation, so every
+# value has to work in both shells. Bash-only aliases go in ~/.bashrc.
 # --------
 
 # neovim instead of vim
@@ -11,14 +14,9 @@ alias vim='nvim'
 alias vi='nvim'
 alias vimrc='vim ~/.config/nvim/init.lua'
 
-# allow sudo for aliases
-
-alias sudo='sudo '
-
 # cd stuff
 
 alias up='cd ..'
-alias ~='cd ~'
 alias back='cd -'
 
 alias ..='cd ..'
@@ -64,6 +62,17 @@ alias mem='top -o mem'
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en0"
 
+# notes, in $NOTES_DIR from ~/.environment
+
+alias notes='cd "$NOTES_DIR"'
+
+# aws: aws-use (in ~/.functions and fish's functions) applies `aws-env`
+
+alias aws-work='aws-use work'
+alias aws-personal='aws-use personal'
+alias aws-personal-admin='aws-use personal-admin'
+alias aws-clear-session='aws-use clear'
+
 # git
 
 alias g='git'
@@ -81,7 +90,7 @@ alias tsw='tailscale switch'
 alias c='clear'
 alias dl='yt-dlp -x'
 alias notify='tput bel'
-alias path='echo -e ${PATH//:/\\n}'
+alias path='echo "$PATH" | tr : "\\n"'
 alias space='df -P -kHl'
 alias ports='lsof -n -i -P | grep LISTEN'
 alias agent-awake='python3 ~/.local/share/agent-awake/agent_awake.py'

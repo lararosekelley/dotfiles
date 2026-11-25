@@ -76,6 +76,14 @@ export RBENV_PATH="$HOME/.rbenv/bin"
 
 export SNAP_PATH="/var/lib/snapd/snap"
 
+# ssh-agent
+
+# Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs
+# and when an inherited socket is dead (herdr's agent symlink can dangle).
+if [ ! -S "${SSH_AUTH_SOCK:-}" ] && [ -S "${XDG_RUNTIME_DIR:-}/ssh-agent.socket" ]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+fi
+
 # path
 
 path_prepend_if_missing "$FLYCTL_INSTALL/bin"
@@ -90,6 +98,10 @@ path_prepend_if_missing "$HOME/.poetry/bin"
 path_prepend_if_missing "${KREW_ROOT:-$HOME/.krew}/bin"
 path_prepend_if_missing "$HOME/.local/bin"
 path_prepend_if_missing "$HOME/.bin"
+path_prepend_if_missing "$HOME/.config/emacs/bin"
+path_prepend_if_missing "$HOME/.config/yarn/global/node_modules/.bin"
+path_prepend_if_missing "$HOME/.yarn/bin"
+path_prepend_if_missing "$HOME/Code/work/product/bin" # added by higharc setup
 
 # herd and tui, from the herdr and tuios config repos when they are cloned
 

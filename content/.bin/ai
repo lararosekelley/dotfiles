@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Start an LLM harness, optionally with an AWS profile set for it alone
+#
+# Params:
+#     harness - Harness to use (claude, codex, opencode)
+#     profile - AWS profile to use (work or personal, optional)
+#     args    - Passed through to the harness
+#
+# Usage: ai harness [profile] [args...]
+
+set -uo pipefail
+
+harness=${1:-}
+shift
+
+case "$harness" in
+  claude | codex | opencode) ;;
+  *)
+    echo "Usage: ai harness [profile] [args...]" >&2
+    echo "  harness: claude, codex, opencode" >&2
+    echo "  profile: work, personal (optional)" >&2
+    exit 1
+    ;;
+esac
+
+case "${1:-}" in
+  work | personal)
+    vars=$(aws-env "$1") || exit 1
+    shift
+
+    while IFS='=' read -r key value; do
+      if [ -n "$value" ]; then
+        export "$key=$value"
+      else
+        unset "$key"
+      fi
+    done <<< "$vars"
+    ;;
+esac
+
+exec "$harness" "$@"

@@ -22,6 +22,11 @@ for file in "${files[@]}"; do
   fi
 done
 
+# bash-only aliases; the shared ones in ~/.aliases are read by fish too
+
+alias sudo='sudo ' # expand aliases after sudo
+alias ~='cd ~'
+
 # bash options
 
 options=(
@@ -80,14 +85,6 @@ for tool in herd tui; do
 done
 unset tool
 
-# ssh-agent
-
-# Plasma points SSH_AUTH_SOCK at the systemd user agent; do the same on TTYs
-# and when an inherited socket is dead (herdr's agent symlink can dangle).
-if [ ! -S "${SSH_AUTH_SOCK:-}" ] && [ -S "${XDG_RUNTIME_DIR:-}/ssh-agent.socket" ]; then
-  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-fi
-
 # pyenv
 
 eval "$(pyenv init - --no-rehash bash)"
@@ -126,13 +123,6 @@ fi
 # PROMPT_COMMAND is set, since it adds its hook to it.
 
 command -v zoxide > /dev/null && eval "$(zoxide init bash)"
-
-path_prepend_if_missing "$HOME/.config/emacs/bin"
-path_prepend_if_missing "$HOME/.config/yarn/global/node_modules/.bin"
-path_prepend_if_missing "$HOME/.yarn/bin"
-
-# Added by higharc setup
-path_prepend_if_missing "$HOME/Code/work/product/bin"
 
 # higharc shell completion
 [ -f "$HOME/.higharc/completion.bash" ] && source "$HOME/.higharc/completion.bash"
