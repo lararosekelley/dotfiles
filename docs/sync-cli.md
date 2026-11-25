@@ -58,8 +58,29 @@ their runtime instructions in `SKILL.md` beside their code.
 
 The sync policy deliberately permits component READMEs rather than excluding all
 Markdown files. Move checkout-only guides to `docs/` instead of maintaining two
-copies. Sync does not remove obsolete installed files; any copies of guides or
-checkout installers already at home can be removed manually.
+copies. `sync to-home --delete` removes copies already installed at home (see
+[Removing deleted files](#removing-deleted-files)).
+
+## Removing deleted files
+
+Sync leaves home files alone when their source leaves `content/`, unless
+`sync to-home` gets `--delete`:
+
+```bash
+cargo run -- sync to-home --delete --dry-run --yes  # list what would go
+cargo run -- sync to-home --delete                  # ask about each file
+```
+
+Git history decides what counts: a home file is a candidate only if its path
+was once tracked under `content/` and is gone now, whether deleted in a commit,
+renamed, or deleted but not yet committed. Home files the repo never tracked,
+paths excluded from the payload or by `--only`/`--exclude`, and files inside
+another git checkout (a config that moved to a repo of its own) are never
+candidates.
+
+Each deletion is confirmed like a copy. A file edited since it left the repo is
+flagged in the prompt, and `--yes` keeps it rather than deleting it. `--backup`
+saves a `.bak` copy first.
 
 ## Previewing changes
 
@@ -85,7 +106,7 @@ cargo run -- status --diff --color=always | less -R  # keep colour through a pip
 cargo run -- status --diff --color=never             # plain output on a terminal
 ```
 
-`--dry-run` prints the `copy`, `symlink`, `remove`, `backup`, and `mkdir -p`
+`--dry-run` prints the `copy`, `symlink`, `remove`, `delete`, `backup`, and `mkdir -p`
 operations instead of performing them. Pair it with `--yes`; without it, sync
 still asks about each file one at a time.
 

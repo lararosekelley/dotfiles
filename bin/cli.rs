@@ -55,6 +55,11 @@ pub struct SyncOptions {
 
     #[arg(long)]
     pub backup: bool,
+
+    /// Also delete home files whose source was removed from content/, asking
+    /// for each one. With --yes, files edited since they left the repo are kept
+    #[arg(long)]
+    pub delete: bool,
 }
 
 #[derive(Args, Debug, Clone)]
