@@ -54,7 +54,8 @@ the repo. Plugin files land in `~/.config/fish` but are not tracked here.
 - File completion leaves out hidden files unless the word starts with `.`, and
   does not color candidates by file type.
 - There is no spelling correction for `cd`.
-- The higharc and Ruby completions are bash-only.
+- The Ruby completions are bash-only. higharc's come from
+  `~/.higharc/completion.fish`, which `higharc setup --shell fish` writes.
 
 ## As the login shell
 
