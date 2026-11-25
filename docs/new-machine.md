@@ -47,7 +47,8 @@ chezmoi init --source ~/Code/personal/dotfiles
 chezmoi apply --interactive
 ```
 
-`init` asks whether to install the KDE settings; answer no on the Arch laptop.
+`init` asks whether to install the KDE settings (answer no on the Arch laptop)
+and the machine's name (`framework`, `thinkpad`, or `desktop`).
 See [Syncing](./syncing.md) for the everyday commands. Copy over the private
 files the repo leaves out, such as `~/.environment`.
 

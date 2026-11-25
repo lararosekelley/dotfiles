@@ -18,7 +18,7 @@ KDE_FILES = {
 
 def chezmoi(tmp, source, kde, *args):
     config = tmp / "chezmoi.toml"
-    config.write_text(f"[data]\n  kde = {str(kde).lower()}\n")
+    config.write_text(f'[data]\n  kde = {str(kde).lower()}\n  machine = "framework"\n')
     (tmp / "home").mkdir(exist_ok=True)
     command = [
         CHEZMOI,
@@ -73,6 +73,17 @@ class SourceTest(unittest.TestCase):
             files = managed(source, True)
         self.assertFalse([f for f in files if "__pycache__" in f or f.endswith(".pyc")])
         self.assertIn(".local/share/agent-awake/agent_awake.py", files)
+
+    def test_sway_reads_the_per_machine_file(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            chezmoi(tmp, REPO, False, "apply", "--force", "--exclude", "scripts")
+            sway = tmp / "home/.config/sway"
+            machine = (sway / "machine.conf").read_text()
+            config = (sway / "config").read_text()
+        self.assertIn("(framework)", machine)
+        self.assertIn("output eDP-1", machine)
+        self.assertIn("include ~/.config/sway/machine.conf", config)
 
     def test_private_and_executable_modes_are_installed(self):
         with tempfile.TemporaryDirectory() as tmp:

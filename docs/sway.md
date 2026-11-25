@@ -13,6 +13,16 @@ cp /etc/sway/config ~/.config/sway/
 vim ~/.config/sway/config
 ```
 
+### Per-machine settings
+
+The config is tracked here, and reads `~/.config/sway/machine.conf` right after
+its variables. chezmoi writes that file from
+`home/dot_config/sway/machine.conf.tmpl`, using the `machine` answer
+from `chezmoi init` (`framework`, `thinkpad`, or `desktop`). Put anything that
+differs between machines in that template's matching section, such as outputs or
+a different `$mod`. Keyboard settings can stay in the shared config: an `input`
+block for a device that isn't connected is ignored.
+
 ### Wallpaper
 
 ### Keybindings

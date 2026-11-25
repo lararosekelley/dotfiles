@@ -10,8 +10,11 @@ tests) are never installed.
 chezmoi init --source ~/Code/personal/dotfiles
 ```
 
-`init` writes chezmoi's config from `home/.chezmoi.toml.tmpl` and asks once
-whether to install the KDE settings, defaulting to yes in a KDE session.
+`init` writes chezmoi's config from `home/.chezmoi.toml.tmpl` and asks two
+questions once per machine: whether to install the KDE settings (yes by default
+in a KDE session), and the machine's name for per-machine settings (`framework`,
+`thinkpad`, or `desktop`; the hostname by default). Rerun `init` to answer a
+question added later.
 
 ## Everyday commands
 
