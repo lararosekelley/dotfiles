@@ -2,7 +2,7 @@ root = true
 
 # shfmt reads its settings from here. Scoped to shell files so other files
 # keep each editor's defaults.
-[{*.sh,.aliases,.bash_profile,.bash_prompt,.bashrc,.exports,.functions}]
+[{*.sh,dot_aliases,dot_bash_profile,dot_bash_prompt,dot_bashrc,dot_exports,dot_functions}]
 indent_style = space
 indent_size = 2
 shell_variant = bash
@@ -10,8 +10,8 @@ switch_case_indent = true
 space_redirects = true
 binary_next_line = true
 
-# scripts in content/.bin have no extension
-[content/.bin/*]
+# scripts in home/dot_bin have no extension
+[home/dot_bin/*]
 indent_style = space
 indent_size = 2
 shell_variant = bash

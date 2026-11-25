@@ -19,7 +19,7 @@ test("OpenCode leases follow activity, pending requests, sessions and disposal",
   t.mock.method(globalThis, "clearInterval", () => {});
   const source = await readFile(
     new URL(
-      "../../content/.config/opencode/plugins/agent-awake.js",
+      "../../home/dot_config/opencode/plugins/agent-awake.js",
       import.meta.url,
     ),
     "utf8",

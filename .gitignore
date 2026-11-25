@@ -22,7 +22,6 @@ target/
 node_modules/
 __pycache__/
 .claude/
-!content/.claude
 
 # codegraph db
 .codegraph/

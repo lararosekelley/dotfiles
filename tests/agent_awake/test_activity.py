@@ -12,8 +12,8 @@ import unittest
 from unittest.mock import patch
 
 REPO = Path(__file__).resolve().parents[2]
-CONTENT = REPO / "content"
-SOURCE = CONTENT / ".local/share/agent-awake"
+CONTENT = REPO / "home"
+SOURCE = CONTENT / "dot_local/share/agent-awake"
 
 
 def module(name, path):
@@ -287,7 +287,7 @@ class HooksAndInstall(unittest.TestCase):
             self.assertEqual(first["model"], original["model"])
             self.assertEqual(first["hooks"]["Stop"][0], original["hooks"]["Stop"][0])
             self.assertEqual(len(list(target.parent.glob("*.bak"))), 1)
-            template = json.loads((CONTENT / ".claude/settings.json").read_text())
+            template = json.loads((CONTENT / "dot_claude/settings.json").read_text())
             self.assertEqual(
                 first, installer.merge_hooks(copy.deepcopy(first), template)
             )
