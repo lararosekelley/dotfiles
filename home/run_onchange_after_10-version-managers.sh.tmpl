@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Clone the language version managers. chezmoi reruns this whenever the script
+# or its helpers change:
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/version-managers") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/lib.sh") | sha256sum }}
+exec {{ joinPath .chezmoi.workingTree "scripts/setup/version-managers" | quote }}

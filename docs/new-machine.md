@@ -26,18 +26,8 @@ makepkg -si
 `/etc/locale.gen` and run `sudo locale-gen`, or every program warns about the
 locale.
 
-pyenv, nodenv, and rbenv are optional git checkouts, and both shells load
-whichever are present. pyenv builds Python itself; nodenv and rbenv need the
-node-build and ruby-build plugins for `nodenv install` and `rbenv install`:
-
-```bash
-git clone https://github.com/pyenv/pyenv ~/.pyenv
-git clone https://github.com/pyenv/pyenv-virtualenv ~/.pyenv/plugins/pyenv-virtualenv
-git clone https://github.com/nodenv/nodenv ~/.nodenv
-git clone https://github.com/nodenv/node-build ~/.nodenv/plugins/node-build
-git clone https://github.com/rbenv/rbenv ~/.rbenv
-git clone https://github.com/rbenv/ruby-build ~/.rbenv/plugins/ruby-build
-```
+pyenv, nodenv, and rbenv, with their build plugins, are git checkouts that
+`chezmoi apply` clones in step 2; both shells load whichever are present.
 
 ## 2. Sync
 
