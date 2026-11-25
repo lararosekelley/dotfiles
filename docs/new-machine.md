@@ -10,18 +10,32 @@ packages in [Packages](./packages.md#distro-packages-that-config-depends-on).
 `rustup` installs no toolchain at first; run `rustup default stable` once, which
 also brings the `rustfmt` and `clippy` that `just lint` uses.
 
+On Arch, packages outside the official repos come from the AUR. Build the paru
+helper once by hand, then `paru -S <package>` installs from the repos or the AUR,
+showing each AUR build script for review, and `paru` alone updates everything:
+
+```bash
+sudo pacman -S --needed base-devel git
+git clone https://aur.archlinux.org/paru.git
+cd paru
+makepkg -si
+```
+
 `.exports` sets `LC_ALL=en_US.UTF-8`. On Arch, uncomment `en_US.UTF-8 UTF-8` in
 `/etc/locale.gen` and run `sudo locale-gen`, or every program warns about the
 locale.
 
 pyenv, nodenv, and rbenv are optional git checkouts, and both shells load
-whichever are present:
+whichever are present. pyenv builds Python itself; nodenv and rbenv need the
+node-build and ruby-build plugins for `nodenv install` and `rbenv install`:
 
 ```bash
 git clone https://github.com/pyenv/pyenv ~/.pyenv
 git clone https://github.com/pyenv/pyenv-virtualenv ~/.pyenv/plugins/pyenv-virtualenv
 git clone https://github.com/nodenv/nodenv ~/.nodenv
+git clone https://github.com/nodenv/node-build ~/.nodenv/plugins/node-build
 git clone https://github.com/rbenv/rbenv ~/.rbenv
+git clone https://github.com/rbenv/ruby-build ~/.rbenv/plugins/ruby-build
 ```
 
 ## 2. Sync
