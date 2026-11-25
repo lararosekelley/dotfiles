@@ -2,40 +2,42 @@
 
 ## Boundaries
 
-- `content/` mirrors paths under home and contains the installed payload.
+- `home/` is the chezmoi source for the home directory: `.config` is
+  `dot_config`, executables start with `executable_`, and private files with
+  `private_`. `.chezmoiroot` points chezmoi at it.
 - `system/` holds configuration requiring separate system-level installation.
 - `scripts/` holds checkout-only installers; `docs/` holds operating/setup guides.
-- `bin/` is the Rust sync CLI. Rust integration tests and Agent Awake tests live
-  under `tests/`.
-- Global agent rules live in `content/.config/opencode/AGENTS.md`;
-  `content/.claude/CLAUDE.md` imports them. Edit the canonical file.
+- Agent Awake and KDE installer tests live under `tests/`.
+- Global agent rules live in `home/dot_config/opencode/AGENTS.md`;
+  `home/dot_claude/CLAUDE.md` imports them. Edit the canonical file.
 
 ## Sync behavior
 
-Sync replaces selected files in full; it does not merge settings, and deletes
-stale home files only with `sync to-home --delete`. Both directions discover
-paths from `content/`, using the exclusions and the KDE-only paths in
-`bin/fs.rs`. Git ignore rules do not define the sync payload.
+chezmoi installs files from `home/` in full; it does not merge settings.
+`home/.chezmoiignore` leaves out caches, and the KDE settings on machines that
+answered no at `chezmoi init`. A file removed from `home/` stays installed until
+it is listed in `home/.chezmoiremove`.
 
-Do not run a live home sync merely to test a change. Use temporary repo/home
-fixtures or `cargo run -- sync to-home --dry-run --yes`. Keep credentials,
-generated state, caches, and private handoff notes out of `content/`.
+Do not run `chezmoi apply` merely to test a change. Use `chezmoi diff`, or a
+temporary destination (`chezmoi apply --destination <dir>`) with its own
+`--persistent-state`. Keep credentials, generated state, caches, and private
+handoff notes out of `home/`.
 
 ## Checks
 
 Run commands from the repository root:
 
-- `just test`: Rust, Python, and Node suites.
-- `just test-rust`, `just test-python`, `just test-node`: focused suites.
-- `just lint`: Rust formatting/Clippy, Python formatting/lint, JavaScript
-  formatting/lint (oxfmt, oxlint), shell formatting/lint (shfmt, shellcheck), and
-  Markdown lint.
+- `just test`: Python and Node suites.
+- `just test-python`, `just test-node`: focused suites.
+- `just lint`: Python formatting/lint, JavaScript formatting/lint (oxfmt,
+  oxlint), shell formatting/lint (shfmt, shellcheck), fish syntax and formatting,
+  and Markdown lint.
 
 CI runs the same lint and test recipes, plus commitlint, on pushes to `main` and
 on pull requests.
 
-For sync changes, cover both directions and file selection. For integration
-installers, verify unrelated live settings are preserved using a temporary home.
+For changes to what chezmoi installs, check `chezmoi managed` and `chezmoi diff`.
+For integration installers, verify unrelated live settings are preserved using a temporary home.
 Docs-only edits need applicable formatting and link checks, not the full test suite.
 
 Commits require a lowercase `type(scope): description` subject. Valid scopes are

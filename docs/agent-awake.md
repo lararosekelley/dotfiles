@@ -102,6 +102,6 @@ just test-python
 just test-node
 ```
 
-`just test` runs these suites and the Rust sync CLI tests.
+`just test` runs these suites.
 
 References: [OpenCode plugins](https://opencode.ai/docs/plugins/) and [Claude Code hooks](https://code.claude.com/docs/en/hooks).

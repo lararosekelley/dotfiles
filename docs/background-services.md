@@ -1,6 +1,6 @@
 # Background services
 
-`content/.config/systemd/user` holds the user units, which syncing alone does not
+`~/.config/systemd/user` holds the user units, which installing them does not
 turn on:
 
 | unit                                  | what it does                           |
