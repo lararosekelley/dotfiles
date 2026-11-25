@@ -1,4 +1,4 @@
-{{- $kde := promptBoolOnce . "kde" "Install the KDE settings (kwin rules, power profile, Discover launcher)" (contains "KDE" (env "XDG_CURRENT_DESKTOP")) -}}
+{{- $kde := promptBoolOnce . "kde" "Install the KDE settings (kwin rules, power profile, Discover launcher)" (contains "kde" (lower (env "XDG_CURRENT_DESKTOP"))) -}}
 sourceDir = {{ .chezmoi.workingTree | quote }}
 
 [data]
