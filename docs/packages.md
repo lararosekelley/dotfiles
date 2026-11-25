@@ -1,23 +1,31 @@
 # Packages
 
-Where each installed program comes from and how to update it. Versions are left
-out; ask the package manager.
+Where each installed program comes from and how to update it, on the Fedora
+desktop and the Arch laptop (see [Machines](../README.md#machines)). Versions are
+left out; ask the package manager.
 
-## dnf
+## Distro packages that config depends on
+
+Config in `content/` depends on these. Names differ by distro; most are in
+Fedora's repos and Arch's official repos, and the exceptions are noted. pyenv,
+nodenv, and rbenv are git checkouts on both; see [New machine](./new-machine.md).
+
+| used by                                            | Fedora (dnf)                     | Arch (pacman)                      |
+| -------------------------------------------------- | -------------------------------- | ---------------------------------- |
+| `.cargo/config.toml` links Rust builds             | `mold`                           | `mold`                             |
+| `.config/fish/` and its plugins                    | `fish fzf fd-find bat`           | `fish fzf fd bat`                  |
+| the `copy` script                                  | `wl-clipboard` or `xclip`        | `wl-clipboard` or `xclip`          |
+| `.config/k9s/` (see [Kubernetes](./kubernetes.md)) | `k9s kubernetes1.34-client helm` | `k9s kubectl helm`                 |
+| `.azure/`                                          | `azure-cli`                      | `azure-cli`                        |
+| `.bin/backup.sh`                                   | `restic`                         | `restic`                           |
+| the `recollindex` override                         | `recoll perl-JSON`               | `recoll perl-json`                 |
+| `.config/obs-studio/`                              | `obs-studio`                     | `obs-studio`                       |
+| the Headlamp Callie theme's font                   | `vernnobile-nunito-fonts`        | none known; install Nunito by hand |
+
+## Fedora: dnf
 
 Most CLI tools and desktop apps come from Fedora and RPM Fusion. `dnf history list`
 shows what was installed explicitly, as opposed to pulled in as a dependency.
-
-Fedora packages that config in `content/` depends on:
-
-- `azure-cli`, configured by `.azure/`
-- `fish`, configured by `.config/fish/`, with `fzf`, `fd-find`, and `bat` for its
-  plugins (see [fish](./fish.md))
-- `mold`, which `.cargo/config.toml` links Rust builds with
-- `obs-studio`, configured by `.config/obs-studio/`
-- `k9s`, configured by `.config/k9s/`, with `kubernetes1.34-client` and `helm`
-  (see [Kubernetes](./kubernetes.md))
-- `vernnobile-nunito-fonts`, the Nunito family the Headlamp Callie theme uses
 
 Third-party repos in use:
 
