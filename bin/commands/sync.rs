@@ -7,11 +7,15 @@ use crate::fs::{
     backup_path, build_records, collect_files, ensure_parent_dir, remove_target, Filters,
 };
 use crate::model::{Direction, Status, SyncMode};
+use crate::stale;
 use crate::ui::confirm;
 
 pub fn run_sync(options: SyncOptions, direction: Direction, allow_symlink: bool) -> Result<()> {
     if options.symlink && !allow_symlink {
         return Err(anyhow!("--symlink is only supported for sync to-home"));
+    }
+    if options.delete && direction != Direction::ToHome {
+        return Err(anyhow!("--delete is only supported for sync to-home"));
     }
 
     let mode = if options.symlink {
@@ -26,8 +30,14 @@ pub fn run_sync(options: SyncOptions, direction: Direction, allow_symlink: bool)
     let filters = Filters::new(&options.only, &options.exclude)?;
     let rel_paths = collect_files(&src_root, &filters)?;
     let records = build_records(&rel_paths, &src_root, &home_root, direction, mode)?;
+    let stale = if options.delete {
+        let repo_root = src_root.parent().expect("content/ has a parent");
+        stale::find(repo_root, &home_root, &filters, &rel_paths)?
+    } else {
+        Vec::new()
+    };
 
-    apply_sync(&records, mode, &options)
+    apply_sync(&records, &stale, mode, &options)
 }
 
 fn resolve_paths(root: Option<PathBuf>, home: Option<PathBuf>) -> Result<(PathBuf, PathBuf)> {
@@ -45,6 +55,7 @@ fn resolve_paths(root: Option<PathBuf>, home: Option<PathBuf>) -> Result<(PathBu
 
 fn apply_sync(
     records: &[crate::model::FileRecord],
+    stale: &[stale::StaleFile],
     mode: SyncMode,
     options: &SyncOptions,
 ) -> Result<()> {
@@ -53,6 +64,7 @@ fn apply_sync(
     let mut skipped = 0;
     let mut missing_source = 0;
     let mut conflicts = 0;
+    let mut deleted = 0;
     let mut created_dirs = HashSet::new();
 
     for record in records {
@@ -138,10 +150,40 @@ fn apply_sync(
         }
     }
 
+    for file in stale {
+        let rel = file.rel_path.to_string_lossy();
+        if !file.unchanged && options.yes {
+            println!("kept {rel}: edited since it left the repo, so --yes will not delete it");
+            skipped += 1;
+            continue;
+        }
+        let note = if file.unchanged {
+            ""
+        } else {
+            " (edited since it left the repo)"
+        };
+        if !confirm(&format!("Delete {rel}{note}?"), options.yes)? {
+            skipped += 1;
+            continue;
+        }
+        // a symlink install's link dangles once its source is gone, so there is
+        // nothing to back up
+        if options.backup && file.home_path.is_file() {
+            backup_file(&file.home_path, options.dry_run)?;
+        }
+        if options.dry_run {
+            println!("delete {}", file.home_path.display());
+        } else {
+            remove_target(&file.home_path)?;
+        }
+        deleted += 1;
+    }
+
     println!();
     println!("Summary");
     println!("  copied:         {copied}");
     println!("  linked:         {linked}");
+    println!("  deleted:        {deleted}");
     println!("  skipped:        {skipped}");
     println!("  missing-source: {missing_source}");
     println!("  conflicts:      {conflicts}");
@@ -160,16 +202,16 @@ fn maybe_backup(record: &crate::model::FileRecord, dry_run: bool) -> Result<()> 
         );
         return Ok(());
     }
-    let backup = backup_path(&record.dest_path)?;
+    backup_file(&record.dest_path, dry_run)
+}
+
+fn backup_file(path: &std::path::Path, dry_run: bool) -> Result<()> {
+    let backup = backup_path(path)?;
     if dry_run {
-        println!(
-            "backup {} -> {}",
-            record.dest_path.display(),
-            backup.display()
-        );
+        println!("backup {} -> {}", path.display(), backup.display());
         return Ok(());
     }
-    std::fs::copy(&record.dest_path, &backup)?;
+    std::fs::copy(path, &backup)?;
     Ok(())
 }
 

@@ -3,6 +3,7 @@ mod commands;
 mod diff;
 mod fs;
 mod model;
+mod stale;
 mod ui;
 
 use anyhow::Result;
