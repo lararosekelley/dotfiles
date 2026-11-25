@@ -1,6 +1,7 @@
-# sway settings for this machine only ({{ .machine }}), set by `machine` at
+{{- $machine := get . "machine" -}}
+# sway settings for this machine only ({{ $machine }}), set by `machine` at
 # `chezmoi init`. Shared settings belong in config.
-{{- if eq .machine "framework" }}
+{{- if eq $machine "framework" }}
 
 # built-in display
 output eDP-1 resolution 2880x1920 position 0 0 scale 2
@@ -11,12 +12,14 @@ bindsym $mod+p exec display-menu
 
 # open sway config file in neovim floating window
 bindsym --locked XF86AudioMedia exec kitty --class sway-config sh -c 'nvim ~/.config/sway/config && swaymsg reload'
-{{- else if eq .machine "thinkpad" }}
-{{- else if eq .machine "desktop" }}
+{{- else if eq $machine "thinkpad" }}
+{{- else if eq $machine "desktop" }}
 
 # Alt as the modifier: sway runs in a window under KDE here, and Plasma keeps
 # most Super shortcuts for itself
 set $mod Mod1
+{{- else if not $machine }}
+{{-   fail "no machine chosen: rerun chezmoi init and choose framework, thinkpad, or desktop" }}
 {{- else }}
-{{-   fail (printf "unknown machine %q: rerun chezmoi init and choose framework, thinkpad, or desktop" .machine) }}
+{{-   fail (printf "unknown machine %q: rerun chezmoi init and choose framework, thinkpad, or desktop" $machine) }}
 {{- end }}

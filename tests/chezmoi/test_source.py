@@ -18,7 +18,10 @@ KDE_FILES = {
 
 def chezmoi(tmp, source, kde, *args, machine="framework"):
     config = tmp / "chezmoi.toml"
-    config.write_text(f'[data]\n  kde = {str(kde).lower()}\n  machine = "{machine}"\n')
+    data = f"[data]\n  kde = {str(kde).lower()}\n"
+    if machine is not None:
+        data += f'  machine = "{machine}"\n'
+    config.write_text(data)
     (tmp / "home").mkdir(exist_ok=True)
     command = [
         CHEZMOI,
@@ -92,6 +95,14 @@ class SourceTest(unittest.TestCase):
             with self.assertRaises(subprocess.CalledProcessError) as raised:
                 chezmoi(tmp, REPO, False, "cat", target, machine="fedora")
         self.assertIn('unknown machine "fedora"', raised.exception.stderr)
+
+    def test_a_config_from_before_the_machine_question_says_to_rerun_init(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            target = str(tmp / "home/.config/sway/machine.conf")
+            with self.assertRaises(subprocess.CalledProcessError) as raised:
+                chezmoi(tmp, REPO, False, "cat", target, machine=None)
+        self.assertIn("no machine chosen", raised.exception.stderr)
 
     def test_private_and_executable_modes_are_installed(self):
         with tempfile.TemporaryDirectory() as tmp:
