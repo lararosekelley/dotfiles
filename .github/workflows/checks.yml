@@ -14,20 +14,6 @@ concurrency:
 
 # Each job runs the same just recipes as the pre-commit hook.
 jobs:
-  rust:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          components: rustfmt, clippy
-      - uses: Swatinem/rust-cache@v2
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: just
-      - run: just lint-rust
-      - run: just test-rust
-
   python:
     runs-on: ubuntu-latest
     steps:

@@ -20,15 +20,9 @@ shell_paths := "home/dot_aliases home/dot_bash_profile home/dot_bash_prompt home
 default:
   @just --list
 
-build:
-  cargo build
+format-lint: format lint
 
-format-lint: format lint check
-
-format: format-rust format-python format-js format-shell format-fish format-markdown
-
-format-rust:
-  cargo fmt
+format: format-python format-js format-shell format-fish format-markdown
 
 format-python:
   black {{python_paths}}
@@ -47,11 +41,7 @@ format-fish:
 format-markdown:
   npx --no -- markdownlint-cli2 --fix "{{markdown_paths}}"
 
-lint: lint-rust lint-python lint-js lint-shell lint-fish lint-markdown
-
-lint-rust:
-  cargo fmt --check
-  cargo clippy --all-targets
+lint: lint-python lint-js lint-shell lint-fish lint-markdown
 
 lint-python:
   black --check --diff {{python_paths}}
@@ -77,51 +67,11 @@ lint-commits from="origin/main" to="HEAD":
 lint-markdown:
   npx --no -- markdownlint-cli2 "{{markdown_paths}}"
 
-check:
-  cargo check
-
 # black and flake8 are expected on PATH; pipx keeps them out of any project venv
 
 install-python-tools:
   pipx install black
   pipx install flake8
-
-run *args:
-  cargo run -- {{args}}
-
-status:
-  cargo run -- status
-
-# same as status, plus a unified diff of every file whose contents differ
-
-diff:
-  cargo run -- status --diff
-
-diff-to-repo:
-  cargo run -- status --direction to-repo --diff
-
-[positional-arguments]
-sync-to-home *args:
-  cargo run -- sync to-home "$@"
-
-[positional-arguments]
-sync-to-home-symlink *args:
-  cargo run -- sync to-home --symlink "$@"
-
-[positional-arguments]
-sync-to-repo *args:
-  cargo run -- sync to-repo "$@"
-
-# --yes is needed for a non-interactive preview, otherwise each file prompts.
-# Extra flags pass through, as in `just sync-to-home --delete`.
-
-[positional-arguments]
-sync-to-home-dry-run *args:
-  cargo run -- sync to-home --dry-run --yes "$@"
-
-[positional-arguments]
-sync-to-repo-dry-run *args:
-  cargo run -- sync to-repo --dry-run --yes "$@"
 
 # pass --dry-run to preview, or --layout to also replace every panel
 
@@ -175,10 +125,7 @@ profile runs="10":
     }
   ' "$trace"
 
-test: test-rust test-python test-node
-
-test-rust:
-    cargo test
+test: test-python test-node
 
 test-python:
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/agent_awake -p 'test_*.py'
