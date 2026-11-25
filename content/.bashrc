@@ -85,18 +85,15 @@ for tool in herd tui; do
 done
 unset tool
 
-# pyenv
+# language version managers, each optional
 
-eval "$(pyenv init - --no-rehash bash)"
-eval "$(pyenv virtualenv-init -)"
+if command -v pyenv > /dev/null; then
+  eval "$(pyenv init - --no-rehash bash)"
+  [ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ] && eval "$(pyenv virtualenv-init -)"
+fi
 
-# nodenv
-
-eval "$(nodenv init -)"
-
-# rbenv
-
-eval "$(rbenv init - --no-rehash bash)"
+command -v nodenv > /dev/null && eval "$(nodenv init -)"
+command -v rbenv > /dev/null && eval "$(rbenv init - --no-rehash bash)"
 
 # ruby completion
 

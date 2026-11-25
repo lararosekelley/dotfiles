@@ -9,7 +9,8 @@ status is-interactive; or status is-login; or return
 # language version managers
 
 command -q pyenv; and pyenv init - --no-rehash fish | source
-command -q pyenv; and pyenv virtualenv-init - fish | source
+command -q pyenv; and test -d "$PYENV_ROOT/plugins/pyenv-virtualenv"
+and pyenv virtualenv-init - fish | source
 command -q nodenv; and nodenv init - fish | source
 command -q rbenv; and rbenv init - --no-rehash fish | source
 
