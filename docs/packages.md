@@ -6,6 +6,10 @@ left out; ask the package manager.
 
 ## Distro packages that config depends on
 
+On CachyOS, always prefer the `cachyos-` prefixed package sources, for example
+`cachyos-extras-znver4` over `extras`, as those are recompiled and
+performance-optimized.
+
 Config in `content/` depends on these. Names differ by distro; most are in
 Fedora's repos and Arch's official repos, and the exceptions are noted. pyenv,
 nodenv, and rbenv are git checkouts on both; see [New machine](./new-machine.md).

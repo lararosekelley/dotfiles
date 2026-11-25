@@ -69,6 +69,18 @@ private files the repo leaves out, such as `~/.environment`.
   herdr also needs its plugins linked and agent integrations installed; its
   README lists the commands.
 
+  Expect a lot of errors from Neovim at first, mostly around missing
+  dependencies. Not having `gem`, `npm`, `pip`, etc. will cause a lot of
+  problems. To work through the rest of the Neovim setup, follow the guide in the
+  nvim repo.
+
+- Install `flatpak`, then the GUI apps listed under
+  [Flatpak](./packages.md#flatpak), starting with Zen:
+
+  ```bash
+  flatpak install app.zen_browser.zen
+  ```
+
 ## 4. fish
 
 Install `fzf`, `fd` (`fd-find` on Fedora), `bat`, and `curl` first: the first
@@ -85,3 +97,7 @@ chsh -s /usr/bin/fish
 Enable the user units as described in
 [Background services](./background-services.md), including the note there on
 starting recoll's indexer under sway.
+
+## 6. Desktop
+
+On the Arch laptop, build out the sway desktop as described in [Sway](./sway.md).

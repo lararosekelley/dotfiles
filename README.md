@@ -13,7 +13,7 @@ The docs refer to two setups:
 
 - **Fedora desktop**: Fedora 40+ with KDE Plasma, and the only machine with
   OpenRGB lighting (`system/`, which sync never installs).
-- **Arch laptop**: Arch Linux with sway.
+- **Arch laptop**: CachyOS, which is Arch-based, with sway.
 
 Steps that differ between them name the distro. [Packages](./docs/packages.md)
 maps package names between Fedora and Arch, and
@@ -107,6 +107,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [fish](./docs/fish.md) - the fish setup, and what it shares with bash
+- [Sway](./docs/sway.md) - the desktop on the Arch laptop
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
 - [Desktop preferences](./docs/desktop-preferences.md) - KDE theme, widgets, panels, and private hardware-specific configuration
