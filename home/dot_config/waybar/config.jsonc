@@ -4,7 +4,7 @@
     "reload_style_on_change": true,
     "height": 34,
     "spacing": 0,
-    "modules-left": ["tray", "sway/workspaces", "sway/mode", "sway/scratchpad"],
+    "modules-left": ["tray", "sway/workspaces", "custom/recording", "sway/mode", "sway/scratchpad"],
     "modules-center": ["clock"],
     "modules-right": [
         "custom/dnd",
@@ -39,6 +39,13 @@
         }
     },
 
+    "custom/recording": {
+        "exec": "screenrecord status",
+        "return-type": "json",
+        "interval": 5,
+        "signal": 10,
+        "on-click": "screenrecord stop"
+    },
     "custom/dnd": {
         "exec": "dnd status",
         "return-type": "json",
