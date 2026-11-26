@@ -24,6 +24,9 @@ set $term kitty
 # app launcher (depends on rofi installation)
 set $menu "rofi -show combi -show-icons -combi-modes window,drun,run,ssh,filebrowser,keys"
 
+# wallpaper, installed with the dotfiles; the laptops use a 16:10 version
+set $wallpaper ~/.local/share/wallpapers/pond.jpg
+
 # this machine
 # --------
 
@@ -61,8 +64,8 @@ client.background       #1c1220
 
 # displays (see: swaymsg -t get_outputs) are set per machine, in machine.conf
 
-# wallpaper
-output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+# wallpaper, set above or in machine.conf
+output * bg $wallpaper fill
 
 # input
 #

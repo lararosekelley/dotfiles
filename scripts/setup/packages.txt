@@ -73,7 +73,6 @@ rofimoji                  rofimoji                  rofimoji
 wtype                     wtype                     wtype
 playerctl                 playerctl                 playerctl
 pactl                     pulseaudio-utils          libpulse
-/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png  sway-wallpapers  sway
 
 # desktop apps; Flatpaks have their own setup script
 obs                       obs-studio                obs-studio

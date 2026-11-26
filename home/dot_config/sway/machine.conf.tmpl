@@ -3,6 +3,9 @@
 # `chezmoi init`. Shared settings belong in config.
 {{- if eq $machine "framework" }}
 
+# wallpaper in the laptop display's proportions
+set $wallpaper ~/.local/share/wallpapers/pond-laptop.jpg
+
 # built-in display
 output eDP-1 resolution 2880x1920 position 0 0 scale 2
 
@@ -13,6 +16,9 @@ bindsym $mod+p exec display-menu
 # open sway config file in neovim floating window
 bindsym --locked XF86AudioMedia exec kitty --class sway-config sh -c 'nvim ~/.config/sway/config && swaymsg reload'
 {{- else if eq $machine "thinkpad" }}
+
+# wallpaper in the laptop display's proportions
+set $wallpaper ~/.local/share/wallpapers/pond-laptop.jpg
 {{- else if eq $machine "desktop" }}
 
 # Alt as the modifier: sway runs in a window under KDE here, and Plasma keeps
