@@ -1,11 +1,13 @@
 # systemd units for scripts/setup/services to enable and start.
 #
 # Columns: user or system, the unit, what it needs installed first (a command
-# or a ~/ or / path), and the machine it is for ("-" for every machine).
+# or a ~/ or / path), and the machine or distro (fedora or arch) it is for ("-"
+# for every machine).
 #
 # scope   unit                  needs                machine
 user      ssh-agent.socket      ssh-agent            -
 user      navi.service          ~/.local/bin/navi    -
 user      recollindex.service   recollindex          -
 system    tailscaled.service    tailscale            -
+system    pkgfile-update.timer  pkgfile              arch
 system    jellyfin.service      jellyfin             desktop

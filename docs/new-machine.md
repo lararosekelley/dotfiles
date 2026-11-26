@@ -77,6 +77,19 @@ and a step that fails runs again on the next `chezmoi apply`.
   tailscale switch <personal-account>
   ```
 
+  On Arch, if `tailscale status` warns that NetworkManager and
+  systemd-resolved are wired together incorrectly, `/etc/resolv.conf` is
+  NetworkManager's own file while systemd-resolved is running. Point it at
+  systemd-resolved's stub, which NetworkManager then follows, and restart both:
+
+  ```bash
+  sudo ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+  sudo systemctl restart NetworkManager tailscaled
+  ```
+
+- On Arch, build pkgfile's database once with `sudo pkgfile --update`, so fish
+  can name the package a missing command is in; a timer keeps it current after
+  that. Fedora's PackageKit does the same without setup.
 - Make fish the login shell, then log out and back in:
 
   ```bash
