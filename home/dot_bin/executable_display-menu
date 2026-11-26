@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Display menu for sway, picked with rofi: kanshi layouts, mirroring the
+# focused screen for presentations, and a night-light toggle
+#
+# Usage: display-menu
+
+set -uo pipefail
+
+kanshi_config="${XDG_CONFIG_HOME:-$HOME/.config}/kanshi/config"
+
+choices=()
+if [ -f "$kanshi_config" ]; then
+  # one entry per `profile NAME {` in the kanshi config
+  while read -r _ name _; do
+    choices+=("layout: $name")
+  done < <(grep -E '^\s*profile\s+\S+' "$kanshi_config")
+fi
+choices+=("mirror this screen")
+if pgrep -x gammastep > /dev/null; then
+  choices+=("night light: off")
+else
+  choices+=("night light: on")
+fi
+
+choice=$(printf '%s\n' "${choices[@]}" | rofi -dmenu -i -p display) || exit 0
+
+case "$choice" in
+  "layout: "*)
+    kanshictl switch "${choice#layout: }"
+    ;;
+  "mirror this screen")
+    output=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')
+    wl-mirror "$output" &
+    ;;
+  "night light: on")
+    gammastep &
+    ;;
+  "night light: off")
+    pkill -x gammastep
+    ;;
+esac
