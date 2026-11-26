@@ -1,12 +1,18 @@
 {{- $machine := get . "machine" -}}
+{{- $laptop := has $machine (list "framework" "thinkpad") -}}
 {{- $wallpaper := "pond.jpg" -}}
-{{- if has $machine (list "framework" "thinkpad") }}{{ $wallpaper = "pond-laptop.jpg" }}{{ end -}}
+{{- if $laptop }}{{ $wallpaper = "pond-laptop.jpg" }}{{ end -}}
 # swaylock, in the Callie theme (https://github.com/greylocklabs/themes), over
 # the same wallpaper as sway on this machine ({{ $machine }})
 # reference: `man swaylock`; each line is a long option without its dashes
 
 daemonize
+{{- if $laptop }}
+# no ignore-empty-password here: pressing Enter on an empty field is how a
+# fingerprint unlock starts (see the fingerprint steps in docs/new-machine.md)
+{{- else }}
 ignore-empty-password
+{{- end }}
 show-failed-attempts
 indicator-caps-lock
 

@@ -49,6 +49,9 @@ recoll                    recoll                    recoll
 perl:JSON                 perl-JSON                 perl-json
 fastfetch                 fastfetch                 fastfetch
 
+# fingerprint login and unlocking, set up by hand per laptop (docs/new-machine.md)
+fprintd-enroll            fprintd                   fprintd
+
 # what fish's command-not-found handler uses to name the package a missing
 # command is in: PackageKit's helper on Fedora, pkgfile on Arch
 /usr/libexec/pk-command-not-found,pkgfile  PackageKit-command-not-found  pkgfile
