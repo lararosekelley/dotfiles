@@ -149,7 +149,7 @@ class ServicesTest(unittest.TestCase):
         self.assertTrue(entries)
         for scope, unit, needs, machine in entries:
             self.assertIn(scope, ("user", "system"))
-            self.assertTrue(unit.endswith((".service", ".timer")), unit)
+            self.assertTrue(unit.endswith((".service", ".socket", ".timer")), unit)
             self.assertIn(machine, ("-", "framework", "thinkpad", "desktop"))
 
 

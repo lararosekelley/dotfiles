@@ -15,7 +15,7 @@ js_paths := "**/*.{js,mjs,cjs}"
 # shell dotfiles have no .sh extension, so they are listed here; dot_git_prompt
 # is git's own git-prompt.sh, and dot_inputrc is readline config
 
-shell_paths := "home/dot_aliases home/dot_bash_profile home/dot_bash_prompt home/dot_bashrc home/dot_exports home/dot_functions $(git ls-files 'home/dot_bin/*' 'scripts/setup/*' ':!:*.sh' ':!:*.txt' ':!:home/dot_bin/executable_sf2-to-sfz')"
+shell_paths := "home/dot_aliases home/dot_bash_profile home/dot_bash_prompt home/dot_bashrc home/dot_exports home/dot_functions $(git ls-files 'home/dot_bin/*' 'scripts/setup/*' ':!:*.sh' ':!:*.txt' ':!:home/dot_bin/executable_sf2-to-sfz') home/private_dot_ssh/modify_private_config"
 
 default:
   @just --list

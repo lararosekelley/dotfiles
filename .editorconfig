@@ -10,8 +10,9 @@ switch_case_indent = true
 space_redirects = true
 binary_next_line = true
 
-# scripts in home/dot_bin and scripts/setup have no extension
-[{home/dot_bin/*,scripts/setup/*}]
+# scripts in home/dot_bin and scripts/setup, and chezmoi modify_ scripts, have no
+# extension
+[{home/dot_bin/*,scripts/setup/*,home/**/modify_*}]
 indent_style = space
 indent_size = 2
 shell_variant = bash
