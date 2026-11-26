@@ -31,6 +31,16 @@ answer apps that ask for your password (KDE's on Fedora, `polkit-gnome` on
 Arch), and `dex`, which starts the desktop's autostart apps such as Dropbox and
 KDE Connect, since sway doesn't.
 
+### Startup windows
+
+When sway starts, `sway-startup` in `~/.bin` opens kitty windows in a fixed
+layout: on workspace 1, the Callie calendar (`callie tui`) in a full-height
+column on the left, and on the right fastfetch above the cliamp music player;
+on workspace 2, Neovim. It opens each window only once the one before it has
+appeared, since sway places a new window beside the focused one, and gives a
+program that isn't installed a plain shell in its place. Edit the script to
+change the layout.
+
 ### Dark mode and night light
 
 When sway is the whole session, `session.conf` sets GTK's `color-scheme` to
@@ -82,7 +92,7 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 
 `$mod+/` lists every key binding, with the comment above it in the config and its command. `sway-keys` in `~/.bin` builds the list from the installed config each time it opens, so it follows `machine.conf` and any binding added later. `sway-keys --print` writes the same list to a terminal. Because the comments double as the list's descriptions, write each binding's comment for someone reading the list.
 
-`$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display.
+`$mod+Shift+Space` and `$mod+Alt+Space` float or tile the focused window (`sway-nested` keeps only the first, since its `$mod` is Alt). `$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display.
 
 `$mod+b` opens the default web browser, whichever `xdg-settings get default-web-browser` names. `$mod+e` opens Neovim in a terminal. `$mod+c` opens the Callie calendar's TUI (`callie tui`) and `$mod+m` the cliamp music player, each in a terminal like any other window. Callie is only installed on Fedora for now.
 

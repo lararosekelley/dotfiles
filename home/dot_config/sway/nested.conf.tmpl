@@ -1,15 +1,18 @@
 {{- /* The sway config for sway-nested, made from config: Alt as $mod, since
-       the desktop sway runs inside keeps most Super shortcuts for itself, and
-       no session.conf, since that desktop already sets up the session. */ -}}
+       the desktop sway runs inside keeps most Super shortcuts for itself; no
+       session.conf, since that desktop already sets up the session; and no
+       $mod+Alt+space, which with Alt as $mod would replace $mod+space. */ -}}
 {{- $config := include "dot_config/sway/config" -}}
 {{- $machine := "include ~/.config/sway/machine.conf" -}}
 {{- $session := "include ~/.config/sway/session.conf" -}}
-{{- if not (and (contains $machine $config) (contains $session $config)) -}}
-{{-   fail "nested.conf.tmpl: config no longer includes machine.conf and session.conf as expected" -}}
+{{- $altfloat := "bindsym $mod+Mod1+space floating toggle" -}}
+{{- if not (and (contains $machine $config) (contains $session $config) (contains $altfloat $config)) -}}
+{{-   fail "nested.conf.tmpl: config no longer has the machine.conf and session.conf includes, or the $mod+Alt+space binding, as expected" -}}
 {{- end -}}
 # sway in a window under another desktop, run by ~/.bin/sway-nested. Made by
 # chezmoi from config: edit that, not this.
 
 {{ $config
   | replace $machine (printf "%s\n\n# Alt as the modifier: the desktop outside keeps most Super shortcuts\nset $mod Mod1" $machine)
-  | replace $session "# session.conf is left out: the desktop outside sets up the session" }}
+  | replace $session "# session.conf is left out: the desktop outside sets up the session"
+  | replace $altfloat "# $mod+Alt+space is left out: with Alt as $mod, it would take $mod+space" }}

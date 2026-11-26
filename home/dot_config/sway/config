@@ -108,6 +108,10 @@ exec swayidle -w
 #
 # --------
 
+# open the startup windows: Callie, fastfetch, and cliamp on workspace 1, and
+# Neovim on workspace 2 (script in ~/.bin)
+exec sway-startup
+
 # open application launcher
 bindsym $mod+o exec $menu
 
@@ -219,6 +223,7 @@ bindsym $mod+f fullscreen
 
 # toggle the current focus between tiling and floating mode
 bindsym $mod+Shift+space floating toggle
+bindsym $mod+Mod1+space floating toggle
 
 # swap focus between the tiling area and the floating area
 bindsym $mod+space focus mode_toggle
