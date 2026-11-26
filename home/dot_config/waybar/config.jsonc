@@ -1,0 +1,6 @@
+// waybar for sway; without a style.css here, waybar uses its default style
+{
+    "modules-left": ["sway/workspaces", "sway/mode"],
+    "modules-center": ["sway/window"],
+    "modules-right": ["pulseaudio", "network", "battery", "clock", "tray"]
+}
