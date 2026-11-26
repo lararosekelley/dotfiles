@@ -137,7 +137,11 @@ if [ ${#routes[@]} -eq 0 ]; then
   finish
 fi
 
-if ! confirm "Install ${names[*]}? (uses sudo)"; then
+question="Install ${names[*]}? (uses sudo)"
+if [ "$distro" = arch ]; then
+  question="Install ${names[*]}? (uses sudo, and upgrades the whole system)"
+fi
+if ! confirm "$question"; then
   warn "not installed (no terminal, or declined): ${names[*]}"
   finish
 fi

@@ -58,13 +58,17 @@ if [ "$distro" = unknown ]; then
 elif [ ${#wanted[@]} -eq 0 ]; then
   say "system packages: all present"
 else
+  question="Install with"
   case "$distro" in
     fedora) install=(sudo dnf install -y --skip-unavailable "${wanted[@]}") ;;
     # -Syu: a fresh install's package list can name versions the mirrors have
     # dropped (a 404), and Arch only supports refreshing it with an upgrade
-    arch) install=(sudo pacman -Syu --needed --noconfirm "${wanted[@]}") ;;
+    arch)
+      install=(sudo pacman -Syu --needed --noconfirm "${wanted[@]}")
+      question="Upgrade the whole system and install with"
+      ;;
   esac
-  if confirm "Install with ${install[*]}?"; then
+  if confirm "$question ${install[*]}?"; then
     run "${install[@]}"
   else
     warn "not installed (no terminal, or declined): ${install[*]}"
