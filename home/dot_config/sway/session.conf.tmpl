@@ -26,6 +26,10 @@ exec gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 # night-light in ~/.bin toggles it
 exec gammastep
 
+# the startup windows: Callie, fastfetch, and cliamp on workspace 1, and Neovim
+# on workspace 2 (script in ~/.bin)
+exec sway-startup
+
 # the desktop's autostart apps, such as Dropbox and KDE Connect
 {{- if $fedora }}
 exec dex-autostart --autostart --environment sway

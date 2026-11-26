@@ -1,49 +1,53 @@
 #!/usr/bin/env bash
 
-# The windows sway opens when it starts. Workspace 1 has the Callie calendar in
-# a full-height column on the left, and fastfetch above the cliamp music player
-# on the right; workspace 2 has Neovim. Each is in kitty, and a program that
-# isn't installed (Callie on Arch, say) gets a plain shell in its place.
+# The windows sway opens when it starts as the whole session (session.conf runs
+# this). Workspace 1 has the Callie calendar in a full-height column on the
+# left, and fastfetch above the cliamp music player on the right; workspace 2
+# has Neovim. Each is in kitty, and a program that isn't installed (Callie on
+# Arch, say) gets a plain shell in its place.
 #
 # sway puts a new window beside the focused one, so each is opened only once
-# the one before it has appeared.
+# the one before it has appeared. Windows stay open at a shell when their
+# program exits, so the layout holds; one that never appears is reported, and
+# the rest are still opened.
 #
 # Usage: sway-startup
+#
+# SWAY_STARTUP_WAIT sets how many tenths of a second to wait for each window,
+# for tests.
 
 set -uo pipefail
 
-# open NAME [--hold] [COMMAND...]: open kitty with app_id startup-NAME on the
-# current workspace, running the command if it's installed (--hold keeps the
-# window open at a shell once it exits), and wait for the window.
+wait_tenths=${SWAY_STARTUP_WAIT:-100}
+missing=0
+
+# open NAME [COMMAND...]: open kitty with app_id startup-NAME on the current
+# workspace, running the command if it's installed, and wait for the window
 open() {
   local name=$1
   shift
-  local args=(kitty --class "startup-$name")
-  if [ "${1:-}" = --hold ]; then
-    args+=(--hold)
-    shift
-  fi
+  local args=(kitty --class "startup-$name" --hold)
   if [ $# -gt 0 ] && command -v "$1" > /dev/null 2>&1; then
     args+=("$@")
   fi
   swaymsg -q exec -- "${args[*]}"
-  for _ in $(seq 1 100); do
+  for _ in $(seq 1 "$wait_tenths"); do
     swaymsg -t get_tree | jq -e --arg id "startup-$name" \
       'any(.. | objects; .app_id? == $id)' > /dev/null && return 0
     sleep 0.1
   done
   echo "sway-startup: startup-$name never appeared" >&2
+  missing=$((missing + 1))
   return 1
 }
 
 swaymsg -q workspace number 1
-open callie callie tui || exit 1
-swaymsg -q '[app_id="startup-callie"] focus, splith'
-open fastfetch --hold fastfetch || exit 1
-swaymsg -q '[app_id="startup-fastfetch"] focus, splitv'
-open cliamp cliamp || exit 1
+open callie callie tui && swaymsg -q '[app_id="startup-callie"] focus, splith'
+open fastfetch fastfetch && swaymsg -q '[app_id="startup-fastfetch"] focus, splitv'
+open cliamp cliamp
 
 swaymsg -q workspace number 2
-open nvim nvim || exit 1
+open nvim nvim
 
 swaymsg -q workspace number 1
+[ "$missing" -eq 0 ]

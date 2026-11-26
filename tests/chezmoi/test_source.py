@@ -109,6 +109,8 @@ class SourceTest(unittest.TestCase):
             self.assertIn("include ~/.config/sway/machine.conf", nested)
             self.assertIn("set $mod Mod1", nested)
             self.assertNotIn("bindsym $mod+Mod1+space", nested)
+            self.assertNotIn("sway-startup", nested)
+            self.assertIn("exec sway-startup", out[machine, "session.conf"])
         self.assertNotIn("Mod1", out["desktop", "machine.conf"])
         self.assertIn("output DP-3", out["desktop", "machine.conf"])
 
