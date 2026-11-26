@@ -25,6 +25,11 @@ recoll ships `recollindex.service` on both Fedora and Arch, as
 not, so the sway session config starts the indexer itself with
 `exec systemctl --user start recollindex.service`.
 
+recoll's settings can also add a login autostart entry for the indexer, which
+would start a second one without the service's limits. The repo's
+`~/.config/autostart/recollindex.desktop` replaces that entry with a hidden
+one, so the service is the only indexer.
+
 `navi.service` reads its tokens from `~/.config/navi/navi.env`, which is not
 synced. Create it by hand (`chmod 600`) with one `KEY=value` per line for the
 sources enabled in `config.toml`. The unit tolerates the file being missing, so
