@@ -1,7 +1,7 @@
 # New machine
 
 Setting up another computer from this repo. Steps that differ between the Fedora
-desktop and the Arch laptop say so (see [Machines](../README.md#machines)).
+desktop and the Arch laptops say so (see [Machines](../README.md#machines)).
 
 ## 1. Packages
 
@@ -37,7 +37,7 @@ chezmoi init --source ~/Code/personal/dotfiles
 chezmoi apply --interactive
 ```
 
-`init` asks whether to install the KDE settings (answer no on the Arch laptop)
+`init` asks whether to install the KDE settings (answer no on the Arch laptops)
 and the machine's name (`framework`, `thinkpad`, or `desktop`).
 See [Syncing](./syncing.md) for the everyday commands. Copy over the private
 files the repo leaves out, such as `~/.environment`.
@@ -77,4 +77,4 @@ starting recoll's indexer under sway.
 
 ## 6. Desktop
 
-On the Arch laptop, build out the sway desktop as described in [Sway](./sway.md).
+On an Arch laptop, build out the sway desktop as described in [Sway](./sway.md).

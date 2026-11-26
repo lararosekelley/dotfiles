@@ -1,7 +1,7 @@
 # Packages
 
 Where each installed program comes from and how to update it, on the Fedora
-desktop and the Arch laptop (see [Machines](../README.md#machines)). Versions are
+desktop and the Arch laptops (see [Machines](../README.md#machines)). Versions are
 left out; ask the package manager.
 
 ## Distro packages that config depends on
