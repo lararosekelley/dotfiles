@@ -16,6 +16,7 @@ module.exports = {
         "shell",
         "prompt",
         "vim",
+        "cliamp",
         "emacs",
         "editor",
         "tmux",

@@ -1,8 +1,10 @@
 theme = "callie"
+provider = "jellyfin"
+
 [ytmusic]
 enabled = true
 cookies_from = "chrome"
 
-[plex]
-url = "http://localhost:32400"
-token = "$PLEX_TOKEN"
+[jellyfin]
+url = "http://localhost:8096"
+token = "$JELLYFIN_API_KEY"
