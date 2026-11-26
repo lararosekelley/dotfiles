@@ -46,7 +46,7 @@ Shell:
 - `rg` - the `rgs`/`rgf` aliases and the `sub` script
 - `zoxide` - directory jumping with `z` and `zi`, or `j` and `ji`, hooked into `PROMPT_COMMAND`
 - `wl-clipboard` (Wayland) or `xclip` (X11) - the `copy` script and `pbcopy` alias
-- `tmux` + `tpm` - `.tmux.conf` and the `mux` script
+- `tmux` + `tpm` - `.tmux.conf`, the `mux` script, and the which-key menu (see [tmux](./docs/tmux.md))
 - `python3` - the `serve` script
 - `awscli` - the `aws-work`/`aws-personal`/`aws-current` helpers
 - `figlet` - the `big` alias
@@ -102,6 +102,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [fish](./docs/fish.md) - the fish setup, and what it shares with bash
+- [tmux](./docs/tmux.md) - sessions, SSH, and agents alongside sway; the bar and which-key menu
 - [Sway](./docs/sway.md) - the desktop on the Arch laptops, and in a window under KDE
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
