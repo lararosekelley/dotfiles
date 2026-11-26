@@ -56,4 +56,4 @@ Temporary Items
 
 # rust-analyzer's check output, which it writes in whatever folder an editor or
 # agent starts it in, Rust project or not
-target/rust-analyzer/
+**/target/rust-analyzer/
