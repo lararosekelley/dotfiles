@@ -1,7 +1,9 @@
 # Sway
 
 Sway provides very little for us here. To get a functional desktop going, we need a few components.
-Assume unless stated otherwise, we're installing packages with `sudo pacman -S <pkg>`
+`chezmoi apply` installs sway and the tools below from
+[`scripts/setup/packages.txt`](../scripts/setup/packages.txt), on every machine.
+Where this guide names a package, it gives the Arch name.
 
 ## Configuring Sway
 

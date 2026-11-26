@@ -9,11 +9,14 @@ Dotfiles live under `home/`, which [chezmoi](https://www.chezmoi.io) installs.
 
 ## Machines
 
-The docs refer to two setups:
+The docs refer to three machines, named by the `machine` answer at
+`chezmoi init`:
 
-- **Fedora desktop**: Fedora 40+ with KDE Plasma, and the only machine with
-  OpenRGB lighting (`system/`, which sync never installs).
-- **Arch laptop**: CachyOS, which is Arch-based, with sway.
+- **Fedora desktop** (`desktop`): Fedora with KDE Plasma, which also runs sway
+  in a window, and the only machine with OpenRGB lighting (`system/`, which
+  sync never installs).
+- **Arch laptops** (`framework`, `thinkpad`): a Framework 13 and a ThinkPad X1
+  on CachyOS, which is Arch-based, with sway.
 
 Steps that differ between them name the distro. [Packages](./docs/packages.md)
 maps package names between Fedora and Arch, and
@@ -99,7 +102,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Packages](./docs/packages.md) - where each program comes from and how to update it
 - [AI agents](./docs/ai-agents.md) - shared review, explanation, reflection, and handoff commands; activity-based sleep inhibition
 - [fish](./docs/fish.md) - the fish setup, and what it shares with bash
-- [Sway](./docs/sway.md) - the desktop on the Arch laptop
+- [Sway](./docs/sway.md) - the desktop on the Arch laptops, and in a window under KDE
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
 - [Media server](./docs/media-server.md) - Jellyfin on the desktop, its media folders, and cliamp
