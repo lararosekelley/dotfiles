@@ -141,7 +141,9 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Notifications
 
-[mako](https://mako-project.org) shows notifications, styled in Callie by `~/.config/mako/config`. It starts on the first notification, through D-Bus, so the sway config doesn't launch it. Under KDE, Plasma keeps showing notifications instead. Critical notifications have a red border and stay until dismissed.
+[mako](https://mako-project.org) shows notifications, styled in Callie by `~/.config/mako/config`. It starts on the first notification, through D-Bus, so the sway config doesn't launch it. Critical notifications have a red border and stay until dismissed.
+
+mako only starts in a sway session: a drop-in, `~/.config/systemd/user/mako.service.d/override.conf`, skips it unless `XDG_CURRENT_DESKTOP` is sway. Without it, a notification sent at login before Plasma claims the notification service starts mako in Plasma's place. Plasma, and `sway-nested` inside it, keep Plasma's notifications.
 
 `$mod+n` runs `dnd`, which toggles do-not-disturb: everything but critical notifications is hidden until it's toggled off.
 
