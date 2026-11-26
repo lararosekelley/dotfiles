@@ -28,6 +28,9 @@ bindsym $mod+q kill
 # save and quit (A & B)
 bindsym --locked $mod+Shift+bracketright exec echo a && echo b
 
+# next workspace
+bindgesture swipe:3:left workspace next
+
 mode "resize" {
     # leave resize mode
     bindsym Escape mode "default"
@@ -83,8 +86,13 @@ class SwayKeysTest(unittest.TestCase):
         self.assertTrue(self.lines()[2].startswith("Alt+Shift+] "))
 
     def test_bindings_in_a_mode_are_labelled_with_it(self):
-        self.assertTrue(self.lines()[3].startswith("resize: Esc "))
-        self.assertEqual(len(self.lines()), 4)
+        self.assertTrue(self.lines()[4].startswith("resize: Esc "))
+        self.assertEqual(len(self.lines()), 5)
+
+    def test_gestures_are_listed_in_words(self):
+        line = self.lines()[3]
+        self.assertTrue(line.startswith("Swipe 3 fingers left "), line)
+        self.assertIn("next workspace  (workspace next)", line)
 
     def test_the_menu_escapes_markup(self):
         result = self.run_script()
