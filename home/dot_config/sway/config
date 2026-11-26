@@ -88,12 +88,9 @@ input type:keyboard {
 # sleep
 # --------
 
-# after 300 seconds, lock screen; after another 300 seconds, go to sleep.
-# turn screens on when resumed
-exec swayidle -w \
-    timeout 300 'swaylock -f -c 000000' \
-    timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
-    before-sleep 'swaylock -f -c 000000'
+# lock and blank the screen when idle, and lock before sleeping; the timings
+# are in ~/.config/swayidle/config, and swaylock's look in its own config
+exec swayidle -w
 
 # keybindings
 #

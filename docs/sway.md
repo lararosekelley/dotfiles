@@ -68,11 +68,11 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Lock screen
 
-The natural choice here is [swaylock](https://github.com/swaywm/swaylock).
+[swaylock](https://github.com/swaywm/swaylock) locks the screen, styled in Callie by `~/.config/swaylock/config`: a ring that turns pink as you type, teal while checking, and red on a wrong password. The config also sets `daemonize`, so `swaylock` returns once the screen is locked, which swayidle's `before-sleep` relies on.
 
 ## Sleep, suspend, and resume
 
-Install [swayidle](https://github.com/swaywm/swayidle)
+[swayidle](https://github.com/swaywm/swayidle) reads `~/.config/swayidle/config`: lock after 5 minutes idle, turn the screens off 5 minutes later, and lock before sleeping. The sway config only starts it.
 
 ## Notifications
 
