@@ -41,6 +41,8 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 
 `$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display.
 
+`$mod+e` opens Neovim in a terminal. `$mod+c` opens the Callie calendar's TUI (`callie tui`) and `$mod+m` the cliamp music player, each in a floating terminal. Callie is only installed on Fedora for now.
+
 Two scripts in `~/.bin` back the hardware keys:
 
 - `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all.
