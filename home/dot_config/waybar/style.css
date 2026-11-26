@@ -1,7 +1,8 @@
-/* waybar in the Callie theme (https://github.com/greylocklabs/themes) */
+/* waybar in the Callie theme (https://github.com/greylocklabs/themes): each
+   module is a rounded pill on the bar, with the focused workspace in pink */
 
 * {
-    font-family: "IosevkaTerm Nerd Font", monospace;
+    font-family: "IosevkaTerm Nerd Font Propo", monospace;
     font-size: 13px;
     min-height: 0;
 }
@@ -15,17 +16,53 @@ window#waybar {
 tooltip {
     background: #261a2a;
     border: 1px solid #3d2c42;
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 tooltip label {
     color: #e0d3df;
 }
 
+/* the pills */
+#workspaces,
+#mode,
+#scratchpad,
+#clock,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#backlight,
+#battery,
+#tray {
+    background: #261a2a;
+    border: 1px solid #3d2c42;
+    border-radius: 8px;
+    margin: 5px 3px;
+    padding: 0 10px;
+}
+
+/* a little room at each end of the bar */
+.modules-left > widget:first-child > * {
+    margin-left: 8px;
+}
+
+.modules-right > widget:last-child > * {
+    margin-right: 8px;
+}
+
+#workspaces {
+    padding: 2px;
+}
+
 #workspaces button {
     padding: 0 8px;
+    margin: 0 1px;
     color: #9a8797;
-    border-radius: 0;
+    border: none;
+    border-radius: 6px;
+    box-shadow: none;
 }
 
 #workspaces button:hover {
@@ -45,29 +82,18 @@ tooltip label {
 
 #mode {
     background: #d6ba86;
+    border-color: #d6ba86;
     color: #2e0f20;
-    padding: 0 10px;
-}
-
-#scratchpad,
-#clock,
-#idle_inhibitor,
-#pulseaudio,
-#network,
-#cpu,
-#memory,
-#backlight,
-#battery,
-#tray {
-    padding: 0 8px;
 }
 
 #clock {
     color: #f08fb8;
+    border-color: #f08fb8;
 }
 
 #idle_inhibitor.activated {
     color: #d6ba86;
+    border-color: #d6ba86;
 }
 
 #pulseaudio {
@@ -98,10 +124,12 @@ tooltip label {
 
 #battery.warning:not(.charging) {
     color: #d6ba86;
+    border-color: #d6ba86;
 }
 
 #battery.critical:not(.charging) {
     color: #e66e6d;
+    border-color: #e66e6d;
 }
 
 #tray > .needs-attention {
