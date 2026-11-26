@@ -1,0 +1,1043 @@
+#!/usr/bin/env python3
+#
+# Vendored from https://github.com/bashexplode/sf2-to-sfz at ca43bc5, with line
+# endings converted to LF and otherwise unmodified below this note. Its README:
+# "Feel free to modify and distribute it as needed."
+#
+# SF2 to SFZ Converter - Standalone Edition
+# Author: bash explode
+#
+# Converts SF2 SoundFont files to SFZ format with per-preset WAV sample export.
+# No third-party dependencies -- uses only Python standard library.
+# Primary target: Serum 2 SFZ import.
+#
+# SF2 spec reference: SoundFont 2.01 Technical Specification (SFSPEC21.PDF)
+# Conversion formulas verified against FluidSynth source (fluid_conv.c).
+
+import argparse
+import os
+import re
+import sys
+import math
+import wave
+import struct
+import logging
+
+logging.getLogger().setLevel(logging.ERROR)
+
+# =============================================================================
+# Section 1: Constants
+# =============================================================================
+
+# Generator operator IDs (SF2 spec Section 8.1.2)
+GEN_START_ADDRS_OFFSET = 0
+GEN_END_ADDRS_OFFSET = 1
+GEN_STARTLOOP_ADDRS_OFFSET = 2
+GEN_ENDLOOP_ADDRS_OFFSET = 3
+GEN_START_ADDRS_COARSE = 4
+GEN_MOD_LFO_TO_PITCH = 5
+GEN_VIB_LFO_TO_PITCH = 6
+GEN_MOD_ENV_TO_PITCH = 7
+GEN_INITIAL_FILTER_FC = 8
+GEN_INITIAL_FILTER_Q = 9
+GEN_MOD_LFO_TO_FILTER_FC = 10
+GEN_MOD_ENV_TO_FILTER_FC = 11
+GEN_END_ADDRS_COARSE = 12
+GEN_MOD_LFO_TO_VOLUME = 13
+# 14 is unused
+GEN_CHORUS_EFFECTS_SEND = 15
+GEN_REVERB_EFFECTS_SEND = 16
+GEN_PAN = 17
+# 18-20 are unused
+GEN_DELAY_MOD_LFO = 21
+GEN_FREQ_MOD_LFO = 22
+GEN_DELAY_VIB_LFO = 23
+GEN_FREQ_VIB_LFO = 24
+GEN_DELAY_MOD_ENV = 25
+GEN_ATTACK_MOD_ENV = 26
+GEN_HOLD_MOD_ENV = 27
+GEN_DECAY_MOD_ENV = 28
+GEN_SUSTAIN_MOD_ENV = 29
+GEN_RELEASE_MOD_ENV = 30
+GEN_KEYNUM_TO_MOD_ENV_HOLD = 31
+GEN_KEYNUM_TO_MOD_ENV_DECAY = 32
+GEN_DELAY_VOL_ENV = 33
+GEN_ATTACK_VOL_ENV = 34
+GEN_HOLD_VOL_ENV = 35
+GEN_DECAY_VOL_ENV = 36
+GEN_SUSTAIN_VOL_ENV = 37
+GEN_RELEASE_VOL_ENV = 38
+GEN_KEYNUM_TO_VOL_ENV_HOLD = 39
+GEN_KEYNUM_TO_VOL_ENV_DECAY = 40
+GEN_INSTRUMENT = 41
+# 42 is reserved
+GEN_KEY_RANGE = 43
+GEN_VEL_RANGE = 44
+GEN_STARTLOOP_ADDRS_COARSE = 45
+# 46 = keynum (substitution), 47 = velocity (substitution)
+GEN_INITIAL_ATTENUATION = 48
+# 49 is reserved
+GEN_ENDLOOP_ADDRS_COARSE = 50
+GEN_COARSE_TUNE = 51
+GEN_FINE_TUNE = 52
+GEN_SAMPLE_ID = 53
+GEN_SAMPLE_MODES = 54
+# 55 is reserved
+GEN_SCALE_TUNING = 56
+GEN_EXCLUSIVE_CLASS = 57
+GEN_OVERRIDING_ROOT_KEY = 58
+
+# Generators that are structural (not subject to preset-level addition per SF2 spec 9.4)
+NON_ADDITIVE_GENS = {GEN_KEY_RANGE, GEN_VEL_RANGE, GEN_INSTRUMENT, GEN_SAMPLE_ID,
+                     GEN_SAMPLE_MODES, GEN_OVERRIDING_ROOT_KEY, GEN_EXCLUSIVE_CLASS}
+
+# Sample type flags (SF2 spec Section 7.10)
+SAMPLE_TYPE_MONO = 1
+SAMPLE_TYPE_RIGHT = 2
+SAMPLE_TYPE_LEFT = 4
+SAMPLE_TYPE_LINKED = 8
+SAMPLE_TYPE_ROM = 0x8000
+
+
+# =============================================================================
+# Section 2: Unit Conversion Functions
+# =============================================================================
+# All formulas verified against SF2 2.01 spec and FluidSynth fluid_conv.c
+
+def timecents_to_seconds(tc):
+    """SF2 timecents to seconds. 0 tc = 1s, 1200 tc = 2s, -1200 tc = 0.5s."""
+    tc = max(-32768, min(32767, tc))
+    return 2.0 ** (tc / 1200.0)
+
+
+def absolute_cents_to_hz(ac):
+    """SF2 absolute cents to Hz. Used for filter cutoff and LFO frequencies.
+    Formula: Hz = 8.176 * 2^(absoluteCents/1200)"""
+    return 8.176 * 2.0 ** (ac / 1200.0)
+
+
+def centibels_to_db(cb):
+    """Centibels to decibels. 1 cB = 0.1 dB."""
+    return cb / 10.0
+
+
+def sustain_vol_env_to_percent(cb_raw):
+    """Convert sustainVolEnv (centibels of attenuation from full scale) to
+    SFZ ampeg_sustain percentage. 0 cB = 100%, 1000 cB ~= 0%.
+    Formula: percent = 100 * 10^(-cB / 200)"""
+    cb = max(0, cb_raw)
+    if cb >= 1000:
+        return 0.0
+    return 100.0 * (10.0 ** (-cb / 200.0))
+
+
+def sustain_mod_env_to_percent(permille_raw):
+    """Convert sustainModEnv (permille decrease from full) to SFZ percentage.
+    0 permille = 100% sustain, 1000 permille = 0% sustain.
+    Formula: percent = 100 - (permille / 10)"""
+    permille = max(0, min(1000, permille_raw))
+    return 100.0 - (permille / 10.0)
+
+
+def sf2_pan_to_sfz(raw_pan):
+    """SF2 pan (-500 to +500 tenths of percent) to SFZ pan (-100 to +100 percent).
+    Formula: sfz_pan = raw / 5.0"""
+    return raw_pan / 5.0
+
+
+def signed_short(amount):
+    """Interpret a 16-bit unsigned value as a signed int16."""
+    return struct.unpack('<h', struct.pack('<H', amount & 0xFFFF))[0]
+
+
+def amount_as_range(amount):
+    """Extract lo/hi bytes from a generator amount for key/vel range.
+    Returns (low, high) sorted."""
+    lo = amount & 0xFF
+    hi = (amount >> 8) & 0xFF
+    return (min(lo, hi), max(lo, hi))
+
+
+# =============================================================================
+# Section 3: Inline SF2 Binary Parser
+# =============================================================================
+
+def _from_cstr(b):
+    """Decode a null-terminated C string from bytes."""
+    if b is None:
+        return None
+    result, _, _ = b.partition(b'\0')
+    return result.decode('latin1', errors='replace')
+
+
+class SF2Sample:
+    """Parsed sample header from the shdr chunk."""
+    __slots__ = ['name', 'start', 'end', 'start_loop', 'end_loop',
+                 'sample_rate', 'original_pitch', 'pitch_correction',
+                 'sample_link', 'sample_type', 'is_rom']
+
+    def __init__(self, raw_name, start, end, start_loop, end_loop,
+                 sample_rate, original_pitch, pitch_correction,
+                 sample_link, sample_type):
+        self.name = _from_cstr(raw_name)
+        self.start = start
+        self.end = end
+        # Store loop points relative to sample start
+        self.start_loop = start_loop - start
+        self.end_loop = end_loop - start
+        self.sample_rate = sample_rate
+        self.sample_link = sample_link
+        self.sample_type = sample_type
+        self.is_rom = bool(sample_type & SAMPLE_TYPE_ROM)
+
+        # Handle pitch edge cases per SF2 spec Section 7.10
+        if original_pitch == 255:
+            # Unpitched sample -- use default pitch 60 (middle C)
+            self.original_pitch = 60
+        elif 128 <= original_pitch <= 254:
+            logging.warning("Sample '%s' has invalid original_pitch %d, defaulting to 60",
+                            self.name, original_pitch)
+            self.original_pitch = 60
+        else:
+            self.original_pitch = original_pitch
+
+        self.pitch_correction = pitch_correction
+
+    @property
+    def duration(self):
+        return self.end - self.start
+
+
+class SF2Generator:
+    """A single generator: operator ID + 16-bit amount."""
+    __slots__ = ['oper', 'amount']
+
+    def __init__(self, oper, amount):
+        self.oper = oper
+        self.amount = amount
+
+    @property
+    def signed(self):
+        return signed_short(self.amount)
+
+    @property
+    def range(self):
+        return amount_as_range(self.amount)
+
+    @property
+    def lo_byte(self):
+        return self.amount & 0xFF
+
+    def __repr__(self):
+        return f"Gen(oper={self.oper}, amount={self.amount}, signed={self.signed})"
+
+
+class SF2Bag:
+    """A zone (bag) containing generators as {oper_id: SF2Generator}."""
+
+    def __init__(self, generators=None):
+        self.generators = generators or {}
+
+    def get(self, oper_id, default=None):
+        """Get signed short value for a generator, or default if absent."""
+        gen = self.generators.get(oper_id)
+        if gen is not None:
+            return gen.signed
+        return default
+
+    def get_unsigned(self, oper_id, default=None):
+        """Get unsigned word value for a generator, or default if absent."""
+        gen = self.generators.get(oper_id)
+        if gen is not None:
+            return gen.amount
+        return default
+
+    def get_range(self, oper_id):
+        """Get range (lo, hi) for a generator, or None if absent."""
+        gen = self.generators.get(oper_id)
+        if gen is not None:
+            return gen.range
+        return None
+
+    def has(self, oper_id):
+        return oper_id in self.generators
+
+    def __repr__(self):
+        return f"Bag({len(self.generators)} gens)"
+
+
+class SF2Instrument:
+    """An instrument with optional global zone and split zones."""
+
+    def __init__(self, name, global_zone=None, zones=None):
+        self.name = name
+        self.global_zone = global_zone  # SF2Bag or None
+        self.zones = zones or []        # list[SF2Bag]
+
+    def __repr__(self):
+        gz = "global+" if self.global_zone else ""
+        return f"Inst({self.name}, {gz}{len(self.zones)} zones)"
+
+
+class SF2Preset:
+    """A preset with bank/program, optional global zone, and split zones."""
+
+    def __init__(self, name, bank, preset_num, global_zone=None, zones=None):
+        self.name = name
+        self.bank = bank
+        self.preset_num = preset_num
+        self.global_zone = global_zone  # SF2Bag or None
+        self.zones = zones or []        # list[SF2Bag]
+
+    def __repr__(self):
+        gz = "global+" if self.global_zone else ""
+        return f"Preset[{self.bank:03}:{self.preset_num:03}] {self.name} ({gz}{len(self.zones)} zones)"
+
+
+class SF2File:
+    """Standalone SF2 binary parser. Reads RIFF/sfbk structure, builds
+    samples, instruments, and presets with proper global zone separation."""
+
+    def __init__(self, filepath):
+        self.filepath = filepath
+        self.samples = []       # list[SF2Sample]
+        self.instruments = []   # list[SF2Instrument]
+        self.presets = []       # list[SF2Preset]
+        self.smpl_offset = 0    # file offset where sample PCM data starts
+        self.smpl_size = 0
+        self._file = None
+
+    def parse(self):
+        """Parse the SF2 file and build all data structures."""
+        self._file = open(self.filepath, 'rb')
+        try:
+            self._parse_riff()
+        except Exception:
+            self._file.close()
+            self._file = None
+            raise
+
+    def close(self):
+        """Close the underlying file handle."""
+        if self._file:
+            self._file.close()
+            self._file = None
+
+    def read_sample_data(self, sample):
+        """Read raw 16-bit PCM data for a sample. Returns bytes or None for ROM."""
+        if sample.is_rom:
+            return None
+        if self._file is None:
+            raise RuntimeError("SF2 file not open")
+        byte_offset = self.smpl_offset + sample.start * 2
+        byte_length = sample.duration * 2
+        self._file.seek(byte_offset)
+        data = self._file.read(byte_length)
+        if len(data) != byte_length:
+            logging.warning("Sample '%s': expected %d bytes, got %d",
+                            sample.name, byte_length, len(data))
+        return data
+
+    # -- Internal parsing methods --
+
+    def _read(self, size):
+        return self._file.read(size)
+
+    def _tell(self):
+        return self._file.tell()
+
+    def _seek(self, pos):
+        self._file.seek(pos)
+
+    def _read_fourcc(self):
+        data = self._read(4)
+        if len(data) < 4:
+            return None
+        return data
+
+    def _read_u32(self):
+        data = self._read(4)
+        if len(data) < 4:
+            return 0
+        return struct.unpack('<I', data)[0]
+
+    def _parse_riff(self):
+        """Parse the top-level RIFF structure."""
+        fourcc = self._read_fourcc()
+        if fourcc != b'RIFF':
+            raise ValueError(f"Not a RIFF file (got {fourcc})")
+        file_size = self._read_u32()
+        form_type = self._read_fourcc()
+        if form_type != b'sfbk':
+            raise ValueError(f"Not an SF2 file (form type: {form_type})")
+
+        raw_phdrs = []
+        raw_pbags = []
+        raw_pgens = []
+        raw_insts = []
+        raw_ibags = []
+        raw_igens = []
+        raw_shdrs = []
+
+        riff_end = file_size + 8  # RIFF header is 8 bytes before data
+        while self._tell() < riff_end:
+            chunk_id = self._read_fourcc()
+            if chunk_id is None:
+                break
+            chunk_size = self._read_u32()
+            chunk_start = self._tell()
+
+            if chunk_id == b'LIST':
+                list_type = self._read_fourcc()
+                if list_type == b'INFO':
+                    # Skip INFO section -- not needed for conversion
+                    self._seek(chunk_start + chunk_size)
+                elif list_type == b'sdta':
+                    self._parse_sdta(chunk_start + chunk_size)
+                elif list_type == b'pdta':
+                    pdta_end = chunk_start + chunk_size
+                    while self._tell() < pdta_end:
+                        sub_id = self._read_fourcc()
+                        if sub_id is None:
+                            break
+                        sub_size = self._read_u32()
+                        sub_start = self._tell()
+
+                        if sub_id == b'phdr':
+                            raw_phdrs = self._parse_array(sub_size, 38, '<20sHHHIII')
+                        elif sub_id == b'pbag':
+                            raw_pbags = self._parse_array(sub_size, 4, '<HH')
+                        elif sub_id == b'pmod':
+                            self._seek(sub_start + sub_size)  # Skip modulators
+                            continue
+                        elif sub_id == b'pgen':
+                            raw_pgens = self._parse_array(sub_size, 4, '<HH')
+                        elif sub_id == b'inst':
+                            raw_insts = self._parse_array(sub_size, 22, '<20sH')
+                        elif sub_id == b'ibag':
+                            raw_ibags = self._parse_array(sub_size, 4, '<HH')
+                        elif sub_id == b'imod':
+                            self._seek(sub_start + sub_size)  # Skip modulators
+                            continue
+                        elif sub_id == b'igen':
+                            raw_igens = self._parse_array(sub_size, 4, '<HH')
+                        elif sub_id == b'shdr':
+                            raw_shdrs = self._parse_array(sub_size, 46, '<20sIIIIIBbHH')
+
+                        self._seek(sub_start + sub_size)
+                else:
+                    self._seek(chunk_start + chunk_size)
+            else:
+                self._seek(chunk_start + chunk_size)
+
+        # Build high-level objects
+        self.samples = self._build_samples(raw_shdrs)
+        self.instruments = self._build_instruments(raw_insts, raw_ibags, raw_igens)
+        self.presets = self._build_presets(raw_phdrs, raw_pbags, raw_pgens)
+
+    def _parse_sdta(self, sdta_end):
+        """Parse the sdta LIST to find smpl offset."""
+        while self._tell() < sdta_end:
+            sub_id = self._read_fourcc()
+            if sub_id is None:
+                break
+            sub_size = self._read_u32()
+            sub_start = self._tell()
+
+            if sub_id == b'smpl':
+                self.smpl_offset = sub_start
+                self.smpl_size = sub_size
+            # sm24 chunk would be here for 24-bit support (not needed for test files)
+
+            self._seek(sub_start + sub_size)
+
+    def _parse_array(self, chunk_size, record_size, fmt):
+        """Parse a chunk as an array of fixed-size records."""
+        count = chunk_size // record_size
+        results = []
+        for _ in range(count):
+            data = self._read(record_size)
+            if len(data) < record_size:
+                break
+            results.append(struct.unpack(fmt, data))
+        return results
+
+    def _build_samples(self, raw_shdrs):
+        """Build SF2Sample objects from raw shdr records."""
+        samples = []
+        for rec in raw_shdrs:
+            name = _from_cstr(rec[0])
+            if name == 'EOS':
+                continue  # Skip sentinel
+            s = SF2Sample(rec[0], rec[1], rec[2], rec[3], rec[4],
+                          rec[5], rec[6], rec[7], rec[8], rec[9])
+            samples.append(s)
+        return samples
+
+    def _build_bags_from_range(self, raw_bags, raw_gens, bag_start, bag_end):
+        """Build SF2Bag objects for a range of bag indices.
+
+        Each bag record is (gen_index, mod_index). Generators for bag i
+        span raw_gens[bag[i].gen_idx .. bag[i+1].gen_idx].
+        """
+        bags = []
+        for i in range(bag_start, bag_end):
+            if i + 1 >= len(raw_bags):
+                break
+            gen_start = raw_bags[i][0]
+            gen_end = raw_bags[i + 1][0]
+            generators = {}
+            for g_idx in range(gen_start, min(gen_end, len(raw_gens))):
+                oper = raw_gens[g_idx][0]
+                amount = raw_gens[g_idx][1]
+                generators[oper] = SF2Generator(oper, amount)
+            bags.append(SF2Bag(generators))
+        return bags
+
+    def _build_instruments(self, raw_insts, raw_ibags, raw_igens):
+        """Build SF2Instrument objects with global zone separation.
+
+        Per SF2 spec Section 7.6: The first bag of an instrument is a global
+        zone if and only if it does NOT contain a sampleID generator (gen 53).
+        """
+        instruments = []
+        for i in range(len(raw_insts) - 1):  # Last is sentinel (EOI)
+            name = _from_cstr(raw_insts[i][0])
+            bag_start = raw_insts[i][1]
+            bag_end = raw_insts[i + 1][1]
+
+            all_bags = self._build_bags_from_range(raw_ibags, raw_igens, bag_start, bag_end)
+
+            global_zone = None
+            zones = []
+
+            if len(all_bags) > 0:
+                if not all_bags[0].has(GEN_SAMPLE_ID):
+                    global_zone = all_bags[0]
+                    zones = all_bags[1:]
+                else:
+                    zones = all_bags
+
+            instruments.append(SF2Instrument(name, global_zone, zones))
+        return instruments
+
+    def _build_presets(self, raw_phdrs, raw_pbags, raw_pgens):
+        """Build SF2Preset objects with global zone separation.
+
+        Per SF2 spec Section 7.7: The first bag of a preset is a global
+        zone if and only if it does NOT contain an instrument generator (gen 41).
+        """
+        presets = []
+        for i in range(len(raw_phdrs) - 1):  # Last is sentinel (EOP)
+            name = _from_cstr(raw_phdrs[i][0])
+            preset_num = raw_phdrs[i][1]
+            bank = raw_phdrs[i][2]
+            bag_start = raw_phdrs[i][3]
+            bag_end = raw_phdrs[i + 1][3]
+
+            all_bags = self._build_bags_from_range(raw_pbags, raw_pgens, bag_start, bag_end)
+
+            global_zone = None
+            zones = []
+
+            if len(all_bags) > 0:
+                if not all_bags[0].has(GEN_INSTRUMENT):
+                    global_zone = all_bags[0]
+                    zones = all_bags[1:]
+                else:
+                    zones = all_bags
+
+            presets.append(SF2Preset(name, bank, preset_num, global_zone, zones))
+        return presets
+
+
+# =============================================================================
+# Section 4: Generator Merging & SFZ Conversion
+# =============================================================================
+
+def merge_generators(inst_global, inst_zone, preset_global, preset_zone):
+    """Merge generators from all four zone levels per SF2 spec Section 9.4.
+
+    Layering rules:
+    1. Start with instrument zone generators (signed values)
+    2. For generators NOT in zone, inherit from instrument global zone
+    3. ADD preset zone generator values on top (additive offsets)
+    4. ADD preset global zone values for any not already added from preset zone
+    Range/terminal/structural generators are NOT additive.
+
+    Returns: dict[int, int] mapping generator oper to final signed value.
+    """
+    merged = {}
+
+    # Step 1 & 2: Instrument level (zone inherits from global for missing gens)
+    if inst_global:
+        for oper, gen in inst_global.generators.items():
+            if oper not in NON_ADDITIVE_GENS:
+                merged[oper] = gen.signed
+            else:
+                merged[oper] = gen.amount  # unsigned for structural gens
+
+    if inst_zone:
+        for oper, gen in inst_zone.generators.items():
+            if oper not in NON_ADDITIVE_GENS:
+                merged[oper] = gen.signed  # Zone overrides global
+            else:
+                merged[oper] = gen.amount
+
+    # Step 3 & 4: Preset level (additive for non-structural generators)
+    preset_offsets = {}
+    if preset_global:
+        for oper, gen in preset_global.generators.items():
+            if oper not in NON_ADDITIVE_GENS:
+                preset_offsets[oper] = gen.signed
+
+    if preset_zone:
+        for oper, gen in preset_zone.generators.items():
+            if oper not in NON_ADDITIVE_GENS:
+                preset_offsets[oper] = gen.signed  # Zone overrides global
+
+    # Apply preset offsets additively to instrument-level values
+    for oper, offset in preset_offsets.items():
+        if oper in merged:
+            merged[oper] = merged[oper] + offset
+        else:
+            merged[oper] = offset
+
+    return merged
+
+
+def generators_to_sfz_opcodes(gens, sample):
+    """Convert merged generator dict to a list of (sfz_opcode, value_string) tuples.
+
+    Args:
+        gens: dict[int, int] from merge_generators()
+        sample: SF2Sample for this region
+
+    Returns: list of (opcode_name, formatted_value) tuples
+    """
+    opcodes = []
+
+    # --- Volume Envelope (ampeg_*) ---
+    # SF2 generators 33-38 -> SFZ amplitude envelope (seconds via timecents)
+    if GEN_DELAY_VOL_ENV in gens:
+        opcodes.append(('ampeg_delay', f'{timecents_to_seconds(gens[GEN_DELAY_VOL_ENV]):.6f}'))
+    if GEN_ATTACK_VOL_ENV in gens:
+        opcodes.append(('ampeg_attack', f'{timecents_to_seconds(gens[GEN_ATTACK_VOL_ENV]):.6f}'))
+    if GEN_HOLD_VOL_ENV in gens:
+        opcodes.append(('ampeg_hold', f'{timecents_to_seconds(gens[GEN_HOLD_VOL_ENV]):.6f}'))
+    if GEN_DECAY_VOL_ENV in gens:
+        opcodes.append(('ampeg_decay', f'{timecents_to_seconds(gens[GEN_DECAY_VOL_ENV]):.6f}'))
+    if GEN_SUSTAIN_VOL_ENV in gens:
+        opcodes.append(('ampeg_sustain', f'{sustain_vol_env_to_percent(gens[GEN_SUSTAIN_VOL_ENV]):.4f}'))
+    if GEN_RELEASE_VOL_ENV in gens:
+        opcodes.append(('ampeg_release', f'{timecents_to_seconds(gens[GEN_RELEASE_VOL_ENV]):.6f}'))
+
+    # --- Modulation Envelope (fileg_* AND pitcheg_*) ---
+    # SF2 has ONE modulation envelope that drives both pitch and filter.
+    # SFZ separates them, so we emit to both fileg_* and pitcheg_*.
+    if GEN_DELAY_MOD_ENV in gens:
+        val = f'{timecents_to_seconds(gens[GEN_DELAY_MOD_ENV]):.6f}'
+        opcodes.append(('fileg_delay', val))
+        opcodes.append(('pitcheg_delay', val))
+    if GEN_ATTACK_MOD_ENV in gens:
+        val = f'{timecents_to_seconds(gens[GEN_ATTACK_MOD_ENV]):.6f}'
+        opcodes.append(('fileg_attack', val))
+        opcodes.append(('pitcheg_attack', val))
+    if GEN_HOLD_MOD_ENV in gens:
+        val = f'{timecents_to_seconds(gens[GEN_HOLD_MOD_ENV]):.6f}'
+        opcodes.append(('fileg_hold', val))
+        opcodes.append(('pitcheg_hold', val))
+    if GEN_DECAY_MOD_ENV in gens:
+        val = f'{timecents_to_seconds(gens[GEN_DECAY_MOD_ENV]):.6f}'
+        opcodes.append(('fileg_decay', val))
+        opcodes.append(('pitcheg_decay', val))
+    if GEN_SUSTAIN_MOD_ENV in gens:
+        val = f'{sustain_mod_env_to_percent(gens[GEN_SUSTAIN_MOD_ENV]):.4f}'
+        opcodes.append(('fileg_sustain', val))
+        opcodes.append(('pitcheg_sustain', val))
+    if GEN_RELEASE_MOD_ENV in gens:
+        val = f'{timecents_to_seconds(gens[GEN_RELEASE_MOD_ENV]):.6f}'
+        opcodes.append(('fileg_release', val))
+        opcodes.append(('pitcheg_release', val))
+
+    # --- Modulation Depths (raw cent values, NOT timecents conversion) ---
+    # These are pitch/filter modulation depths in cents
+
+    # pitchlfo_depth: sum of modLfoToPitch (gen 5) and vibLfoToPitch (gen 6)
+    # SF2 has separate mod LFO and vibrato LFO; SFZ has one pitch LFO
+    pitchlfo_depth = 0
+    if GEN_MOD_LFO_TO_PITCH in gens:
+        pitchlfo_depth += gens[GEN_MOD_LFO_TO_PITCH]
+    if GEN_VIB_LFO_TO_PITCH in gens:
+        pitchlfo_depth += gens[GEN_VIB_LFO_TO_PITCH]
+    if pitchlfo_depth != 0:
+        opcodes.append(('pitchlfo_depth', str(pitchlfo_depth)))
+
+    # pitcheg_depth: modEnvToPitch (gen 7) -- raw cents
+    if GEN_MOD_ENV_TO_PITCH in gens and gens[GEN_MOD_ENV_TO_PITCH] != 0:
+        opcodes.append(('pitcheg_depth', str(gens[GEN_MOD_ENV_TO_PITCH])))
+
+    # fillfo_depth: modLfoToFilterFc (gen 10) -- raw cents
+    if GEN_MOD_LFO_TO_FILTER_FC in gens and gens[GEN_MOD_LFO_TO_FILTER_FC] != 0:
+        opcodes.append(('fillfo_depth', str(gens[GEN_MOD_LFO_TO_FILTER_FC])))
+
+    # fileg_depth: modEnvToFilterFc (gen 11) -- raw cents
+    if GEN_MOD_ENV_TO_FILTER_FC in gens and gens[GEN_MOD_ENV_TO_FILTER_FC] != 0:
+        opcodes.append(('fileg_depth', str(gens[GEN_MOD_ENV_TO_FILTER_FC])))
+
+    # amplfo_depth: modLfoToVolume (gen 13) -- centibels to dB
+    if GEN_MOD_LFO_TO_VOLUME in gens and gens[GEN_MOD_LFO_TO_VOLUME] != 0:
+        opcodes.append(('amplfo_depth', f'{centibels_to_db(gens[GEN_MOD_LFO_TO_VOLUME]):.2f}'))
+
+    # --- Filter ---
+    if GEN_INITIAL_FILTER_FC in gens:
+        # Only emit if filter is actually active (< ~20kHz = 13500 absolute cents)
+        if gens[GEN_INITIAL_FILTER_FC] < 13500:
+            hz = absolute_cents_to_hz(gens[GEN_INITIAL_FILTER_FC])
+            opcodes.append(('cutoff', f'{hz:.2f}'))
+            opcodes.append(('fil_type', 'lpf_2p'))
+
+    if GEN_INITIAL_FILTER_Q in gens and gens[GEN_INITIAL_FILTER_Q] > 0:
+        opcodes.append(('resonance', f'{centibels_to_db(gens[GEN_INITIAL_FILTER_Q]):.2f}'))
+
+    # --- LFOs ---
+    # Mod LFO (drives amplitude and filter)
+    if GEN_DELAY_MOD_LFO in gens:
+        val = f'{timecents_to_seconds(gens[GEN_DELAY_MOD_LFO]):.6f}'
+        opcodes.append(('amplfo_delay', val))
+        opcodes.append(('fillfo_delay', val))
+    if GEN_FREQ_MOD_LFO in gens:
+        hz = f'{absolute_cents_to_hz(gens[GEN_FREQ_MOD_LFO]):.4f}'
+        opcodes.append(('amplfo_freq', hz))
+        opcodes.append(('fillfo_freq', hz))
+
+    # Vibrato LFO (drives pitch)
+    if GEN_DELAY_VIB_LFO in gens:
+        opcodes.append(('pitchlfo_delay', f'{timecents_to_seconds(gens[GEN_DELAY_VIB_LFO]):.6f}'))
+    if GEN_FREQ_VIB_LFO in gens:
+        opcodes.append(('pitchlfo_freq', f'{absolute_cents_to_hz(gens[GEN_FREQ_VIB_LFO]):.4f}'))
+
+    # --- Volume / Attenuation ---
+    # initialAttenuation (gen 48) -> volume in negative dB
+    if GEN_INITIAL_ATTENUATION in gens and gens[GEN_INITIAL_ATTENUATION] != 0:
+        db = -(gens[GEN_INITIAL_ATTENUATION] / 10.0)
+        db = max(-144.0, min(0.0, db))
+        opcodes.append(('volume', f'{db:.2f}'))
+
+    # --- Pan ---
+    if GEN_PAN in gens and gens[GEN_PAN] != 0:
+        pan_val = sf2_pan_to_sfz(gens[GEN_PAN])
+        opcodes.append(('pan', f'{pan_val:.1f}'))
+
+    # --- Effects ---
+    if GEN_REVERB_EFFECTS_SEND in gens:
+        opcodes.append(('effect1', f'{gens[GEN_REVERB_EFFECTS_SEND] / 10.0:.1f}'))
+    if GEN_CHORUS_EFFECTS_SEND in gens:
+        opcodes.append(('effect2', f'{gens[GEN_CHORUS_EFFECTS_SEND] / 10.0:.1f}'))
+
+    # --- Tuning ---
+    # scaleTuning (gen 56) -> pitch_keytrack (cents per key, default 100)
+    if GEN_SCALE_TUNING in gens:
+        st = gens[GEN_SCALE_TUNING] & 0xFFFF  # unsigned
+        if st != 100:
+            opcodes.append(('pitch_keytrack', str(st)))
+
+    # coarseTune (gen 51) -> transpose (semitones)
+    if GEN_COARSE_TUNE in gens and gens[GEN_COARSE_TUNE] != 0:
+        opcodes.append(('transpose', str(gens[GEN_COARSE_TUNE])))
+
+    # fineTune (gen 52) + sample pitch_correction -> tune (cents)
+    fine = gens.get(GEN_FINE_TUNE, 0)
+    correction = sample.pitch_correction if sample else 0
+    total_tune = fine + correction
+    if total_tune != 0:
+        opcodes.append(('tune', str(total_tune)))
+
+    # --- Exclusive Class ---
+    # exclusiveClass (gen 57) -> group + off_by (same value, enables muting groups)
+    if GEN_EXCLUSIVE_CLASS in gens:
+        cls = gens[GEN_EXCLUSIVE_CLASS] & 0xFFFF  # unsigned
+        if cls != 0:
+            opcodes.append(('group', str(cls)))
+            opcodes.append(('off_by', str(cls)))
+            opcodes.append(('off_mode', 'fast'))
+
+    return opcodes
+
+
+# =============================================================================
+# Section 5: Sample Export & SFZ File Writing
+# =============================================================================
+
+def sanitize_filename(name):
+    """Sanitize a string for use in a filename."""
+    return re.sub(r'[^A-Za-z0-9_\-]', '_', name)
+
+
+def export_sample_to_wav(sf2, sample, output_path):
+    """Export a single SF2Sample to a 16-bit mono WAV file.
+    Returns True on success, False if ROM sample or error."""
+    if sample.is_rom:
+        return False
+
+    raw_data = sf2.read_sample_data(sample)
+    if raw_data is None or len(raw_data) == 0:
+        print(f"  Warning: Empty sample data for '{sample.name}'", file=sys.stderr)
+        return False
+
+    try:
+        with wave.open(output_path, 'wb') as wav:
+            wav.setnchannels(1)
+            wav.setsampwidth(2)  # 16-bit
+            wav.setframerate(sample.sample_rate)
+            wav.writeframes(raw_data)
+    except Exception as e:
+        print(f"  Error writing WAV for '{sample.name}': {e}", file=sys.stderr)
+        return False
+
+    return True
+
+
+def process_preset(sf2, preset, output_base, base_folder):
+    """Process a single preset: export samples and write SFZ file."""
+    preset_name_clean = preset.name.strip()
+    preset_name_nospace = preset_name_clean.replace(" ", "")
+
+    # Create sample folder
+    sample_folder = os.path.join(base_folder, f"{output_base} {preset_name_clean} Samples")
+    if not os.path.exists(sample_folder):
+        os.makedirs(sample_folder)
+
+    sfz_filename = os.path.join(base_folder, f"{output_base} {preset_name_clean}.sfz")
+
+    # Track exported samples to avoid duplicates {sample_index: wav_filename}
+    exported_samples = {}
+    used_names = {}
+    rom_warned = set()
+
+    with open(sfz_filename, 'w') as f:
+        # Header
+        f.write(f"// {preset_name_clean}\n")
+        f.write("// Converted from SF2 to SFZ by bash explode\n\n")
+        f.write("<control>\n")
+        f.write(f"default_path={os.path.basename(sample_folder)}/\n\n")
+
+        region_count = 0
+
+        for preset_zone in preset.zones:
+            inst_gen = preset_zone.generators.get(GEN_INSTRUMENT)
+            if inst_gen is None:
+                continue
+
+            inst_idx = inst_gen.amount
+            if inst_idx >= len(sf2.instruments):
+                logging.warning("Preset '%s' references invalid instrument index %d",
+                                preset.name, inst_idx)
+                continue
+
+            instrument = sf2.instruments[inst_idx]
+
+            for inst_zone in instrument.zones:
+                sample_gen = inst_zone.generators.get(GEN_SAMPLE_ID)
+                if sample_gen is None:
+                    continue
+
+                sample_idx = sample_gen.amount
+                if sample_idx >= len(sf2.samples):
+                    logging.warning("Instrument '%s' references invalid sample index %d",
+                                    instrument.name, sample_idx)
+                    continue
+
+                sample = sf2.samples[sample_idx]
+
+                # Skip ROM samples (no embedded PCM data)
+                if sample.is_rom:
+                    if sample_idx not in rom_warned:
+                        rom_warned.add(sample_idx)
+                    continue
+
+                # Merge generators from all four levels
+                merged = merge_generators(
+                    instrument.global_zone, inst_zone,
+                    preset.global_zone, preset_zone)
+
+                # Export sample WAV if not already done
+                if sample_idx not in exported_samples:
+                    base_name = sanitize_filename(sample.name.strip())
+                    if base_name in used_names:
+                        used_names[base_name] += 1
+                        base_name = f"{base_name}-{used_names[base_name]}"
+                    else:
+                        used_names[base_name] = 1
+                    wav_filename = f"{output_base}-{preset_name_nospace}-{base_name}.wav"
+                    wav_path = os.path.join(sample_folder, wav_filename)
+
+                    if export_sample_to_wav(sf2, sample, wav_path):
+                        exported_samples[sample_idx] = wav_filename
+                    else:
+                        continue
+
+                wav_filename = exported_samples.get(sample_idx)
+                if wav_filename is None:
+                    continue
+
+                # --- Write region ---
+                f.write("<region>\n")
+                f.write(f"sample={wav_filename}\n")
+
+                # Key range: check instrument zone, then instrument global, then preset
+                key_range = inst_zone.get_range(GEN_KEY_RANGE)
+                if key_range is None and instrument.global_zone:
+                    key_range = instrument.global_zone.get_range(GEN_KEY_RANGE)
+
+                preset_key_range = preset_zone.get_range(GEN_KEY_RANGE)
+                if preset_key_range is None and preset.global_zone:
+                    preset_key_range = preset.global_zone.get_range(GEN_KEY_RANGE)
+
+                if key_range is not None:
+                    lo, hi = key_range
+                    # Intersect with preset-level key range if present
+                    if preset_key_range is not None:
+                        lo = max(lo, preset_key_range[0])
+                        hi = min(hi, preset_key_range[1])
+                    if lo == hi:
+                        f.write(f"lochan=10 hichan=10\n")
+                        f.write(f"key={lo}\n")
+                    else:
+                        f.write(f"lokey={lo} hikey={hi}\n")
+                elif preset_key_range is not None:
+                    lo, hi = preset_key_range
+                    if lo == hi:
+                        f.write(f"lochan=10 hichan=10\n")
+                        f.write(f"key={lo}\n")
+                    else:
+                        f.write(f"lokey={lo} hikey={hi}\n")
+
+                # Velocity range
+                vel_range = inst_zone.get_range(GEN_VEL_RANGE)
+                if vel_range is None and instrument.global_zone:
+                    vel_range = instrument.global_zone.get_range(GEN_VEL_RANGE)
+                if vel_range is not None:
+                    lo_v, hi_v = vel_range
+                    if not (lo_v == 0 and hi_v == 127):
+                        f.write(f"lovel={lo_v} hivel={hi_v}\n")
+
+                # Pitch keycenter
+                if GEN_OVERRIDING_ROOT_KEY in merged:
+                    pk = merged[GEN_OVERRIDING_ROOT_KEY] & 0xFFFF
+                    if pk <= 127:
+                        f.write(f"pitch_keycenter={pk}\n")
+                    else:
+                        f.write(f"pitch_keycenter={sample.original_pitch}\n")
+                else:
+                    f.write(f"pitch_keycenter={sample.original_pitch}\n")
+
+                # All other SFZ opcodes from generators
+                sfz_opcodes = generators_to_sfz_opcodes(merged, sample)
+                for opcode, value in sfz_opcodes:
+                    f.write(f"{opcode}={value}\n")
+
+                # Loop parameters
+                sample_modes = merged.get(GEN_SAMPLE_MODES, 0)
+                if sample_modes is not None:
+                    sample_modes = sample_modes & 0xFFFF
+                else:
+                    sample_modes = 0
+                loop_on = (sample_modes & 1) != 0
+                loop_on_noteoff = (sample_modes & 2) != 0
+
+                if loop_on:
+                    if loop_on_noteoff:
+                        f.write("loop_mode=loop_continuous\n")
+                    else:
+                        f.write("loop_mode=loop_sustain\n")
+
+                    # Loop points: sample-relative + generator offsets
+                    loop_start = sample.start_loop
+                    loop_start += merged.get(GEN_STARTLOOP_ADDRS_OFFSET, 0)
+                    sloop_coarse = merged.get(GEN_STARTLOOP_ADDRS_COARSE, 0)
+                    if sloop_coarse:
+                        loop_start += sloop_coarse * 32768
+
+                    loop_end = sample.end_loop
+                    loop_end += merged.get(GEN_ENDLOOP_ADDRS_OFFSET, 0)
+                    eloop_coarse = merged.get(GEN_ENDLOOP_ADDRS_COARSE, 0)
+                    if eloop_coarse:
+                        loop_end += eloop_coarse * 32768
+
+                    # Clamp for safety (handles SuperMarioWorld off-by-one anomaly)
+                    sample_length = sample.duration
+                    loop_end = max(0, min(loop_end, sample_length))
+                    loop_start = max(0, min(loop_start, loop_end))
+
+                    # SFZ loop_end is inclusive (last sample of loop)
+                    if loop_end > 0:
+                        f.write(f"loop_start={loop_start}\n")
+                        f.write(f"loop_end={loop_end - 1}\n")
+
+                # Sample offset (start address offset)
+                sample_offset = merged.get(GEN_START_ADDRS_OFFSET, 0)
+                scoarse = merged.get(GEN_START_ADDRS_COARSE, 0)
+                if scoarse:
+                    sample_offset += scoarse * 32768
+                if sample_offset != 0:
+                    f.write(f"offset={sample_offset}\n")
+
+                f.write("\n")
+                region_count += 1
+
+    if region_count > 0:
+        print(f"  SFZ: {sfz_filename} ({region_count} regions)")
+    else:
+        # Clean up empty files
+        try:
+            os.remove(sfz_filename)
+            if os.path.exists(sample_folder) and not os.listdir(sample_folder):
+                os.rmdir(sample_folder)
+        except OSError:
+            pass
+        if len(rom_warned) > 0:
+            print(f"  Skipped: {preset_name_clean} (all {len(rom_warned)} samples are ROM)",
+                  file=sys.stderr)
+
+
+# =============================================================================
+# Section 6: CLI Entry Point
+# =============================================================================
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Convert an SF2 file to separate SFZ files per preset.")
+    parser.add_argument("input", help="Input SF2 file")
+    parser.add_argument("output", help="Output SFZ base filename (e.g., mySound)")
+
+    if len(sys.argv) < 3:
+        parser.print_help()
+        sys.exit(1)
+
+    args = parser.parse_args()
+
+    output_base = os.path.splitext(os.path.basename(args.output))[0]
+    base_folder = output_base
+    if not os.path.exists(base_folder):
+        os.makedirs(base_folder)
+
+    print(f"Parsing {args.input}...")
+    sf2 = SF2File(args.input)
+    sf2.parse()
+
+    rom_count = sum(1 for s in sf2.samples if s.is_rom)
+    print(f"  {len(sf2.presets)} presets, {len(sf2.instruments)} instruments, "
+          f"{len(sf2.samples)} samples" +
+          (f" ({rom_count} ROM, will be skipped)" if rom_count > 0 else ""))
+
+    print(f"\nExporting to {base_folder}/...")
+    for preset in sf2.presets:
+        process_preset(sf2, preset, output_base, base_folder)
+
+    sf2.close()
+    print("\nDone.")
+
+
+if __name__ == "__main__":
+    main()
