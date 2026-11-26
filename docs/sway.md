@@ -31,7 +31,13 @@ session, and quitting sway would end the Plasma session with it.
 
 ### Wallpaper
 
-The wallpaper is `pond`, installed with the dotfiles to `~/.local/share/wallpapers`. The config sets `$wallpaper` to `pond.jpg` (3440x1440), and each laptop's section of `machine.conf.tmpl` switches it to `pond-laptop.jpg` (2560x1600, the laptops' 16:10). Both are JPEGs, to keep the repo small.
+The wallpaper is `pond`, installed with the dotfiles to `~/.local/share/wallpapers`. The config sets `$wallpaper` to `pond.jpg` (3440x1440), and each laptop's section of `machine.conf.tmpl` switches it to `pond-laptop.jpg` (2560x1600, the laptops' 16:10). Both are JPEGs, to keep the repo small, with a 40% wash of Callie's background color (`#1c1220`) baked in so the painting sits with the rest of the theme. To remake one from its original PNG:
+
+```bash
+magick pond.png -alpha off \( +clone -fill '#1c1220' -colorize 100 -alpha set \
+  -channel A -evaluate set 40% +channel \) -composite -strip -quality 92 \
+  -sampling-factor 4:4:4 pond.jpg
+```
 
 ### Look
 
