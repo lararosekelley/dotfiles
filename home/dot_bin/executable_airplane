@@ -3,12 +3,33 @@
 # Airplane mode: block every radio if any is on, otherwise unblock them all.
 # Unlike `rfkill toggle all`, the radios always end up in the same state.
 #
+# One key press can reach here twice, or after the kernel or firmware has
+# already toggled the radios, either of which would undo the change. So a
+# second run at the same moment exits, and if the radios change on their own
+# in the first half second, they're left as they are. Either way, it ends by
+# saying which way they went.
+#
 # Usage: airplane
 
 set -uo pipefail
 
-if rfkill list | grep -q 'Soft blocked: no'; then
-  rfkill block all
+state() { rfkill -n -o SOFT; }
+
+exec 9> "${XDG_RUNTIME_DIR:-/tmp}/airplane.lock"
+flock -n 9 || exit 0
+
+before=$(state)
+sleep 0.5
+if [ "$(state)" = "$before" ]; then
+  if grep -qx unblocked <<< "$before"; then
+    rfkill block all
+  else
+    rfkill unblock all
+  fi
+fi
+
+if grep -qx unblocked <<< "$(state)"; then
+  notify-send -t 3000 "Airplane mode off" "Radios are on"
 else
-  rfkill unblock all
+  notify-send -t 3000 "Airplane mode on" "Every radio is off"
 fi
