@@ -28,6 +28,7 @@ tooltip label {
 #mode,
 #scratchpad,
 #clock,
+#custom-recording,
 #custom-dnd,
 #custom-notifications,
 #custom-night-light,
@@ -92,6 +93,12 @@ tooltip label {
 #clock {
     color: #f08fb8;
     border-color: #f08fb8;
+}
+
+#custom-recording {
+    background: #e66e6d;
+    border-color: #e66e6d;
+    color: #2e0f20;
 }
 
 #custom-notifications {

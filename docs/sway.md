@@ -121,7 +121,7 @@ bar {
 
 This should replace whatever was originally in the `bar {}` block. Hit `Mod-Shift-C` to reload Sway with Waybar in place of the original!
 
-The repo tracks `~/.config/waybar/config.jsonc` and a Callie `style.css`: the tray (apps' status icons, such as Dropbox), then workspaces, mode, and scratchpad on the left; the clock in the middle, with a calendar on hover; and on the right do-not-disturb and the notification bell (see [Notifications](#notifications)), the night light (a moon when on; click to toggle, right-click to configure), an idle toggle (stay awake while the eye is open), volume (click to mute), network, CPU, memory, brightness (scroll to change), and battery. Each module is a rounded, bordered pill on a 34px bar. Brightness and battery hide themselves where there is no backlight or battery, and the battery turns yellow below 30% and red below 15%. The bar uses IosevkaTerm Nerd Font's Propo variant, whose icons are sized to sit beside text.
+The repo tracks `~/.config/waybar/config.jsonc` and a Callie `style.css`: the tray (apps' status icons, such as Dropbox), then workspaces, a red dot while a screen recording runs, mode, and scratchpad on the left; the clock in the middle, with a calendar on hover; and on the right do-not-disturb and the notification bell (see [Notifications](#notifications)), the night light (a moon when on; click to toggle, right-click to configure), an idle toggle (stay awake while the eye is open), volume (click to mute), network, CPU, memory, brightness (scroll to change), and battery. Each module is a rounded, bordered pill on a 34px bar. Brightness and battery hide themselves where there is no backlight or battery, and the battery turns yellow below 30% and red below 15%. The bar uses IosevkaTerm Nerd Font's Propo variant, whose icons are sized to sit beside text.
 
 Waybar reapplies `style.css` as soon as it changes; `Mod-Shift-C` reloads the rest.
 
@@ -189,6 +189,27 @@ Plasma, where sway's keys don't apply, send from a terminal with `clip-send`.
 - `Shift+Print`: the focused display.
 - `$mod+Print`: click a window.
 - `$mod+Shift+Print`: drag a region, then annotate it in [swappy](https://github.com/jtheoof/swappy) before it's saved.
+
+## Screen recording
+
+`screenrecord` in `~/.bin` records with
+[wf-recorder](https://github.com/ammen99/wf-recorder) to
+`~/Videos/Recordings`. While it records, a red dot shows in waybar to the right
+of the workspaces:
+
+- `$mod+Shift+r`: drag to select a region.
+- `$mod+Shift+a`: a region, with the desktop's sound.
+- `$mod+Ctrl+Shift+r`: the focused display.
+- `$mod+Ctrl+Shift+a`: the focused display, with the desktop's sound.
+
+Any of those keys, or a click on the red dot, stops the recording and saves it,
+with a notification. The sound is what's playing, recorded from the default
+output's monitor, not the microphone.
+
+For anything longer or more involved, use OBS with its "Screen Capture
+(PipeWire)" source. That, and screen sharing in browsers and apps such as Zoom,
+goes through `xdg-desktop-portal-wlr`, which asks which display to share the
+first time.
 
 ## File manager
 

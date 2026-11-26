@@ -313,6 +313,21 @@ bindsym $mod+Print exec screenshot window
 # screenshot a dragged region and annotate it in swappy
 bindsym $mod+Shift+Print exec screenshot region --edit
 
+# screen recordings, saved to ~/Videos/Recordings (script in ~/.bin); any of
+# these keys stops a recording in progress, as does waybar's red dot
+
+# record a dragged region
+bindsym $mod+Shift+r exec screenrecord region
+
+# record a dragged region with the desktop's sound
+bindsym $mod+Shift+a exec screenrecord region --audio
+
+# record the focused display
+bindsym $mod+Ctrl+Shift+r exec screenrecord output
+
+# record the focused display with the desktop's sound
+bindsym $mod+Ctrl+Shift+a exec screenrecord output --audio
+
 # windows
 # --------
 

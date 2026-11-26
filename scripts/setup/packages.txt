@@ -94,6 +94,7 @@ wl-mirror                 wl-mirror                 wl-mirror
 gammastep                 gammastep                 gammastep
 grim                      grim                      grim
 slurp                     slurp                     slurp
+wf-recorder               wf-recorder               wf-recorder
 swappy                    swappy                    swappy
 notify-send               libnotify                 libnotify
 brightnessctl             brightnessctl             brightnessctl

@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+# Record the screen under sway with wf-recorder: a dragged region, or the
+# focused display, optionally with the desktop's sound (not the microphone).
+# Run it again, or click the red dot in waybar, to stop; the video is saved to
+# ~/Videos/Recordings.
+#
+# Usage: screenrecord [region|output] [--audio]
+#        screenrecord stop|status
+#
+#   status  print waybar's JSON for the recording dot, empty when not recording
+
+set -uo pipefail
+
+state="${XDG_RUNTIME_DIR:-/tmp}/screenrecord"
+pidfile="$state.pid"
+filefile="$state.file"
+
+recording() { [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2> /dev/null; }
+
+# waybar's recording dot updates on this signal (see its config)
+refresh_bar() { pkill -RTMIN+10 -x waybar; }
+
+stop() {
+  local pid file
+  pid=$(cat "$pidfile")
+  file=$(cat "$filefile" 2> /dev/null)
+  # SIGINT lets wf-recorder finish writing the file; give it five seconds
+  kill -INT "$pid" 2> /dev/null
+  for _ in $(seq 1 50); do
+    kill -0 "$pid" 2> /dev/null || break
+    sleep 0.1
+  done
+  kill -TERM "$pid" 2> /dev/null
+  rm -f "$pidfile" "$filefile"
+  refresh_bar
+  notify-send -t 4000 "Recording saved" "$file"
+}
+
+mode=region
+audio=false
+for arg in "$@"; do
+  case "$arg" in
+    region | output) mode=$arg ;;
+    --audio) audio=true ;;
+    stop)
+      recording && stop
+      exit 0
+      ;;
+    status)
+      if recording; then
+        printf '{"text": "󰑊", "class": "recording", "tooltip": "Recording: click to stop"}\n'
+      else
+        printf '{"text": ""}\n'
+      fi
+      exit 0
+      ;;
+    -h | --help)
+      echo "usage: screenrecord [region|output] [--audio] | stop | status"
+      exit 0
+      ;;
+    *)
+      echo "unknown argument: $arg" >&2
+      exit 2
+      ;;
+  esac
+done
+
+# any recording key stops a recording in progress
+if recording; then
+  stop
+  exit 0
+fi
+
+videos=$(xdg-user-dir VIDEOS 2> /dev/null) || videos="$HOME/Videos"
+dir="$videos/Recordings"
+mkdir -p "$dir"
+file="$dir/$(date +%Y-%m-%d_%H-%M-%S).mp4"
+
+args=(-f "$file")
+case "$mode" in
+  region)
+    geometry=$(slurp -d) || exit 0
+    args+=(-g "$geometry")
+    ;;
+  output)
+    args+=(-o "$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')")
+    ;;
+esac
+if $audio; then
+  # the monitor of the default output records what's playing
+  args+=("--audio=$(pactl get-default-sink).monitor")
+fi
+
+# In its own session, so it outlives this script. A background job starts with
+# SIGINT ignored, which stop relies on, so env restores it. setsid and env run
+# in place, so $! is wf-recorder's own pid.
+setsid env --default-signal=INT wf-recorder "${args[@]}" > "$state.log" 2>&1 < /dev/null &
+pid=$!
+sleep 0.5
+if ! kill -0 "$pid" 2> /dev/null; then
+  notify-send -t 4000 "Couldn't start recording" "See $state.log"
+  exit 1
+fi
+echo "$pid" > "$pidfile"
+echo "$file" > "$filefile"
+refresh_bar
