@@ -31,6 +31,8 @@ session, and quitting sway would end the Plasma session with it.
 
 ### Wallpaper
 
+The wallpaper is `pond`, installed with the dotfiles to `~/.local/share/wallpapers`. The config sets `$wallpaper` to `pond.jpg` (3440x1440), and each laptop's section of `machine.conf.tmpl` switches it to `pond-laptop.jpg` (2560x1600, the laptops' 16:10). Both are JPEGs, to keep the repo small.
+
 ### Look
 
 Windows have 2px borders and 6px gaps, both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons.
