@@ -37,13 +37,27 @@ include ~/.config/sway/machine.conf
 # reference: `man 5 sway-output`
 # --------
 
-# gap between windows
-gaps inner 8
-gaps outer 8
+# gap between windows, dropped when a workspace holds a single window
+gaps inner 6
+gaps outer 2
+smart_gaps on
 
-# border around windows
+# border around windows, hidden when a workspace holds a single window
 default_border pixel 2
 default_floating_border pixel 2
+smart_borders on
+
+# title font, seen in tabbed and stacked layouts
+font pango:IosevkaTerm Nerd Font 10
+
+# window colors, from the Callie theme (https://github.com/greylocklabs/themes)
+# class                 border  bg      text    indicator child_border
+client.focused          #f08fb8 #f08fb8 #2e0f20 #e5aac1   #f08fb8
+client.focused_inactive #3d2c42 #261a2a #c9b7c6 #3d2c42   #3d2c42
+client.unfocused        #2c2031 #1c1220 #9a8797 #2c2031   #2c2031
+client.urgent           #e66e6d #e66e6d #2e0f20 #e66e6d   #e66e6d
+client.placeholder      #1c1220 #1c1220 #e0d3df #1c1220   #1c1220
+client.background       #1c1220
 
 # displays (see: swaymsg -t get_outputs) are set per machine, in machine.conf
 
@@ -181,6 +195,11 @@ bindsym $mod+space focus mode_toggle
 # move focus to the parent container
 bindsym $mod+a focus parent
 
+# switch to the last workspace, or the next or previous one on this output
+bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+bracketright workspace next_on_output
+bindsym $mod+bracketleft workspace prev_on_output
+
 # show next window on the scratchpad
 bindsym $mod+x scratchpad show
 
@@ -229,6 +248,21 @@ bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
 # take a screenshot with grim
 bindsym Print exec grim
+
+# windows
+# --------
+
+# float dialogs and pop-ups instead of tiling them
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="bubble"] floating enable
+for_window [window_role="dialog"] floating enable
+for_window [window_type="dialog"] floating enable
+for_window [title="^(Open|Save)( (File|Files|Folder|As))?"] floating enable
+for_window [app_id="pavucontrol"] floating enable
+
+# don't lock or blank the screen while a window is fullscreen, such as a video
+for_window [app_id=".*"] inhibit_idle fullscreen
+for_window [class=".*"] inhibit_idle fullscreen
 
 # open sway config file in neovim floating window; the key that opens it is set
 # per machine, in machine.conf
