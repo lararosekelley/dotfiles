@@ -8,6 +8,8 @@
 set -uo pipefail
 
 makoctl mode -t do-not-disturb > /dev/null
+# waybar's notifications bell shows the mode; this updates it now
+pkill -RTMIN+9 -x waybar
 if makoctl mode | grep -qx do-not-disturb; then
   notify-send -u critical -t 3000 "Do not disturb" "Only critical notifications will show"
 else

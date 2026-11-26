@@ -7,6 +7,7 @@
     "modules-left": ["sway/workspaces", "sway/mode", "sway/scratchpad"],
     "modules-center": ["clock"],
     "modules-right": [
+        "custom/notifications",
         "custom/night-light",
         "idle_inhibitor",
         "pulseaudio",
@@ -38,6 +39,14 @@
         }
     },
 
+    "custom/notifications": {
+        "exec": "notifications status",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 9,
+        "on-click": "notifications",
+        "on-click-right": "dnd"
+    },
     "custom/night-light": {
         "exec": "night-light status",
         "return-type": "json",

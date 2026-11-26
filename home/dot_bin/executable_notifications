@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# Notification history for sway: what mako is showing, then what it has
+# dismissed (up to max-history in ~/.config/mako/config), newest first, in
+# rofi. Enter copies the chosen notification's text.
+#
+# Usage: notifications [status]
+#
+#   status  print waybar's JSON for the bell: slashed during do-not-disturb
+
+set -uo pipefail
+
+# every notification, showing then dismissed, as one JSON array
+all() {
+  {
+    makoctl list -j 2> /dev/null || echo '[]'
+    makoctl history -j 2> /dev/null || echo '[]'
+  } | jq -s 'add // []'
+}
+
+if [ "${1:-}" = status ]; then
+  count=$(all | jq length)
+  if makoctl mode 2> /dev/null | grep -qx do-not-disturb; then
+    printf '{"text": "", "class": "dnd", "tooltip": "Do not disturb: %s notifications. Click for history, right-click to turn off"}\n' "$count"
+  else
+    printf '{"text": "", "class": "normal", "tooltip": "%s notifications. Click for history, right-click for do not disturb"}\n' "$count"
+  fi
+  exit 0
+fi
+
+notifications=$(all)
+if [ "$(jq length <<< "$notifications")" -eq 0 ]; then
+  notify-send -t 3000 "No notifications" "Nothing showing, and nothing in the history"
+  exit 0
+fi
+
+# one line each: "App: summary - body", with the body on one line
+index=$(jq -r '.[] | "\(.app_name // "unknown"): \(.summary)"
+    + (if (.body // "") != "" then " - " + (.body | gsub("\\s+"; " ")) else "" end)' \
+  <<< "$notifications" \
+  | rofi -dmenu -i -no-custom -format i -p notifications \
+    -mesg "Enter: copy the text") || exit 0
+[ -n "$index" ] || exit 0
+
+jq -r --argjson i "$index" '.[$i] | [.summary, .body // ""] | map(select(. != "")) | join("\n")' \
+  <<< "$notifications" | wl-copy
