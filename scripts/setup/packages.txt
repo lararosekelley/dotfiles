@@ -65,6 +65,9 @@ wl-mirror                 wl-mirror                 wl-mirror
 gammastep                 gammastep                 gammastep
 grim                      grim                      grim
 brightnessctl             brightnessctl             brightnessctl
+cliphist                  cliphist                  cliphist
+rofimoji                  rofimoji                  rofimoji
+wtype                     wtype                     wtype
 playerctl                 playerctl                 playerctl
 pactl                     pulseaudio-utils          libpulse
 /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png  sway-wallpapers  sway

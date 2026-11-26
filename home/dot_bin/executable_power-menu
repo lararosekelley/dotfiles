@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Power menu for sway, picked with rofi: lock, log out, suspend, reboot, or
+# shut down. Logging out, rebooting, and shutting down ask again first.
+#
+# Usage: power-menu
+
+set -uo pipefail
+
+confirm() {
+  [ "$(printf '%s\n' no yes | rofi -dmenu -i -p "$1?")" = yes ]
+}
+
+choice=$(printf '%s\n' lock "log out" suspend reboot "shut down" \
+  | rofi -dmenu -i -p power) || exit 0
+
+case "$choice" in
+  lock) swaylock ;;
+  "log out") confirm "log out" && swaymsg exit ;;
+  suspend) systemctl suspend ;;
+  reboot) confirm reboot && systemctl reboot ;;
+  "shut down") confirm "shut down" && systemctl poweroff ;;
+esac

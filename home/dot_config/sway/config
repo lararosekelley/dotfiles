@@ -108,6 +108,16 @@ exec swayidle -w
 # open application launcher
 bindsym $mod+o exec $menu
 
+# power menu: lock, log out, suspend, reboot, or shut down (script in ~/.bin)
+bindsym $mod+Escape exec power-menu
+
+# clipboard history, recorded by cliphist as things are copied
+exec wl-paste --watch cliphist store
+bindsym $mod+v exec cliphist list | rofi -dmenu -p clipboard | cliphist decode | wl-copy
+
+# emoji picker, which types the emoji into the focused window
+bindsym $mod+period exec rofimoji
+
 # open terminal
 bindsym $mod+Return exec $term
 
