@@ -1,4 +1,8 @@
-# swaylock, in the Callie theme (https://github.com/greylocklabs/themes)
+{{- $machine := get . "machine" -}}
+{{- $wallpaper := "pond.jpg" -}}
+{{- if has $machine (list "framework" "thinkpad") }}{{ $wallpaper = "pond-laptop.jpg" }}{{ end -}}
+# swaylock, in the Callie theme (https://github.com/greylocklabs/themes), over
+# the same wallpaper as sway on this machine ({{ $machine }})
 # reference: `man swaylock`; each line is a long option without its dashes
 
 daemonize
@@ -6,18 +10,23 @@ ignore-empty-password
 show-failed-attempts
 indicator-caps-lock
 
+image={{ joinPath .chezmoi.homeDir ".local/share/wallpapers" $wallpaper }}
+scaling=fill
 color=1c1220
+
+# show the ring before typing starts, so the screen reads as locked
+indicator-idle-visible
 font=IosevkaTerm Nerd Font
 indicator-radius=90
 indicator-thickness=10
 
-inside-color=261a2a
-inside-clear-color=261a2a
-inside-caps-lock-color=261a2a
-inside-ver-color=261a2a
-inside-wrong-color=261a2a
+inside-color=261a2ae6
+inside-clear-color=261a2ae6
+inside-caps-lock-color=261a2ae6
+inside-ver-color=261a2ae6
+inside-wrong-color=261a2ae6
 
-ring-color=3d2c42
+ring-color=c9b7c6cc
 ring-clear-color=d6ba86
 ring-caps-lock-color=d6ba86
 ring-ver-color=82cdcd
