@@ -1,0 +1,42 @@
+# swaylock, in the Callie theme (https://github.com/greylocklabs/themes)
+# reference: `man swaylock`; each line is a long option without its dashes
+
+daemonize
+ignore-empty-password
+show-failed-attempts
+indicator-caps-lock
+
+color=1c1220
+font=IosevkaTerm Nerd Font
+indicator-radius=90
+indicator-thickness=10
+
+inside-color=261a2a
+inside-clear-color=261a2a
+inside-caps-lock-color=261a2a
+inside-ver-color=261a2a
+inside-wrong-color=261a2a
+
+ring-color=3d2c42
+ring-clear-color=d6ba86
+ring-caps-lock-color=d6ba86
+ring-ver-color=82cdcd
+ring-wrong-color=e66e6d
+
+line-color=00000000
+line-clear-color=00000000
+line-caps-lock-color=00000000
+line-ver-color=00000000
+line-wrong-color=00000000
+separator-color=00000000
+
+key-hl-color=f08fb8
+caps-lock-key-hl-color=f08fb8
+bs-hl-color=e66e6d
+caps-lock-bs-hl-color=e66e6d
+
+text-color=e0d3df
+text-clear-color=d6ba86
+text-caps-lock-color=d6ba86
+text-ver-color=82cdcd
+text-wrong-color=e66e6d
