@@ -137,7 +137,7 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Sleep, suspend, and resume
 
-[swayidle](https://github.com/swaywm/swayidle) reads `~/.config/swayidle/config`: lock after 5 minutes idle, turn the screens off 5 minutes later, and lock before sleeping. The sway config only starts it.
+[swayidle](https://github.com/swaywm/swayidle) reads `~/.config/swayidle/config`, which chezmoi writes from `config.tmpl`: lock after 5 minutes idle, then 5 minutes later suspend on the laptops or turn the screens off on the desktop, and lock before sleeping. The sway config only starts it. While Agent Awake holds its sleep lock, the laptops' suspend fails and they stay locked instead.
 
 ## Notifications
 

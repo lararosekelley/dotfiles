@@ -148,6 +148,21 @@ class SourceTest(unittest.TestCase):
         self.assertNotIn("ignore-empty-password", laptop.splitlines())
         self.assertIn("ignore-empty-password", desktop.splitlines())
 
+    def test_swayidle_suspends_the_laptops_and_blanks_the_desktop(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            target = str(tmp / "home/.config/swayidle/config")
+            laptop = chezmoi(tmp, REPO, False, "cat", target).splitlines()
+            desktop = chezmoi(
+                tmp, REPO, False, "cat", target, machine="desktop"
+            ).splitlines()
+        self.assertIn("timeout 600 'systemctl suspend'", laptop)
+        self.assertNotIn("timeout 600 'systemctl suspend'", desktop)
+        self.assertTrue(any("output * power off" in line for line in desktop))
+        for lines in (laptop, desktop):
+            self.assertIn("timeout 300 'swaylock'", lines)
+            self.assertIn("before-sleep 'swaylock'", lines)
+
     def test_an_unknown_machine_stops_with_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
