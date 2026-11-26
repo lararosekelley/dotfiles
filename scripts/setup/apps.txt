@@ -85,6 +85,12 @@ lazygit
   dnf:lazygit
   pacman:lazygit
 
+# Fedora has no package: download cliamp-linux-amd64 from
+# https://github.com/bjarneo/cliamp/releases into ~/.local/bin
+cliamp
+  -
+  aur:cliamp
+
 # sfizz's Fedora builds live in an openSUSE Build Service home project
 sfizz_jack
   -
