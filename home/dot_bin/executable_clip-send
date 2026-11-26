@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 
-# Send the clipboard, or what's piped in, to another device on the tailnet with
-# Taildrop. clip-receive on that device puts it on its clipboard. Text and
-# images both work. Without a device, pick one from those Taildrop can reach.
+# Send the clipboard, or with --stdin what's piped in, to another device on
+# the tailnet with Taildrop. clip-receive on that device puts it on its
+# clipboard. Text and images both work. Without a device, it's the only one
+# Taildrop can reach, or one picked from them.
 #
-# Usage: clip-send [device]
+# Usage: clip-send [--stdin] [device]
 
 set -uo pipefail
 
+from_stdin=false
 case "${1:-}" in
   -h | --help)
-    echo "usage: clip-send [device]"
+    echo "usage: clip-send [--stdin] [device]"
     exit 0
+    ;;
+  --stdin)
+    from_stdin=true
+    shift
     ;;
 esac
 
@@ -19,17 +25,24 @@ notify() { notify-send -t 3000 "$@" 2> /dev/null || printf '%s\n' "$*" >&2; }
 
 device=${1:-}
 if [ -z "$device" ]; then
-  device=$(tailscale file cp --targets 2> /dev/null | awk '{print $2}' \
-    | rofi -dmenu -i -p "send clipboard to") || exit 0
+  targets=$(tailscale file cp --targets 2> /dev/null | awk '{print $2}')
+  case "$(grep -c . <<< "$targets")" in
+    0)
+      notify "No device to send to" "Taildrop can't reach any of your machines"
+      exit 1
+      ;;
+    1) device=$targets ;;
+    *) device=$(rofi -dmenu -i -p "send clipboard to" <<< "$targets") || exit 0 ;;
+  esac
   [ -n "$device" ] || exit 0
 fi
 
 clip=$(mktemp)
 trap 'rm -f "$clip"' EXIT
-if [ -t 0 ]; then
-  wl-paste > "$clip" 2> /dev/null
-else
+if $from_stdin; then
   cat > "$clip"
+else
+  wl-paste > "$clip" 2> /dev/null
 fi
 if [ ! -s "$clip" ]; then
   notify "Nothing to send" "The clipboard is empty"
