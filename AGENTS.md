@@ -9,8 +9,8 @@
 - `scripts/` holds checkout-only installers; `docs/` holds operating/setup guides.
   `scripts/setup/` holds the setup steps `chezmoi apply` runs through the
   `run_onchange_after_*` wrappers in `home/`.
-- Agent Awake, KDE installer, chezmoi source, and setup script tests live under
-  `tests/`.
+- Agent Awake, KDE installer, chezmoi source, setup script, and `~/.bin` script
+  tests live under `tests/`.
 - Global agent rules live in `home/dot_config/opencode/AGENTS.md`;
   `home/dot_claude/CLAUDE.md` imports them. Edit the canonical file.
 

@@ -1,0 +1,160 @@
+#!/usr/bin/env bash
+
+# Searchable list of sway's key bindings, read from the sway config each time
+# it opens so it always matches: every bindsym with the comment above it and
+# its command, in rofi. Included files are read in place, so machine.conf can
+# change $mod first; globbed includes (the distro's config.d) are skipped.
+#
+# Usage: sway-keys [--print]
+#
+# --print writes the list to stdout instead. SWAY_KEYS_CONFIG reads another
+# config, for tests.
+
+set -uo pipefail
+
+config=${SWAY_KEYS_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/sway/config}
+markup=true
+case "${1:-}" in
+  --print) markup=false ;;
+  -h | --help)
+    echo "usage: sway-keys [--print]"
+    exit 0
+    ;;
+  "") ;;
+  *)
+    echo "unknown argument: $1" >&2
+    exit 2
+    ;;
+esac
+
+if [ ! -r "$config" ]; then
+  echo "sway-keys: can't read $config" >&2
+  exit 1
+fi
+
+list=$(awk -v home="$HOME" -v markup="$markup" '
+  function trim(s) { gsub(/^[ \t]+|[ \t]+$/, "", s); return s }
+
+  function expand(s,   name, n, i, parts) {
+    # replace $variables, longest names first so $mod2 beats $mod
+    n = split(varnames, parts, " ")
+    for (i = n; i >= 1; i--) {
+      name = parts[i]
+      if (name != "") gsub("\\$" name, vars[name], s)
+    }
+    return s
+  }
+
+  function pretty(key,   n, i, parts, out, k) {
+    n = split(key, parts, "+")
+    out = ""
+    for (i = 1; i <= n; i++) {
+      k = parts[i]
+      if (k == "Mod4") k = "Super"
+      else if (k == "Mod1") k = "Alt"
+      else if (tolower(k) == "shift") k = "Shift"
+      else if (tolower(k) == "ctrl" || k == "Control") k = "Ctrl"
+      else if (k == "Return") k = "Enter"
+      else if (k == "Escape") k = "Esc"
+      else if (k == "space") k = "Space"
+      else if (k == "bracketleft") k = "["
+      else if (k == "bracketright") k = "]"
+      else if (k == "period") k = "."
+      else if (k == "comma") k = ","
+      else if (k == "slash") k = "/"
+      else if (k == "backslash") k = "\\"
+      else if (k == "minus") k = "-"
+      else if (k == "bar") k = "|"
+      else if (k ~ /^XF86/) sub(/^XF86/, "", k)
+      else if (length(k) == 1) k = toupper(k)
+      out = out (out == "" ? "" : "+") k
+    }
+    return out
+  }
+
+  function escape(s) {
+    gsub(/&/, "\\&amp;", s); gsub(/</, "\\&lt;", s); gsub(/>/, "\\&gt;", s)
+    return s
+  }
+
+  function emit(key, what, command,   shown) {
+    shown = sprintf("%-24s", key)
+    if (markup == "true")
+      printf "<span color=\"#f08fb8\">%s</span> %s  <span color=\"#9a8797\">%s</span>\n", escape(shown), escape(what), escape(command)
+    else
+      printf "%s %s  (%s)\n", shown, what, command
+  }
+
+  function read(file,   line, path, words, flags, key, command, what, n, i) {
+    while ((getline line < file) > 0) {
+      line = trim(line)
+      if (line == "") { comment = ""; continue }
+      if (line ~ /^#/) {
+        sub(/^#+[ \t]*/, "", line)
+        if (line ~ /^-+$/ || line ~ /^reference:/ || line == "") continue
+        comment = (comment == "" ? line : comment " " line)
+        continue
+      }
+      if (line ~ /^include[ \t]/) {
+        path = trim(substr(line, 8))
+        sub(/^~/, home, path)
+        if (path !~ /[*?]/) read(path)
+        comment = ""
+        continue
+      }
+      if (line ~ /^set[ \t]+\$/) {
+        n = split(line, words, /[ \t]+/)
+        name = substr(words[2], 2)
+        value = trim(substr(line, index(line, words[2]) + length(words[2])))
+        gsub(/^"|"$/, "", value)
+        if (!(name in vars)) varnames = varnames " " name
+        vars[name] = expand(value)
+        # keep names sorted by length for expand()
+        varnames = bylength(varnames)
+        continue
+      }
+      if (line ~ /^mode[ \t]+"[^"]*"[ \t]*\{/) {
+        mode = line; sub(/^mode[ \t]+"/, "", mode); sub(/".*/, "", mode)
+        continue
+      }
+      if (line == "}") { mode = ""; continue }
+      if (line ~ /^bindsym[ \t]/) {
+        n = split(line, words, /[ \t]+/)
+        i = 2
+        while (i <= n && words[i] ~ /^--/) i++
+        key = pretty(expand(words[i]))
+        command = trim(substr(line, index(line, words[i]) + length(words[i])))
+        command = expand(command)
+        sub(/^exec[ \t]+/, "", command)
+        what = (comment == "" ? command : comment)
+        if (mode != "") key = mode ": " key
+        emit(key, what, command)
+      }
+    }
+    close(file)
+  }
+
+  function bylength(names,   n, parts, i, j, t, out) {
+    n = split(trim(names), parts, " ")
+    for (i = 2; i <= n; i++)
+      for (j = i; j > 1 && length(parts[j]) < length(parts[j - 1]); j--) {
+        t = parts[j]; parts[j] = parts[j - 1]; parts[j - 1] = t
+      }
+    out = ""
+    for (i = 1; i <= n; i++) out = out " " parts[i]
+    return out
+  }
+
+  BEGIN { varnames = ""; comment = ""; mode = "" }
+  END { read(config) }
+' config="$config" /dev/null)
+
+if [ "$markup" = false ]; then
+  printf '%s\n' "$list"
+  exit 0
+fi
+
+printf '%s\n' "$list" \
+  | rofi -dmenu -i -markup-rows -no-custom -p keys \
+    -theme-str 'window { width: 1100px; } listview { lines: 16; }' > /dev/null
+exit 0
