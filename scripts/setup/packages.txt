@@ -59,6 +59,8 @@ swayidle                  swayidle                  swayidle
 swaylock                  swaylock                  swaylock
 waybar                    waybar                    waybar
 rofi                      rofi                      rofi
+xdg-settings              xdg-utils                 xdg-utils
+gtk-launch                gtk3                      gtk3
 mako                      mako                      mako
 kanshi                    kanshi                    kanshi
 wl-mirror                 wl-mirror                 wl-mirror

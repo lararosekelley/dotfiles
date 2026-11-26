@@ -133,6 +133,9 @@ bindsym $mod+Return exec $term
 # open neovim in a terminal
 bindsym $mod+e exec $term nvim
 
+# open the default web browser, as set in xdg-settings
+bindsym $mod+b exec gtk-launch "$(xdg-settings get default-web-browser)"
+
 # open the Callie calendar in a terminal
 bindsym $mod+c exec $term callie tui
 
