@@ -22,11 +22,13 @@ pyenv_root=${PYENV_ROOT:-$HOME/.pyenv}
 nodenv_root=${NODENV_ROOT:-$HOME/.nodenv}
 rbenv_root=${RBENV_ROOT:-$HOME/.rbenv}
 
-clone_repo https://github.com/pyenv/pyenv "$pyenv_root"
-clone_repo https://github.com/pyenv/pyenv-virtualenv "$pyenv_root/plugins/pyenv-virtualenv"
-clone_repo https://github.com/nodenv/nodenv "$nodenv_root"
-clone_repo https://github.com/nodenv/node-build "$nodenv_root/plugins/node-build"
-clone_repo https://github.com/rbenv/rbenv "$rbenv_root"
-clone_repo https://github.com/rbenv/ruby-build "$rbenv_root/plugins/ruby-build"
+# A plugin is cloned only into its manager's checkout: cloning it anyway would
+# create the manager's folder as a plain directory that no later run can fix.
+clone_repo https://github.com/pyenv/pyenv "$pyenv_root" \
+  && clone_repo https://github.com/pyenv/pyenv-virtualenv "$pyenv_root/plugins/pyenv-virtualenv"
+clone_repo https://github.com/nodenv/nodenv "$nodenv_root" \
+  && clone_repo https://github.com/nodenv/node-build "$nodenv_root/plugins/node-build"
+clone_repo https://github.com/rbenv/rbenv "$rbenv_root" \
+  && clone_repo https://github.com/rbenv/ruby-build "$rbenv_root/plugins/ruby-build"
 
 finish

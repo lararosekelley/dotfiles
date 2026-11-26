@@ -60,22 +60,25 @@ normalize_remote() {
 
 # Clone url into dest, unless dest already exists. An existing checkout of the
 # same repo is left as it is; anything else at dest is left alone with a warning.
+# Returns non-zero unless dest ends up as that checkout (or would, under
+# --dry-run), so anything that goes inside it can be skipped.
 clone_repo() {
   local url=$1 dest=$2 top remote
   if [ ! -e "$dest" ]; then
-    run git clone --quiet "$url" "$dest" && ! $dry_run && say "cloned $url into $dest"
+    run git clone --quiet "$url" "$dest" || return 1
+    $dry_run || say "cloned $url into $dest"
     return 0
   fi
   top=$(git -C "$dest" rev-parse --show-toplevel 2> /dev/null)
   if [ "$top" != "$(cd "$dest" && pwd -P)" ]; then
     warn "$dest exists but is not a git checkout; left alone (expected $url)"
-    return 0
+    return 1
   fi
   # the configured URL, not get-url, which expands insteadOf rewrites
   remote=$(git -C "$dest" config --get remote.origin.url)
   if [ "$(normalize_remote "$remote")" != "$(normalize_remote "$url")" ]; then
     warn "$dest is a checkout of ${remote:-a repo without an origin}, not $url; left alone"
-    return 0
+    return 1
   fi
   say "present: $dest"
 }
