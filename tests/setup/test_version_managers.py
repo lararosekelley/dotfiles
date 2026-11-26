@@ -131,6 +131,22 @@ class VersionManagersTest(unittest.TestCase):
             "pyenv-virtualenv exists but is not a git checkout", result.stderr
         )
 
+    def test_a_failed_manager_clone_skips_its_plugin_and_a_retry_repairs_it(self):
+        remote = self.tmp / "remotes/nodenv/nodenv"
+        parked = self.tmp / "parked"
+        remote.rename(parked)
+        result = self.run_script()
+        self.assertEqual(result.returncode, 1)
+        self.assertFalse((self.home / ".nodenv").exists())
+        parked.rename(remote)
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.origin(".nodenv"), "https://github.com/nodenv/nodenv")
+        self.assertEqual(
+            self.origin(".nodenv/plugins/node-build"),
+            "https://github.com/nodenv/node-build",
+        )
+
     def test_a_failed_clone_is_reported_and_the_rest_still_run(self):
         subprocess.run(
             ["rm", "-rf", str(self.tmp / "remotes/nodenv/nodenv")], check=True
