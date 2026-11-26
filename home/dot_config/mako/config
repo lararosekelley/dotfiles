@@ -1,0 +1,30 @@
+# mako notifications, in the Callie theme (https://github.com/greylocklabs/themes)
+# reference: `man 5 mako`
+
+font=IosevkaTerm Nerd Font 11
+background-color=#261a2a
+text-color=#e0d3df
+border-color=#f08fb8
+progress-color=over #33243a
+border-size=2
+border-radius=8
+padding=10
+outer-margin=12
+width=380
+max-icon-size=48
+default-timeout=6000
+group-by=app-name
+
+[urgency=low]
+border-color=#3d2c42
+
+[urgency=critical]
+border-color=#e66e6d
+default-timeout=0
+
+# do-not-disturb, toggled by ~/.bin/dnd: hide everything but critical alerts
+[mode=do-not-disturb]
+invisible=1
+
+[mode=do-not-disturb urgency=critical]
+invisible=0
