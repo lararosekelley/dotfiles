@@ -92,12 +92,12 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Screenshots
 
-A combination of [grim](https://sr.ht/~emersion/grim), [slurp](https://github.com/emersion/slurp), and [satty](https://satty-org.github.io/Satty) will allow for a standard desktop screenshotting
-experience, with support for things like:
+`screenshot` in `~/.bin` takes screenshots with [grim](https://sr.ht/~emersion/grim), selecting with [slurp](https://github.com/emersion/slurp). Each one is saved to `~/Pictures/Screenshots` and copied to the clipboard:
 
-- Click and drag to select area
-- Annotations via a UI
-- etc...
+- `Print`: drag to select a region.
+- `Shift+Print`: the focused display.
+- `$mod+Print`: click a window.
+- `$mod+Shift+Print`: drag a region, then annotate it in [swappy](https://github.com/jtheoof/swappy) before it's saved.
 
 ## File manager
 
