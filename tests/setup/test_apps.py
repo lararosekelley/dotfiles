@@ -134,7 +134,7 @@ class AppsTest(unittest.TestCase):
         self.assertEqual(
             self.changes(),
             [
-                "sudo pacman -S --needed --noconfirm alpha",
+                "sudo pacman -Syu --needed --noconfirm alpha",
                 "paru -S --needed --noconfirm beta-bin",
                 "paru -S --needed --noconfirm epsilon",
             ],
@@ -182,7 +182,7 @@ class AppsTest(unittest.TestCase):
         self.assertIn(
             "paru is missing, so this was skipped: aur:beta-bin", result.stderr
         )
-        self.assertIn("sudo pacman -S --needed --noconfirm alpha", self.changes())
+        self.assertIn("sudo pacman -Syu --needed --noconfirm alpha", self.changes())
 
     def test_a_missing_download_fails_the_script(self):
         self.stub("curl", "exit 22")

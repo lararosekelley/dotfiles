@@ -91,7 +91,7 @@ class PackagesTest(unittest.TestCase):
 
     def test_arch_plan_uses_arch_names_and_leaves_the_font_by_hand(self):
         result = self.run_script("arch", "--dry-run")
-        pacman = "sudo pacman -S --needed --noconfirm fd perl-json marker shfmt"
+        pacman = "sudo pacman -Syu --needed --noconfirm fd perl-json marker shfmt"
         self.assertIn(pacman, result.stdout)
         self.assertIn("font:Nunito: no arch package", result.stderr)
         self.assertNotIn("go install", result.stdout)

@@ -60,7 +60,9 @@ elif [ ${#wanted[@]} -eq 0 ]; then
 else
   case "$distro" in
     fedora) install=(sudo dnf install -y --skip-unavailable "${wanted[@]}") ;;
-    arch) install=(sudo pacman -S --needed --noconfirm "${wanted[@]}") ;;
+    # -Syu: a fresh install's package list can name versions the mirrors have
+    # dropped (a 404), and Arch only supports refreshing it with an upgrade
+    arch) install=(sudo pacman -Syu --needed --noconfirm "${wanted[@]}") ;;
   esac
   if confirm "Install with ${install[*]}?"; then
     run "${install[@]}"

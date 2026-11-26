@@ -84,7 +84,8 @@ install_route() {
       ;;
     pacman)
       IFS=, read -r -a packages <<< "$value"
-      run sudo pacman -S --needed --noconfirm "${packages[@]}"
+      # -Syu for the same reason as in scripts/setup/packages
+      run sudo pacman -Syu --needed --noconfirm "${packages[@]}"
       ;;
     aur)
       if ! command -v paru > /dev/null 2>&1; then
