@@ -87,6 +87,17 @@ class SourceTest(unittest.TestCase):
         self.assertIn("(framework)", machine)
         self.assertIn("output eDP-1", machine)
         self.assertIn("include ~/.config/sway/machine.conf", config)
+        self.assertIn("include ~/.config/sway/session.conf", config)
+
+    def test_only_the_laptops_load_the_distro_session_setup(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            target = str(tmp / "home/.config/sway/session.conf")
+            laptop = chezmoi(tmp, REPO, False, "cat", target)
+            desktop = chezmoi(tmp, REPO, False, "cat", target, machine="desktop")
+        include = "include /etc/sway/config.d/*"
+        self.assertIn(include, laptop)
+        self.assertNotIn(include, desktop)
 
     def test_an_unknown_machine_stops_with_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
