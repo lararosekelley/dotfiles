@@ -122,6 +122,9 @@ bindsym $mod+slash exec sway-keys
 exec wl-paste --watch cliphist store
 bindsym $mod+v exec clip-menu
 
+# send what's on the clipboard to another machine (script in ~/.bin)
+bindsym $mod+Shift+v exec clip-send
+
 # emoji picker, which types the emoji into the focused window
 bindsym $mod+period exec rofimoji
 

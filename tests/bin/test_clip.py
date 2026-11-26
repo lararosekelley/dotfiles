@@ -67,6 +67,7 @@ class ClipTest(unittest.TestCase):
             "sleep",
             "cp",
             "chmod",
+            "grep",
             "sh",
         ):
             (system / command).symlink_to(shutil.which(command))
@@ -121,7 +122,7 @@ esac""",
     # clip-send
 
     def test_send_names_a_text_clip_and_sends_what_was_piped_in(self):
-        result = self.run_script("clip-send", "framework", stdin=b"hello")
+        result = self.run_script("clip-send", "--stdin", "framework", stdin=b"hello")
         self.assertEqual(result.returncode, 0, result.stderr)
         (cp,) = self.calls("tailscale file cp")
         self.assertRegex(cp, r"--name clipboard-\S+-\d{8}-\d{6}\.txt - framework:$")
@@ -129,18 +130,38 @@ esac""",
         self.assertFalse(self.calls("rofi"))
 
     def test_send_names_an_image_clip_png(self):
-        self.run_script("clip-send", "framework", stdin=PNG)
+        self.run_script("clip-send", "--stdin", "framework", stdin=PNG)
         self.assertRegex(self.calls("tailscale file cp")[0], r"\.png - framework:$")
         self.assertEqual((self.tmp / "sent").read_bytes(), PNG)
 
     def test_send_without_a_device_asks_which_one(self):
-        self.run_script("clip-send", stdin=b"hello")
+        self.run_script("clip-send", "--stdin", stdin=b"hello")
         self.assertTrue(self.calls("rofi"))
         (send,) = self.calls("tailscale file cp --name")
         self.assertTrue(send.endswith(" thinkpad:"), send)
 
+    def test_send_reads_the_clipboard_without_stdin_even_without_a_terminal(self):
+        result = self.run_script("clip-send", "framework", stdin=b"ignored")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertTrue(self.calls("wl-paste"))
+        self.assertEqual((self.tmp / "sent").read_bytes(), b"from the clipboard")
+
+    def test_send_picks_the_only_device_without_asking(self):
+        self.stub(
+            "tailscale",
+            f"""case "$1 $2 $3" in
+  "file cp --targets") printf '100.1.1.1\\tframework\\n' ;;
+  "file cp --name") cat > "{self.tmp}/sent" ;;
+esac""",
+        )
+        result = self.run_script("clip-send")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse(self.calls("rofi"))
+        (send,) = self.calls("tailscale file cp --name")
+        self.assertTrue(send.endswith(" framework:"), send)
+
     def test_send_refuses_an_empty_clip(self):
-        result = self.run_script("clip-send", "framework", stdin=b"")
+        result = self.run_script("clip-send", "--stdin", "framework", stdin=b"")
         self.assertEqual(result.returncode, 1)
         self.assertFalse(self.calls("tailscale file cp --name"))
 
@@ -189,12 +210,14 @@ esac""",
             "cliphist", 'case "$1" in list) echo "1\tsecret";; decode) cat;; esac'
         )
         self.stub("clip-send", f'cat > "{self.tmp}/sent-from-menu"')
+        # clip-send has to be told to read the entry from stdin
         self.stub("rofi", 'echo "1\tsecret"')
         self.run_script("clip-menu")
         self.assertEqual((self.tmp / "copied").read_text(), "1\tsecret\n")
         self.stub("rofi", 'echo "1\tsecret"; exit 10')
         self.run_script("clip-menu")
         self.assertEqual((self.tmp / "sent-from-menu").read_text(), "1\tsecret\n")
+        self.assertIn("clip-send --stdin", self.log.read_text())
 
 
 if __name__ == "__main__":

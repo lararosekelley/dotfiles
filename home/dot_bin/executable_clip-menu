@@ -15,5 +15,5 @@ status=$?
 
 case "$status" in
   0) cliphist decode <<< "$entry" | wl-copy ;;
-  10) cliphist decode <<< "$entry" | clip-send ;;
+  10) cliphist decode <<< "$entry" | clip-send --stdin ;;
 esac

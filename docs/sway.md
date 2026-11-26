@@ -155,18 +155,25 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Sending the clipboard
 
-`clip-send` in `~/.bin` sends the clipboard, text or an image, to another of
-your machines over the tailnet with [Taildrop](https://tailscale.com/kb/1106/taildrop):
-`clip-send desktop`, or plain `clip-send` to pick the machine in rofi.
-`$mod+v` sends a history entry the same way with Alt+Enter.
+To send something to another of your machines over the tailnet, copy it, then
+press `$mod+Shift+v`. It arrives on that machine's clipboard with a
+notification, ready to paste. To send something copied earlier, open the
+history with `$mod+v`, choose it, and press Alt+Enter instead of Enter. Text
+and images both work.
+
+Both run `clip-send` in `~/.bin`, which sends with
+[Taildrop](https://tailscale.com/kb/1106/taildrop). It sends to the only other
+machine Taildrop can reach, or asks which in rofi when there are several. From
+a terminal: `clip-send` sends the clipboard, `clip-send desktop` picks the
+machine, and `... | clip-send --stdin` sends what's piped in.
 
 On the receiving machine, the `clip-receive` user service puts the clip on the
-clipboard and shows a notification. Any other file sent with Taildrop
-(`tailscale file cp <file> <machine>:`) lands in `~/Downloads`, renamed rather
-than overwriting a file already there. Both need `tailscale set --operator=$USER`
-on each machine (see [New machine](./new-machine.md#3-after-the-first-apply)),
-and work only between machines on the same tailnet, so not while one is
-switched to another.
+clipboard. Any other file sent with Taildrop (`tailscale file cp <file>
+<machine>:`) lands in `~/Downloads`, renamed rather than overwriting a file
+already there. Both need `tailscale set --operator=$USER` on each machine (see
+[New machine](./new-machine.md#3-after-the-first-apply)), and work only between
+machines on the same tailnet, so not while one is switched to another. Under
+Plasma, where sway's keys don't apply, send from a terminal with `clip-send`.
 
 ## Screenshots
 
