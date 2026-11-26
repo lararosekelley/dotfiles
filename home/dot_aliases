@@ -8,6 +8,10 @@
 # value has to work in both shells. Bash-only aliases go in ~/.bashrc.
 # --------
 
+# quick update dotfiles via chezmoi
+
+alias cu='chezmoi update'
+
 # neovim instead of vim
 
 alias vim='nvim'
