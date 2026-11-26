@@ -55,7 +55,7 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 
 Two scripts in `~/.bin` back the hardware keys:
 
-- `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all.
+- `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all, then shows a notification. A press can reach it twice, or after the kernel or firmware has already toggled the radios, so it ignores a second run at the same moment and leaves a change that happens on its own in the first half second.
 - `display-menu`, on F9 on the Framework (it sends `$mod+p`): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. Its tools come from [`scripts/setup/packages.txt`](../scripts/setup/packages.txt), with the rest of sway's.
 
 ### Auto-start programs
