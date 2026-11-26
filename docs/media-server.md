@@ -41,8 +41,12 @@ Jellyfin may only pass through.
 ## cliamp
 
 cliamp plays the music library through its `[jellyfin]` provider, set in
-`~/.config/cliamp/config.toml`. Create an API key under Dashboard > API Keys
-and put it in `~/.environment`, which is not synced:
+`~/.config/cliamp/config.toml`. It reaches the server as `http://desktop:8096`:
+the desktop's own hostname there, and its name on the personal tailnet from the
+laptops, at home or away, so the laptops need to be on that tailnet (see
+[New machine](./new-machine.md#3-after-the-first-apply)). Create an API key
+under Dashboard > API Keys and put it in `~/.environment` on each machine,
+which is not synced:
 
 ```bash
 JELLYFIN_API_KEY=...

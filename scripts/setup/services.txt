@@ -7,4 +7,5 @@
 user      ssh-agent.socket      ssh-agent            -
 user      navi.service          ~/.local/bin/navi    -
 user      recollindex.service   recollindex          -
+system    tailscaled.service    tailscale            -
 system    jellyfin.service      jellyfin             desktop

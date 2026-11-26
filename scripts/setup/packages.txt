@@ -44,6 +44,7 @@ mold                      mold                      mold
 
 # tools configured here
 restic                    restic                    restic
+tailscale                 tailscale                 tailscale
 recoll                    recoll                    recoll
 perl:JSON                 perl-JSON                 perl-json
 fastfetch                 fastfetch                 fastfetch

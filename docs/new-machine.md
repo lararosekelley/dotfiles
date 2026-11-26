@@ -26,6 +26,15 @@ On Arch:
 
 - Bring the system up to date with `sudo pacman -Syu`.
 
+Name the machine after its role, the same name `chezmoi init` asks for below
+(`desktop`, `framework`, or `thinkpad`). chezmoi then picks it as the default,
+and it's the name other machines reach it by on the network and the tailnet,
+such as cliamp's `http://desktop:8096`:
+
+```bash
+sudo hostnamectl hostname desktop
+```
+
 Copy or create your SSH keys in `~/.ssh`, and add the public key to GitHub:
 the repo and the config repos below are cloned over SSH.
 
@@ -56,6 +65,18 @@ and a step that fails runs again on the next `chezmoi apply`.
 - Copy over the private files the repo leaves out: `~/.environment` (including
   `JELLYFIN_API_KEY`), `~/.config/navi/navi.env` (`chmod 600`), and the host
   entries in `~/.ssh/config`. chezmoi only adds `AddKeysToAgent` to that file.
+- Join the personal tailnet, which the machines share (cliamp reaches the
+  desktop's Jellyfin over it), and let `tailscale switch` run without sudo.
+  Add the work account too, to switch to when needed; see
+  [Kubernetes](./kubernetes.md#remote-clusters-over-tailscale):
+
+  ```bash
+  sudo tailscale up            # log in with the personal account
+  sudo tailscale set --operator=$USER
+  tailscale login              # the work account, then switch back:
+  tailscale switch <personal-account>
+  ```
+
 - Make fish the login shell, then log out and back in:
 
   ```bash
