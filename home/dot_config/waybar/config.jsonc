@@ -1,6 +1,74 @@
-// waybar for sway; without a style.css here, waybar uses its default style
+// waybar for sway, in the Callie theme; icons need IosevkaTerm Nerd Font
+// reference: `man 5 waybar` and the man page for each module
 {
-    "modules-left": ["sway/workspaces", "sway/mode"],
-    "modules-center": ["sway/window"],
-    "modules-right": ["pulseaudio", "network", "battery", "clock", "tray"]
+    "reload_style_on_change": true,
+    "spacing": 4,
+    "modules-left": ["sway/workspaces", "sway/mode", "sway/scratchpad"],
+    "modules-center": ["clock"],
+    "modules-right": [
+        "idle_inhibitor",
+        "pulseaudio",
+        "network",
+        "cpu",
+        "memory",
+        "backlight",
+        "battery",
+        "tray"
+    ],
+
+    "sway/mode": { "format": "{}" },
+    "sway/scratchpad": {
+        "format": " {count}",
+        "show-empty": false,
+        "tooltip-format": "{app}: {title}"
+    },
+
+    "clock": {
+        "format": " {:%a %b %d  %H:%M}",
+        "tooltip-format": "<tt><small>{calendar}</small></tt>",
+        "calendar": {
+            "mode": "month",
+            "format": {
+                "months": "<span color='#f08fb8'><b>{}</b></span>",
+                "weekdays": "<span color='#82cdcd'><b>{}</b></span>",
+                "today": "<span color='#f08fb8'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": { "activated": "", "deactivated": "" },
+        "tooltip-format-activated": "Staying awake",
+        "tooltip-format-deactivated": "Idle as usual"
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 muted",
+        "format-bluetooth": " {volume}%",
+        "format-icons": { "default": ["", "", ""] },
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+    },
+    "network": {
+        "format-wifi": " {essid}",
+        "format-ethernet": " wired",
+        "format-disconnected": "󰖪 offline",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "cpu": { "format": " {usage}%", "interval": 5 },
+    "memory": { "format": "󰍛 {percentage}%", "interval": 10 },
+    "backlight": {
+        "format": " {percent}%",
+        "on-scroll-up": "brightnessctl set 5%+",
+        "on-scroll-down": "brightnessctl set 5%-"
+    },
+    "battery": {
+        "states": { "warning": 30, "critical": 15 },
+        "format": "{icon} {capacity}%",
+        "format-charging": " {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "tooltip-format": "{timeTo}"
+    },
+    "tray": { "spacing": 8 }
 }

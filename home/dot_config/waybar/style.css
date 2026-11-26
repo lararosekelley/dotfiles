@@ -1,0 +1,109 @@
+/* waybar in the Callie theme (https://github.com/greylocklabs/themes) */
+
+* {
+    font-family: "IosevkaTerm Nerd Font", monospace;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #1c1220;
+    color: #e0d3df;
+    border-bottom: 1px solid #3d2c42;
+}
+
+tooltip {
+    background: #261a2a;
+    border: 1px solid #3d2c42;
+    border-radius: 6px;
+}
+
+tooltip label {
+    color: #e0d3df;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    color: #9a8797;
+    border-radius: 0;
+}
+
+#workspaces button:hover {
+    background: #33243a;
+    color: #e0d3df;
+}
+
+#workspaces button.focused {
+    background: #f08fb8;
+    color: #2e0f20;
+}
+
+#workspaces button.urgent {
+    background: #e66e6d;
+    color: #2e0f20;
+}
+
+#mode {
+    background: #d6ba86;
+    color: #2e0f20;
+    padding: 0 10px;
+}
+
+#scratchpad,
+#clock,
+#idle_inhibitor,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#backlight,
+#battery,
+#tray {
+    padding: 0 8px;
+}
+
+#clock {
+    color: #f08fb8;
+}
+
+#idle_inhibitor.activated {
+    color: #d6ba86;
+}
+
+#pulseaudio {
+    color: #a4beef;
+}
+
+#pulseaudio.muted,
+#network.disconnected {
+    color: #9a8797;
+}
+
+#network {
+    color: #82cdcd;
+}
+
+#cpu,
+#memory {
+    color: #e5aac1;
+}
+
+#backlight {
+    color: #d6ba86;
+}
+
+#battery {
+    color: #9dcca3;
+}
+
+#battery.warning:not(.charging) {
+    color: #d6ba86;
+}
+
+#battery.critical:not(.charging) {
+    color: #e66e6d;
+}
+
+#tray > .needs-attention {
+    background: #e66e6d;
+}
