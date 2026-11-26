@@ -98,6 +98,9 @@ rofimoji                  rofimoji                  rofimoji
 wtype                     wtype                     wtype
 playerctl                 playerctl                 playerctl
 pactl                     pulseaudio-utils          libpulse
+wpctl                     wireplumber               wireplumber
+canberra-gtk-play         libcanberra-gtk3          libcanberra
+/usr/share/sounds/freedesktop/index.theme  sound-theme-freedesktop  sound-theme-freedesktop
 
 # desktop apps; Flatpaks have their own setup script
 obs                       obs-studio                obs-studio
