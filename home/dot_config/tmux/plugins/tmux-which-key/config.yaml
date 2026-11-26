@@ -1,0 +1,185 @@
+# tmux-which-key menu (https://github.com/alexwforsythe/tmux-which-key)
+#
+# Opens on prefix+Space, and on C-Space without the prefix, as tuios opens its
+# command palette. Rebuilt into tmux commands each time TPM loads the plugin.
+command_alias_start_index: 200
+keybindings:
+  prefix_table: Space
+  root_table: C-Space
+title:
+  style: align=centre,bold
+  prefix: tmux
+  prefix_style: fg=#f08fb8,align=centre,bold
+position:
+  x: C
+  y: C
+custom_variables:
+  - name: log_info
+    value: '#[fg=#9dcca3,italics] [info]#[default]#[italics]'
+macros:
+  - name: reload-config
+    commands:
+      - display "#{log_info} Reloading config..."
+      - source-file $HOME/.tmux.conf
+  - name: restart-pane
+    commands:
+      - display "#{log_info} Restarting pane"
+      - 'respawnp -k -c #{pane_current_path}'
+items:
+  - name: Run a command
+    key: space
+    command: command-prompt
+  - name: Go to window or pane
+    key: g
+    command: choose-tree -Zw
+  - name: Last window
+    key: tab
+    command: last-window
+  - separator: true
+  - name: +Windows
+    key: w
+    menu:
+      - name: New
+        key: c
+        command: 'neww -c #{pane_current_path}'
+      - name: Choose
+        key: w
+        command: choose-tree -Zw
+      - name: Previous
+        key: p
+        command: previous-window
+        transient: true
+      - name: Next
+        key: n
+        command: next-window
+        transient: true
+      - name: Move left
+        key: H
+        command: swap-window -t -1 \; select-window -t -1
+        transient: true
+      - name: Move right
+        key: L
+        command: swap-window -t +1 \; select-window -t +1
+        transient: true
+      - name: Rename
+        key: R
+        command: command-prompt -p "Rename window:" -I "#W" "renamew -- \"%%\""
+      - name: Kill
+        key: X
+        command: 'confirm -p "Kill window #W? (y/n)" killw'
+  - name: +Panes
+    key: p
+    menu:
+      - name: Split right
+        key: '|'
+        command: 'splitw -h -c #{pane_current_path}'
+      - name: Split down
+        key: '-'
+        command: 'splitw -v -c #{pane_current_path}'
+      - name: Zoom
+        key: z
+        command: resizep -Z
+      - name: Choose by number
+        key: p
+        command: displayp -d 0
+      - name: +Resize
+        key: r
+        menu:
+          - name: Left
+            key: h
+            command: resizep -L 5
+            transient: true
+          - name: Down
+            key: j
+            command: resizep -D 5
+            transient: true
+          - name: Up
+            key: k
+            command: resizep -U 5
+            transient: true
+          - name: Right
+            key: l
+            command: resizep -R 5
+            transient: true
+      - name: +Layout
+        key: l
+        menu:
+          - name: Even horizontal
+            key: h
+            command: selectl even-horizontal
+          - name: Even vertical
+            key: v
+            command: selectl even-vertical
+          - name: Tiled
+            key: t
+            command: selectl tiled
+          - name: Next
+            key: l
+            command: nextl
+            transient: true
+      - name: Respawn
+        key: R
+        macro: restart-pane
+      - name: Kill
+        key: X
+        command: 'confirm -p "Kill pane #P? (y/n)" killp'
+  - name: +Sessions
+    key: s
+    menu:
+      - name: Choose
+        key: s
+        command: choose-tree -Zs
+      - name: Previous
+        key: p
+        command: switch-client -p
+        transient: true
+      - name: Next
+        key: n
+        command: switch-client -n
+        transient: true
+      - name: Rename
+        key: R
+        command: command-prompt -p "Rename session:" -I "#S" "rename-session -- \"%%\""
+      - name: Detach
+        key: d
+        command: detach-client
+      - name: Kill
+        key: X
+        command: 'confirm -p "Kill session #S? (y/n)" kill-session'
+  - name: +Copy
+    key: c
+    menu:
+      - name: Copy mode
+        key: c
+        command: copy-mode
+      - name: Open a URL
+        key: u
+        command: 'run-shell -b "~/.tmux/plugins/tmux-fzf-url/fzf-url.sh"'
+      - name: Paste buffer
+        key: p
+        command: paste-buffer
+      - name: Choose buffer
+        key: b
+        command: choose-buffer -Z
+  - name: +Plugins
+    key: P
+    menu:
+      - name: Install
+        key: i
+        command: 'run-shell "~/.tmux/plugins/tpm/bindings/install_plugins"'
+      - name: Update
+        key: u
+        command: 'run-shell "~/.tmux/plugins/tpm/bindings/update_plugins"'
+      - name: Clean
+        key: c
+        command: 'run-shell "~/.tmux/plugins/tpm/bindings/clean_plugins"'
+      - name: Save sessions
+        key: s
+        command: 'run-shell "~/.tmux/plugins/tmux-resurrect/scripts/save.sh"'
+  - separator: true
+  - name: Reload config
+    key: r
+    macro: reload-config
+  - name: All keys
+    key: '?'
+    command: list-keys -N
