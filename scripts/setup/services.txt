@@ -7,6 +7,7 @@
 # scope   unit                  needs                machine
 user      ssh-agent.socket      ssh-agent            -
 user      navi.service          ~/.local/bin/navi    -
+user      clip-receive.service  tailscale            -
 user      recollindex.service   recollindex          -
 system    tailscaled.service    tailscale            -
 system    pkgfile-update.timer  pkgfile              arch

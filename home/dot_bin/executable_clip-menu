@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+# Clipboard history, picked with rofi from what cliphist recorded: Enter copies
+# the entry again, and Alt+Enter sends it to another device with clip-send.
+#
+# Usage: clip-menu
+
+set -uo pipefail
+
+entry=$(cliphist list | rofi -dmenu -i -p clipboard \
+  -kb-custom-1 Alt+Return \
+  -mesg "Enter: copy    Alt+Enter: send to another device")
+status=$?
+[ -n "$entry" ] || exit 0
+
+case "$status" in
+  0) cliphist decode <<< "$entry" | wl-copy ;;
+  10) cliphist decode <<< "$entry" | clip-send ;;
+esac

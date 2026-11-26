@@ -117,9 +117,10 @@ bindsym $mod+Escape exec power-menu
 # list every key binding, read from this config (script in ~/.bin)
 bindsym $mod+slash exec sway-keys
 
-# clipboard history, recorded by cliphist as things are copied
+# clipboard history, recorded by cliphist as things are copied: Enter copies an
+# entry, Alt+Enter sends it to another device (scripts in ~/.bin)
 exec wl-paste --watch cliphist store
-bindsym $mod+v exec cliphist list | rofi -dmenu -p clipboard | cliphist decode | wl-copy
+bindsym $mod+v exec clip-menu
 
 # emoji picker, which types the emoji into the focused window
 bindsym $mod+period exec rofimoji

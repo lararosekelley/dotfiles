@@ -1,0 +1,12 @@
+[Unit]
+Description=clip-receive: Taildrop clips onto the clipboard, other files to Downloads
+After=tailscaled.service
+
+[Service]
+Type=simple
+ExecStart=%h/.bin/clip-receive
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

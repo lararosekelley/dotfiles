@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+# Send the clipboard, or what's piped in, to another device on the tailnet with
+# Taildrop. clip-receive on that device puts it on its clipboard. Text and
+# images both work. Without a device, pick one from those Taildrop can reach.
+#
+# Usage: clip-send [device]
+
+set -uo pipefail
+
+case "${1:-}" in
+  -h | --help)
+    echo "usage: clip-send [device]"
+    exit 0
+    ;;
+esac
+
+notify() { notify-send -t 3000 "$@" 2> /dev/null || printf '%s\n' "$*" >&2; }
+
+device=${1:-}
+if [ -z "$device" ]; then
+  device=$(tailscale file cp --targets 2> /dev/null | awk '{print $2}' \
+    | rofi -dmenu -i -p "send clipboard to") || exit 0
+  [ -n "$device" ] || exit 0
+fi
+
+clip=$(mktemp)
+trap 'rm -f "$clip"' EXIT
+if [ -t 0 ]; then
+  wl-paste > "$clip" 2> /dev/null
+else
+  cat > "$clip"
+fi
+if [ ! -s "$clip" ]; then
+  notify "Nothing to send" "The clipboard is empty"
+  exit 1
+fi
+
+case "$(file -b --mime-type "$clip")" in
+  image/*) extension=png ;;
+  *) extension=txt ;;
+esac
+# clip-receive recognizes a clip by this name; anything else is a plain file
+name="clipboard-$(hostname)-$(date +%Y%m%d-%H%M%S).$extension"
+
+if tailscale file cp --name "$name" - "$device:" < "$clip" > /dev/null; then
+  notify "Clipboard sent to $device"
+else
+  notify "Couldn't send the clipboard to $device"
+  exit 1
+fi
