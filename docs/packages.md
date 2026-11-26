@@ -43,7 +43,6 @@ Third-party repos in use:
 | `greylocklabs`            | Callie and Jot                |
 | `protonvpn-fedora-stable` | Proton VPN                    |
 | `tableplus`               | TablePlus                     |
-| `copr:dejan/lazygit`      | `lazygit`                     |
 | `rpmfusion-*`             | Steam, codecs, NVIDIA, akmods |
 | `home:justkidding`        | `ueberzugpp`                  |
 
