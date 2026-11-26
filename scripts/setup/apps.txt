@@ -45,6 +45,12 @@ dropbox
   repo:nautilus-dropbox@system/yum.repos.d/dropbox.repo
   aur:dropbox
 
+# Dropbox's command line (exclude, status), for selective sync without its
+# window. On Fedora, nautilus-dropbox's dropbox command is already this.
+dropbox-cli
+  none
+  aur:dropbox-cli
+
 protonvpn-app
   repo:proton-vpn-gnome-desktop@system/yum.repos.d/protonvpn-stable.repo
   pacman:proton-vpn-gtk-app
