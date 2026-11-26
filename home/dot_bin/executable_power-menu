@@ -1,18 +1,22 @@
 #!/usr/bin/env bash
 
 # Power menu for sway, picked with rofi: lock, log out, suspend, reboot, or
-# shut down. Logging out, rebooting, and shutting down ask again first.
+# shut down. Logging out, rebooting, and shutting down ask again first. Each
+# entry starts with a Nerd Font icon and two spaces, which are dropped before
+# matching.
 #
 # Usage: power-menu
 
 set -uo pipefail
 
+pick() { rofi -dmenu -i -p "$1" | sed 's/^.*  //'; }
+
 confirm() {
-  [ "$(printf '%s\n' no yes | rofi -dmenu -i -p "$1?")" = yes ]
+  [ "$(printf '%s\n' "󰅖  no" "󰄬  yes" | pick "$1?")" = yes ]
 }
 
-choice=$(printf '%s\n' lock "log out" suspend reboot "shut down" \
-  | rofi -dmenu -i -p power) || exit 0
+choice=$(printf '%s\n' "󰌾  lock" "󰍃  log out" "󰤄  suspend" "󰜉  reboot" \
+  "󰐥  shut down" | pick power) || exit 0
 
 case "$choice" in
   lock) swaylock ;;

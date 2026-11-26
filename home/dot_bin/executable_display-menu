@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Display menu for sway, picked with rofi: kanshi layouts, mirroring the
-# focused screen for presentations, and a night-light toggle (~/.bin/night-light)
+# focused screen for presentations, and a night-light toggle (~/.bin/night-light).
+# Each entry starts with a Nerd Font icon and two spaces, which are dropped
+# before matching.
 #
 # Usage: display-menu
 
@@ -13,17 +15,18 @@ choices=()
 if [ -f "$kanshi_config" ]; then
   # one entry per `profile NAME {` in the kanshi config
   while read -r _ name _; do
-    choices+=("layout: $name")
+    choices+=("󰍹  layout: $name")
   done < <(grep -E '^\s*profile\s+\S+' "$kanshi_config")
 fi
-choices+=("mirror this screen")
+choices+=("󱒃  mirror this screen")
 if pgrep -x gammastep > /dev/null; then
-  choices+=("night light: off")
+  choices+=("󰖙  night light: off")
 else
-  choices+=("night light: on")
+  choices+=("󰖔  night light: on")
 fi
 
-choice=$(printf '%s\n' "${choices[@]}" | rofi -dmenu -i -p display) || exit 0
+choice=$(printf '%s\n' "${choices[@]}" | rofi -dmenu -i -p display \
+  | sed 's/^.*  //') || exit 0
 
 case "$choice" in
   "layout: "*)
