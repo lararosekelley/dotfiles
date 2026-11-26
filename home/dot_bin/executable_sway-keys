@@ -80,7 +80,9 @@ list=$(awk -v home="$HOME" -v markup="$markup" '
   function emit(key, what, command,   shown) {
     shown = sprintf("%-24s", key)
     if (markup == "true")
-      printf "<span color=\"#f08fb8\">%s</span> %s  <span color=\"#9a8797\">%s</span>\n", escape(shown), escape(what), escape(command)
+      # weight and transparency rather than colors, so rows stay readable in
+      # the colors of the rofi theme, including the highlighted row
+      printf "<b>%s</b> %s  <span fgalpha=\"55%%\">%s</span>\n", escape(shown), escape(what), escape(command)
     else
       printf "%s %s  (%s)\n", shown, what, command
   }
