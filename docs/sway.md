@@ -56,7 +56,9 @@ bar {
 
 This should replace whatever was originally in the `bar {}` block. Hit `Mod-Shift-C` to reload Sway with Waybar in place of the original!
 
-The repo tracks a minimal `~/.config/waybar/config.jsonc`: workspaces and mode on the left, the focused window in the middle, and audio, network, battery, clock, and tray on the right. There is no `style.css`, so waybar falls back to its default in `/etc/xdg/waybar`. Like with Sway, `Mod-Shift-C` will also reload Waybar for you as config changes are saved.
+The repo tracks `~/.config/waybar/config.jsonc` and a Callie `style.css`: workspaces, mode, and scratchpad on the left; the clock in the middle, with a calendar on hover; and on the right an idle toggle (stay awake while the eye is open), volume (click to mute), network, CPU, memory, brightness (scroll to change), battery, and the tray. Brightness and battery hide themselves where there is no backlight or battery, and the battery turns yellow below 30% and red below 15%. Icons need IosevkaTerm Nerd Font.
+
+Waybar reapplies `style.css` as soon as it changes; `Mod-Shift-C` reloads the rest.
 
 ## Audio
 
