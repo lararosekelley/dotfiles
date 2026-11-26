@@ -42,6 +42,9 @@ glab                      glab                      glab
 # ~/.cargo/config.toml links Rust builds with mold
 mold                      mold                      mold
 
+# the nvim config repo's pre-commit hook lints Lua with selene
+selene                    -                         selene          cargo install --locked selene
+
 # tools configured here
 restic                    restic                    restic
 tailscale                 tailscale                 tailscale
