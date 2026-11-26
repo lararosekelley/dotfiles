@@ -108,10 +108,6 @@ exec swayidle -w
 #
 # --------
 
-# open the startup windows: Callie, fastfetch, and cliamp on workspace 1, and
-# Neovim on workspace 2 (script in ~/.bin)
-exec sway-startup
-
 # open application launcher
 bindsym $mod+o exec $menu
 
