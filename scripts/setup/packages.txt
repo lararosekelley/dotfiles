@@ -25,6 +25,7 @@ pipx                      pipx                      python-pipx
 shellcheck                ShellCheck                shellcheck
 shfmt                     -                         shfmt           go install mvdan.cc/sh/v3/cmd/shfmt@latest
 jq                        jq                        jq
+tldr                      tealdeer                  tealdeer
 
 # aliases and ~/.bin scripts
 rg                        ripgrep                   ripgrep
