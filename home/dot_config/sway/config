@@ -41,8 +41,8 @@ include ~/.config/sway/machine.conf
 # --------
 
 # gap between windows, dropped when a workspace holds a single window
-gaps inner 6
-gaps outer 2
+gaps inner 8
+gaps outer 4
 smart_gaps on
 
 # border around windows, hidden when a workspace holds a single window

@@ -86,7 +86,7 @@ magick pond.png -alpha off \( +clone -fill '#1c1220' -colorize 100 -alpha set \
 
 ### Look
 
-Windows have 2px borders and 6px gaps, both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons.
+Windows have 2px borders and 8px gaps (4px at the screen edges), both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons.
 
 Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a video, keeps the screen from locking or blanking.
 
