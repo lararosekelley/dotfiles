@@ -3,7 +3,7 @@
 # Enable and start the systemd units in services.txt that are installed but
 # not yet enabled. User units need nothing more; system units need sudo, so
 # they are only enabled after asking (or with --yes). A unit whose program
-# isn't installed, or that is for another machine, is skipped.
+# isn't installed, or that is for another machine or distro, is skipped.
 #
 # chezmoi runs this on apply (see home/run_onchange_after_60-services.sh.tmpl);
 # it is also safe to run by hand.
@@ -31,12 +31,13 @@ present() {
 }
 
 machine=$(detect_machine)
+distro=$(detect_distro)
 user_units=()
 system_units=()
 
 while read -r scope unit needs for; do
   case "$scope" in "" | "#"*) continue ;; esac
-  [ "$for" = - ] || [ "$for" = "$machine" ] || continue
+  [ "$for" = - ] || [ "$for" = "$machine" ] || [ "$for" = "$distro" ] || continue
   if ! present "$needs"; then
     warn "$unit: $needs is not installed; skipped"
     continue

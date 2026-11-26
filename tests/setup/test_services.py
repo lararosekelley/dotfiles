@@ -14,6 +14,7 @@ user     alpha.service   ~/bin/alpha     -
 user     beta.service    beta            -
 system   gamma.service   gamma           desktop
 system   delta.service   delta           framework
+system   epsilon.service epsilon         arch
 """
 
 # A unit is enabled when its name is in the state file,
@@ -47,7 +48,7 @@ class ServicesTest(unittest.TestCase):
             (system / command).symlink_to(shutil.which(command))
         self.path = f"{self.bin}:{system}"
         (self.tmp / "bin/alpha").write_text("")
-        for name in ("beta", "gamma", "delta"):
+        for name in ("beta", "gamma", "delta", "epsilon"):
             self.stub(name)
         self.stub("sudo", '"$@"')
         self.stub(
@@ -62,13 +63,16 @@ class ServicesTest(unittest.TestCase):
         )
         script.chmod(0o755)
 
-    def run_script(self, *args, machine="desktop"):
+    def run_script(self, *args, machine="desktop", distro="fedora"):
+        os_release = self.tmp / "os-release"
+        os_release.write_text(f"ID={distro}\n")
         self.log.write_text("")
         env = {
             "PATH": self.path,
             "HOME": str(self.tmp),
             "SETUP_SERVICES": str(self.list),
             "SETUP_MACHINE": machine,
+            "SETUP_OS_RELEASE": str(os_release),
         }
         return subprocess.run(
             [str(SCRIPT), *args],
@@ -110,6 +114,12 @@ class ServicesTest(unittest.TestCase):
         self.assertIn("sudo systemctl enable --now delta.service", self.changes())
         self.assertNotIn("sudo systemctl enable --now gamma.service", self.changes())
 
+    def test_a_unit_for_a_distro_is_enabled_only_there(self):
+        self.run_script("--yes")
+        self.assertFalse([c for c in self.changes() if "epsilon" in c])
+        self.run_script("--yes", distro="arch")
+        self.assertIn("sudo systemctl enable --now epsilon.service", self.changes())
+
     def test_a_unit_whose_program_is_missing_is_skipped(self):
         (self.tmp / "bin/alpha").unlink()
         result = self.run_script("--yes")
@@ -150,7 +160,9 @@ class ServicesTest(unittest.TestCase):
         for scope, unit, needs, machine in entries:
             self.assertIn(scope, ("user", "system"))
             self.assertTrue(unit.endswith((".service", ".socket", ".timer")), unit)
-            self.assertIn(machine, ("-", "framework", "thinkpad", "desktop"))
+            self.assertIn(
+                machine, ("-", "framework", "thinkpad", "desktop", "fedora", "arch")
+            )
 
 
 if __name__ == "__main__":

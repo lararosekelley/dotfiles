@@ -8,6 +8,7 @@ skips a unit whose program isn't installed yet. To enable them by hand:
 | unit                                  | what it does                           |
 | ------------------------------------- | -------------------------------------- |
 | `ssh-agent.socket`                    | the SSH agent, from the distro         |
+| `pkgfile-update.timer` (Arch)         | refreshes pkgfile's database daily     |
 | `navi.service`                        | PR-review alerts, polls every 60s      |
 | `recollindex.service.d/override.conf` | keeps recoll's indexer off the desktop |
 
