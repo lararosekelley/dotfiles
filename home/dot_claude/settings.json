@@ -45,9 +45,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -73,9 +73,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -93,9 +93,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -113,9 +113,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -133,9 +133,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -153,9 +153,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 310,
-            "type": "command"
+            "timeout": 310
           }
         ]
       }
@@ -173,9 +173,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -193,9 +193,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -213,9 +213,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -233,9 +233,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -253,9 +253,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -306,9 +306,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -327,9 +327,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -338,9 +338,9 @@
       {
         "hooks": [
           {
+            "type": "command",
             "command": "sh -c 'p=$(cat); if [ -n \"$TUIOS_SOCKET\" ] && [ -n \"$p\" ]; then case $p in (*PermissionRequest*) w=330;; (*) w=2;; esac; o=$({ printf \"{\\\"id\\\":1,\\\"verb\\\":\\\"agent-hook-event\\\",\\\"params\\\":{\\\"harness\\\":\\\"%s\\\",\\\"forwarder\\\":true,\\\"env\\\":{\" claude-code; s=; for v in TUIOS_AGENT CODEX_THREAD_ID CURSOR_VERSION GROK_SESSION_ID CRUSH_SESSION_ID; do eval \"x=\\${$v-}\"; case $x in (\"\") ;; (*[!A-Za-z0-9._:/@+=-]*) ;; (*) printf \"%s\\\"%s\\\":\\\"%s\\\"\" \"$s\" \"$v\" \"$x\"; s=,;; esac; done; printf \"},\\\"payload_json\\\":\"; printf \"%s\" \"$p\"; printf \"}}\\n\"; } | nc -U -w \"$w\" \"$TUIOS_SOCKET\" 2>/dev/null; echo .); o=${o%.}; case $o in (TUIOS-HOOK-OK?*) printf \"%s\" \"${o#TUIOS-HOOK-OK?}\"; exit 0;; esac; fi; printf \"%s\" \"$p\" | exec tuios agent-hook claude-code --integration 3'",
-            "timeout": 5,
-            "type": "command"
+            "timeout": 5
           }
         ]
       }
@@ -361,8 +361,8 @@
   },
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
-  "editorMode": "vim",
   "theme": "custom:callie",
-  "idleCompaction": false,
-  "preferredNotifChannel": "notifications_disabled"
+  "editorMode": "vim",
+  "preferredNotifChannel": "notifications_disabled",
+  "idleCompaction": false
 }
