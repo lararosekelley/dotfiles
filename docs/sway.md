@@ -23,6 +23,12 @@ differs between machines in that template's matching section, such as outputs or
 a different `$mod`. Keyboard settings can stay in the shared config: an `input`
 block for a device that isn't connected is ignored.
 
+The config ends by reading `~/.config/sway/session.conf`, written from
+`session.conf.tmpl`, which includes the distro's session setup in
+`/etc/sway/config.d` on the laptops only. On the desktop, sway runs in a window
+under KDE. There, the distro's `session.sh` would treat sway as the graphical
+session, and quitting sway would end the Plasma session with it.
+
 ### Wallpaper
 
 ### Look

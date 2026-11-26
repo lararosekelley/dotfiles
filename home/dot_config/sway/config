@@ -296,5 +296,6 @@ bar {
     swaybar_command waybar
 }
 
-# the distro's systemd session setup, do not delete
-include /etc/sway/config.d/*
+# the distro's systemd session setup, included on machines where sway is the
+# whole session (see session.conf.tmpl in the dotfiles repo)
+include ~/.config/sway/session.conf

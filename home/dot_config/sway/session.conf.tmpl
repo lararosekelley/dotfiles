@@ -1,0 +1,10 @@
+{{- $machine := get . "machine" -}}
+# The distro's sway session setup ({{ $machine }}), read at the end of config.
+{{- if eq $machine "desktop" }}
+#
+# Left out here: sway runs in a window under KDE on this machine, and the
+# distro's session.sh would treat it as the graphical session, taking Plasma's
+# session down with it when sway quits.
+{{- else }}
+include /etc/sway/config.d/*
+{{- end }}
