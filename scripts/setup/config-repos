@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Clone the configs that live in their own repos (nvim, emacs.d, kitty, herdr,
-# tuios), then install what the nvim config needs with its own install-deps.
-# Anything already at those paths is left alone.
+# tuios), then install what the nvim config needs with its own install-deps,
+# and herdr's Claude hook script. Anything already at those paths is left alone.
 #
 # Clones use HTTPS, which works before an SSH key is on GitHub, with SSH as the
 # push URL so pushing uses the key once it is set up.
@@ -49,6 +49,16 @@ elif $dry_run; then
   say "  would run: $deps, once nvim is cloned"
 else
   warn "$deps is missing; install the nvim config's requirements by hand (see its README)"
+fi
+
+# The managed ~/.claude/settings.json already runs this hook, so the install
+# only adds the script and leaves the settings file as it is.
+if ! command -v herdr > /dev/null; then
+  warn "herdr is not installed; once it is, rerun scripts/setup/config-repos for its Claude hook"
+elif herdr integration status 2> /dev/null | grep -q '^claude: current'; then
+  say "present: herdr's claude integration"
+else
+  run herdr integration install claude
 fi
 
 finish

@@ -20,6 +20,19 @@ REPOS = {
 INSTALL_DEPS = (
     '#!/usr/bin/env bash\necho "ran $*" >> "$HOME/deps.log"\nexit "${DEPS_EXIT:-0}"\n'
 )
+# stands in for herdr: reports the Claude integration as installed once its hook
+# script exists, and records each install
+HERDR = """#!/usr/bin/env bash
+hook="$HOME/.claude/hooks/herdr-agent-state.sh"
+case "$1 $2" in
+"integration status")
+  if [ -e "$hook" ]; then echo "claude: current (v11) ($hook)"
+  else echo "claude: not installed ($hook)"; fi ;;
+"integration install")
+  echo "install $3" >> "$HOME/herdr.log"
+  mkdir -p "${hook%/*}" && : > "$hook" ;;
+esac
+"""
 
 
 class ConfigReposTest(unittest.TestCase):
@@ -35,6 +48,13 @@ class ConfigReposTest(unittest.TestCase):
                 files = {"scripts/install-deps": (INSTALL_DEPS, True)}
             make_remote(self.remotes, f"lararosekelley/{name}", files)
         self.env = environment(self.home, self.remotes)
+        # only the stand-in herdr, never one installed on this machine
+        self.bin = self.tmp / "bin"
+        self.bin.mkdir()
+        herdr = self.bin / "herdr"
+        herdr.write_text(HERDR)
+        herdr.chmod(0o755)
+        self.env["PATH"] = f"{self.bin}:/usr/local/bin:/usr/bin:/bin"
 
     def run_script(self, *args, **env):
         return subprocess.run(
@@ -58,6 +78,29 @@ class ConfigReposTest(unittest.TestCase):
             push = config(self.env, checkout, "remote.origin.pushurl")
             self.assertEqual(push, f"git@github.com:lararosekelley/{name}")
         self.assertEqual(self.deps_runs(), ["ran "])
+
+    def herdr_installs(self):
+        log = self.home / "herdr.log"
+        return log.read_text().splitlines() if log.exists() else []
+
+    def test_herdr_claude_hook_is_installed_once(self):
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("present: herdr's claude integration", result.stdout)
+        self.assertEqual(self.herdr_installs(), ["install claude"])
+
+    def test_a_dry_run_does_not_install_the_herdr_hook(self):
+        result = self.run_script("--dry-run")
+        self.assertIn("would run: herdr integration install claude", result.stdout)
+        self.assertEqual(self.herdr_installs(), [])
+
+    def test_without_herdr_the_hook_is_skipped_with_a_warning(self):
+        (self.bin / "herdr").unlink()
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("herdr is not installed", result.stderr)
 
     def test_a_second_run_clones_nothing_and_leaves_push_urls_alone(self):
         self.run_script()

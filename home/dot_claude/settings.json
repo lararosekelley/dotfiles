@@ -17,16 +17,6 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$HOME/.claude/hooks/herdr-agent-state.sh\" session",
-            "timeout": 10
-          }
-        ]
-      },
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
             "command": "python3 \"$HOME/.local/share/agent-awake/agent_awake.py\" claude",
             "timeout": 5
           }
