@@ -150,8 +150,23 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 [rofi](https://github.com/davatorium/rofi) is the launcher on `$mod+o`, and draws every menu below. `~/.config/rofi/config.rasi` picks the Callie theme in `~/.config/rofi/themes/callie.rasi`, so the launcher and the `~/.bin` menus share one look.
 
 - `$mod+Escape`: `power-menu`, to lock, log out, suspend, reboot, or shut down. Logging out, rebooting, and shutting down ask again first.
-- `$mod+v`: clipboard history. [cliphist](https://github.com/sentriz/cliphist) records everything copied, and picking an entry copies it again.
+- `$mod+v`: clipboard history. [cliphist](https://github.com/sentriz/cliphist) records everything copied; Enter copies an entry again, and Alt+Enter sends it to another machine (see [Sending the clipboard](#sending-the-clipboard)).
 - `$mod+.`: [rofimoji](https://github.com/fdw/rofimoji), which types the chosen emoji into the focused window with `wtype`.
+
+## Sending the clipboard
+
+`clip-send` in `~/.bin` sends the clipboard, text or an image, to another of
+your machines over the tailnet with [Taildrop](https://tailscale.com/kb/1106/taildrop):
+`clip-send desktop`, or plain `clip-send` to pick the machine in rofi.
+`$mod+v` sends a history entry the same way with Alt+Enter.
+
+On the receiving machine, the `clip-receive` user service puts the clip on the
+clipboard and shows a notification. Any other file sent with Taildrop
+(`tailscale file cp <file> <machine>:`) lands in `~/Downloads`, renamed rather
+than overwriting a file already there. Both need `tailscale set --operator=$USER`
+on each machine (see [New machine](./new-machine.md#3-after-the-first-apply)),
+and work only between machines on the same tailnet, so not while one is
+switched to another.
 
 ## Screenshots
 

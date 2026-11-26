@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+
+# Receive Taildrop files as they arrive. A clip from clip-send goes onto the
+# clipboard; any other file goes to ~/Downloads, never over an existing one.
+# Each gets a notification. Runs as the clip-receive user service.
+#
+# Usage: clip-receive [--once]
+#
+# --once handles one batch and exits, for tests. CLIP_RECEIVE_INBOX sets where
+# files wait while being handled.
+
+set -uo pipefail
+
+once=false
+case "${1:-}" in
+  --once) once=true ;;
+  -h | --help)
+    echo "usage: clip-receive [--once]"
+    exit 0
+    ;;
+esac
+
+inbox=${CLIP_RECEIVE_INBOX:-${XDG_RUNTIME_DIR:-/tmp}/clip-receive}
+mkdir -p "$inbox"
+downloads=$(xdg-user-dir DOWNLOAD 2> /dev/null) || downloads="$HOME/Downloads"
+
+# A user service starts before the desktop does, so take the display from the
+# environment sway or Plasma gave the user manager once it's there.
+session_env() {
+  [ -n "${WAYLAND_DISPLAY:-}" ] && return
+  local line
+  while IFS= read -r line; do
+    case "$line" in
+      WAYLAND_DISPLAY=* | DBUS_SESSION_BUS_ADDRESS=*) export "${line?}" ;;
+    esac
+  done < <(systemctl --user show-environment 2> /dev/null)
+}
+
+notify() { notify-send -t 4000 "$@" 2> /dev/null || true; }
+
+# a name not already in the directory: file.txt, then file-1.txt, file-2.txt...
+free_name() {
+  local dir=$1 name=$2 base ext n=1
+  [ -e "$dir/$name" ] || {
+    printf '%s\n' "$dir/$name"
+    return
+  }
+  base=${name%.*}
+  ext=${name##*.}
+  [ "$base" = "$name" ] && ext="" || ext=".$ext"
+  while [ -e "$dir/$base-$n$ext" ]; do n=$((n + 1)); done
+  printf '%s\n' "$dir/$base-$n$ext"
+}
+
+handle() {
+  local file=$1 name sender target
+  name=$(basename "$file")
+  session_env
+  case "$name" in
+    clipboard-*)
+      sender=${name#clipboard-}
+      sender=${sender%%-[0-9]*}
+      if wl-copy < "$file"; then
+        rm -f "$file"
+        notify "Clipboard from $sender" "Ready to paste"
+        return
+      fi
+      ;;
+  esac
+  mkdir -p "$downloads"
+  target=$(free_name "$downloads" "$name")
+  mv -n "$file" "$target" && notify "Received $(basename "$target")" "in $downloads"
+}
+
+while :; do
+  tailscale file get --wait --conflict=rename "$inbox" > /dev/null || {
+    $once && exit 1
+    sleep 10
+    continue
+  }
+  for file in "$inbox"/*; do
+    [ -f "$file" ] && handle "$file"
+  done
+  $once && exit 0
+done
