@@ -31,9 +31,11 @@ steam
   dnf:steam
   pacman:steam
 
+# On Arch, Docker Desktop (below) brings its own Compose and Buildx and
+# conflicts with the separate packages, so only the engine comes from pacman
 docker
   repo:docker-ce,docker-ce-cli,containerd.io,docker-buildx-plugin,docker-compose-plugin@https://download.docker.com/linux/fedora/docker-ce.repo
-  pacman:docker,docker-buildx,docker-compose
+  pacman:docker
 
 /opt/docker-desktop
   rpm:https://desktop.docker.com/linux/main/amd64/docker-desktop-x86_64.rpm
@@ -42,10 +44,6 @@ docker
 dropbox
   repo:nautilus-dropbox@system/yum.repos.d/dropbox.repo
   aur:dropbox
-
-/opt/tableplus
-  repo:tableplus@https://yum.tableplus.com/rpm/x86_64/tableplus.repo
-  aur:tableplus
 
 protonvpn-app
   repo:proton-vpn-gnome-desktop@system/yum.repos.d/protonvpn-stable.repo

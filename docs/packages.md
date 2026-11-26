@@ -43,7 +43,6 @@ Third-party repos in use:
 | `google-cloud-cli`        | `gcloud`                      |
 | `greylocklabs`            | Callie and Jot                |
 | `protonvpn-fedora-stable` | Proton VPN                    |
-| `tableplus`               | TablePlus                     |
 | `rpmfusion-*`             | Steam, codecs, NVIDIA, akmods |
 | `home:justkidding`        | `ueberzugpp`                  |
 
