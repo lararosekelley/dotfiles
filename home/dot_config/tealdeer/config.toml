@@ -1,0 +1,7 @@
+# tealdeer (tldr): refresh the pages cache when it's older than a week, so
+# there's no `tldr --update` to remember
+# reference: https://tealdeer-rs.github.io/tealdeer/config.html
+
+[updates]
+auto_update = true
+auto_update_interval_hours = 168
