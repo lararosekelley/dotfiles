@@ -10,12 +10,13 @@
 
 set -uo pipefail
 
-# every notification, showing then dismissed, as one JSON array
+# every notification, showing then dismissed, as one JSON array; an empty one
+# if mako isn't running or its output can't be read (it needs mako 1.11+)
 all() {
-  {
-    makoctl list -j 2> /dev/null || echo '[]'
-    makoctl history -j 2> /dev/null || echo '[]'
-  } | jq -s 'add // []'
+  local list history
+  list=$(makoctl list -j 2> /dev/null | jq -c 'arrays' 2> /dev/null)
+  history=$(makoctl history -j 2> /dev/null | jq -c 'arrays' 2> /dev/null)
+  jq -cn --argjson a "${list:-[]}" --argjson b "${history:-[]}" '$a + $b'
 }
 
 if [ "${1:-}" = status ]; then
