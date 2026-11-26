@@ -133,7 +133,7 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Lock screen
 
-[swaylock](https://github.com/swaywm/swaylock) locks the screen, styled in Callie by `~/.config/swaylock/config`. It shows the machine's wallpaper with a ring in the middle, visible before you type: pink highlights as you type, teal while checking, and red on a wrong password. chezmoi writes the config from `config.tmpl`, which picks `pond` or `pond-laptop` like the sway config does. The config also sets `daemonize`, so `swaylock` returns once the screen is locked, which swayidle's `before-sleep` relies on.
+[swaylock](https://github.com/swaywm/swaylock) locks the screen, styled in Callie by `~/.config/swaylock/config`. It shows the machine's wallpaper with a ring in the middle, visible before you type: pink highlights as you type, teal while checking, and red on a wrong password. chezmoi writes the config from `config.tmpl`, which picks `pond` or `pond-laptop` like the sway config does. On the laptops it leaves out `ignore-empty-password`, so pressing Enter on the empty field starts a fingerprint unlock (see [New machine](./new-machine.md#3-after-the-first-apply)). The config also sets `daemonize`, so `swaylock` returns once the screen is locked, which swayidle's `before-sleep` relies on.
 
 ## Sleep, suspend, and resume
 

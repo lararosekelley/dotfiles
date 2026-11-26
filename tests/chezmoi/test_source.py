@@ -139,6 +139,15 @@ class SourceTest(unittest.TestCase):
                 (ssh / "config").write_text(result)
                 self.assertEqual(chezmoi(tmp, REPO, False, "cat", target), result)
 
+    def test_swaylock_lets_the_laptops_start_a_fingerprint_unlock(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            target = str(tmp / "home/.config/swaylock/config")
+            laptop = chezmoi(tmp, REPO, False, "cat", target)
+            desktop = chezmoi(tmp, REPO, False, "cat", target, machine="desktop")
+        self.assertNotIn("ignore-empty-password", laptop.splitlines())
+        self.assertIn("ignore-empty-password", desktop.splitlines())
+
     def test_an_unknown_machine_stops_with_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)

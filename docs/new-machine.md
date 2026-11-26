@@ -117,6 +117,33 @@ On the desktop:
 - Set up Jellyfin's libraries as in [Media server](./media-server.md), and
   OpenRGB as in [RGB lighting](./rgb-lighting.md).
 
+On an Arch laptop, set up fingerprint login. `chezmoi apply` installs fprintd;
+enroll a finger and check it matches:
+
+```bash
+fprintd-enroll
+fprintd-verify
+```
+
+If enrolling fails on the Framework, update the reader's firmware first with
+`fwupdmgr refresh && fwupdmgr update`. Then add this line before the other
+`auth` lines in each PAM file that should accept a fingerprint. A password
+still works wherever it's added:
+
+```text
+auth  sufficient  pam_fprintd.so
+```
+
+- `/etc/pam.d/sudo`, for `sudo`.
+- `/etc/pam.d/polkit-1`, for apps that ask for your password.
+- `/etc/pam.d/swaylock`, for the lock screen: press Enter on the empty password
+  field, then touch the reader.
+- The login screen's file: `/etc/pam.d/<name>` for the login manager that
+  `systemctl status display-manager` names, or `/etc/pam.d/login` if there is
+  none and you log in at a text console.
+
+Add it to those files rather than `system-auth`, which every service shares.
+
 On an Arch laptop, see [Sway](./sway.md) for the desktop. recoll's indexer
 waits for a graphical session target that sway doesn't start; see
 [Background services](./background-services.md) for starting it.
