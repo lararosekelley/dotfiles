@@ -45,9 +45,10 @@ gaps inner 8
 gaps outer 4
 smart_gaps on
 
-# border around windows, hidden when a workspace holds a single window
+# border around windows, hidden when a workspace holds a single window;
+# floating windows also get a title bar to drag them by
 default_border pixel 2
-default_floating_border pixel 2
+default_floating_border normal 2
 smart_borders on
 
 # title font, seen in tabbed and stacked layouts
@@ -225,9 +226,10 @@ bindsym $mod+t layout tabbed
 # make the current focus fullscreen
 bindsym $mod+f fullscreen
 
-# toggle the current focus between tiling and floating mode
-bindsym $mod+Shift+space floating toggle
-bindsym $mod+Mod1+space floating toggle
+# toggle the current focus between tiling and floating mode; a window that
+# floats is resized to 60% of the screen, centered, and given a title bar
+bindsym $mod+Shift+space floating toggle; [con_id=__focused__ floating] resize set 60 ppt 60 ppt, move position center, border normal 2; [con_id=__focused__ tiling] border pixel 2
+bindsym $mod+Mod1+space floating toggle; [con_id=__focused__ floating] resize set 60 ppt 60 ppt, move position center, border normal 2; [con_id=__focused__ tiling] border pixel 2
 
 # swap focus between the tiling area and the floating area
 bindsym $mod+space focus mode_toggle
@@ -248,7 +250,7 @@ bindgesture swipe:3:right workspace prev_on_output
 bindgesture swipe:4:up scratchpad show
 
 # swipe four fingers down to float or tile the focused window
-bindgesture swipe:4:down floating toggle
+bindgesture swipe:4:down floating toggle; [con_id=__focused__ floating] resize set 60 ppt 60 ppt, move position center, border normal 2; [con_id=__focused__ tiling] border pixel 2
 
 # show next window on the scratchpad
 bindsym $mod+x scratchpad show
