@@ -19,5 +19,14 @@ if [ -f "$cache" ]; then
   fi
 fi
 
-sh "$script" > "$cache.tmp" 2> /dev/null && mv "$cache.tmp" "$cache"
+if sh "$script" > "$cache.tmp" 2> /dev/null && [ -s "$cache.tmp" ]; then
+  mv "$cache.tmp" "$cache"
+else
+  # A failed or empty run (offline, say) keeps the last result, and is tried
+  # again in a minute rather than after the full SECONDS.
+  rm -f "$cache.tmp"
+  [ -f "$cache" ] || : > "$cache"
+  retry=$(($(date +%s) - ttl + 60))
+  touch -d "@$retry" "$cache"
+fi
 cat "$cache" 2> /dev/null
