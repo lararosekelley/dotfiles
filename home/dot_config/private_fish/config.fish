@@ -27,8 +27,13 @@ status is-interactive; or return
 set -g fish_greeting
 
 # callie colors for syntax highlighting and the completion pager, picking the
-# light or dark variant from the terminal background
-fish_config theme choose callie
+# light or dark variant from the terminal background, or dark in terminals that
+# don't report one, such as herdr
+if test "$fish_terminal_color_theme" = unknown
+    fish_config theme choose callie --color-theme=dark
+else
+    fish_config theme choose callie
+end
 
 # zoxide: z and zi (abbreviated j and ji) jump to visited directories
 
