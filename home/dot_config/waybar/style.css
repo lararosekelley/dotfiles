@@ -28,6 +28,7 @@ tooltip label {
 #mode,
 #scratchpad,
 #clock,
+#custom-dnd,
 #custom-notifications,
 #custom-night-light,
 #idle_inhibitor,
@@ -93,12 +94,17 @@ tooltip label {
     border-color: #f08fb8;
 }
 
-#custom-notifications.normal {
+#custom-notifications {
     color: #a4beef;
 }
 
-#custom-notifications.dnd {
+#custom-dnd.off {
     color: #9a8797;
+}
+
+#custom-dnd.on {
+    color: #d6ba86;
+    border-color: #d6ba86;
 }
 
 #custom-night-light.on {

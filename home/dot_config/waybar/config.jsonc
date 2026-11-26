@@ -4,9 +4,10 @@
     "reload_style_on_change": true,
     "height": 34,
     "spacing": 0,
-    "modules-left": ["sway/workspaces", "sway/mode", "sway/scratchpad"],
+    "modules-left": ["tray", "sway/workspaces", "sway/mode", "sway/scratchpad"],
     "modules-center": ["clock"],
     "modules-right": [
+        "custom/dnd",
         "custom/notifications",
         "custom/night-light",
         "idle_inhibitor",
@@ -15,8 +16,7 @@
         "cpu",
         "memory",
         "backlight",
-        "battery",
-        "tray"
+        "battery"
     ],
 
     "sway/mode": { "format": "{}" },
@@ -39,13 +39,19 @@
         }
     },
 
+    "custom/dnd": {
+        "exec": "dnd status",
+        "return-type": "json",
+        "interval": 30,
+        "signal": 9,
+        "on-click": "dnd"
+    },
     "custom/notifications": {
         "exec": "notifications status",
         "return-type": "json",
         "interval": 30,
         "signal": 9,
-        "on-click": "notifications",
-        "on-click-right": "dnd"
+        "on-click": "notifications"
     },
     "custom/night-light": {
         "exec": "night-light status",

@@ -6,7 +6,7 @@
 #
 # Usage: notifications [status]
 #
-#   status  print waybar's JSON for the bell: slashed during do-not-disturb
+#   status  print waybar's JSON for the bell
 
 set -uo pipefail
 
@@ -20,12 +20,7 @@ all() {
 }
 
 if [ "${1:-}" = status ]; then
-  count=$(all | jq length)
-  if makoctl mode 2> /dev/null | grep -qx do-not-disturb; then
-    printf '{"text": "", "class": "dnd", "tooltip": "Do not disturb: %s notifications. Click for history, right-click to turn off"}\n' "$count"
-  else
-    printf '{"text": "", "class": "normal", "tooltip": "%s notifications. Click for history, right-click for do not disturb"}\n' "$count"
-  fi
+  printf '{"text": "", "tooltip": "%s notifications. Click for the history"}\n' "$(all | jq length)"
   exit 0
 fi
 
