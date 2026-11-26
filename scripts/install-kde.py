@@ -157,6 +157,15 @@ def run(command):
     subprocess.run(command, check=True)
 
 
+def restart_shell():
+    """Panels built by a script show their pinned apps only after a restart."""
+    command = ["systemctl", "--user", "restart", "plasma-plasmashell"]
+    if subprocess.run(command).returncode == 0:
+        print("Restarted plasmashell")
+    else:
+        print("Restart plasmashell to show pinned apps: " + shlex.join(command))
+
+
 def apply(settings, home, dry_run, layout):
     if layout and not dry_run:
         shell_call()
@@ -180,6 +189,7 @@ def apply(settings, home, dry_run, layout):
         else:
             shell_call("evaluateScript", script)
             print("Replaced panels with scripts/kde/layout.json")
+            restart_shell()
     if not dry_run:
         print("Log out and back in to apply every setting.")
 

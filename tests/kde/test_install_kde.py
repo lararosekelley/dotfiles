@@ -109,6 +109,24 @@ class Layout(unittest.TestCase):
                 kde.apply({"packages": []}, Path("/h"), dry_run=False, layout=True)
         run.assert_not_called()
 
+    def test_layout_apply_restarts_the_shell_after_replacing_panels(self):
+        calls = []
+        with (
+            patch.object(kde, "shell_call", side_effect=lambda *a: calls.append(a)),
+            patch.object(kde, "run"),
+            patch.object(kde, "missing_packages", return_value=[]),
+            patch.object(kde, "theme_commands", return_value=[]),
+            patch.object(kde, "config_commands", return_value=[]),
+            patch.object(kde.subprocess, "run") as subprocess_run,
+        ):
+            subprocess_run.return_value.returncode = 0
+            settings = {"packages": [], "widgets": [], "config": {}}
+            kde.apply(settings, Path("/h"), dry_run=False, layout=True)
+        self.assertEqual(calls[-1][0], "evaluateScript")
+        subprocess_run.assert_called_with(
+            ["systemctl", "--user", "restart", "plasma-plasmashell"]
+        )
+
     def test_committed_layout_is_sanitized(self):
         layout = json.loads((REPO / "scripts/kde/layout.json").read_text())
         self.assertEqual(kde.sanitize(layout), layout)

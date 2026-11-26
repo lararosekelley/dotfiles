@@ -26,7 +26,7 @@ them while running; log out and back in after restoring desktop configuration.
 ```bash
 python3 scripts/install-kde.py apply --dry-run   # preview
 python3 scripts/install-kde.py apply             # theme, widgets, settings
-python3 scripts/install-kde.py apply --layout    # also replace every panel
+python3 scripts/install-kde.py apply --layout    # also replace every panel, then restart plasmashell
 python3 scripts/install-kde.py capture --dry-run # diff this machine's panels
 python3 scripts/install-kde.py capture           # save this machine's panels
 ```
