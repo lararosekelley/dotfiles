@@ -144,6 +144,7 @@ These install outside a package manager and update themselves or by re-downloadi
 | ------------------------------------------ | ---------------- | ------------------------ |
 | `claude`                                   | `~/.local/bin`   | updates itself           |
 | `codegraph`                                | `~/.local/bin`   | `codegraph upgrade`      |
+| `cliamp` (Fedora; AUR on Arch)             | `~/.local/bin`   | `cliamp upgrade`         |
 | `herdr`, `navi`, `tuicr`, `git-stk`        | `~/.local/bin`   | re-download a release    |
 | `yt-dlp`                                   | `~/.local/bin`   | `yt-dlp -U`              |
 | `uv`                                       | `~/.local/bin`   | `uv self update`         |
