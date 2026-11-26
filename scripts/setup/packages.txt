@@ -100,6 +100,10 @@ pactl                     pulseaudio-utils          libpulse
 obs                       obs-studio                obs-studio
 flatpak                   flatpak                   flatpak
 
+# for fun
+sl                        sl                        sl
+cowsay                    cowsay                    cowsay
+
 # the Headlamp Callie theme's font
 font:Nunito               vernnobile-nunito-fonts   -
 
