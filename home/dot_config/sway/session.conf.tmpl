@@ -1,10 +1,22 @@
-{{- $machine := get . "machine" -}}
-# The distro's sway session setup ({{ $machine }}), read at the end of config.
-{{- if eq $machine "desktop" }}
-#
-# Left out here: sway runs in a window under KDE on this machine, and the
-# distro's session.sh would treat it as the graphical session, taking Plasma's
-# session down with it when sway quits.
-{{- else }}
+{{- $fedora := or (eq .chezmoi.osRelease.id "fedora") (contains "fedora" (.chezmoi.osRelease.idLike | default "")) -}}
+# What sway sets up when it is the whole session, read at the end of config.
+# sway-nested, which runs sway in a window under another desktop, leaves this
+# out, since that desktop already does all of it.
+
+# the distro's systemd session setup: the graphical session target, and the
+# environment the portals and user services need
 include /etc/sway/config.d/*
+
+# a polkit agent, to answer apps that ask for your password
+{{- if $fedora }}
+exec /usr/libexec/kf6/polkit-kde-authentication-agent-1
+{{- else }}
+exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+{{- end }}
+
+# the desktop's autostart apps, such as Dropbox and KDE Connect
+{{- if $fedora }}
+exec dex-autostart --autostart --environment sway
+{{- else }}
+exec dex --autostart --environment sway
 {{- end }}

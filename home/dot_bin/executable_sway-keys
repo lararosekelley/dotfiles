@@ -7,12 +7,21 @@
 #
 # Usage: sway-keys [--print]
 #
-# --print writes the list to stdout instead. SWAY_KEYS_CONFIG reads another
-# config, for tests.
+# --print writes the list to stdout instead. Inside sway it reads the config sway
+# loaded, which is nested.conf under sway-nested; elsewhere, ~/.config/sway/config.
+# SWAY_KEYS_CONFIG reads another config, for tests.
 
 set -uo pipefail
 
 config=${SWAY_KEYS_CONFIG:-${XDG_CONFIG_HOME:-$HOME/.config}/sway/config}
+if [ -z "${SWAY_KEYS_CONFIG:-}" ] && [ -n "${SWAYSOCK:-}" ]; then
+  loaded=$(mktemp)
+  trap 'rm -f "$loaded"' EXIT
+  if swaymsg -t get_config -r 2> /dev/null | jq -r .config > "$loaded" 2> /dev/null \
+    && [ -s "$loaded" ]; then
+    config=$loaded
+  fi
+fi
 markup=true
 case "${1:-}" in
   --print) markup=false ;;

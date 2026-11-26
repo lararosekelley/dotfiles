@@ -1,0 +1,15 @@
+{{- /* The sway config for sway-nested, made from config: Alt as $mod, since
+       the desktop sway runs inside keeps most Super shortcuts for itself, and
+       no session.conf, since that desktop already sets up the session. */ -}}
+{{- $config := include "dot_config/sway/config" -}}
+{{- $machine := "include ~/.config/sway/machine.conf" -}}
+{{- $session := "include ~/.config/sway/session.conf" -}}
+{{- if not (and (contains $machine $config) (contains $session $config)) -}}
+{{-   fail "nested.conf.tmpl: config no longer includes machine.conf and session.conf as expected" -}}
+{{- end -}}
+# sway in a window under another desktop, run by ~/.bin/sway-nested. Made by
+# chezmoi from config: edit that, not this.
+
+{{ $config
+  | replace $machine (printf "%s\n\n# Alt as the modifier: the desktop outside keeps most Super shortcuts\nset $mod Mod1" $machine)
+  | replace $session "# session.conf is left out: the desktop outside sets up the session" }}

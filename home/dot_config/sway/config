@@ -320,6 +320,5 @@ bar {
     swaybar_command waybar
 }
 
-# the distro's systemd session setup, included on machines where sway is the
-# whole session (see session.conf.tmpl in the dotfiles repo)
+# what sway sets up when it is the whole session; sway-nested leaves it out
 include ~/.config/sway/session.conf

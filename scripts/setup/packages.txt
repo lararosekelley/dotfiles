@@ -2,7 +2,8 @@
 #
 # Columns: what to check, the Fedora package, the Arch package, and a command to
 # run instead where the distro has no package ("-"). What to check is a command
-# name, a path (/...), a font (font:Name), or a Perl module (perl:Module).
+# name, a path (/...), a font (font:Name), or a Perl module (perl:Module);
+# several, separated by commas, mean any one of them will do.
 #
 # check                   fedora                    arch            fallback
 
@@ -67,6 +68,11 @@ gtk-launch                gtk3                      gtk3
 # Flatpak apps such as Zen need for downloads, and wlr for screen sharing
 /usr/share/xdg-desktop-portal/portals/gtk.portal  xdg-desktop-portal-gtk  xdg-desktop-portal-gtk
 /usr/share/xdg-desktop-portal/portals/wlr.portal  xdg-desktop-portal-wlr  xdg-desktop-portal-wlr
+
+# a polkit agent, to answer apps that ask for your password, and dex, to start
+# the desktop's autostart apps: sway's session.conf runs both
+/usr/libexec/kf6/polkit-kde-authentication-agent-1,/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1  polkit-kde  polkit-gnome
+dex-autostart,dex         dex-autostart             dex
 mako                      mako                      mako
 kanshi                    kanshi                    kanshi
 wl-mirror                 wl-mirror                 wl-mirror

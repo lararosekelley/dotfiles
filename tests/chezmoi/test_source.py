@@ -89,15 +89,27 @@ class SourceTest(unittest.TestCase):
         self.assertIn("include ~/.config/sway/machine.conf", config)
         self.assertIn("include ~/.config/sway/session.conf", config)
 
-    def test_only_the_laptops_load_the_distro_session_setup(self):
+    def test_every_machine_loads_the_session_setup_but_sway_nested_does_not(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
-            target = str(tmp / "home/.config/sway/session.conf")
-            laptop = chezmoi(tmp, REPO, False, "cat", target)
-            desktop = chezmoi(tmp, REPO, False, "cat", target, machine="desktop")
-        include = "include /etc/sway/config.d/*"
-        self.assertIn(include, laptop)
-        self.assertNotIn(include, desktop)
+            sway = tmp / "home/.config/sway"
+            out = {}
+            for machine in ("framework", "desktop"):
+                for name in ("session.conf", "nested.conf", "machine.conf"):
+                    out[machine, name] = chezmoi(
+                        tmp, REPO, False, "cat", str(sway / name), machine=machine
+                    )
+        for machine in ("framework", "desktop"):
+            self.assertIn("include /etc/sway/config.d/*", out[machine, "session.conf"])
+            self.assertIn(
+                "--autostart --environment sway", out[machine, "session.conf"]
+            )
+            nested = out[machine, "nested.conf"]
+            self.assertNotIn("include ~/.config/sway/session.conf", nested)
+            self.assertIn("include ~/.config/sway/machine.conf", nested)
+            self.assertIn("set $mod Mod1", nested)
+        self.assertNotIn("Mod1", out["desktop", "machine.conf"])
+        self.assertIn("output DP-3", out["desktop", "machine.conf"])
 
     def test_ssh_config_gets_add_keys_to_agent_and_keeps_its_hosts(self):
         hosts = "Host example\n  User me\n"

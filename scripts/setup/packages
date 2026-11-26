@@ -23,13 +23,20 @@ usage() { echo "usage: scripts/setup/packages [--yes] [--dry-run]"; }
 
 parse_args "$@"
 
+# One check, or several separated by commas, any of which will do (a program
+# can live at a different path, or go by another name, on each distro).
 installed() {
-  case "$1" in
-    /*) [ -e "$1" ] ;;
-    font:*) grep -qi -- "${1#font:}" <<< "$(fc-list 2> /dev/null)" ;;
-    perl:*) perl -M"${1#perl:}" -e 1 2> /dev/null ;;
-    *) command -v "$1" > /dev/null 2>&1 ;;
-  esac
+  local check
+  IFS=, read -r -a checks <<< "$1"
+  for check in "${checks[@]}"; do
+    case "$check" in
+      /*) [ -e "$check" ] && return 0 ;;
+      font:*) grep -qi -- "${check#font:}" <<< "$(fc-list 2> /dev/null)" && return 0 ;;
+      perl:*) perl -M"${check#perl:}" -e 1 2> /dev/null && return 0 ;;
+      *) command -v "$check" > /dev/null 2>&1 && return 0 ;;
+    esac
+  done
+  return 1
 }
 
 distro=$(detect_distro)

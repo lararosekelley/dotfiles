@@ -21,9 +21,8 @@ bindsym --locked XF86AudioMedia exec kitty --class sway-config sh -c 'nvim ~/.co
 set $wallpaper ~/.local/share/wallpapers/pond-laptop.jpg
 {{- else if eq $machine "desktop" }}
 
-# Alt as the modifier: sway runs in a window under KDE here, and Plasma keeps
-# most Super shortcuts for itself
-set $mod Mod1
+# ultrawide display, at its highest refresh rate
+output DP-3 mode 3440x1440 scale 1.25 adaptive_sync on
 {{- else if not $machine }}
 {{-   fail "no machine chosen: rerun chezmoi init and choose framework, thinkpad, or desktop" }}
 {{- else }}

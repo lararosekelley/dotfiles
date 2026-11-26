@@ -137,6 +137,15 @@ class PackagesTest(unittest.TestCase):
         result = self.run_script("fedora", "--yes")
         self.assertEqual(result.returncode, 1)
 
+    def test_any_one_of_several_checks_will_do(self):
+        self.list.write_text("nope,fd  either  either\n")
+        self.stub("fd")
+        result = self.run_script("fedora", "--dry-run")
+        self.assertNotIn("either", result.stdout)
+        (self.bin / "fd").unlink()
+        result = self.run_script("fedora", "--dry-run")
+        self.assertIn(" either", result.stdout)
+
     def test_the_real_list_is_well_formed(self):
         lines = (REPO / "scripts/setup/packages.txt").read_text().splitlines()
         entries = [line.split() for line in lines if line and not line.startswith("#")]

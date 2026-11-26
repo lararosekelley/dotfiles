@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Run sway in a window under another desktop, such as KDE: Alt as $mod, and
+# without the session setup that desktop already does (see nested.conf)
+#
+# Usage: sway-nested [sway options]
+
+exec sway -c "${XDG_CONFIG_HOME:-$HOME/.config}/sway/nested.conf" "$@"
