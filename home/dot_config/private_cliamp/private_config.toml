@@ -6,5 +6,6 @@ enabled = true
 cookies_from = "chrome"
 
 [jellyfin]
-url = "http://localhost:8096"
+# the desktop, by its name on the personal tailnet, so the laptops reach it too
+url = "http://desktop:8096"
 token = "$JELLYFIN_API_KEY"

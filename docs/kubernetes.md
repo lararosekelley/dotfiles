@@ -60,7 +60,10 @@ sudo tailscale set --operator=$USER
 ```
 
 Then add each account once with `tailscale login`, list them with
-`tailscale switch --list`, and move between them with `tsw <account>`.
+`tailscale switch --list`, and move between them with `tsw <account>`. The
+machines stay on the personal tailnet day to day, so switch to the work one
+before using its clusters, and back afterwards: until then, the personal
+machines, such as the desktop's Jellyfin, are out of reach.
 
 On the tailnet that serves the cluster, add it as a kubectl context. The proxy's
 hostname comes from that cluster's access docs:
