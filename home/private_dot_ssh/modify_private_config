@@ -16,7 +16,7 @@ config=$(
 config=${config%x}
 
 printf '%s' "$config"
-if ! grep -qiE '^[[:space:]]*AddKeysToAgent[[:space:]]' <<< "$config"; then
+if ! grep -qiE '^[[:space:]]*AddKeysToAgent[[:space:]=]' <<< "$config"; then
   if [ -n "$config" ]; then
     [ "${config: -1}" = $'\n' ] || echo
     echo
