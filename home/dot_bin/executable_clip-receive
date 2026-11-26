@@ -20,8 +20,10 @@ case "${1:-}" in
     ;;
 esac
 
-inbox=${CLIP_RECEIVE_INBOX:-${XDG_RUNTIME_DIR:-/tmp}/clip-receive}
-mkdir -p "$inbox"
+# On disk rather than XDG_RUNTIME_DIR, a small RAM-backed tmpfs that a large
+# file would overflow; private, since clips can hold passwords.
+inbox=${CLIP_RECEIVE_INBOX:-${XDG_CACHE_HOME:-$HOME/.cache}/clip-receive}
+mkdir -p "$inbox" && chmod 700 "$inbox"
 downloads=$(xdg-user-dir DOWNLOAD 2> /dev/null) || downloads="$HOME/Downloads"
 
 # A user service starts before the desktop does, so take the display from the
