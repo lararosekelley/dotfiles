@@ -1,0 +1,8 @@
+# recollindex.service starts the indexer, with the limits in its override.conf.
+# recoll's settings write this entry when "start indexing at login" is on,
+# which would start a second indexer without them; Hidden turns it off.
+[Desktop Entry]
+Type=Application
+Name=Recoll real time indexer
+Exec=recollindex -w 60 -m
+Hidden=true
