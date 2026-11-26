@@ -78,6 +78,13 @@ flatpak update
 flatpak uninstall --unused
 ```
 
+Thunderbird is the ESR build, `org.mozilla.thunderbird_esr`. A machine with
+another Thunderbird Flatpak, such as Flathub's `org.mozilla.Thunderbird` or
+Fedora's `net.thunderbird.Thunderbird`, gets the ESR beside it with an empty
+profile: each Flatpak keeps its data under its own app ID, and the ESR won't
+open a profile a newer Thunderbird has used. Add the accounts again in the
+ESR, then remove the other build with `flatpak uninstall`.
+
 ## Snap
 
 Only `ngrok`. Discover skips the snap backend (see
