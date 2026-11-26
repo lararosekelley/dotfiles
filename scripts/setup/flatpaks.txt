@@ -16,7 +16,7 @@ flathub        io.kinvolk.Headlamp
 flathub        md.obsidian.Obsidian
 flathub        org.ardour.Ardour
 flathub        org.libretro.RetroArch
-flathub        org.mozilla.Thunderbird              net.thunderbird.Thunderbird
+flathub        org.mozilla.thunderbird_esr
 flathub        org.musescore.MuseScore
 flathub        org.signal.Signal
 
