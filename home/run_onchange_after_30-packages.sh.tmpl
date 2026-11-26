@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Install the distro packages the dotfiles depend on. chezmoi reruns this
+# whenever the script, its list, or its helpers change:
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/packages") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/packages.txt") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/lib.sh") | sha256sum }}
+exec {{ joinPath .chezmoi.workingTree "scripts/setup/packages" | quote }}

@@ -5,8 +5,8 @@ desktop and the Arch laptop say so (see [Machines](../README.md#machines)).
 
 ## 1. Packages
 
-Install `git`, `chezmoi`, and the packages in
-[Packages](./packages.md#distro-packages-that-config-depends-on). For the Rust
+Install `git` and `chezmoi`; `chezmoi apply` in step 2 installs the rest of
+the [packages](./packages.md#distro-packages-that-config-depends-on). For the Rust
 tools under [Rust](./packages.md#rust), install `rustup` (or the distro's
 `rust`); `rustup` installs no toolchain at first, so run `rustup default stable`
 once.

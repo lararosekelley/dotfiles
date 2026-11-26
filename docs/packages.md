@@ -10,21 +10,14 @@ On CachyOS, always prefer the `cachyos-` prefixed package sources, for example
 `cachyos-extras-znver4` over `extras`, as those are recompiled and
 performance-optimized.
 
-Config in `home/` depends on these. Names differ by distro; most are in
-Fedora's repos and Arch's official repos, and the exceptions are noted. pyenv,
-nodenv, and rbenv are git checkouts on both; see [New machine](./new-machine.md).
-
-| used by                                            | Fedora (dnf)                     | Arch (pacman)                      |
-| -------------------------------------------------- | -------------------------------- | ---------------------------------- |
-| `.cargo/config.toml` links Rust builds             | `mold`                           | `mold`                             |
-| `.config/fish/` and its plugins                    | `fish fzf fd-find bat`           | `fish fzf fd bat`                  |
-| the `copy` script                                  | `wl-clipboard` or `xclip`        | `wl-clipboard` or `xclip`          |
-| `.config/k9s/` (see [Kubernetes](./kubernetes.md)) | `k9s kubernetes1.34-client helm` | `k9s kubectl helm`                 |
-| `.azure/`                                          | `azure-cli`                      | `azure-cli`                        |
-| `.bin/backup.sh`                                   | `restic`                         | `restic`                           |
-| the `recollindex` override                         | `recoll perl-JSON`               | `recoll perl-json`                 |
-| `.config/obs-studio/`                              | `obs-studio`                     | `obs-studio`                       |
-| the Headlamp Callie theme's font                   | `vernnobile-nunito-fonts`        | none known; install Nunito by hand |
+Config in `home/` depends on the packages in
+[`scripts/setup/packages.txt`](../scripts/setup/packages.txt), which gives each
+one's Fedora and Arch name, or a fallback such as `pipx install` where a distro
+has none. `chezmoi apply` installs whatever is missing through
+`scripts/setup/packages`, asking first. The Nunito font on Arch is the one
+package left to install by hand. pyenv, nodenv, and rbenv are git checkouts on
+both; see
+[New machine](./new-machine.md).
 
 ## Fedora: dnf
 
