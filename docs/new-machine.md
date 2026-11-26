@@ -103,9 +103,9 @@ and a step that fails runs again on the next `chezmoi apply`.
   `tuicr`. herdr also needs its plugins linked and agent integrations
   installed; its README lists the commands. `scripts/setup/config-repos`
   installs the Claude integration, so rerun it once herdr is installed.
-- Install the fonts no package covers: IosevkaTerm Nerd Font on Fedora, from
-  [Nerd Fonts](https://www.nerdfonts.com/font-downloads), and Nunito on Arch.
-  On Fedora, also download cliamp into `~/.local/bin` (see
+- On Fedora, install IosevkaTerm Nerd Font, which no package covers, from
+  [Nerd Fonts](https://www.nerdfonts.com/font-downloads), and download cliamp
+  into `~/.local/bin` (see
   [Packages](./packages.md#self-updating-and-standalone-binaries)).
 - If you use `rustup`, it installs no toolchain at first: run
   `rustup default stable` once.

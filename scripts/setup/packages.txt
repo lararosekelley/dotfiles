@@ -111,7 +111,7 @@ sl                        sl                        sl
 cowsay                    cowsay                    cowsay
 
 # the Headlamp Callie theme's font
-font:Nunito               vernnobile-nunito-fonts   -
+font:Nunito               vernnobile-nunito-fonts   ttf-nunito
 
 # sway's titles and waybar's icons; Fedora has no package, so it's installed by
 # hand from https://www.nerdfonts.com/font-downloads
