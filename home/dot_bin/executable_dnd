@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Toggle do-not-disturb in mako, which hides every notification but critical
+# ones (see ~/.config/mako/config), and say which way it went
+#
+# Usage: dnd
+
+set -uo pipefail
+
+makoctl mode -t do-not-disturb > /dev/null
+if makoctl mode | grep -qx do-not-disturb; then
+  notify-send -u critical "Do not disturb" "Only critical notifications will show"
+else
+  notify-send "Notifications on"
+fi

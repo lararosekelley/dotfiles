@@ -118,6 +118,9 @@ bindsym $mod+v exec cliphist list | rofi -dmenu -p clipboard | cliphist decode |
 # emoji picker, which types the emoji into the focused window
 bindsym $mod+period exec rofimoji
 
+# toggle do-not-disturb for notifications (script in ~/.bin)
+bindsym $mod+n exec dnd
+
 # open terminal
 bindsym $mod+Return exec $term
 

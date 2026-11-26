@@ -78,7 +78,9 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Notifications
 
-Install [mako](https://mako-project.org).
+[mako](https://mako-project.org) shows notifications, styled in Callie by `~/.config/mako/config`. It starts on the first notification, through D-Bus, so the sway config doesn't launch it. Under KDE, Plasma keeps showing notifications instead. Critical notifications have a red border and stay until dismissed.
+
+`$mod+n` runs `dnd`, which toggles do-not-disturb: everything but critical notifications is hidden until it's toggled off.
 
 ## Application launcher
 
