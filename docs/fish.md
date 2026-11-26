@@ -32,10 +32,10 @@ variables), plus the prompt. `functions/fish_prompt.fish` mirrors
   `Ctrl+Alt+F` (files), `Ctrl+Alt+L` (git log), `Ctrl+Alt+S` (git status),
   `Ctrl+Alt+P` (processes), `Ctrl+V` (variables, replacing fish's paste), and
   `Ctrl+R` (history).
-- [fifc](https://github.com/gazorby/fifc): Tab completion in fzf, with fish's
-  own candidates, previews, and colored paths from `fd`. `fifc_editor` is set in
-  `conf.d/plugins.fish`. fifc binds Tab as it loads, before that file runs, and
-  only reads another key from the universal `fifc_keybinding`.
+- [fifc](https://github.com/gazorby/fifc): completion in fzf on `Shift+Tab`,
+  with fish's own candidates, previews, and colored paths from `fd`. Tab stays
+  fish's own completion. `conf.d/plugins.fish` sets the key and `fifc_editor`;
+  fifc reads its key from the universal `fifc_keybinding` as it loads.
 
 `conf.d/plugins.fish` keeps the installed plugins in step with the list. The
 first interactive shell without fisher downloads it, at the tag in

@@ -8,6 +8,15 @@ status is-interactive; or return
 # fifc opens files from its previews here
 set -gx fifc_editor $EDITOR
 
+# fifc's fzf completion on demand with Shift+Tab, in place of fish's completion
+# search; Tab stays fish's own completion. fifc reads fifc_keybinding as a
+# universal variable when it loads, which can be before this file.
+set -U fifc_keybinding shift-tab
+for mode in default insert
+    bind --erase --mode $mode tab
+    bind --mode $mode shift-tab _fifc
+end
+
 set -l plugins (string match -rv '^\s*(#.*)?$' <$__fish_config_dir/fish_plugins 2>/dev/null)
 or return
 
