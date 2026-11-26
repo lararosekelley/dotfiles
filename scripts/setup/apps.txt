@@ -13,6 +13,8 @@
 #   json:URL@FILTER         the RPM whose URL the jq FILTER picks from URL's JSON
 #   pacman:PKG,...          Arch packages
 #   aur:PKG,...             AUR packages, built with paru
+#   sh:URL[@VAR=VALUE,...]  download an install script and run it with sh,
+#                           with those environment variables set
 #   none                    nothing to install on this distro
 #   -                       no route on this distro; install it by hand
 #
@@ -50,6 +52,18 @@ dropbox
 dropbox-cli
   none
   aur:dropbox-cli
+
+# Standalone tools whose own install scripts put them in ~/.local/bin, and
+# update them later (codegraph upgrade; tuicr by rerunning its script). The
+# dotfiles already wire codegraph into the agents, so `codegraph install`,
+# which would rewrite their configs, is not needed.
+codegraph
+  sh:https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh
+  sh:https://raw.githubusercontent.com/colbymchenry/codegraph/main/install.sh
+
+tuicr
+  sh:https://tuicr.dev/install.sh@TUICR_INSTALL_YES=1
+  sh:https://tuicr.dev/install.sh@TUICR_INSTALL_YES=1
 
 protonvpn-app
   repo:proton-vpn-gnome-desktop@system/yum.repos.d/protonvpn-stable.repo

@@ -44,7 +44,7 @@ to show its plan. They can be run by hand too:
 | `scripts/setup/config-repos` | clones nvim, emacs.d, kitty, herdr, and tuios, then runs nvim's `install-deps` and installs herdr's Claude hook |
 | `scripts/setup/packages` | installs the missing packages in `scripts/setup/packages.txt`, asking before `sudo` |
 | `scripts/setup/flatpaks` | installs the missing apps in `scripts/setup/flatpaks.txt` for your user, adding their remotes |
-| `scripts/setup/apps` | installs the missing apps in `scripts/setup/apps.txt` from vendor repos and RPMs, or the AUR, asking first |
+| `scripts/setup/apps` | installs the missing apps in `scripts/setup/apps.txt` from vendor repos and RPMs, the AUR, or their own install scripts, asking first |
 | `scripts/setup/services` | enables the units in `scripts/setup/services.txt`, asking before `sudo` |
 
 ## Names

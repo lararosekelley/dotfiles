@@ -42,6 +42,7 @@ CURL = """\
 case "$*" in
   *.repo*) printf '[gamma-repo]\\nname=Gamma\\n' ;;
   *.json*) echo '{"url": "https://example.com/delta-1.rpm"}' ;;
+  *install.sh*) echo 'echo "installer ran with YES=${ZETA_YES-unset}"' ;;
   *) exit 22 ;;
 esac
 """
@@ -71,6 +72,7 @@ class AppsTest(unittest.TestCase):
             "head",
             "cat",
             "jq",
+            "sh",
         ):
             (system / command).symlink_to(shutil.which(command))
         self.path = f"{self.bin}:{system}"
@@ -192,6 +194,31 @@ class AppsTest(unittest.TestCase):
             "no download found at https://example.com/delta.json", result.stderr
         )
 
+    def test_an_install_script_runs_with_its_variables(self):
+        self.list.write_text(
+            "zeta\n  sh:https://example.com/install.sh@ZETA_YES=1\n"
+            "  sh:https://example.com/install.sh\n"
+        )
+        for distro, expected in (("fedora", "YES=1"), ("arch", "YES=unset")):
+            result = self.run_script(distro, "--yes")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn(f"installer ran with {expected}", result.stdout)
+            self.assertIn("curl -fsSL https://example.com/install.sh", self.calls())
+        result = self.run_script("fedora", "--dry-run")
+        self.assertIn(
+            "would run: curl -fsSL https://example.com/install.sh | ZETA_YES=1 sh",
+            result.stdout,
+        )
+
+    def test_a_failing_install_script_fails_the_script(self):
+        self.list.write_text("zeta\n  sh:https://example.com/missing.sh\n  none\n")
+        result = self.run_script("fedora", "--yes")
+        self.assertEqual(result.returncode, 1)
+        self.assertIn(
+            "failed: the install script at https://example.com/missing.sh",
+            result.stderr,
+        )
+
     def test_an_unknown_distro_installs_nothing(self):
         result = self.run_script("debian", "--yes")
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -202,7 +229,7 @@ class AppsTest(unittest.TestCase):
         text = "\n".join((REPO / "scripts/setup" / n).read_text() for n in lists)
         fields = " ".join(line.split("#")[0] for line in text.splitlines()).split()
         self.assertEqual(len(fields) % 3, 0)
-        kinds = ("dnf", "rpm", "repo", "json", "pacman", "aur")
+        kinds = ("dnf", "rpm", "repo", "json", "pacman", "aur", "sh")
         for i in range(0, len(fields), 3):
             for route in fields[i + 1 : i + 3]:
                 if route in ("none", "-"):

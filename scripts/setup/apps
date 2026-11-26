@@ -2,7 +2,8 @@
 #
 # Install the desktop apps in apps.txt, and apps-<machine>.txt for this
 # machine, that come from outside the distro's own repos: vendor repos and RPMs
-# on Fedora, the official repos and the AUR on Arch. Only what's missing is installed, and only after asking (or with
+# on Fedora, the official repos and the AUR on Arch, and standalone tools'
+# own install scripts. Only what's missing is installed, and only after asking (or with
 # --yes); without a terminal, the plan is reported instead.
 #
 # chezmoi runs this on apply (see home/run_onchange_after_50-apps.sh.tmpl); it
@@ -94,6 +95,19 @@ install_route() {
       fi
       IFS=, read -r -a packages <<< "$value"
       run paru -S --needed --noconfirm "${packages[@]}"
+      ;;
+    sh)
+      url=${value%%@*}
+      vars=()
+      [ "$url" != "$value" ] && IFS=, read -r -a vars <<< "${value#*@}"
+      if $dry_run; then
+        say "  would run: curl -fsSL $url | ${vars[*]:+${vars[*]} }sh"
+        return
+      fi
+      if ! curl -fsSL "$url" | env "${vars[@]}" sh; then
+        printf 'failed: the install script at %s\n' "$url" >&2
+        failures=$((failures + 1))
+      fi
       ;;
     *) warn "unknown route: $route" ;;
   esac

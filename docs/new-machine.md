@@ -98,11 +98,11 @@ and a step that fails runs again on the next `chezmoi apply`.
 
 - Install the binaries in
   [Self-updating and standalone binaries](./packages.md#self-updating-and-standalone-binaries),
-  including `claude`, `codegraph`, `herdr`, `navi`, `tuicr`, and `git-stk` in
-  `~/.local/bin`, and the `gh` extensions listed there. herdr also needs its
-  plugins linked and agent integrations installed; its README lists the
-  commands. `scripts/setup/config-repos` installs the Claude integration, so
-  rerun it once herdr is installed.
+  including `claude`, `herdr`, `navi`, and `git-stk` in `~/.local/bin`, and the
+  `gh` extensions listed there. `chezmoi apply` installs `codegraph` and
+  `tuicr`. herdr also needs its plugins linked and agent integrations
+  installed; its README lists the commands. `scripts/setup/config-repos`
+  installs the Claude integration, so rerun it once herdr is installed.
 - Install the fonts no package covers: IosevkaTerm Nerd Font on Fedora, from
   [Nerd Fonts](https://www.nerdfonts.com/font-downloads), and Nunito on Arch.
   On Fedora, also download cliamp into `~/.local/bin` (see

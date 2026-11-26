@@ -145,14 +145,17 @@ go install golang.org/x/tools/gopls@latest
 
 ## Self-updating and standalone binaries
 
-These install outside a package manager and update themselves or by re-downloading:
+These install outside a package manager and update themselves or by re-downloading.
+`scripts/setup/apps` installs `codegraph` and `tuicr` with their own install
+scripts; the rest are installed by hand.
 
 | binary                                     | location         | update                   |
 | ------------------------------------------ | ---------------- | ------------------------ |
 | `claude`                                   | `~/.local/bin`   | updates itself           |
 | `codegraph`                                | `~/.local/bin`   | `codegraph upgrade`      |
 | `cliamp` (Fedora; AUR on Arch)             | `~/.local/bin`   | `cliamp upgrade`         |
-| `herdr`, `navi`, `tuicr`, `git-stk`        | `~/.local/bin`   | re-download a release    |
+| `tuicr`                                    | `~/.local/bin`   | re-run its installer     |
+| `herdr`, `navi`, `git-stk`                 | `~/.local/bin`   | re-download a release    |
 | `yt-dlp`                                   | `~/.local/bin`   | `yt-dlp -U`              |
 | `uv`                                       | `~/.local/bin`   | `uv self update`         |
 | `aws`                                      | `/usr/local/bin` | re-run the AWS installer |
