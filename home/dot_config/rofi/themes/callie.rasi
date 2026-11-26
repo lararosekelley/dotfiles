@@ -1,0 +1,97 @@
+/* rofi in the Callie theme (https://github.com/greylocklabs/themes) */
+
+* {
+    bg: #1c1220;
+    panel: #261a2a;
+    border-color: #3d2c42;
+    fg: #e0d3df;
+    muted: #9a8797;
+    accent: #f08fb8;
+    on-accent: #2e0f20;
+    urgent: #e66e6d;
+
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    width: 640px;
+    background-color: @bg;
+    border: 2px;
+    border-color: @accent;
+    border-radius: 8px;
+}
+
+mainbox {
+    padding: 12px;
+    spacing: 10px;
+}
+
+inputbar {
+    padding: 8px 12px;
+    spacing: 8px;
+    background-color: @panel;
+    border-radius: 6px;
+    children: [prompt, entry];
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    placeholder: "search";
+    placeholder-color: @muted;
+}
+
+message {
+    padding: 8px 12px;
+    background-color: @panel;
+    border-radius: 6px;
+}
+
+listview {
+    lines: 10;
+    scrollbar: false;
+    spacing: 2px;
+}
+
+element {
+    padding: 6px 10px;
+    spacing: 10px;
+    border-radius: 6px;
+}
+
+element-icon {
+    size: 1.2em;
+}
+
+element-text {
+    text-color: inherit;
+}
+
+element normal.normal,
+element alternate.normal {
+    text-color: @fg;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    text-color: @urgent;
+}
+
+element normal.active,
+element alternate.active {
+    text-color: @accent;
+}
+
+element selected.normal,
+element selected.active {
+    background-color: @accent;
+    text-color: @on-accent;
+}
+
+element selected.urgent {
+    background-color: @urgent;
+    text-color: @on-accent;
+}

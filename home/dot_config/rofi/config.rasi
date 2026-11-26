@@ -1,0 +1,10 @@
+/* rofi, for the sway launcher and the menus in ~/.bin */
+
+configuration {
+    modi: "drun,run,window,filebrowser";
+    show-icons: true;
+    drun-display-format: "{name}";
+    font: "IosevkaTerm Nerd Font 12";
+}
+
+@theme "callie"

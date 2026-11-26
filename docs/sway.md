@@ -82,17 +82,11 @@ Install [mako](https://mako-project.org).
 
 ## Application launcher
 
-Go with [rofi](https://github.com/davatorium/rofi), which supports Wayland as of 2025. After installing, you can set it as the application launcher for Sway:
+[rofi](https://github.com/davatorium/rofi) is the launcher on `$mod+o`, and draws every menu below. `~/.config/rofi/config.rasi` picks the Callie theme in `~/.config/rofi/themes/callie.rasi`, so the launcher and the `~/.bin` menus share one look.
 
-```sway
-set $menu "rofi -show combi -show-icons -combi-modes window,drun,run,ssh,filebrowser,keys"
-```
-
-Optionally, bind Rofi to a set of keys:
-
-```sway
-bindsym $mod+p exec $menu
-```
+- `$mod+Escape`: `power-menu`, to lock, log out, suspend, reboot, or shut down. Logging out, rebooting, and shutting down ask again first.
+- `$mod+v`: clipboard history. [cliphist](https://github.com/sentriz/cliphist) records everything copied, and picking an entry copies it again.
+- `$mod+.`: [rofimoji](https://github.com/fdw/rofimoji), which types the chosen emoji into the focused window with `wtype`.
 
 ## Screenshots
 
