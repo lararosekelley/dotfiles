@@ -147,6 +147,8 @@ mako only starts in a sway session: a drop-in, `~/.config/systemd/user/mako.serv
 
 `$mod+n` runs `dnd`, which toggles do-not-disturb: everything but critical notifications is hidden until it's toggled off.
 
+The bell in waybar opens the notification history, as does `$mod+Ctrl+n`: `notifications` in `~/.bin` lists what's showing and then the last 50 dismissed, newest first, in rofi, and Enter copies one's text. A right-click on the bell toggles do-not-disturb, and the bell is slashed while it's on.
+
 ## Application launcher
 
 [rofi](https://github.com/davatorium/rofi) is the launcher on `$mod+o`, and draws every menu below. `~/.config/rofi/config.rasi` picks the Callie theme in `~/.config/rofi/themes/callie.rasi`, so the launcher and the `~/.bin` menus share one look.

@@ -28,6 +28,7 @@ tooltip label {
 #mode,
 #scratchpad,
 #clock,
+#custom-notifications,
 #custom-night-light,
 #idle_inhibitor,
 #pulseaudio,
@@ -90,6 +91,14 @@ tooltip label {
 #clock {
     color: #f08fb8;
     border-color: #f08fb8;
+}
+
+#custom-notifications.normal {
+    color: #a4beef;
+}
+
+#custom-notifications.dnd {
+    color: #9a8797;
 }
 
 #custom-night-light.on {

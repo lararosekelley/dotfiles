@@ -131,6 +131,10 @@ bindsym $mod+period exec rofimoji
 # toggle do-not-disturb for notifications (script in ~/.bin)
 bindsym $mod+n exec dnd
 
+# browse notifications, showing and dismissed, and copy one's text (script in
+# ~/.bin)
+bindsym $mod+Ctrl+n exec notifications
+
 # toggle the night light, which the session starts at login (script in ~/.bin)
 bindsym $mod+Shift+n exec night-light toggle
 
