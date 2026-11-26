@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+# Airplane mode: block every radio if any is on, otherwise unblock them all.
+# Unlike `rfkill toggle all`, the radios always end up in the same state.
+#
+# Usage: airplane
+
+set -uo pipefail
+
+if rfkill list | grep -q 'Soft blocked: no'; then
+  rfkill block all
+else
+  rfkill unblock all
+fi

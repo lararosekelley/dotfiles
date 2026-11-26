@@ -25,6 +25,11 @@ block for a device that isn't connected is ignored.
 
 ### Keybindings
 
+Two scripts in `~/.bin` back the hardware keys:
+
+- `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all.
+- `display-menu`, on F9 on the Framework (it sends `$mod+p`): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. It needs `rofi`, `kanshi`, `wl-mirror`, `gammastep`, and `jq`.
+
 ### Auto-start programs
 
 ## Status bar
