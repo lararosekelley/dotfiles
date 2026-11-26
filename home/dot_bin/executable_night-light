@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+
+# Night light for sway, run by gammastep with ~/.config/gammastep/config.ini.
+#
+# Usage: night-light [toggle|status|configure]
+#
+#   toggle     turn it on or off (the default)
+#   status     print waybar's JSON for the night-light module
+#   configure  edit the config in a terminal, then restart gammastep with it
+
+set -uo pipefail
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/gammastep/config.ini"
+
+running() { pgrep -x gammastep > /dev/null; }
+
+start() { setsid -f gammastep > /dev/null 2>&1; }
+
+stop() {
+  pkill -x gammastep
+  # let it fade the screen back before anything starts it again
+  while running; do sleep 0.1; done
+}
+
+# waybar's night-light module updates on this signal (see its config)
+refresh_bar() { pkill -RTMIN+8 -x waybar; }
+
+case "${1:-toggle}" in
+  toggle)
+    if running; then stop; else start; fi
+    refresh_bar
+    ;;
+  status)
+    if running; then
+      printf '{"text": "\U000F0594", "class": "on", "tooltip": "Night light on: click to turn off, right-click to configure"}\n'
+    else
+      printf '{"text": "\U000F0599", "class": "off", "tooltip": "Night light off: click to turn on, right-click to configure"}\n'
+    fi
+    ;;
+  configure)
+    was_running=false
+    running && was_running=true
+    kitty --class night-light-config "${EDITOR:-nvim}" "$config"
+    if $was_running; then
+      stop
+      start
+    fi
+    refresh_bar
+    ;;
+  -h | --help) sed -n '5,9p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *)
+    echo "usage: night-light [toggle|status|configure]" >&2
+    exit 2
+    ;;
+esac
