@@ -75,6 +75,16 @@ esac""",
         (self.tmp / "mode").write_text("default\ndo-not-disturb\n")
         self.assertEqual(json.loads(self.run_script("status").stdout)["class"], "dnd")
 
+    def test_unreadable_output_counts_as_no_notifications(self):
+        (self.tmp / "list.json").write_text("Notification 1: Hi\n  App name: x\n")
+        (self.tmp / "history.json").write_text("")
+        status = json.loads(self.run_script("status").stdout)
+        self.assertIn("0 notifications", status["tooltip"])
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertFalse((self.tmp / "shown").exists())
+        self.assertIn("No notifications", (self.tmp / "notified").read_text())
+
     def test_nothing_to_list_says_so_instead_of_opening_the_menu(self):
         (self.tmp / "list.json").write_text("[]")
         (self.tmp / "history.json").write_text("[]")
