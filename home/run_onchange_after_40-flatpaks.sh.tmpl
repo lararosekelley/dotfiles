@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Install the Flatpak apps for this user. chezmoi reruns this whenever the
+# script, its list, or its helpers change:
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/flatpaks") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/flatpaks.txt") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/lib.sh") | sha256sum }}
+exec {{ joinPath .chezmoi.workingTree "scripts/setup/flatpaks" | quote }}

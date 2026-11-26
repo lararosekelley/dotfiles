@@ -1,0 +1,39 @@
+# Flatpak apps for scripts/setup/flatpaks, installed per user.
+#
+# Columns: the remote, the app ID, and other IDs that count as already
+# installed (the same app published under another name elsewhere).
+#
+# remote       app                                  also
+
+# flathub
+flathub        app.zen_browser.zen
+flathub        com.calibre_ebook.calibre
+flathub        com.discordapp.Discord
+flathub        com.slack.Slack
+flathub        fm.reaper.Reaper
+flathub        io.github.shiftey.Desktop
+flathub        io.kinvolk.Headlamp
+flathub        md.obsidian.Obsidian
+flathub        org.ardour.Ardour
+flathub        org.libretro.RetroArch
+flathub        org.mozilla.Thunderbird              net.thunderbird.Thunderbird
+flathub        org.musescore.MuseScore
+flathub        org.signal.Signal
+
+# ArtCraft and its Craft apps (https://getartcraft.com/linux)
+artcraft-oci   ai.storyteller.artcraft-launcher
+artcraft-oci   ai.storyteller.anicraft
+artcraft-oci   ai.storyteller.cadcraft
+artcraft-oci   ai.storyteller.deckcraft
+artcraft-oci   ai.storyteller.designcraft
+artcraft-oci   ai.storyteller.effectcraft
+artcraft-oci   ai.storyteller.figcraft
+artcraft-oci   ai.storyteller.filmcraft
+artcraft-oci   ai.storyteller.gridcraft
+artcraft-oci   ai.storyteller.lightcraft
+artcraft-oci   ai.storyteller.materialcraft
+artcraft-oci   ai.storyteller.pdfcraft
+artcraft-oci   ai.storyteller.photocraft
+artcraft-oci   ai.storyteller.soundcraft
+artcraft-oci   ai.storyteller.vectorcraft
+artcraft-oci   ai.storyteller.wordcraft

@@ -59,8 +59,12 @@ dnf list --installed | awk '$3 == "@commandline"'  # the file-installed RPMs abo
 
 ## Flatpak
 
-GUI apps, mostly from Flathub: Zen, Slack, Discord, Signal, Thunderbird, Obsidian,
-Todoist, Calibre, Reaper, Ardour, RetroArch, GitHub Desktop, Headlamp.
+GUI apps, listed in
+[`scripts/setup/flatpaks.txt`](../scripts/setup/flatpaks.txt) and installed per
+user (`flatpak --user`) by `scripts/setup/flatpaks` on `chezmoi apply`. Most
+come from Flathub; ArtCraft and its Craft apps come from ArtCraft's own
+`artcraft-oci` remote (see [getartcraft.com/linux](https://getartcraft.com/linux)).
+Apps already installed system-wide, as on the desktop, are left there.
 
 ```bash
 flatpak update
@@ -148,21 +152,4 @@ These install outside a package manager and update themselves or by re-downloadi
 gh extension install dlvhdr/gh-dash
 gh extension install dlvhdr/gh-enhance
 gh extension upgrade --all
-```
-
-## AppImages
-
-AppImages live in `~/Applications`: MuseScore, Slippi, and the Craft suite
-(artcraft-launcher, cadcraft, deckcraft, designcraft, effectcraft, figcraft,
-filmcraft, gridcraft, lightcraft, pdfcraft, photocraft, soundcraft, vectorcraft,
-wordcraft).
-
-[AppImageLauncher](https://github.com/TheAssassin/AppImageLauncher), installed
-from its RPM above, integrates them: opening an AppImage offers to move it to
-`~/Applications` and add a menu entry. Its `ail-cli` does the same from a
-terminal. Update an AppImage by downloading the new release and integrating it.
-
-```bash
-ail-cli integrate ~/Downloads/<app>.AppImage
-ail-cli unintegrate ~/Applications/<app>.AppImage  # before deleting one
 ```

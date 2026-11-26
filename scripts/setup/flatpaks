@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#
+# Install the Flatpak apps in flatpaks.txt for this user, adding each app's
+# remote for the user first if it's missing. An app installed in any
+# installation, user or system, under its ID or one of its other IDs, is left
+# alone.
+#
+# chezmoi runs this on apply (see home/run_onchange_after_40-flatpaks.sh.tmpl);
+# it is also safe to run by hand.
+#
+# Usage: scripts/setup/flatpaks [--dry-run]
+#
+# SETUP_FLATPAKS points at another list, for tests.
+
+set -uo pipefail
+
+here=$(dirname "$0")
+# shellcheck source=scripts/setup/lib.sh
+. "$here/lib.sh"
+
+usage() { echo "usage: scripts/setup/flatpaks [--dry-run]"; }
+
+parse_args "$@"
+
+declare -A remote_urls=(
+  ["flathub"]=https://dl.flathub.org/repo/flathub.flatpakrepo
+  ["artcraft-oci"]=https://getartcraft.com/artcraft-oci.flatpakrepo
+)
+
+if ! command -v flatpak > /dev/null 2>&1; then
+  warn "flatpak is missing; run scripts/setup/packages, then this again"
+  finish
+fi
+
+installed() {
+  local id
+  for id in "$@"; do
+    flatpak info "$id" > /dev/null 2>&1 && return 0
+  done
+  return 1
+}
+
+remotes=()
+declare -A missing=()
+
+while read -r remote app also; do
+  case "$remote" in "" | "#"*) continue ;; esac
+  # shellcheck disable=SC2086 # the other IDs are space separated
+  installed "$app" $also && continue
+  if [ -z "${remote_urls[$remote]:-}" ]; then
+    warn "$app: unknown remote $remote; skipped"
+    continue
+  fi
+  [ -n "${missing[$remote]:-}" ] || remotes+=("$remote")
+  missing[$remote]+=" $app"
+done < "${SETUP_FLATPAKS:-$here/flatpaks.txt}"
+
+if [ ${#remotes[@]} -eq 0 ]; then
+  say "flatpaks: all present"
+fi
+
+for remote in "${remotes[@]}"; do
+  read -r -a apps <<< "${missing[$remote]}"
+  run flatpak remote-add --user --if-not-exists "$remote" "${remote_urls[$remote]}" \
+    && run flatpak install --user --noninteractive "$remote" "${apps[@]}"
+done
+
+finish

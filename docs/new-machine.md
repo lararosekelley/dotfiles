@@ -55,12 +55,8 @@ files the repo leaves out, such as `~/.environment`.
   herdr also needs its plugins linked and agent integrations installed; its
   README lists the commands.
 
-- Install `flatpak`, then the GUI apps listed under
-  [Flatpak](./packages.md#flatpak), starting with Zen:
-
-  ```bash
-  flatpak install app.zen_browser.zen
-  ```
+- The GUI apps under [Flatpak](./packages.md#flatpak) are installed for your
+  user by `chezmoi apply` in step 2.
 
 ## 4. fish
 
