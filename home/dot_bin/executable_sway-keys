@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# Searchable list of sway's key bindings, read from the sway config each time
-# it opens so it always matches: every bindsym with the comment above it and
-# its command, in rofi. Included files are read in place, so machine.conf can
+# Searchable list of sway's key bindings and touchpad gestures, read from the
+# sway config each time it opens so it always matches: every bindsym and
+# bindgesture, with the comment above it and its command, in rofi. Included files are read in place, so machine.conf can
 # change $mod first; globbed includes (the distro's config.d) are skipped.
 #
 # Usage: sway-keys [--print]
@@ -81,6 +81,19 @@ list=$(awk -v home="$HOME" -v markup="$markup" '
     return out
   }
 
+  # swipe:3:left -> Swipe 3 fingers left; pinch:inward+up -> Pinch inward and up
+  function gesture(g,   n, parts, out, dir) {
+    n = split(g, parts, ":")
+    out = toupper(substr(parts[1], 1, 1)) substr(parts[1], 2)
+    dir = ""
+    if (n >= 2 && parts[2] ~ /^[0-9]+$/) {
+      out = out " " parts[2] " fingers"
+      if (n >= 3) dir = parts[3]
+    } else if (n >= 2) dir = parts[2]
+    gsub(/\+/, " and ", dir)
+    return dir == "" ? out : out " " dir
+  }
+
   function escape(s) {
     gsub(/&/, "\\&amp;", s); gsub(/</, "\\&lt;", s); gsub(/>/, "\\&gt;", s)
     return s
@@ -129,11 +142,12 @@ list=$(awk -v home="$HOME" -v markup="$markup" '
         continue
       }
       if (line == "}") { mode = ""; continue }
-      if (line ~ /^bindsym[ \t]/) {
+      if (line ~ /^bind(sym|gesture)[ \t]/) {
         n = split(line, words, /[ \t]+/)
         i = 2
         while (i <= n && words[i] ~ /^--/) i++
-        key = pretty(expand(words[i]))
+        if (line ~ /^bindgesture/) key = gesture(words[i])
+        else key = pretty(expand(words[i]))
         command = trim(substr(line, index(line, words[i]) + length(words[i])))
         command = expand(command)
         sub(/^exec[ \t]+/, "", command)

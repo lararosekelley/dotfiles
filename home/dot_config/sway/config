@@ -233,6 +233,16 @@ bindsym $mod+Tab workspace back_and_forth
 bindsym $mod+bracketright workspace next_on_output
 bindsym $mod+bracketleft workspace prev_on_output
 
+# swipe three fingers left or right on a touchpad to move between workspaces
+bindgesture swipe:3:left workspace next_on_output
+bindgesture swipe:3:right workspace prev_on_output
+
+# swipe four fingers up to show the next window on the scratchpad
+bindgesture swipe:4:up scratchpad show
+
+# swipe four fingers down to float or tile the focused window
+bindgesture swipe:4:down floating toggle
+
 # show next window on the scratchpad
 bindsym $mod+x scratchpad show
 
