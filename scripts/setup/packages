@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+#
+# Install the distro packages the dotfiles depend on, listed with their Fedora
+# and Arch names in packages.txt. Only what's missing is installed, and only
+# after asking (or with --yes); without a terminal, the install is reported
+# instead. Where a distro has no package, the list's fallback runs if its tool
+# is present.
+#
+# chezmoi runs this on apply (see home/run_onchange_after_30-packages.sh.tmpl);
+# it is also safe to run by hand.
+#
+# Usage: scripts/setup/packages [--yes] [--dry-run]
+#
+# SETUP_PACKAGES points at another list, for tests.
+
+set -uo pipefail
+
+here=$(dirname "$0")
+# shellcheck source=scripts/setup/lib.sh
+. "$here/lib.sh"
+
+usage() { echo "usage: scripts/setup/packages [--yes] [--dry-run]"; }
+
+parse_args "$@"
+
+installed() {
+  case "$1" in
+    /*) [ -e "$1" ] ;;
+    font:*) grep -qi -- "${1#font:}" <<< "$(fc-list 2> /dev/null)" ;;
+    perl:*) perl -M"${1#perl:}" -e 1 2> /dev/null ;;
+    *) command -v "$1" > /dev/null 2>&1 ;;
+  esac
+}
+
+distro=$(detect_distro)
+wanted=()
+fallbacks=()
+
+while read -r check fedora arch fallback; do
+  case "$check" in "" | "#"*) continue ;; esac
+  installed "$check" && continue
+  case "$distro" in
+    fedora) package=$fedora ;;
+    arch) package=$arch ;;
+    *) package="-" ;;
+  esac
+  if [ "$package" != "-" ]; then
+    wanted+=("$package")
+  elif [ -n "$fallback" ]; then
+    fallbacks+=("$fallback")
+  elif [ "$distro" != unknown ]; then
+    warn "$check: no $distro package; install it by hand"
+  fi
+done < "${SETUP_PACKAGES:-$here/packages.txt}"
+
+if [ "$distro" = unknown ]; then
+  warn "this distro isn't recognized; install the packages in scripts/setup/packages.txt by hand"
+elif [ ${#wanted[@]} -eq 0 ]; then
+  say "system packages: all present"
+else
+  case "$distro" in
+    fedora) install=(sudo dnf install -y --skip-unavailable "${wanted[@]}") ;;
+    arch) install=(sudo pacman -S --needed --noconfirm "${wanted[@]}") ;;
+  esac
+  if confirm "Install with ${install[*]}?"; then
+    run "${install[@]}"
+  else
+    warn "not installed (no terminal, or declined): ${install[*]}"
+  fi
+fi
+
+for fallback in "${fallbacks[@]}"; do
+  read -r -a command <<< "$fallback"
+  if command -v "${command[0]}" > /dev/null 2>&1; then
+    run "${command[@]}"
+  else
+    warn "${command[0]} is missing, so this was skipped: $fallback"
+  fi
+done
+
+finish

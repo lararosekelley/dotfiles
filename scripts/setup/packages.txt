@@ -1,0 +1,60 @@
+# Distro packages the dotfiles depend on, for scripts/setup/packages.
+#
+# Columns: what to check, the Fedora package, the Arch package, and a command to
+# run instead where the distro has no package ("-"). What to check is a command
+# name, a path (/...), a font (font:Name), or a Perl module (perl:Module).
+#
+# check                   fedora                    arch            fallback
+
+# repo tooling and the shells
+git                       git                       git
+chezmoi                   chezmoi                   chezmoi
+just                      just                      just
+/usr/share/bash-completion/bash_completion  bash-completion  bash-completion
+fish                      fish                      fish
+fzf                       fzf                       fzf
+fd                        fd-find                   fd
+bat                       bat                       bat
+curl                      curl                      curl
+zoxide                    zoxide                    zoxide
+tmux                      tmux                      tmux
+nvim                      neovim                    neovim
+python3                   python3                   python
+pipx                      pipx                      python-pipx
+shellcheck                ShellCheck                shellcheck
+shfmt                     -                         shfmt           go install mvdan.cc/sh/v3/cmd/shfmt@latest
+jq                        jq                        jq
+
+# aliases and ~/.bin scripts
+rg                        ripgrep                   ripgrep
+wl-copy                   wl-clipboard              wl-clipboard
+figlet                    figlet                    figlet
+ffmpeg                    ffmpeg-free               ffmpeg
+gifsicle                  gifsicle                  gifsicle
+
+# git
+diff-so-fancy             diff-so-fancy             diff-so-fancy
+git-lfs                   git-lfs                   git-lfs
+gh                        gh                        github-cli
+glab                      glab                      glab
+
+# ~/.cargo/config.toml links Rust builds with mold
+mold                      mold                      mold
+
+# tools configured here
+restic                    restic                    restic
+recoll                    recoll                    recoll
+perl:JSON                 perl-JSON                 perl-json
+fastfetch                 fastfetch                 fastfetch
+gcalcli                   -                         -               pipx install gcalcli
+k9s                       k9s                       k9s
+kubectl                   kubernetes1.34-client     kubectl
+helm                      helm                      helm
+az                        azure-cli                 azure-cli
+
+# desktop apps; Flatpaks have their own setup script
+obs                       obs-studio                obs-studio
+flatpak                   flatpak                   flatpak
+
+# the Headlamp Callie theme's font
+font:Nunito               vernnobile-nunito-fonts   -

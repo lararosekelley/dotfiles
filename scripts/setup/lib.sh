@@ -8,6 +8,7 @@
 # chezmoi reports it and runs the script again on the next apply.
 
 dry_run=false
+yes=false
 warnings=0
 failures=0
 
@@ -16,6 +17,7 @@ parse_args() {
   for arg in "$@"; do
     case "$arg" in
       -n | --dry-run) dry_run=true ;;
+      -y | --yes) yes=true ;;
       -h | --help)
         usage
         exit 0
@@ -45,6 +47,34 @@ run() {
   printf 'failed: %s\n' "$*" >&2
   failures=$((failures + 1))
   return 1
+}
+
+# Ask before something that needs sudo or changes the desktop. Without a
+# terminal, and without --yes, the answer is no.
+confirm() {
+  $yes && return 0
+  $dry_run && return 0
+  [ -t 0 ] || return 1
+  local answer
+  read -r -p "$1 [y/N] " answer
+  [[ "$answer" =~ ^[Yy]$ ]]
+}
+
+# fedora, arch, or unknown, from os-release (SETUP_OS_RELEASE overrides the path
+# for tests)
+detect_distro() {
+  local file=${SETUP_OS_RELEASE:-/etc/os-release} ID="" ID_LIKE=""
+  if [ ! -r "$file" ]; then
+    echo unknown
+    return
+  fi
+  # shellcheck source=/dev/null
+  . "$file"
+  case " $ID $ID_LIKE " in
+    *" fedora "*) echo fedora ;;
+    *" arch "*) echo arch ;;
+    *) echo unknown ;;
+  esac
 }
 
 # github.com/owner/repo, whichever of https://, git@...:, or .git it is written with
