@@ -99,6 +99,29 @@ class SourceTest(unittest.TestCase):
         self.assertIn(include, laptop)
         self.assertNotIn(include, desktop)
 
+    def test_ssh_config_gets_add_keys_to_agent_and_keeps_its_hosts(self):
+        hosts = "Host example\n  User me\n"
+        block = "Host *\n  AddKeysToAgent yes\n"
+        cases = {
+            None: block,
+            hosts: hosts + "\n" + block,
+            "Host example\n  User me": "Host example\n  User me\n\n" + block,
+            hosts + "Host *\n  addkeystoagent no\n": None,
+        }
+        for current, expected in cases.items():
+            with self.subTest(current=current), tempfile.TemporaryDirectory() as tmp:
+                tmp = Path(tmp)
+                ssh = tmp / "home/.ssh"
+                ssh.mkdir(parents=True)
+                if current is not None:
+                    (ssh / "config").write_text(current)
+                target = str(ssh / "config")
+                result = chezmoi(tmp, REPO, False, "cat", target)
+                self.assertEqual(result, expected or current)
+                # a second pass over the result changes nothing
+                (ssh / "config").write_text(result)
+                self.assertEqual(chezmoi(tmp, REPO, False, "cat", target), result)
+
     def test_an_unknown_machine_stops_with_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)

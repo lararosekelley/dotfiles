@@ -4,6 +4,7 @@
 # or a ~/ or / path), and the machine it is for ("-" for every machine).
 #
 # scope   unit                  needs                machine
+user      ssh-agent.socket      ssh-agent            -
 user      navi.service          ~/.local/bin/navi    -
 user      recollindex.service   recollindex          -
 system    jellyfin.service      jellyfin             desktop

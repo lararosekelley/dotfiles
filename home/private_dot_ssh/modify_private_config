@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+# chezmoi passes ~/.ssh/config on stdin and installs what this prints. The file
+# stays local, since its hosts don't belong in a public repo; this only makes
+# sure ssh hands a key to the agent the first time it's unlocked, so its
+# passphrase is asked once per session. An existing AddKeysToAgent line, for
+# any host, is left as it is.
+
+set -uo pipefail
+
+# read everything, keeping trailing newlines, which $(cat) alone would drop
+config=$(
+  cat
+  printf x
+)
+config=${config%x}
+
+printf '%s' "$config"
+if ! grep -qiE '^[[:space:]]*AddKeysToAgent[[:space:]]' <<< "$config"; then
+  if [ -n "$config" ]; then
+    [ "${config: -1}" = $'\n' ] || echo
+    echo
+  fi
+  printf '%s\n' "Host *" "  AddKeysToAgent yes"
+fi
