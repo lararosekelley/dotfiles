@@ -32,9 +32,9 @@ case "${1:-toggle}" in
     ;;
   status)
     if running; then
-      printf '{"text": "\U000F0594", "class": "on", "tooltip": "Night light on: click to turn off, right-click to configure"}\n'
+      printf '{"text": "󰖔", "class": "on", "tooltip": "Night light on: click to turn off, right-click to configure"}\n'
     else
-      printf '{"text": "\U000F0599", "class": "off", "tooltip": "Night light off: click to turn on, right-click to configure"}\n'
+      printf '{"text": "󰖙", "class": "off", "tooltip": "Night light off: click to turn on, right-click to configure"}\n'
     fi
     ;;
   configure)
