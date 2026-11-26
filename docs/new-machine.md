@@ -136,12 +136,13 @@ auth  sufficient  pam_fprintd.so
 ```
 
 - `/etc/pam.d/sudo`, for `sudo`.
-- `/etc/pam.d/polkit-1`, for apps that ask for your password.
-- `/etc/pam.d/swaylock`, for the lock screen: press Enter on the empty password
-  field, then touch the reader.
-- The login screen's file: `/etc/pam.d/<name>` for the login manager that
-  `systemctl status display-manager` names, or `/etc/pam.d/login` if there is
-  none and you log in at a text console.
+- `/etc/pam.d/polkit-1`, for apps that ask for your password. Arch ships it as
+  `/usr/lib/pam.d/polkit-1`; copy that to `/etc/pam.d` first.
+- `/etc/pam.d/login`, after its `pam_nologin` line. swaylock's file and ly's
+  (CachyOS's login screen, `ly@tty2`) both include it, so this covers the lock
+  screen, ly, and a text console. On the lock screen, press Enter on the empty
+  password field, then touch the reader. A fingerprint login doesn't unlock
+  the keyring, which needs the password.
 
 Add it to those files rather than `system-auth`, which every service shares.
 
