@@ -62,8 +62,9 @@ rofi                      rofi                      rofi
 xdg-settings              xdg-utils                 xdg-utils
 gtk-launch                gtk3                      gtk3
 
-# the portals sway's sway-portals.conf names: file dialogs, which Flatpak apps
-# such as Zen need for downloads, and screen sharing
+# the portals sway-portals.conf sends requests to (sway's own package installs
+# that file in /usr/share/xdg-desktop-portal): gtk for file dialogs, which
+# Flatpak apps such as Zen need for downloads, and wlr for screen sharing
 /usr/share/xdg-desktop-portal/portals/gtk.portal  xdg-desktop-portal-gtk  xdg-desktop-portal-gtk
 /usr/share/xdg-desktop-portal/portals/wlr.portal  xdg-desktop-portal-wlr  xdg-desktop-portal-wlr
 mako                      mako                      mako
