@@ -24,10 +24,28 @@ a different `$mod`. Keyboard settings can stay in the shared config: an `input`
 block for a device that isn't connected is ignored.
 
 The config ends by reading `~/.config/sway/session.conf`, written from
-`session.conf.tmpl`, which includes the distro's session setup in
-`/etc/sway/config.d` on the laptops only. On the desktop, sway runs in a window
-under KDE. There, the distro's `session.sh` would treat sway as the graphical
-session, and quitting sway would end the Plasma session with it.
+`session.conf.tmpl`: what sway sets up when it is the whole session. That is the
+distro's session setup in `/etc/sway/config.d` (the graphical session target,
+and the environment the portals and user services need), a polkit agent to
+answer apps that ask for your password (KDE's on Fedora, `polkit-gnome` on
+Arch), and `dex`, which starts the desktop's autostart apps such as Dropbox and
+KDE Connect, since sway doesn't.
+
+### Sway on the desktop
+
+On the desktop, choose Sway instead of Plasma at the login screen for a full
+sway session, with the same config as the laptops and the ultrawide set up in
+`machine.conf`.
+
+To run sway in a window inside KDE instead, use `sway-nested`. It runs
+`~/.config/sway/nested.conf`, which chezmoi makes from the config with `$mod` set
+to Alt, since Plasma keeps most Super shortcuts, and without `session.conf`,
+since Plasma already set up the session. Plain `sway` there would take the
+session over, and quitting it would end the Plasma session too.
+
+Under sway, Chrome may look for saved passwords in the GNOME keyring rather
+than KDE Wallet, so they seem missing. Start it with
+`--password-store=kwallet6` to keep using the wallet.
 
 ### Wallpaper
 
