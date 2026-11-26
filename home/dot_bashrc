@@ -116,8 +116,8 @@ if [ -f ~/.bash_prompt ]; then
   PROMPT_COMMAND="set_prompt; history -a; history -c; history -r"
 fi
 
-# zoxide: z and zi jump to visited directories. Initialized after
-# PROMPT_COMMAND is set, since it adds its hook to it.
+# zoxide: z and zi (aliased j and ji) jump to visited directories.
+# Initialized after PROMPT_COMMAND is set, since it adds its hook to it.
 
 command -v zoxide > /dev/null && eval "$(zoxide init bash)"
 

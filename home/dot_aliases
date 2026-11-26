@@ -24,6 +24,10 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+# jump to visited directories with zoxide's z and zi
+alias j='z'
+alias ji='zi'
+
 # clipboard
 
 alias pbcopy='copy' # old macos habits; copy is in ~/.bin

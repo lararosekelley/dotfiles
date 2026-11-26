@@ -41,7 +41,7 @@ Shell:
 
 - `pyenv` (with `pyenv-virtualenv`), `nodenv`, `rbenv` - language versions, loaded when installed
 - `rg` - the `rgs`/`rgf` aliases and the `sub` script
-- `zoxide` - directory jumping with `z` and `zi`, hooked into `PROMPT_COMMAND`
+- `zoxide` - directory jumping with `z` and `zi`, or `j` and `ji`, hooked into `PROMPT_COMMAND`
 - `wl-clipboard` (Wayland) or `xclip` (X11) - the `copy` script and `pbcopy` alias
 - `tmux` + `tpm` - `.tmux.conf` and the `mux` script
 - `python3` - the `serve` script

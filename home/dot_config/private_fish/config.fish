@@ -30,7 +30,7 @@ set -g fish_greeting
 # light or dark variant from the terminal background
 fish_config theme choose callie
 
-# zoxide: z and zi jump to visited directories
+# zoxide: z and zi (abbreviated j and ji) jump to visited directories
 
 command -q zoxide; and zoxide init fish | source
 
