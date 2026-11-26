@@ -107,6 +107,8 @@ class SourceTest(unittest.TestCase):
             hosts: hosts + "\n" + block,
             "Host example\n  User me": "Host example\n  User me\n\n" + block,
             hosts + "Host *\n  addkeystoagent no\n": None,
+            hosts + "Host *\n  AddKeysToAgent=confirm\n": None,
+            hosts + "Host *\n  AddKeysToAgent = yes\n": None,
         }
         for current, expected in cases.items():
             with self.subTest(current=current), tempfile.TemporaryDirectory() as tmp:
