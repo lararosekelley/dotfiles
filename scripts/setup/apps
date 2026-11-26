@@ -1,0 +1,150 @@
+#!/usr/bin/env bash
+#
+# Install the desktop apps in apps.txt, and apps-<machine>.txt for this
+# machine, that come from outside the distro's own repos: vendor repos and RPMs
+# on Fedora, the official repos and the AUR on Arch. Only what's missing is installed, and only after asking (or with
+# --yes); without a terminal, the plan is reported instead.
+#
+# chezmoi runs this on apply (see home/run_onchange_after_50-apps.sh.tmpl); it
+# is also safe to run by hand.
+#
+# Usage: scripts/setup/apps [--yes] [--dry-run]
+#
+# SETUP_MACHINE names the machine; by hand, it comes from chezmoi's data.
+# SETUP_APPS points at another list, for tests.
+
+set -uo pipefail
+
+here=$(dirname "$0")
+repo_root=$(cd "$here/../.." && pwd)
+# shellcheck source=scripts/setup/lib.sh
+. "$here/lib.sh"
+
+usage() { echo "usage: scripts/setup/apps [--yes] [--dry-run]"; }
+
+parse_args "$@"
+
+installed() {
+  local check
+  IFS=, read -r -a checks <<< "$1"
+  for check in "${checks[@]}"; do
+    case "$check" in
+      /*) [ -e "$check" ] && return 0 ;;
+      *) command -v "$check" > /dev/null 2>&1 && return 0 ;;
+    esac
+  done
+  return 1
+}
+
+# The ids of the repos a .repo file defines, given its URL or its path here
+repo_ids() {
+  local source=$1
+  case "$source" in
+    https://*) curl -fsSL "$source" ;;
+    *) cat "$repo_root/$source" ;;
+  esac | sed -n 's/^\[\(.*\)\]$/\1/p'
+}
+
+add_repo() {
+  local source=$1 id present
+  present=$(dnf repolist --all --quiet 2> /dev/null | awk '{print $1}')
+  for id in $(repo_ids "$source"); do
+    grep -qxF -- "$id" <<< "$present" && continue
+    case "$source" in
+      https://*) ;;
+      *) source="$repo_root/$source" ;;
+    esac
+    run sudo dnf config-manager addrepo --from-repofile="$source"
+    return
+  done
+}
+
+install_route() {
+  local route=$1 kind=${1%%:*} value=${1#*:} packages url
+  case "$kind" in
+    dnf)
+      IFS=, read -r -a packages <<< "$value"
+      run sudo dnf install -y "${packages[@]}"
+      ;;
+    rpm)
+      IFS=, read -r -a packages <<< "${value//\{fedora\}/$(rpm -E %fedora)}"
+      run sudo dnf install -y "${packages[@]}"
+      ;;
+    repo)
+      IFS=, read -r -a packages <<< "${value%%@*}"
+      add_repo "${value#*@}" && run sudo dnf install -y "${packages[@]}"
+      ;;
+    json)
+      url=$(curl -fsSL "${value%%@*}" | jq -r "${value#*@}" | head -n 1)
+      if [ -z "$url" ]; then
+        printf 'failed: no download found at %s\n' "${value%%@*}" >&2
+        failures=$((failures + 1))
+        return
+      fi
+      run sudo dnf install -y "$url"
+      ;;
+    pacman)
+      IFS=, read -r -a packages <<< "$value"
+      run sudo pacman -S --needed --noconfirm "${packages[@]}"
+      ;;
+    aur)
+      if ! command -v paru > /dev/null 2>&1; then
+        warn "paru is missing, so this was skipped: $route"
+        return
+      fi
+      IFS=, read -r -a packages <<< "$value"
+      run paru -S --needed --noconfirm "${packages[@]}"
+      ;;
+    *) warn "unknown route: $route" ;;
+  esac
+}
+
+distro=$(detect_distro)
+if [ "$distro" = unknown ]; then
+  warn "this distro isn't recognized; install the apps in scripts/setup/apps.txt by hand"
+  finish
+fi
+
+list=${SETUP_APPS:-$here/apps.txt}
+lists=("$list")
+machine=${SETUP_MACHINE-$(chezmoi execute-template '{{ get . "machine" }}' 2> /dev/null)}
+machine_list="$(dirname "$list")/apps-$machine.txt"
+[ -n "$machine" ] && [ -f "$machine_list" ] && lists+=("$machine_list")
+
+# Every entry is three fields, however the lines are broken.
+read -r -a fields <<< "$(sed 's/#.*//' "${lists[@]}" | tr '\n' ' ')"
+names=()
+routes=()
+for ((i = 0; i + 2 < ${#fields[@]}; i += 3)); do
+  check=${fields[i]}
+  installed "$check" && continue
+  case "$distro" in
+    fedora) route=${fields[i + 1]} ;;
+    arch) route=${fields[i + 2]} ;;
+  esac
+  case "$route" in
+    none) ;;
+    -) warn "${check%%,*}: no $distro route; install it by hand" ;;
+    *)
+      names+=("${check%%,*}")
+      routes+=("$route")
+      ;;
+  esac
+done
+
+if [ ${#routes[@]} -eq 0 ]; then
+  say "apps: all present"
+  finish
+fi
+
+if ! confirm "Install ${names[*]}? (uses sudo)"; then
+  warn "not installed (no terminal, or declined): ${names[*]}"
+  finish
+fi
+
+for ((i = 0; i < ${#routes[@]}; i++)); do
+  say "${names[i]}:"
+  install_route "${routes[i]}"
+done
+
+finish

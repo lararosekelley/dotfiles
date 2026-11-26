@@ -1,0 +1,8 @@
+# Apps for the desktop only, in the format of apps.txt.
+#
+# check  fedora  arch
+
+# media server; jellyfin.service runs it at http://localhost:8096
+jellyfin
+  dnf:jellyfin
+  pacman:jellyfin-server,jellyfin-web
