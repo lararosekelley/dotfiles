@@ -256,8 +256,13 @@ bindsym --locked XF86AudioStop exec playerctl stop
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
-# take a screenshot with grim
-bindsym Print exec grim
+# screenshots, saved to ~/Pictures/Screenshots and copied (script in ~/.bin):
+# a dragged region, the focused output, a clicked window, or a region to
+# annotate in swappy first
+bindsym Print exec screenshot region
+bindsym Shift+Print exec screenshot output
+bindsym $mod+Print exec screenshot window
+bindsym $mod+Shift+Print exec screenshot region --edit
 
 # windows
 # --------

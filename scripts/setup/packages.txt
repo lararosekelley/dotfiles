@@ -64,6 +64,9 @@ kanshi                    kanshi                    kanshi
 wl-mirror                 wl-mirror                 wl-mirror
 gammastep                 gammastep                 gammastep
 grim                      grim                      grim
+slurp                     slurp                     slurp
+swappy                    swappy                    swappy
+notify-send               libnotify                 libnotify
 brightnessctl             brightnessctl             brightnessctl
 cliphist                  cliphist                  cliphist
 rofimoji                  rofimoji                  rofimoji

@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+# Take a screenshot under sway: a dragged region, a clicked window, the focused
+# output, or every output. It's saved to ~/Pictures/Screenshots and copied to
+# the clipboard; --edit opens it in swappy first, to annotate.
+#
+# Usage: screenshot [region|window|output|all] [--edit]
+
+set -uo pipefail
+
+mode=region
+edit=false
+for arg in "$@"; do
+  case "$arg" in
+    region | window | output | all) mode=$arg ;;
+    --edit) edit=true ;;
+    -h | --help)
+      echo "usage: screenshot [region|window|output|all] [--edit]"
+      exit 0
+      ;;
+    *)
+      echo "unknown argument: $arg" >&2
+      exit 2
+      ;;
+  esac
+done
+
+pictures=$(xdg-user-dir PICTURES 2> /dev/null) || pictures="$HOME/Pictures"
+dir="$pictures/Screenshots"
+mkdir -p "$dir"
+file="$dir/$(date +%Y-%m-%d_%H-%M-%S).png"
+
+# slurp exits non-zero when the selection is cancelled with Escape
+case "$mode" in
+  region)
+    geometry=$(slurp -d) || exit 0
+    grim -g "$geometry" "$file"
+    ;;
+  window)
+    geometry=$(swaymsg -t get_tree \
+      | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' \
+      | slurp -r) || exit 0
+    grim -g "$geometry" "$file"
+    ;;
+  output)
+    grim -o "$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')" "$file"
+    ;;
+  all)
+    grim "$file"
+    ;;
+esac || exit 1
+
+if $edit; then
+  swappy -f "$file" -o "$file"
+fi
+wl-copy --type image/png < "$file"
+notify-send -i "$file" "Screenshot saved" "$file"
