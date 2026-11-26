@@ -9,7 +9,7 @@ set -uo pipefail
 
 makoctl mode -t do-not-disturb > /dev/null
 if makoctl mode | grep -qx do-not-disturb; then
-  notify-send -u critical "Do not disturb" "Only critical notifications will show"
+  notify-send -u critical -t 3000 "Do not disturb" "Only critical notifications will show"
 else
-  notify-send "Notifications on"
+  notify-send -t 3000 "Notifications on"
 fi
