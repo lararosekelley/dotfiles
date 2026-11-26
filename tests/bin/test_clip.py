@@ -66,6 +66,7 @@ class ClipTest(unittest.TestCase):
             "date",
             "sleep",
             "cp",
+            "chmod",
             "sh",
         ):
             (system / command).symlink_to(shutil.which(command))
@@ -153,6 +154,16 @@ esac""",
         self.assertEqual(list(self.inbox.iterdir()), [])
         self.assertIn("display=wayland-9", self.log.read_text())
         self.assertIn("Clipboard from desktop", self.calls("notify-send")[0])
+
+    def test_receive_waits_for_files_in_a_private_folder_on_disk(self):
+        env = {"PATH": self.path, "HOME": str(self.home), "XDG_RUNTIME_DIR": "/run/x"}
+        subprocess.run(
+            [str(BIN / "executable_clip-receive"), "--once"], env=env, check=False
+        )
+        (get,) = self.calls("tailscale file get")
+        inbox = self.home / ".cache/clip-receive"
+        self.assertTrue(get.endswith(str(inbox)), get)
+        self.assertEqual(inbox.stat().st_mode & 0o777, 0o700)
 
     def test_receive_moves_other_files_to_downloads_without_overwriting(self):
         downloads = self.home / "Downloads"
