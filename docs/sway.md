@@ -44,14 +44,9 @@ bar {
 }
 ```
 
-This should replace whatever was originally in the `bar {}` block. Hit `Mod-Shift-C` to reload Sway with Waybar in place of the original! Now, create a local config:
+This should replace whatever was originally in the `bar {}` block. Hit `Mod-Shift-C` to reload Sway with Waybar in place of the original!
 
-```bash
-mkdir -p ~/.config/waybar
-cp /etc/xdg/waybar/* ~/.config/waybar
-```
-
-And get to customizing. Like with Sway, `Mod-Shift-C` will also reload Waybar for you as config changes are saved.
+The repo tracks a minimal `~/.config/waybar/config.jsonc`: workspaces and mode on the left, the focused window in the middle, and audio, network, battery, clock, and tray on the right. There is no `style.css`, so waybar falls back to its default in `/etc/xdg/waybar`. Like with Sway, `Mod-Shift-C` will also reload Waybar for you as config changes are saved.
 
 ## Audio
 
