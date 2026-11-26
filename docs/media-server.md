@@ -45,7 +45,7 @@ cliamp plays the music library through its `[jellyfin]` provider, set in
 and put it in `~/.environment`, which is not synced:
 
 ```bash
-JELLYFIN_TOKEN=...
+JELLYFIN_API_KEY=...
 ```
 
 ## Backups
