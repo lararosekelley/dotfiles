@@ -1,0 +1,93 @@
+# Desktop apps from outside the distro's own repos, for scripts/setup/apps, on
+# every machine. apps-<machine>.txt adds apps for one machine, as chosen at
+# `chezmoi init`, in the same format.
+#
+# Columns: what to check, then how to install it on Fedora and on Arch. What to
+# check is a command or a path (/...); several, comma separated, mean any one
+# of them will do. A route is one of:
+#
+#   dnf:PKG,...             Fedora packages, from repos already set up
+#   rpm:URL,...             RPMs to download and install ({fedora} is the release)
+#   repo:PKG,...@REPOFILE   add a repo (a URL, or a file in this checkout), then
+#                           install its packages
+#   json:URL@FILTER         the RPM whose URL the jq FILTER picks from URL's JSON
+#   pacman:PKG,...          Arch packages
+#   aur:PKG,...             AUR packages, built with paru
+#   none                    nothing to install on this distro
+#   -                       no route on this distro; install it by hand
+#
+# check  fedora  arch
+
+# RPM Fusion, for Steam
+/usr/share/dnf5/repos.d/rpmfusion-nonfree.repo,/etc/yum.repos.d/rpmfusion-nonfree.repo
+  rpm:https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{fedora}.noarch.rpm,https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{fedora}.noarch.rpm
+  none
+
+google-chrome
+  rpm:https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+  aur:google-chrome
+
+steam
+  dnf:steam
+  pacman:steam
+
+docker
+  repo:docker-ce,docker-ce-cli,containerd.io,docker-buildx-plugin,docker-compose-plugin@https://download.docker.com/linux/fedora/docker-ce.repo
+  pacman:docker,docker-buildx,docker-compose
+
+/opt/docker-desktop
+  rpm:https://desktop.docker.com/linux/main/amd64/docker-desktop-x86_64.rpm
+  aur:docker-desktop
+
+dropbox
+  repo:nautilus-dropbox@system/yum.repos.d/dropbox.repo
+  aur:dropbox
+
+/opt/tableplus
+  repo:tableplus@https://yum.tableplus.com/rpm/x86_64/tableplus.repo
+  aur:tableplus
+
+protonvpn-app
+  repo:proton-vpn-gnome-desktop@system/yum.repos.d/protonvpn-stable.repo
+  pacman:proton-vpn-gtk-app
+
+proton-pass
+  rpm:https://proton.me/download/PassDesktop/linux/x64/ProtonPass.rpm
+  aur:proton-pass-bin
+
+proton-authenticator
+  rpm:https://proton.me/download/authenticator/linux/ProtonAuthenticator.rpm
+  aur:proton-authenticator-bin
+
+protonmail-bridge
+  json:https://proton.me/download/bridge/version_linux.json@.stable.Installers[]|select(endswith(".rpm"))
+  pacman:protonmail-bridge
+
+zoom
+  rpm:https://zoom.us/client/latest/zoom_x86_64.rpm
+  aur:zoom
+
+balena-etcher
+  json:https://api.github.com/repos/balena-io/etcher/releases/latest@.assets[].browser_download_url|select(endswith(".x86_64.rpm"))
+  aur:balena-etcher
+
+muse-sounds-manager
+  rpm:https://muse-cdn.com/Muse_Sounds_Manager_x64.rpm
+  aur:muse-sounds-manager-bin
+
+gcloud
+  repo:google-cloud-cli@system/yum.repos.d/google-cloud-cli.repo
+  pacman:google-cloud-cli
+
+session-manager-plugin
+  rpm:https://s3.amazonaws.com/session-manager-downloads/plugin/latest/linux_64bit/session-manager-plugin.rpm
+  aur:aws-session-manager-plugin
+
+lazygit
+  dnf:lazygit
+  pacman:lazygit
+
+# sfizz's Fedora builds live in an openSUSE Build Service home project
+sfizz_jack
+  -
+  pacman:sfizz

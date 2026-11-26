@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Install the desktop apps from outside the distro's own repos. chezmoi reruns
+# this whenever the script, its list, or its helpers change:
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/apps") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/apps.txt") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/apps-desktop.txt") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/lib.sh") | sha256sum }}
+SETUP_MACHINE={{ get . "machine" | quote }} exec {{ joinPath .chezmoi.workingTree "scripts/setup/apps" | quote }}

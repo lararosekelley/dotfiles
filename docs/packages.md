@@ -24,6 +24,14 @@ both; see
 Most CLI tools and desktop apps come from Fedora and RPM Fusion. `dnf history list`
 shows what was installed explicitly, as opposed to pulled in as a dependency.
 
+The apps from outside the distro's own repos are listed in
+[`scripts/setup/apps.txt`](../scripts/setup/apps.txt), with their Fedora and Arch
+sources, plus [`apps-desktop.txt`](../scripts/setup/apps-desktop.txt) (Jellyfin) for
+the desktop only. `chezmoi apply` installs whatever is missing through
+`scripts/setup/apps`, asking first; on Arch it builds AUR packages with paru.
+Callie and Jot are left out, as is everything machine-specific below
+(NVIDIA, akmods, `ueberzugpp`).
+
 Third-party repos in use:
 
 | repo                      | provides                      |
@@ -42,7 +50,7 @@ Third-party repos in use:
 Some RPMs are installed from a downloaded file and have no repo, so `dnf upgrade`
 never updates them. Download the new RPM and `dnf install ./file.rpm` it:
 
-- Zoom, Proton Pass, Proton Mail Bridge, Plex Media Server
+- Zoom, Proton Pass, Proton Mail Bridge
 - Docker Desktop, GitKraken, balenaEtcher, AppImageLauncher
 - Muse Sounds Manager, sfizz, AWS `session-manager-plugin`
 
