@@ -127,6 +127,9 @@ bindsym $mod+period exec rofimoji
 # toggle do-not-disturb for notifications (script in ~/.bin)
 bindsym $mod+n exec dnd
 
+# toggle the night light, which the session starts at login (script in ~/.bin)
+bindsym $mod+Shift+n exec night-light toggle
+
 # open terminal
 bindsym $mod+Return exec $term
 
@@ -298,6 +301,9 @@ for_window [window_role="dialog"] floating enable
 for_window [window_type="dialog"] floating enable
 for_window [title="^(Open|Save)( (File|Files|Folder|As))?$"] floating enable
 for_window [app_id="pavucontrol"] floating enable
+
+# the night light's config, opened from waybar, floats
+for_window [app_id="night-light-config"] floating enable, resize set 900 500, move position center
 
 # don't lock or blank the screen while a window is fullscreen, such as a video
 for_window [app_id=".*"] inhibit_idle fullscreen

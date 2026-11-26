@@ -14,6 +14,18 @@ exec /usr/libexec/kf6/polkit-kde-authentication-agent-1
 exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 {{- end }}
 
+# dark mode, for GTK apps and, through the portal, Flatpaks and browsers.
+# Plasma themes GTK apps itself on KDE machines; elsewhere, use Adwaita's dark
+# variant for GTK 3 apps, which ignore color-scheme.
+exec gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+{{- if not .kde }}
+exec gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+{{- end }}
+
+# night light, on from login: ~/.config/gammastep/config.ini sets it up, and
+# night-light in ~/.bin toggles it
+exec gammastep
+
 # the desktop's autostart apps, such as Dropbox and KDE Connect
 {{- if $fedora }}
 exec dex-autostart --autostart --environment sway

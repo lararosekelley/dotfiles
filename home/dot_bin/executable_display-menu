@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Display menu for sway, picked with rofi: kanshi layouts, mirroring the
-# focused screen for presentations, and a night-light toggle
+# focused screen for presentations, and a night-light toggle (~/.bin/night-light)
 #
 # Usage: display-menu
 
@@ -33,10 +33,7 @@ case "$choice" in
     output=$(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')
     wl-mirror "$output" &
     ;;
-  "night light: on")
-    gammastep &
-    ;;
-  "night light: off")
-    pkill -x gammastep
+  "night light: on" | "night light: off")
+    night-light toggle
     ;;
 esac
