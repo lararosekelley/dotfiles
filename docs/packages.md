@@ -14,8 +14,9 @@ Config in `home/` depends on the packages in
 [`scripts/setup/packages.txt`](../scripts/setup/packages.txt), which gives each
 one's Fedora and Arch name, or a fallback such as `pipx install` where a distro
 has none. `chezmoi apply` installs whatever is missing through
-`scripts/setup/packages`, asking first. The Nunito font on Arch is the one
-package left to install by hand. pyenv, nodenv, and rbenv are git checkouts on
+`scripts/setup/packages`, asking first. On Arch it installs with
+`pacman -Syu`, which also brings the system up to date. Two fonts are left to
+install by hand: Nunito on Arch, and IosevkaTerm Nerd Font on Fedora. pyenv, nodenv, and rbenv are git checkouts on
 both; see
 [New machine](./new-machine.md).
 
