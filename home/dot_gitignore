@@ -53,3 +53,7 @@ Temporary Items
 # End of https://www.toptal.com/developers/gitignore/api/linux
 
 **/.claude/settings.local.json
+
+# rust-analyzer's check output, which it writes in whatever folder an editor or
+# agent starts it in, Rust project or not
+target/rust-analyzer/
