@@ -111,6 +111,9 @@ bindsym $mod+o exec $menu
 # power menu: lock, log out, suspend, reboot, or shut down (script in ~/.bin)
 bindsym $mod+Escape exec power-menu
 
+# list every key binding, read from this config (script in ~/.bin)
+bindsym $mod+slash exec sway-keys
+
 # clipboard history, recorded by cliphist as things are copied
 exec wl-paste --watch cliphist store
 bindsym $mod+v exec cliphist list | rofi -dmenu -p clipboard | cliphist decode | wl-copy
@@ -232,13 +235,13 @@ mode "resize" {
     bindsym $up resize shrink height 10px
     bindsym $right resize grow width 10px
 
-    # Ditto, with arrow keys
+    # resize a window with the arrow keys
     bindsym Left resize shrink width 10px
     bindsym Down resize grow height 10px
     bindsym Up resize shrink height 10px
     bindsym Right resize grow width 10px
 
-    # Return to default mode
+    # leave resize mode
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
@@ -265,12 +268,18 @@ bindsym --locked XF86AudioStop exec playerctl stop
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
-# screenshots, saved to ~/Pictures/Screenshots and copied (script in ~/.bin):
-# a dragged region, the focused output, a clicked window, or a region to
-# annotate in swappy first
+# screenshots, saved to ~/Pictures/Screenshots and copied (script in ~/.bin)
+
+# screenshot a dragged region
 bindsym Print exec screenshot region
+
+# screenshot the focused display
 bindsym Shift+Print exec screenshot output
+
+# screenshot a clicked window
 bindsym $mod+Print exec screenshot window
+
+# screenshot a dragged region and annotate it in swappy
 bindsym $mod+Shift+Print exec screenshot region --edit
 
 # windows
@@ -295,7 +304,7 @@ for_window [class=".*"] inhibit_idle fullscreen
 # per machine, in machine.conf
 for_window [app_id="sway-config"] floating enable, resize set 800 600, move position center
 
-# toggle network (script in ~/.bin, must be on PATH and executable)
+# airplane mode: turn every radio off, or all back on (script in ~/.bin)
 bindsym --locked XF86RFKill exec airplane
 
 # control various display settings: bound per machine, in machine.conf, since

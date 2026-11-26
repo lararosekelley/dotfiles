@@ -6,8 +6,8 @@
 # built-in display
 output eDP-1 resolution 2880x1920 position 0 0 scale 2
 
-# F9, the display key, sends $mod+p on Framework laptops
-# requires ~/.bin/display-menu to be on PATH and executable
+# display menu: layouts, mirroring, and night light (script in ~/.bin), on F9,
+# the display key, which sends $mod+p on Framework laptops
 bindsym $mod+p exec display-menu
 
 # open sway config file in neovim floating window
