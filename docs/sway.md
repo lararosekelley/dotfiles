@@ -119,7 +119,7 @@ bar {
 
 This should replace whatever was originally in the `bar {}` block. Hit `Mod-Shift-C` to reload Sway with Waybar in place of the original!
 
-The repo tracks `~/.config/waybar/config.jsonc` and a Callie `style.css`: workspaces, mode, and scratchpad on the left; the clock in the middle, with a calendar on hover; and on the right the night light (a moon when on; click to toggle, right-click to configure), an idle toggle (stay awake while the eye is open), volume (click to mute), network, CPU, memory, brightness (scroll to change), battery, and the tray. Each module is a rounded, bordered pill on a 34px bar. Brightness and battery hide themselves where there is no backlight or battery, and the battery turns yellow below 30% and red below 15%. The bar uses IosevkaTerm Nerd Font's Propo variant, whose icons are sized to sit beside text.
+The repo tracks `~/.config/waybar/config.jsonc` and a Callie `style.css`: the tray (apps' status icons, such as Dropbox), then workspaces, mode, and scratchpad on the left; the clock in the middle, with a calendar on hover; and on the right do-not-disturb and the notification bell (see [Notifications](#notifications)), the night light (a moon when on; click to toggle, right-click to configure), an idle toggle (stay awake while the eye is open), volume (click to mute), network, CPU, memory, brightness (scroll to change), and battery. Each module is a rounded, bordered pill on a 34px bar. Brightness and battery hide themselves where there is no backlight or battery, and the battery turns yellow below 30% and red below 15%. The bar uses IosevkaTerm Nerd Font's Propo variant, whose icons are sized to sit beside text.
 
 Waybar reapplies `style.css` as soon as it changes; `Mod-Shift-C` reloads the rest.
 
@@ -147,7 +147,7 @@ mako only starts in a sway session: a drop-in, `~/.config/systemd/user/mako.serv
 
 `$mod+n` runs `dnd`, which toggles do-not-disturb: everything but critical notifications is hidden until it's toggled off.
 
-The bell in waybar opens the notification history, as does `$mod+Ctrl+n`: `notifications` in `~/.bin` lists what's showing and then the last 50 dismissed, newest first, in rofi, and Enter copies one's text. A right-click on the bell toggles do-not-disturb, and the bell is slashed while it's on.
+The bell in waybar opens the notification history, as does `$mod+Ctrl+n`: `notifications` in `~/.bin` lists what's showing and then the last 50 dismissed, newest first, in rofi, and Enter copies one's text. Beside it, the do-not-disturb pill shows a hollow circle while notifications show and a filled yellow one during do-not-disturb; a click toggles it, like `$mod+n`.
 
 ## Application launcher
 

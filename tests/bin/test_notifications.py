@@ -68,12 +68,23 @@ esac""",
         )
         self.assertEqual((self.tmp / "copied").read_text(), "New message\ntwo\nlines\n")
 
-    def test_status_shows_the_count_and_the_mode(self):
+    def test_status_shows_the_count(self):
         status = json.loads(self.run_script("status").stdout)
-        self.assertEqual(status["class"], "normal")
         self.assertIn("3 notifications", status["tooltip"])
+
+    def test_the_dnd_pill_follows_the_mode(self):
+        dnd = REPO / "home/dot_bin/executable_dnd"
+        run = lambda: json.loads(  # noqa: E731
+            subprocess.run(
+                [str(dnd), "status"],
+                env={"PATH": self.path},
+                capture_output=True,
+                text=True,
+            ).stdout
+        )
+        self.assertEqual(run()["class"], "off")
         (self.tmp / "mode").write_text("default\ndo-not-disturb\n")
-        self.assertEqual(json.loads(self.run_script("status").stdout)["class"], "dnd")
+        self.assertEqual(run()["class"], "on")
 
     def test_unreadable_output_counts_as_no_notifications(self):
         (self.tmp / "list.json").write_text("Notification 1: Hi\n  App name: x\n")

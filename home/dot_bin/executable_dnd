@@ -3,14 +3,27 @@
 # Toggle do-not-disturb in mako, which hides every notification but critical
 # ones (see ~/.config/mako/config), and say which way it went
 #
-# Usage: dnd
+# Usage: dnd [status]
+#
+#   status  print waybar's JSON for the do-not-disturb pill
 
 set -uo pipefail
 
+on() { makoctl mode 2> /dev/null | grep -qx do-not-disturb; }
+
+if [ "${1:-}" = status ]; then
+  if on; then
+    printf '{"text": "󰍶", "class": "on", "tooltip": "Do not disturb is on: only critical notifications show. Click to turn off"}\n'
+  else
+    printf '{"text": "󰍷", "class": "off", "tooltip": "Do not disturb is off. Click to turn on"}\n'
+  fi
+  exit 0
+fi
+
 makoctl mode -t do-not-disturb > /dev/null
-# waybar's notifications bell shows the mode; this updates it now
+# waybar's do-not-disturb pill shows the mode; this updates it now
 pkill -RTMIN+9 -x waybar
-if makoctl mode | grep -qx do-not-disturb; then
+if on; then
   notify-send -u critical -t 3000 "Do not disturb" "Only critical notifications will show"
 else
   notify-send -t 3000 "Notifications on"
