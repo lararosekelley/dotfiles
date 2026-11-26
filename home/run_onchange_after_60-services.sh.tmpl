@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Enable the systemd units the dotfiles set up. chezmoi reruns this whenever the
+# script, its list, or its helpers change:
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/services") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/services.txt") | sha256sum }}
+# {{ include (joinPath .chezmoi.workingTree "scripts/setup/lib.sh") | sha256sum }}
+SETUP_MACHINE={{ get . "machine" | quote }} exec {{ joinPath .chezmoi.workingTree "scripts/setup/services" | quote }}

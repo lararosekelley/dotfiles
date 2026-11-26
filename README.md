@@ -102,6 +102,7 @@ Setup and management notes for this machine and its devices live in [`docs/`](./
 - [Sway](./docs/sway.md) - the desktop on the Arch laptop
 - [Kubernetes](./docs/kubernetes.md) - cluster tools, remote clusters over Tailscale, and a local k3d cluster
 - [Background services](./docs/background-services.md) - user systemd units
+- [Media server](./docs/media-server.md) - Jellyfin on the desktop, its media folders, and cliamp
 - [Desktop preferences](./docs/desktop-preferences.md) - KDE theme, widgets, panels, and private hardware-specific configuration
 - [Audio plugins and OBS](./docs/audio-and-obs.md)
 - [RGB lighting](./docs/rgb-lighting.md) - OpenRGB profiles and services

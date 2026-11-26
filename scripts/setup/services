@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+#
+# Enable and start the systemd units in services.txt that are installed but
+# not yet enabled. User units need nothing more; system units need sudo, so
+# they are only enabled after asking (or with --yes). A unit whose program
+# isn't installed, or that is for another machine, is skipped.
+#
+# chezmoi runs this on apply (see home/run_onchange_after_60-services.sh.tmpl);
+# it is also safe to run by hand.
+#
+# Usage: scripts/setup/services [--yes] [--dry-run]
+#
+# SETUP_SERVICES points at another list, for tests.
+
+set -uo pipefail
+
+here=$(dirname "$0")
+# shellcheck source=scripts/setup/lib.sh
+. "$here/lib.sh"
+
+usage() { echo "usage: scripts/setup/services [--yes] [--dry-run]"; }
+
+parse_args "$@"
+
+present() {
+  case "$1" in
+    \~/*) [ -e "$HOME/${1#\~/}" ] ;;
+    /*) [ -e "$1" ] ;;
+    *) command -v "$1" > /dev/null 2>&1 ;;
+  esac
+}
+
+machine=$(detect_machine)
+user_units=()
+system_units=()
+
+while read -r scope unit needs for; do
+  case "$scope" in "" | "#"*) continue ;; esac
+  [ "$for" = - ] || [ "$for" = "$machine" ] || continue
+  if ! present "$needs"; then
+    warn "$unit: $needs is not installed; skipped"
+    continue
+  fi
+  case "$scope" in
+    user)
+      if systemctl --user is-enabled --quiet "$unit" 2> /dev/null; then
+        say "enabled: $unit"
+      else
+        user_units+=("$unit")
+      fi
+      ;;
+    system)
+      if systemctl is-enabled --quiet "$unit" 2> /dev/null; then
+        say "enabled: $unit"
+      else
+        system_units+=("$unit")
+      fi
+      ;;
+    *) warn "$unit: unknown scope $scope; skipped" ;;
+  esac
+done < "${SETUP_SERVICES:-$here/services.txt}"
+
+if [ ${#user_units[@]} -gt 0 ]; then
+  if systemctl --user show-environment > /dev/null 2>&1; then
+    # chezmoi may have just installed the unit files
+    run systemctl --user daemon-reload \
+      && run systemctl --user enable --now "${user_units[@]}"
+  else
+    warn "no systemd user session; enable these by hand: ${user_units[*]}"
+  fi
+fi
+
+if [ ${#system_units[@]} -gt 0 ]; then
+  if confirm "Enable and start ${system_units[*]} with sudo?"; then
+    run sudo systemctl enable --now "${system_units[@]}"
+  else
+    warn "not enabled (no terminal, or declined): ${system_units[*]}"
+  fi
+fi
+
+finish
