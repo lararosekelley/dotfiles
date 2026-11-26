@@ -1,7 +1,9 @@
 # Background services
 
-`~/.config/systemd/user` holds the user units, which installing them does not
-turn on:
+`~/.config/systemd/user` holds the user units. `chezmoi apply` enables and
+starts them, and `jellyfin.service` on the desktop (see
+[Media server](./media-server.md)), through `scripts/setup/services`, which
+skips a unit whose program isn't installed yet. To enable them by hand:
 
 | unit                                  | what it does                           |
 | ------------------------------------- | -------------------------------------- |

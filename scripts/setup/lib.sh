@@ -77,6 +77,16 @@ detect_distro() {
   esac
 }
 
+# The machine chosen at `chezmoi init` (framework, thinkpad, desktop), or empty.
+# chezmoi's wrappers pass it as SETUP_MACHINE; by hand it comes from chezmoi.
+detect_machine() {
+  if [ -n "${SETUP_MACHINE+set}" ]; then
+    printf '%s\n' "$SETUP_MACHINE"
+  else
+    chezmoi execute-template '{{ get . "machine" }}' 2> /dev/null
+  fi
+}
+
 # github.com/owner/repo, whichever of https://, git@...:, or .git it is written with
 normalize_remote() {
   local url=${1%.git}

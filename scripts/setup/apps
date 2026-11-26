@@ -10,7 +10,6 @@
 #
 # Usage: scripts/setup/apps [--yes] [--dry-run]
 #
-# SETUP_MACHINE names the machine; by hand, it comes from chezmoi's data.
 # SETUP_APPS points at another list, for tests.
 
 set -uo pipefail
@@ -107,7 +106,7 @@ fi
 
 list=${SETUP_APPS:-$here/apps.txt}
 lists=("$list")
-machine=${SETUP_MACHINE-$(chezmoi execute-template '{{ get . "machine" }}' 2> /dev/null)}
+machine=$(detect_machine)
 machine_list="$(dirname "$list")/apps-$machine.txt"
 [ -n "$machine" ] && [ -f "$machine_list" ] && lists+=("$machine_list")
 
