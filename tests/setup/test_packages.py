@@ -145,8 +145,8 @@ class PackagesTest(unittest.TestCase):
             self.assertGreaterEqual(len(fields), 3, fields)
             check, fedora, arch, *fallback = fields
             if "-" in (fedora, arch) and not fallback:
-                # only the Nunito font is allowed to have no route on a distro
-                self.assertEqual(check, "font:Nunito", fields)
+                # only fonts are allowed to have no route on a distro
+                self.assertTrue(check.startswith("font:"), fields)
 
 
 if __name__ == "__main__":

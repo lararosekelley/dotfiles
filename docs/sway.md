@@ -25,7 +25,15 @@ block for a device that isn't connected is ignored.
 
 ### Wallpaper
 
+### Look
+
+Windows have 2px borders and 6px gaps, both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons.
+
+Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a video, keeps the screen from locking or blanking.
+
 ### Keybindings
+
+`$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display.
 
 Two scripts in `~/.bin` back the hardware keys:
 
