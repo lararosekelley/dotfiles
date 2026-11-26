@@ -28,7 +28,7 @@ block for a device that isn't connected is ignored.
 Two scripts in `~/.bin` back the hardware keys:
 
 - `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all.
-- `display-menu`, on F9 on the Framework (it sends `$mod+p`): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. It needs `rofi`, `kanshi`, `wl-mirror`, `gammastep`, and `jq`.
+- `display-menu`, on F9 on the Framework (it sends `$mod+p`): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. Its tools come from [`scripts/setup/packages.txt`](../scripts/setup/packages.txt), with the rest of sway's.
 
 ### Auto-start programs
 

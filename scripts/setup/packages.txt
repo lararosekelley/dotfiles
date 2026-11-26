@@ -52,6 +52,23 @@ kubectl                   kubernetes1.34-client     kubectl
 helm                      helm                      helm
 az                        azure-cli                 azure-cli
 
+# sway, and what its config and the ~/.bin scripts it binds call
+sway                      sway                      sway
+swaybg                    swaybg                    swaybg
+swayidle                  swayidle                  swayidle
+swaylock                  swaylock                  swaylock
+waybar                    waybar                    waybar
+rofi                      rofi                      rofi
+mako                      mako                      mako
+kanshi                    kanshi                    kanshi
+wl-mirror                 wl-mirror                 wl-mirror
+gammastep                 gammastep                 gammastep
+grim                      grim                      grim
+brightnessctl             brightnessctl             brightnessctl
+playerctl                 playerctl                 playerctl
+pactl                     pulseaudio-utils          libpulse
+/usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png  sway-wallpapers  sway
+
 # desktop apps; Flatpaks have their own setup script
 obs                       obs-studio                obs-studio
 flatpak                   flatpak                   flatpak
