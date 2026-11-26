@@ -1,0 +1,7 @@
+# CachyOS copies its welcome screen's autostart entry into new homes; Hidden
+# keeps it from opening at every login.
+[Desktop Entry]
+Type=Application
+Name=CachyOS Hello
+Exec=/usr/bin/cachyos-hello
+Hidden=true

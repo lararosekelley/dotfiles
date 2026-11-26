@@ -36,3 +36,7 @@ exec dex-autostart --autostart --environment sway
 {{- else }}
 exec dex --autostart --environment sway
 {{- end }}
+
+# recoll's indexer, which waits for a graphical session target sway doesn't
+# start
+exec systemctl --user start recollindex.service

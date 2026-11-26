@@ -22,9 +22,8 @@ systemctl --user enable --now recollindex.service
 
 recoll ships `recollindex.service` on both Fedora and Arch, as
 `WantedBy=graphical-session.target`. KDE Plasma starts that target; sway does
-not, so under sway the indexer never starts on its own. Start sway through
-something that runs the session target, such as uwsm, or start the indexer from
-the sway config with `exec systemctl --user start recollindex.service`.
+not, so the sway session config starts the indexer itself with
+`exec systemctl --user start recollindex.service`.
 
 `navi.service` reads its tokens from `~/.config/navi/navi.env`, which is not
 synced. Create it by hand (`chmod 600`) with one `KEY=value` per line for the

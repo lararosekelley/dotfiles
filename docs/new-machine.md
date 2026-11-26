@@ -145,9 +145,7 @@ auth  sufficient  pam_fprintd.so
 
 Add it to those files rather than `system-auth`, which every service shares.
 
-On an Arch laptop, see [Sway](./sway.md) for the desktop. recoll's indexer
-waits for a graphical session target that sway doesn't start; see
-[Background services](./background-services.md) for starting it.
+On an Arch laptop, see [Sway](./sway.md) for the desktop.
 
 ## 4. Neovim
 
