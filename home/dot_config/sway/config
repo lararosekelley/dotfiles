@@ -257,7 +257,7 @@ for_window [window_role="pop-up"] floating enable
 for_window [window_role="bubble"] floating enable
 for_window [window_role="dialog"] floating enable
 for_window [window_type="dialog"] floating enable
-for_window [title="^(Open|Save)( (File|Files|Folder|As))?"] floating enable
+for_window [title="^(Open|Save)( (File|Files|Folder|As))?$"] floating enable
 for_window [app_id="pavucontrol"] floating enable
 
 # don't lock or blank the screen while a window is fullscreen, such as a video
