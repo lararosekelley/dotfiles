@@ -23,9 +23,8 @@ exec gsettings set org.gnome.desktop.interface color-scheme prefer-dark
 exec gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 {{- end }}
 
-# night light, on from login: ~/.config/gammastep/config.ini sets it up, and
-# night-light in ~/.bin toggles it
-exec gammastep
+# night light, back on at login if it was on before (script in ~/.bin)
+exec night-light restore
 
 # the startup windows (script in ~/.bin), laid out for the ultrawide on the
 # desktop

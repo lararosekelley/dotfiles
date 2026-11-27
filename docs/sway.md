@@ -57,13 +57,14 @@ When sway is the whole session, `session.conf` sets GTK's `color-scheme` to
 browsers. On machines without KDE, it also sets the GTK 3 theme to Adwaita's
 dark variant; on KDE machines Plasma themes GTK apps itself.
 
-The night light, [gammastep](https://gitlab.com/chinstrap/gammastep), starts at
-login. `~/.config/gammastep/config.ini` sets it to warm the screen to 3600K
-between dusk (19:00 to 20:30) and dawn (06:30 to 07:30), fading in and out,
-with fixed times rather than a location. `night-light` in `~/.bin` controls it:
-the moon or sun in waybar shows whether it's on, a click toggles it, and a
-right-click opens the config and restarts it with any changes. `$mod+Shift+n`
-also toggles it, as does the display menu.
+The night light, [gammastep](https://gitlab.com/chinstrap/gammastep), warms the
+screen to 3600K (`temp-night` in `~/.config/gammastep/config.ini`) while it's
+on. `night-light` in `~/.bin` controls it: the moon or sun in waybar shows
+whether it's on, a click toggles it, and a right-click opens the config and
+applies any changes. `$mod+Shift+n` also toggles it, as does the display menu.
+It remembers whether it was on, and login puts it back that way. A display with
+adaptive sync (VRR) on can't change its colors, so the night light turns
+adaptive sync off on those displays while it's on, and back on afterwards.
 
 ### Sway on the desktop
 

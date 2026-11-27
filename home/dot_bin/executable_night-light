@@ -1,25 +1,62 @@
 #!/usr/bin/env bash
 
-# Night light for sway, run by gammastep with ~/.config/gammastep/config.ini.
+# Night light for sway: on warms the screen now, to temp-night from
+# ~/.config/gammastep/config.ini, and off returns it to normal. It remembers
+# which it was, and the sway session puts it back that way at login.
 #
-# Usage: night-light [toggle|status|configure]
+# A display with adaptive sync (VRR) on can't change its colors, so turning the
+# night light on turns adaptive sync off on those displays, and turning it off
+# turns it back on.
+#
+# Usage: night-light [toggle|on|off|restore|status|configure]
 #
 #   toggle     turn it on or off (the default)
+#   restore    turn it on if it was on last time (the session runs this)
 #   status     print waybar's JSON for the night-light module
-#   configure  edit the config in a terminal, then restart gammastep with it
+#   configure  edit the config in a terminal, then apply it
 
 set -uo pipefail
 
 config="${XDG_CONFIG_HOME:-$HOME/.config}/gammastep/config.ini"
+state_dir="${XDG_STATE_HOME:-$HOME/.local/state}/night-light"
+state="$state_dir/state"
+vrr="$state_dir/adaptive-sync-outputs"
 
 running() { pgrep -x gammastep > /dev/null; }
 
-start() { setsid -f gammastep > /dev/null 2>&1; }
+warm() {
+  local temp
+  temp=$(sed -n 's/^[[:space:]]*temp-night[[:space:]]*=[[:space:]]*\([0-9]*\).*/\1/p' \
+    "$config" 2> /dev/null | tail -n 1)
+  echo "${temp:-3600}"
+}
+
+remember() {
+  mkdir -p "$state_dir"
+  echo "$1" > "$state"
+}
+
+start() {
+  mkdir -p "$state_dir"
+  # adaptive sync blocks the color change, so note which displays had it
+  swaymsg -t get_outputs \
+    | jq -r '.[] | select(.adaptive_sync_status == "enabled") | .name' > "$vrr"
+  while read -r output; do
+    swaymsg -q output "$output" adaptive_sync off
+  done < "$vrr"
+  setsid -f gammastep -O "$(warm)" > /dev/null 2>&1
+}
 
 stop() {
   pkill -x gammastep
   # let it fade the screen back before anything starts it again
   while running; do sleep 0.1; done
+  if [ -f "$vrr" ]; then
+    while read -r output; do
+      swaymsg -q output "$output" adaptive_sync on
+    done < "$vrr"
+    rm -f "$vrr"
+  fi
 }
 
 # waybar's night-light module updates on this signal (see its config)
@@ -27,29 +64,48 @@ refresh_bar() { pkill -RTMIN+8 -x waybar; }
 
 case "${1:-toggle}" in
   toggle)
-    if running; then stop; else start; fi
+    if running; then
+      stop
+      remember off
+    else
+      start
+      remember on
+    fi
     refresh_bar
+    ;;
+  on)
+    running || start
+    remember on
+    refresh_bar
+    ;;
+  off)
+    stop
+    remember off
+    refresh_bar
+    ;;
+  restore)
+    [ "$(cat "$state" 2> /dev/null)" = on ] && ! running && start
+    refresh_bar
+    exit 0
     ;;
   status)
     if running; then
-      printf '{"text": "󰖔", "class": "on", "tooltip": "Night light on: click to turn off, right-click to configure"}\n'
+      printf '{"text": "󰖔", "class": "on", "tooltip": "Night light on (%sK): click to turn off, right-click to configure"}\n' "$(warm)"
     else
       printf '{"text": "󰖙", "class": "off", "tooltip": "Night light off: click to turn on, right-click to configure"}\n'
     fi
     ;;
   configure)
-    was_running=false
-    running && was_running=true
     kitty --class night-light-config "${EDITOR:-nvim}" "$config"
-    if $was_running; then
+    if running; then
       stop
       start
     fi
     refresh_bar
     ;;
-  -h | --help) sed -n '5,9p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h | --help) sed -n '11,16p' "$0" | sed 's/^# \{0,1\}//' ;;
   *)
-    echo "usage: night-light [toggle|status|configure]" >&2
+    echo "usage: night-light [toggle|on|off|restore|status|configure]" >&2
     exit 2
     ;;
 esac
