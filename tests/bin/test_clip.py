@@ -211,10 +211,11 @@ esac""",
         )
         self.stub("clip-send", f'cat > "{self.tmp}/sent-from-menu"')
         # clip-send has to be told to read the entry from stdin
-        self.stub("rofi", 'echo "1\tsecret"')
+        # rofi reads all its input, or cliphist dies of SIGPIPE under pipefail
+        self.stub("rofi", 'cat > /dev/null; echo "1\tsecret"')
         self.run_script("clip-menu")
         self.assertEqual((self.tmp / "copied").read_text(), "1\tsecret\n")
-        self.stub("rofi", 'echo "1\tsecret"; exit 10')
+        self.stub("rofi", 'cat > /dev/null; echo "1\tsecret"; exit 10')
         self.run_script("clip-menu")
         self.assertEqual((self.tmp / "sent-from-menu").read_text(), "1\tsecret\n")
         self.assertIn("clip-send --stdin", self.log.read_text())
