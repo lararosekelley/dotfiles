@@ -20,6 +20,12 @@ settings() {
   fi
 }
 
+# nmcli -t escapes colons and backslashes in its fields
+unescape() {
+  local value=${1//\\:/:}
+  echo "${value//\\\\/\\}"
+}
+
 # pick PROMPT: choose a line from stdin, printing its index
 pick() { rofi -dmenu -i -p "$1" -format i; }
 
@@ -44,7 +50,7 @@ fi
 ssids=()
 rows=()
 inuse=()
-secured=()
+securities=()
 declare -A seen
 while IFS= read -r line; do
   use=${line%%:*}
@@ -53,8 +59,7 @@ while IFS= read -r line; do
   line=${line#*:}
   security=${line%%:*}
   ssid=${line#*:}
-  ssid=${ssid//\\:/:}
-  ssid=${ssid//\\\\/\\}
+  ssid=$(unescape "$ssid")
   [ -n "$ssid" ] && [ -z "${seen[$ssid]:-}" ] || continue
   seen[$ssid]=1
   if [ "$signal" -ge 75 ]; then
@@ -71,17 +76,17 @@ while IFS= read -r line; do
   ssids+=("$ssid")
   rows+=("$row")
   inuse+=("$use")
-  secured+=("${lock:+yes}")
+  securities+=("${lock:+$security}")
 done < <(nmcli -t -f IN-USE,SIGNAL,SECURITY,SSID device wifi list --rescan no \
   | LC_ALL=C sort -t: -k1,1r -k2,2nr)
 
+count=${#ssids[@]}
 choice=$({
-  printf '%s\n' "${rows[@]}"
+  [ "$count" -eq 0 ] || printf '%s\n' "${rows[@]}"
   printf '%s\n' "󰑐  rescan" "󰖪  turn Wi-Fi off" "󰒓  network settings"
 } | pick wifi) || exit 0
 [ "$choice" -ge 0 ] 2> /dev/null || exit 0
 
-count=${#ssids[@]}
 case $((choice - count)) in
   0)
     nmcli device wifi rescan > /dev/null 2>&1
@@ -106,26 +111,51 @@ if [ "${inuse[$choice]}" = "*" ]; then
   exit 0
 fi
 
-# a saved connection for this network, which keeps its own password
+# a saved connection for this network, which keeps its own password; found by
+# UUID, since names can hold colons
 saved=""
-while IFS=: read -r name type; do
+while IFS=: read -r uuid type; do
   [ "$type" = 802-11-wireless ] || continue
-  if [ "$(nmcli -g 802-11-wireless.ssid connection show "$name")" = "$ssid" ]; then
-    saved=$name
+  if [ "$(unescape "$(nmcli -g 802-11-wireless.ssid connection show uuid "$uuid")")" = "$ssid" ]; then
+    saved=$uuid
     break
   fi
-done < <(nmcli -t -f NAME,TYPE connection show)
+done < <(nmcli -t -f UUID,TYPE connection show)
 
+security=${securities[$choice]}
 if [ -n "$saved" ]; then
-  result=$(nmcli connection up id "$saved" 2>&1)
-elif [ -n "${secured[$choice]}" ]; then
+  result=$(nmcli connection up uuid "$saved" 2>&1)
+  status=$?
+elif [ -z "$security" ]; then
+  result=$(nmcli device wifi connect "$ssid" 2>&1)
+  status=$?
+else
+  case "$security" in
+    *802.1X* | *WEP*)
+      notify "$ssid needs NetworkManager's settings" "Enterprise and WEP networks aren't set up from this menu."
+      settings
+      exit 0
+      ;;
+    *WPA1* | *WPA2*) key_mgmt=wpa-psk ;;
+    *WPA3*) key_mgmt=sae ;;
+    *) key_mgmt=wpa-psk ;;
+  esac
   password=$(rofi -dmenu -password -l 0 -p "password for $ssid" < /dev/null) || exit 0
   [ -n "$password" ] || exit 0
-  result=$(nmcli device wifi connect "$ssid" password "$password" 2>&1)
-else
-  result=$(nmcli device wifi connect "$ssid" 2>&1)
+  # Make the connection, then bring it up with the password read from a pipe
+  # (printf is built in), so it never appears in the process list as an
+  # argument would. NetworkManager keeps it with the connection once it works.
+  uuid=$(cat /proc/sys/kernel/random/uuid)
+  if result=$(nmcli connection add type wifi con-name "$ssid" ssid "$ssid" \
+    connection.uuid "$uuid" wifi-sec.key-mgmt "$key_mgmt" 2>&1); then
+    result=$(nmcli connection up uuid "$uuid" passwd-file \
+      <(printf '802-11-wireless-security.psk:%s\n' "$password") 2>&1)
+    status=$?
+    [ "$status" -eq 0 ] || nmcli connection delete uuid "$uuid" > /dev/null 2>&1
+  else
+    status=1
+  fi
 fi
-status=$?
 
 if [ "$status" -eq 0 ]; then
   notify "Connected" "$ssid"
