@@ -52,6 +52,9 @@ tailscale                 tailscale                 tailscale
 recoll                    recoll                    recoll
 perl:JSON                 perl-JSON                 perl-json
 fastfetch                 fastfetch                 fastfetch
+# fastfetch loads these at runtime to draw its image logo (in chafa blocks)
+chafa                     chafa                     chafa
+magick                    ImageMagick               imagemagick
 
 # fingerprint login and unlocking, set up by hand per laptop (docs/new-machine.md)
 fprintd-enroll            fprintd                   fprintd
