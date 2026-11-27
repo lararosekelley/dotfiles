@@ -1,0 +1,13 @@
+# Replaces the xwaylandvideobridge package's entry in /etc/xdg/autostart to add
+# NotShowIn=sway: Plasma keeps the bridge's window hidden, but under sway it
+# tiles as an empty window, and the bridge needs Plasma's portal to work.
+[Desktop Entry]
+Type=Application
+Name=Xwayland Video Bridge
+Exec=xwaylandvideobridge
+Icon=org.kde.xwaylandvideobridge
+NoDisplay=true
+StartupNotify=false
+X-KDE-autostart-phase=2
+X-GNOME-Autostart-enabled=true
+NotShowIn=sway;
