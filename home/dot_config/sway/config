@@ -357,6 +357,9 @@ for_window [app_id="pavucontrol"] floating enable
 # the night light's config, opened from waybar, floats
 for_window [app_id="night-light-config"] floating enable, resize set 900 500, move position center
 
+# the full forecast waybar's weather opens
+for_window [app_id="weather"] floating enable, resize set 1100 800, move position center
+
 # the live sensor readings waybar's hardware pill opens
 for_window [app_id="hardware"] floating enable, resize set 900 700, move position center
 

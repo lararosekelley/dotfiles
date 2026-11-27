@@ -64,6 +64,13 @@ docs = "docs/new-machine.md#3-after-the-first-apply"
 check = "grep -q JELLYFIN_API_KEY= ~/.environment"
 
 [[step]]
+id = "weather-location"
+title = "Set WEATHER_LOCATION in ~/.environment"
+needed_for = "Waybar's weather for the right place, which wttr.in otherwise guesses from the IP address"
+docs = "docs/sway.md#status-bar"
+check = "grep -q '^[[:space:]]*\\(export[[:space:]]\\+\\)\\?WEATHER_LOCATION=.' ~/.environment"
+
+[[step]]
 id = "navi-env"
 title = "Copy over ~/.config/navi/navi.env, readable only by you"
 needed_for = "navi's tokens"

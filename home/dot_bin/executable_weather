@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# Weather for waybar, beside the clock: the current conditions' icon and
+# temperature, with today's and the next two days' forecast on hover, from
+# wttr.in. The location is WEATHER_LOCATION, from the environment or
+# ~/.environment (a city, a ZIP code, or an airport code); without it, wttr.in
+# guesses from the IP address, which is wrong behind a VPN.
+#
+# Readings are cached for 15 minutes, and a cached one is still shown for 3
+# hours when wttr.in can't be reached; with nothing newer, the module hides.
+#
+# Usage: weather [status|forecast]
+#
+#   status    print waybar's JSON (the default)
+#   forecast  show wttr.in's full forecast in this terminal
+
+set -uo pipefail
+
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/weather.json"
+refresh_after=900
+hide_after=10800
+
+location() {
+  if [ -n "${WEATHER_LOCATION:-}" ]; then
+    echo "$WEATHER_LOCATION"
+    return
+  fi
+  # only this one line, rather than sourcing the whole private file
+  sed -n 's/^[[:space:]]*\(export[[:space:]]\+\)\?WEATHER_LOCATION=//p' \
+    ~/.environment 2> /dev/null | tail -n 1 \
+    | sed -e 's/^"\(.*\)"$/\1/' -e "s/^'\(.*\)'$/\1/"
+}
+
+# the location as part of a URL; empty lets wttr.in guess
+url_location() { jq -rn --arg l "$(location)" '$l | @uri'; }
+
+age() {
+  [ -f "$cache" ] || return 1
+  echo $(($(date +%s) - $(stat -c %Y "$cache")))
+}
+
+fetch() {
+  local tmp
+  mkdir -p "$(dirname "$cache")"
+  tmp=$(mktemp "$cache.XXXXXX") || return 1
+  if curl -fsS --max-time 10 "https://wttr.in/$(url_location)?format=j1" -o "$tmp" \
+    && jq -e '.current_condition[0].temp_F' "$tmp" > /dev/null 2>&1; then
+    mv "$tmp" "$cache"
+  else
+    rm -f "$tmp"
+    return 1
+  fi
+}
+
+status() {
+  local seconds
+  seconds=$(age) || seconds=$((hide_after + 1))
+  if [ "$seconds" -ge "$refresh_after" ]; then
+    fetch && seconds=0
+  fi
+  if [ "$seconds" -gt "$hide_after" ]; then
+    echo '{"text": ""}'
+    return
+  fi
+  jq -c --arg now "$(date +%H%M)" '
+    # "07:01 AM" as 701
+    def clock: capture("(?<h>[0-9]+):(?<m>[0-9]+) (?<p>[AP]M)")
+      | ((.h | tonumber) % 12 + (if .p == "PM" then 12 else 0 end)) * 100
+        + (.m | tonumber);
+    def icon($code; $night):
+      ($code | tonumber) as $c
+      | if $c == 113 then (if $night then "󰖔" else "󰖙" end)
+        elif $c == 116 then (if $night then "󰼱" else "󰖕" end)
+        elif $c == 119 or $c == 122 then "󰖐"
+        elif [143, 248, 260] | index($c) then "󰖑"
+        elif [200, 386, 389, 392, 395] | index($c) then "󰙾"
+        elif [299, 302, 305, 308, 356, 359] | index($c) then "󰖖"
+        elif [176, 263, 266, 293, 296, 353] | index($c) then "󰖗"
+        elif [179, 182, 185, 281, 284, 311, 314, 317, 350, 362, 365, 374, 377] | index($c) then "󰙿"
+        elif [227, 230, 323, 326, 329, 332, 335, 338, 368, 371] | index($c) then "󰖘"
+        else "󰔏" end;
+    .current_condition[0] as $now_c
+    | .weather[0].astronomy[0] as $sky
+    | ($now | tonumber) as $t
+    | ($t < ($sky.sunrise | clock) or $t >= ($sky.sunset | clock)) as $night
+    | ($now_c.weatherDesc[0].value | ascii_downcase | trim) as $desc
+    | ([.weather | to_entries[]
+        | (if .key == 0 then "Today" elif .key == 1 then "Tomorrow"
+           else (.value.date | strptime("%Y-%m-%d") | strftime("%A")) end) as $day
+        | "\($day): high \(.value.maxtempF)°, low \(.value.mintempF)°, \(.value.hourly[4].weatherDesc[0].value | ascii_downcase | trim)"]) as $days
+    | {
+        text: "\(icon($now_c.weatherCode; $night)) \($now_c.temp_F)°",
+        tooltip: ([
+          "\($desc), \($now_c.temp_F)°F, feels like \($now_c.FeelsLikeF)°F",
+          "humidity \($now_c.humidity)%, wind \($now_c.windspeedMiles) mph \($now_c.winddir16Point)",
+          "",
+          ($days[])
+        ] | map(@html) | join("\n")),
+        class: "weather"
+      }' "$cache" 2> /dev/null || echo '{"text": ""}'
+}
+
+case "${1:-status}" in
+  status) status ;;
+  forecast)
+    curl -fsS --max-time 15 "https://wttr.in/$(url_location)?u&F" \
+      || echo "Couldn't reach wttr.in."
+    read -rsn 1 -p "Press any key to close."
+    ;;
+  -h | --help) sed -n '3,17p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *)
+    echo "unknown argument: $1" >&2
+    exit 2
+    ;;
+esac
