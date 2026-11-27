@@ -159,8 +159,8 @@ sudo install -m 644 system/pam.d/swaylock /etc/pam.d/swaylock
 ```
 
 On the lock screen, type the password, or press Enter on the empty field and
-then touch the reader. After a wrong password it waits for a fingerprint for up
-to 15 seconds before showing the failure.
+then touch the reader. With a reader, a wrong password waits for a fingerprint
+for up to 15 seconds before showing the failure.
 
 ## 4. Neovim
 
