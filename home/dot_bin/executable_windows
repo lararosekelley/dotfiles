@@ -37,7 +37,8 @@ done <<< "$rows"
 choice=$(while IFS=$'\x1f' read -r _ workspace app title _; do
   printf '%-10s  %-16s  %s\0icon\x1f%s\n' "$workspace" "$app" "$title" "${app,,}"
 done <<< "$rows" \
-  | rofi -dmenu -i -show-icons -p windows -format i -selected-row "$selected") \
+  | rofi -dmenu -i -no-custom -show-icons -p windows -format i \
+    -selected-row "$selected") \
   || exit 0
-[ -n "$choice" ] || exit 0
+[ "${choice:--1}" -ge 0 ] || exit 0
 swaymsg -q "[con_id=${ids[$choice]}] focus"
