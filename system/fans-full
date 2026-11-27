@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+
+# Run the desktop's fans at full speed: every fan on the Corsair Commander Pro,
+# and the fan header on the NZXT Kraken cooler. The Kraken's pump keeps its own
+# curve. Both controllers forget a speed when they lose power, so
+# fans-full.service runs this at boot and after sleep.
+#
+# Controllers are found by their hwmon driver's name, since the hwmonN numbers
+# can change between boots. They are USB devices that may appear a little after
+# boot, so this waits for them.
+#
+# Usage: fans-full
+
+set -uo pipefail
+
+root=${HWMON_ROOT:-/sys/class/hwmon}
+wait_tenths=${FANS_FULL_WAIT:-300}
+
+# find NAME...: print the directory of the first chip with one of these names
+find_chip() {
+  local dir name
+  for dir in "$root"/hwmon*; do
+    name=$(cat "$dir/name" 2> /dev/null) || continue
+    for wanted in "$@"; do
+      [ "$name" = "$wanted" ] && echo "$dir" && return 0
+    done
+  done
+  return 1
+}
+
+wait_chip() {
+  local dir
+  for _ in $(seq 1 "$wait_tenths"); do
+    dir=$(find_chip "$@") && echo "$dir" && return 0
+    sleep 0.1
+  done
+  find_chip "$@"
+}
+
+failed=0
+
+set_full() {
+  local file=$1
+  if echo 255 > "$file"; then
+    echo "${file#"$root"/}: 255"
+  else
+    echo "couldn't set ${file#"$root"/}" >&2
+    failed=1
+  fi
+}
+
+# the driver only lists the Commander Pro's connected fans
+if cpro=$(wait_chip corsaircpro); then
+  for pwm in "$cpro"/pwm[0-9]; do
+    [ -e "$pwm" ] && set_full "$pwm"
+  done
+else
+  echo "no Corsair Commander Pro found" >&2
+  failed=1
+fi
+
+# pwm1 is the pump; pwm2 is the fan header, which takes a fixed speed only in
+# manual mode (1)
+if kraken=$(wait_chip z53 z63 z73 x53 x63 x73); then
+  echo 1 > "$kraken/pwm2_enable" || failed=1
+  set_full "$kraken/pwm2"
+else
+  echo "no NZXT Kraken found" >&2
+  failed=1
+fi
+
+exit "$failed"

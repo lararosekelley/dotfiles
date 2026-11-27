@@ -126,6 +126,17 @@ On the desktop:
   sudo modprobe nct6683 drivetemp
   ```
 
+- Run the case and radiator fans at full speed, set again at every boot and
+  after sleep, since the Commander Pro and the Kraken forget it when they lose
+  power. The Kraken's pump keeps its own curve:
+
+  ```bash
+  sudo install -m 755 system/fans-full /usr/local/sbin/
+  sudo install -m 644 system/fans-full.service /etc/systemd/system/
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now fans-full.service
+  ```
+
 On a machine with a fingerprint reader, set up fingerprint login. `chezmoi
 apply` installs fprintd; enroll a finger and check it matches:
 

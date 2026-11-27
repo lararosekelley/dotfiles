@@ -1,0 +1,15 @@
+# Runs the desktop's fans at full speed at boot and again after sleep, since the
+# fan controllers forget their speed when they lose power. Installed as
+# /etc/systemd/system/fans-full.service, with the script as
+# /usr/local/sbin/fans-full (see docs/new-machine.md).
+
+[Unit]
+Description=Run the case and radiator fans at full speed
+After=suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/fans-full
+
+[Install]
+WantedBy=multi-user.target suspend.target hibernate.target hybrid-sleep.target suspend-then-hibernate.target
