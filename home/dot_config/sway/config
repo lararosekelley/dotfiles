@@ -116,6 +116,9 @@ bindsym $mod+o exec $menu
 # jumps to one (script in ~/.bin)
 bindsym $mod+w exec windows
 
+# pick a Wi-Fi network, or turn Wi-Fi on or off (script in ~/.bin)
+bindsym $mod+Shift+w exec wifi-menu
+
 # power menu: lock, log out, suspend, reboot, or shut down (script in ~/.bin)
 bindsym $mod+Escape exec power-menu
 

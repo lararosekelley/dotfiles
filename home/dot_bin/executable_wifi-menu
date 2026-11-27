@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+
+# Wi-Fi picker for sway, through rofi and NetworkManager: the networks in range,
+# strongest first, with the connected one marked. Choosing a network connects
+# to it, with a saved password if there is one and otherwise asking; choosing
+# the connected one disconnects. The menu also turns Wi-Fi on or off, rescans,
+# and opens NetworkManager's own settings for wired, VPN, and the rest.
+#
+# Usage: wifi-menu
+
+set -uo pipefail
+
+notify() { notify-send -t 5000 "$@"; }
+
+settings() {
+  if command -v nm-connection-editor > /dev/null; then
+    nm-connection-editor
+  else
+    kitty --class nmtui nmtui
+  fi
+}
+
+# pick PROMPT: choose a line from stdin, printing its index
+pick() { rofi -dmenu -i -p "$1" -format i; }
+
+if ! nmcli -t -f TYPE device | grep -qx wifi; then
+  notify "No Wi-Fi" "NetworkManager has no Wi-Fi device here."
+  exit 0
+fi
+
+if [ "$(nmcli radio wifi)" != enabled ]; then
+  choice=$(printf '%s\n' "󰖩  turn Wi-Fi on" "󰒓  network settings" \
+    | pick wifi) || exit 0
+  case "$choice" in
+    0) nmcli radio wifi on && notify "Wi-Fi on" ;;
+    1) settings ;;
+  esac
+  exit 0
+fi
+
+# one line per network, the connected one first, then strongest first, and
+# once per name: in use, signal, security, then the name, whose colons nmcli
+# escapes as \:
+ssids=()
+rows=()
+inuse=()
+secured=()
+declare -A seen
+while IFS= read -r line; do
+  use=${line%%:*}
+  line=${line#*:}
+  signal=${line%%:*}
+  line=${line#*:}
+  security=${line%%:*}
+  ssid=${line#*:}
+  ssid=${ssid//\\:/:}
+  ssid=${ssid//\\\\/\\}
+  [ -n "$ssid" ] && [ -z "${seen[$ssid]:-}" ] || continue
+  seen[$ssid]=1
+  if [ "$signal" -ge 75 ]; then
+    bars=󰤨
+  elif [ "$signal" -ge 50 ]; then
+    bars=󰤥
+  elif [ "$signal" -ge 25 ]; then
+    bars=󰤢
+  else bars=󰤟; fi
+  lock=""
+  if [ -n "$security" ] && [ "$security" != "--" ]; then lock="  󰌾"; fi
+  row="$bars  $ssid$lock"
+  [ "$use" = "*" ] && row="󰄬  $ssid$lock  (connected: Enter disconnects)"
+  ssids+=("$ssid")
+  rows+=("$row")
+  inuse+=("$use")
+  secured+=("${lock:+yes}")
+done < <(nmcli -t -f IN-USE,SIGNAL,SECURITY,SSID device wifi list --rescan no \
+  | LC_ALL=C sort -t: -k1,1r -k2,2nr)
+
+choice=$({
+  printf '%s\n' "${rows[@]}"
+  printf '%s\n' "󰑐  rescan" "󰖪  turn Wi-Fi off" "󰒓  network settings"
+} | pick wifi) || exit 0
+[ "$choice" -ge 0 ] 2> /dev/null || exit 0
+
+count=${#ssids[@]}
+case $((choice - count)) in
+  0)
+    nmcli device wifi rescan > /dev/null 2>&1
+    sleep 2
+    exec "$0"
+    ;;
+  1)
+    nmcli radio wifi off && notify "Wi-Fi off"
+    exit 0
+    ;;
+  2)
+    settings
+    exit 0
+    ;;
+esac
+[ "$choice" -lt "$count" ] || exit 0
+
+ssid=${ssids[$choice]}
+if [ "${inuse[$choice]}" = "*" ]; then
+  device=$(nmcli -t -f DEVICE,TYPE,STATE device | awk -F: '$2 == "wifi" && $3 == "connected" { print $1; exit }')
+  nmcli device disconnect "$device" > /dev/null && notify "Disconnected" "$ssid"
+  exit 0
+fi
+
+# a saved connection for this network, which keeps its own password
+saved=""
+while IFS=: read -r name type; do
+  [ "$type" = 802-11-wireless ] || continue
+  if [ "$(nmcli -g 802-11-wireless.ssid connection show "$name")" = "$ssid" ]; then
+    saved=$name
+    break
+  fi
+done < <(nmcli -t -f NAME,TYPE connection show)
+
+if [ -n "$saved" ]; then
+  result=$(nmcli connection up id "$saved" 2>&1)
+elif [ -n "${secured[$choice]}" ]; then
+  password=$(rofi -dmenu -password -l 0 -p "password for $ssid" < /dev/null) || exit 0
+  [ -n "$password" ] || exit 0
+  result=$(nmcli device wifi connect "$ssid" password "$password" 2>&1)
+else
+  result=$(nmcli device wifi connect "$ssid" 2>&1)
+fi
+status=$?
+
+if [ "$status" -eq 0 ]; then
+  notify "Connected" "$ssid"
+else
+  notify -u critical "Couldn't connect to $ssid" "$result"
+fi
