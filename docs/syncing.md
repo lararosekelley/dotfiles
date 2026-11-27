@@ -14,7 +14,14 @@ chezmoi init --source ~/Code/personal/dotfiles
 questions once per machine: whether to install the KDE settings (yes by default
 in a KDE session), and the machine's name for per-machine settings (`framework`,
 `thinkpad`, or `desktop`; the hostname by default). Rerun `init` to answer a
-question added later.
+question added later, or when chezmoi warns that its config template has
+changed; it keeps the earlier answers. The config also sets `chezmoi merge` to
+open `nvim -d`.
+
+`chezmoi doctor` checks the setup. Two of its complaints are expected here: a
+`hardlink` error, since `/tmp` is a separate filesystem from home, and a
+`latest-version` warning when the distro's chezmoi package trails the newest
+release.
 
 ## Everyday commands
 
