@@ -11,6 +11,9 @@
   `run_onchange_after_*` wrappers in `home/`.
 - Agent Awake, KDE installer, chezmoi source, setup script, and `~/.bin` script
   tests live under `tests/`.
+- `manual-steps.toml` lists every setup step the docs ask for by hand, each
+  with a check, for `dotfiles-doctor` in `~/.bin`. When a doc gains, changes,
+  or drops a manual step, update its entry in the same change.
 - Global agent rules live in `home/dot_config/opencode/AGENTS.md`;
   `home/dot_claude/CLAUDE.md` imports them. Edit the canonical file.
 
