@@ -79,11 +79,11 @@ esac""",
         script.write_text(f"#!/usr/bin/env bash\n{body}\n")
         script.chmod(0o755)
 
-    def commands(self, *trees):
+    def commands(self, *trees, args=()):
         for n, layout_tree in enumerate(trees, 1):
             (self.trees / f"{n}.json").write_text(json.dumps(layout_tree))
         result = subprocess.run(
-            [str(SCRIPT)],
+            [str(SCRIPT), *args],
             env={"PATH": self.path},
             capture_output=True,
             text=True,
@@ -126,6 +126,21 @@ esac""",
     def test_nothing_is_split_while_sway_startup_runs(self):
         (self.tmp / "startup-running").write_text("")
         self.assertEqual(self.commands(tree("splith", window(400, 800))), [])
+
+    def test_flip_toggles_the_focused_windows_container(self):
+        self.assertEqual(
+            self.commands(
+                tree("splith", window(400, 800), window(400, 800, False)),
+                args=["flip"],
+            ),
+            ["-q layout toggle split"],
+        )
+
+    def test_flip_on_a_window_alone_in_its_container_flips_the_one_above(self):
+        self.assertEqual(
+            self.commands(tree("splitv", window(400, 800)), args=["flip"]),
+            ["-q focus parent; layout toggle split; focus child"],
+        )
 
 
 if __name__ == "__main__":

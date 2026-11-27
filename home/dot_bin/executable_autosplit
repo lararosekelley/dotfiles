@@ -7,7 +7,11 @@
 # ($mod+minus, $mod+bar) still override it for the next window. The sway config
 # starts it; it runs until sway exits.
 #
-# Usage: autosplit
+# `autosplit flip` flips the windows beside the focused one between side by side
+# and stacked. Splitting wraps a window in a container of its own, so when the
+# focused window is alone in one, it flips the container that holds it instead.
+#
+# Usage: autosplit [flip]
 
 set -uo pipefail
 
@@ -20,6 +24,18 @@ focused() {
     | .layout as $layout | .nodes[] | select(.focused and .type == "con")
     | "\($layout) \(.rect.width) \(.rect.height) \(.fullscreen_mode)"'
 }
+
+if [ "${1:-}" = flip ]; then
+  alone=$(swaymsg -t get_tree | jq -r '
+    first(.. | objects | select(.nodes? and any(.nodes[]; .focused)))
+    | .nodes | length == 1')
+  if [ "$alone" = true ]; then
+    swaymsg -q 'focus parent; layout toggle split; focus child'
+  else
+    swaymsg -q 'layout toggle split'
+  fi
+  exit
+fi
 
 swaymsg -t subscribe -m '["window"]' \
   | jq --unbuffered -r 'select(.change == "focus") | .change' \
