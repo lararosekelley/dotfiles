@@ -36,8 +36,20 @@ remember() {
   echo "$1" > "$state"
 }
 
+# turn adaptive sync back on where night-light turned it off
+restore_vrr() {
+  [ -f "$vrr" ] || return 0
+  while read -r output; do
+    swaymsg -q output "$output" adaptive_sync on
+  done < "$vrr"
+  rm -f "$vrr"
+}
+
 start() {
   mkdir -p "$state_dir"
+  # a list left by a gammastep that died without stop() still names displays
+  # that are off only because of it
+  restore_vrr
   # adaptive sync blocks the color change, so note which displays had it
   swaymsg -t get_outputs \
     | jq -r '.[] | select(.adaptive_sync_status == "enabled") | .name' > "$vrr"
@@ -51,12 +63,7 @@ stop() {
   pkill -x gammastep
   # let it fade the screen back before anything starts it again
   while running; do sleep 0.1; done
-  if [ -f "$vrr" ]; then
-    while read -r output; do
-      swaymsg -q output "$output" adaptive_sync on
-    done < "$vrr"
-    rm -f "$vrr"
-  fi
+  restore_vrr
 }
 
 # waybar's night-light module updates on this signal (see its config)
