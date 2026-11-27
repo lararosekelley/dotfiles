@@ -15,7 +15,7 @@ js_paths := "**/*.{js,mjs,cjs}"
 # shell dotfiles have no .sh extension, so they are listed here; dot_git_prompt
 # is git's own git-prompt.sh, and dot_inputrc is readline config
 
-shell_paths := "home/dot_aliases home/dot_bash_profile home/dot_bash_prompt home/dot_bashrc home/dot_exports home/dot_functions $(git ls-files 'home/dot_bin/*' 'scripts/setup/*' ':!:*.sh' ':!:*.txt' ':!:home/dot_bin/executable_sf2-to-sfz' ':!:home/dot_bin/executable_hardware') home/private_dot_ssh/modify_private_config"
+shell_paths := "home/dot_aliases home/dot_bash_profile home/dot_bash_prompt home/dot_bashrc home/dot_exports home/dot_functions $(git ls-files 'home/dot_bin/*' 'scripts/setup/*' ':!:*.sh' ':!:*.txt' ':!:home/dot_bin/executable_sf2-to-sfz' ':!:home/dot_bin/executable_hardware') home/private_dot_ssh/modify_private_config system/fans-full"
 
 default:
   @just --list
@@ -133,6 +133,7 @@ test-python:
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/chezmoi -p 'test_*.py'
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/setup -p 'test_*.py'
     PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/bin -p 'test_*.py'
+    PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests/system -p 'test_*.py'
 
 test-node:
     node --test tests/agent_awake/plugin.test.mjs
