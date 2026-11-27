@@ -104,6 +104,20 @@ class DoctorTest(unittest.TestCase):
         self.assertIn("[ -- ] Arch only", out)
         self.assertIn("[skip] Needs hardware", out)
 
+    def test_an_unknown_machine_is_an_error_not_a_clean_report(self):
+        # a PATH with python but no chezmoi to ask
+        bin = self.repo / "bin"
+        bin.mkdir()
+        (bin / "python3").symlink_to(shutil.which("python3"))
+        result = subprocess.run(
+            [str(SCRIPT), "--distro", "fedora"],
+            env={"DOTFILES_REPO": str(self.repo), "PATH": str(bin)},
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 2)
+        self.assertIn("can't tell which machine", result.stderr)
+
     def test_machine_and_distro_pick_their_steps(self):
         out = subprocess.run(
             [str(SCRIPT), "--machine", "framework", "--distro", "arch"],
@@ -148,6 +162,15 @@ class ManualStepsTest(unittest.TestCase):
                 self.assertTrue(doc.is_file(), path)
                 if anchor:
                     self.assertIn(anchor, anchors(doc.read_text()))
+
+    def test_command_v_checks_one_name_at_a_time(self):
+        # with several names, command -v succeeds if any one exists
+        for step in self.steps:
+            for field in ("when", "check"):
+                for args in re.findall(r"command -v ([^;&|)]*)", step.get(field, "")):
+                    names = [a for a in args.split() if not a.startswith((">", "2>"))]
+                    with self.subTest(step=step["id"], field=field):
+                        self.assertEqual(len(names), 1, args)
 
     def test_each_command_is_valid_bash(self):
         for step in self.steps:

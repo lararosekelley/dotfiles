@@ -6,6 +6,8 @@ each check for this machine and distro, and lists what's left with what it's
 needed for, how to do it, and where the docs explain it. Steps no command can
 check are listed for you to confirm. Exits 1 while anything is left to do.
 
+Exits 2 when it can't tell which machine this is.
+
 Usage: dotfiles-doctor [--all] [--machine NAME] [--distro fedora|arch]
 
   --all      also list the steps that are done or don't apply here
@@ -40,11 +42,14 @@ def repo_root():
 
 
 def this_machine():
-    result = subprocess.run(
-        ["chezmoi", "execute-template", "{{ .machine }}"],
-        capture_output=True,
-        text=True,
-    )
+    try:
+        result = subprocess.run(
+            ["chezmoi", "execute-template", "{{ .machine }}"],
+            capture_output=True,
+            text=True,
+        )
+    except OSError:
+        return ""
     return result.stdout.strip() if result.returncode == 0 else ""
 
 
@@ -116,6 +121,13 @@ def main():
     repo = repo_root()
     steps = tomllib.loads((repo / "manual-steps.toml").read_text())["step"]
     machine = args.machine or this_machine()
+    if not machine:
+        print(
+            "dotfiles-doctor: can't tell which machine this is; run `chezmoi init`,"
+            " or pass --machine",
+            file=sys.stderr,
+        )
+        return 2
     distro = args.distro or this_distro()
     env = {**os.environ, "MACHINE": machine, "DISTRO": distro}
     color = Colors(sys.stdout.isatty() and "NO_COLOR" not in os.environ)

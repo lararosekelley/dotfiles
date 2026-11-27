@@ -110,7 +110,7 @@ id = "standalone-binaries"
 title = "Install claude, herdr, navi, and git-stk in ~/.local/bin"
 needed_for = "The agents, herdr, navi, and stacked branches"
 docs = "docs/packages.md#self-updating-and-standalone-binaries"
-check = "command -v claude herdr navi git-stk"
+check = "command -v claude && command -v herdr && command -v navi && command -v git-stk"
 
 [[step]]
 id = "gh-extensions"
@@ -161,7 +161,7 @@ title = "Install Callie, Jot, and sfizz"
 needed_for = "The calendar on workspace 1, notes, and sfizz's instruments"
 docs = "docs/new-machine.md#3-after-the-first-apply"
 machines = ["desktop"]
-check = "command -v callie jot sfizz_jack"
+check = "command -v callie && command -v jot && command -v sfizz_jack"
 
 [[step]]
 id = "jellyfin-libraries"
