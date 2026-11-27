@@ -144,6 +144,13 @@ echo "$*" > "{self.tmp}/args"
         self.run_script()
         self.assertEqual((self.tmp / "swaymsg").read_text(), "-q [con_id=6] focus\n")
 
+    def test_no_matching_window_focuses_nothing(self):
+        self.answer("-1")
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("-no-custom", (self.tmp / "args").read_text())
+        self.assertFalse((self.tmp / "swaymsg").exists())
+
     def test_a_scratchpad_window_is_brought_out_by_focusing_it(self):
         self.answer("4")
         self.run_script()
