@@ -80,6 +80,65 @@ esac
             self.log.read_text().splitlines(), ["cliamp play-pause", "cliamp next"]
         )
 
+    def focus(self, tree, owner_pid="", parents=""):
+        """Run focus with a sway tree, the player's D-Bus process, and a
+        "pid ppid" table for ps; return what swaymsg and notify-send got."""
+        (self.tmp / "tree.json").write_text(json.dumps(tree))
+        (self.tmp / "parents").write_text(parents)
+        log = self.log
+        self.stub_bin(
+            "swaymsg",
+            f'if [ "$1" = -t ]; then cat "{self.tmp}/tree.json"; '
+            f'else echo "swaymsg $*" >> "{log}"; fi',
+        )
+        self.stub_bin("busctl", f'[ -n "{owner_pid}" ] && echo "u {owner_pid}"')
+        self.stub_bin(
+            "ps",
+            f'awk -v p="${{@: -1}}" \'$1 == p {{ print $2 }}\' "{self.tmp}/parents"',
+        )
+        self.stub_bin("notify-send", f'echo "notify-send $*" >> "{log}"')
+        self.run_script("focus")
+        return log.read_text().splitlines() if log.exists() else []
+
+    def stub_bin(self, name, body):
+        script = self.bin / name
+        script.write_text(f"#!/usr/bin/env bash\n{body}\n")
+        script.chmod(0o755)
+
+    def test_focus_finds_the_terminal_a_player_runs_in(self):
+        self.player("cliamp", "Playing", "Mitski", "Nobody")
+        tree = {
+            "nodes": [
+                {"id": 5, "pid": 100, "app_id": "kitty", "name": "~"},
+                {"id": 9, "pid": 300, "app_id": "kitty", "name": "cliamp"},
+            ]
+        }
+        # cliamp (pid 500) runs in a shell (400) in the second kitty (300)
+        calls = self.focus(tree, owner_pid="500", parents="500 400\n400 300\n")
+        self.assertEqual(calls, ["swaymsg -q [con_id=9] focus"])
+
+    def test_focus_falls_back_to_the_app_name_then_the_title(self):
+        self.player("firefox.instance_1_2", "Playing", "A", "Video Title")
+        tree = {
+            "nodes": [
+                {"id": 3, "pid": 10, "app_id": "kitty", "name": "~"},
+                {
+                    "id": 7,
+                    "pid": 20,
+                    "app_id": "app.zen_browser.zen",
+                    "name": "Video Title - YouTube",
+                },
+            ]
+        }
+        self.assertEqual(self.focus(tree), ["swaymsg -q [con_id=7] focus"])
+
+    def test_focus_says_so_when_no_window_is_found(self):
+        self.player("cliamp", "Playing", "a", "b")
+        tree = {"nodes": [{"id": 3, "pid": 10, "app_id": "kitty", "name": "~"}]}
+        calls = self.focus(tree)
+        self.assertEqual(len(calls), 1)
+        self.assertIn("Can't find the window playing", calls[0])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # What's playing, for waybar: the artist and title from whichever MPRIS player
-# (cliamp, a browser) is playing, and nothing while none is. A click pauses
-# it, and scrolling skips tracks.
+# (cliamp, a browser) is playing, and nothing while none is. A click jumps to
+# the player's window, a right-click pauses it, and scrolling skips tracks.
 #
-# Usage: now-playing [status|toggle|next|previous]
+# Usage: now-playing [status|focus|toggle|next|previous]
 #
 #   status  print waybar's JSON (the default)
+#   focus   focus the window the playing player runs in
 
 set -uo pipefail
 
@@ -18,6 +19,32 @@ playing() {
       && echo "$player" && return 0
   done < <(playerctl -l 2> /dev/null)
   return 1
+}
+
+# the sway window the player runs in: the window of the player's process or
+# its nearest ancestor (cliamp's terminal), else one whose app name holds the
+# player's name, else one whose title holds the track's title; with several,
+# the one whose title holds the track's title
+window_of() {
+  local player=$1 title=$2 tree pid ids
+  tree=$(swaymsg -t get_tree)
+  pid=$(busctl --user call org.freedesktop.DBus / org.freedesktop.DBus \
+    GetConnectionUnixProcessID s "org.mpris.MediaPlayer2.$player" 2> /dev/null \
+    | awk '{print $2}')
+  while [ -n "$pid" ] && [ "$pid" -gt 1 ]; do
+    ids=$(jq -r --argjson pid "$pid" --arg title "$title" '
+      [.. | objects | select(.pid? == $pid)]
+      | (map(select($title != "" and ((.name // "") | contains($title)))) + .)
+      | .[0].id // empty' <<< "$tree")
+    [ -n "$ids" ] && echo "$ids" && return 0
+    pid=$(ps -o ppid= -p "$pid" 2> /dev/null | tr -d ' ')
+  done
+  jq -r --arg name "${player%%.*}" --arg title "$title" '
+    [.. | objects | select(.pid? and .pid > 0)]
+    | (map(select((.app_id // .window_properties.class // "") | ascii_downcase
+        | contains($name | ascii_downcase)))
+       + map(select($title != "" and ((.name // "") | contains($title)))))
+    | .[0].id // empty' <<< "$tree" | grep . || return 1
 }
 
 case "${1:-status}" in
@@ -37,6 +64,15 @@ case "${1:-status}" in
           class: "playing"
         }'
     ;;
+  focus)
+    player=$(playing) || exit 0
+    title=$(playerctl -p "$player" metadata title 2> /dev/null)
+    if id=$(window_of "$player" "$title"); then
+      swaymsg -q "[con_id=$id] focus"
+    else
+      notify-send -t 4000 "Can't find the window playing" "${player%%.*}"
+    fi
+    ;;
   toggle | next | previous)
     player=$(playing) || exit 0
     case "$1" in
@@ -44,7 +80,7 @@ case "${1:-status}" in
       *) playerctl -p "$player" "$1" ;;
     esac
     ;;
-  -h | --help) sed -n '3,9p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h | --help) sed -n '3,10p' "$0" | sed 's/^# \{0,1\}//' ;;
   *)
     echo "unknown argument: $1" >&2
     exit 2
