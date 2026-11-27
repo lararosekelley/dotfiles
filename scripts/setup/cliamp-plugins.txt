@@ -1,0 +1,6 @@
+# cliamp's Lua plugins, for scripts/setup/cliamp-plugins, pinned to a release.
+# Installing one also approves its contents, which cliamp requires before it
+# runs a plugin.
+#
+# name       source
+album-art    lararosekelley/cliamp-plugin-album-art@v1.0.0
