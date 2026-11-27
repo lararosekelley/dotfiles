@@ -94,6 +94,16 @@ class SwayKeysTest(unittest.TestCase):
         self.assertTrue(line.startswith("Swipe 3 fingers left "), line)
         self.assertIn("next workspace  (workspace next)", line)
 
+    def test_symbol_keys_show_as_symbols(self):
+        (self.tmp / "config").write_text(
+            "set $mod Mod1\n"
+            "# grow\nbindsym $mod+equal resize grow width 10 ppt\n"
+            "# shrink\nbindsym $mod+minus resize shrink width 10 ppt\n"
+            "# flip\nbindsym $mod+bar exec autosplit flip\n"
+        )
+        keys = [line.split()[0] for line in self.lines()]
+        self.assertEqual(keys, ["Alt+=", "Alt+-", "Alt+|"])
+
     def test_the_menu_escapes_markup(self):
         result = self.run_script()
         self.assertEqual(result.returncode, 0, result.stderr)

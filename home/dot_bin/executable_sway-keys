@@ -73,6 +73,7 @@ list=$(awk -v home="$HOME" -v markup="$markup" '
       else if (k == "slash") k = "/"
       else if (k == "backslash") k = "\\"
       else if (k == "minus") k = "-"
+      else if (k == "equal") k = "="
       else if (k == "bar") k = "|"
       else if (k ~ /^XF86/) sub(/^XF86/, "", k)
       else if (length(k) == 1) k = toupper(k)

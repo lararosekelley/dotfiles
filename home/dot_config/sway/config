@@ -287,6 +287,12 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# shrink or grow the focused window in both directions, without resize mode: a
+# tenth of the screen when tiled, 100px when floating. Each direction is its own
+# swaymsg, since sway stops a command list at a direction it can't resize.
+bindsym $mod+minus exec swaymsg resize shrink width 100 px or 10 ppt; exec swaymsg resize shrink height 100 px or 10 ppt
+bindsym $mod+equal exec swaymsg resize grow width 100 px or 10 ppt; exec swaymsg resize grow height 100 px or 10 ppt
+
 # utility keybindings
 # --------
 
