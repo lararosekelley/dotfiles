@@ -1,10 +1,17 @@
 {
   "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
-  // compact, to fit sway's startup pane: the detected distro's small logo
-  // beside a short list
+  // compact, to fit sway's startup pane: a watercolor rose beside a short list,
+  // drawn in colored blocks by chafa, which look the same in any terminal and
+  // in tmux. Piped output gets no image.
   "logo": {
-    "type": "small",
+    "type": "chafa",
+    "source": "~/.local/share/fastfetch/pink-rose.png",
+    "width": 18,
     "padding": { "right": 2 },
+  },
+  // labels such as "OS:" in Callie's pink (#f08fb8); values keep the default
+  "display": {
+    "color": { "keys": "38;2;240;143;184" },
   },
   "modules": [
     "title",
