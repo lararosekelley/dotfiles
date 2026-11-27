@@ -87,6 +87,16 @@ else echo "swaymsg $*" >> "{self.log}"; fi""",
         self.assertEqual(self.state(), "off")
         self.assertIn('"class": "off"', self.run_script("status"))
 
+    def test_after_a_crash_on_still_remembers_which_displays_had_vrr(self):
+        self.run_script("on")
+        # gammastep dies without night-light off; DP-3 now reports VRR off
+        self.running.unlink()
+        outputs = [dict(o, adaptive_sync_status="disabled") for o in OUTPUTS]
+        (self.tmp / "outputs.json").write_text(json.dumps(outputs))
+        self.log.write_text("")
+        self.run_script("on")
+        self.assertIn("swaymsg -q output DP-3 adaptive_sync on", self.calls())
+
     def test_restore_brings_it_back_only_if_it_was_on(self):
         self.run_script("restore")
         self.assertFalse(self.running.exists())
