@@ -112,6 +112,10 @@ exec swayidle -w
 # open application launcher
 bindsym $mod+o exec $menu
 
+# window overview: every window on every workspace, and the scratchpad; Enter
+# jumps to one (script in ~/.bin)
+bindsym $mod+w exec windows
+
 # power menu: lock, log out, suspend, reboot, or shut down (script in ~/.bin)
 bindsym $mod+Escape exec power-menu
 

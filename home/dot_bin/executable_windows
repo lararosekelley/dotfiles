@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+
+# Window overview for sway: every window on every workspace, and those in the
+# scratchpad, listed in rofi by workspace with their icons. Typing filters by
+# workspace, app, or title, and Enter jumps to the chosen window, bringing it
+# out of the scratchpad if it's there.
+#
+# Usage: windows
+
+set -uo pipefail
+
+# one line per window, the scratchpad's last: con id, workspace, app, title,
+# and whether it's focused, split by \x1f rather than tabs, which would merge
+# around an empty title
+rows=$(swaymsg -t get_tree | jq -r '
+  [.nodes[].nodes[] | select(.type == "workspace") as $ws
+  | $ws | recurse(.nodes[]?, .floating_nodes[]?)
+  | select(.pid? and (.type == "con" or .type == "floating_con"))
+  | [.id,
+     (if $ws.name == "__i3_scratch" then "scratchpad" else $ws.name end),
+     (.app_id // .window_properties.class // "unknown"),
+     ((.name // "") | gsub("[\n\u001f]"; " ")),
+     (if .focused then 1 else 0 end)]]
+  | sort_by(.[1] == "scratchpad") | .[]
+  | map(tostring) | join("\u001f")')
+[ -n "$rows" ] || exit 0
+
+ids=()
+selected=0
+while IFS=$'\x1f' read -r id _ _ _ focused; do
+  [ "$focused" = 1 ] && selected=${#ids[@]}
+  ids+=("$id")
+done <<< "$rows"
+
+# rofi's icon for a row follows a NUL byte, which a variable can't hold, so the
+# rows go straight to it
+choice=$(while IFS=$'\x1f' read -r _ workspace app title _; do
+  printf '%-10s  %-16s  %s\0icon\x1f%s\n' "$workspace" "$app" "$title" "${app,,}"
+done <<< "$rows" \
+  | rofi -dmenu -i -show-icons -p windows -format i -selected-row "$selected") \
+  || exit 0
+[ -n "$choice" ] || exit 0
+swaymsg -q "[con_id=${ids[$choice]}] focus"
