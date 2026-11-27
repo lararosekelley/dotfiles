@@ -6,3 +6,9 @@
 jellyfin
   dnf:jellyfin
   pacman:jellyfin-server,jellyfin-web
+
+# the monitor's brightness over DDC/CI, for ~/.bin/brightness; its udev rule
+# lets the logged-in user reach the monitor
+ddcutil
+  dnf:ddcutil
+  pacman:ddcutil

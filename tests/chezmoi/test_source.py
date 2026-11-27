@@ -111,7 +111,7 @@ class SourceTest(unittest.TestCase):
             self.assertNotIn("bindsym $mod+Mod1+space", nested)
             self.assertNotIn("sway-startup", nested)
             self.assertIn("exec sway-startup", out[machine, "session.conf"])
-        self.assertNotIn("Mod1", out["desktop", "machine.conf"])
+        self.assertNotIn("set $mod Mod1", out["desktop", "machine.conf"])
         self.assertIn("output DP-3", out["desktop", "machine.conf"])
 
     def test_ssh_config_gets_add_keys_to_agent_and_keeps_its_hosts(self):

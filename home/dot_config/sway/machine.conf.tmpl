@@ -9,12 +9,8 @@ set $wallpaper ~/.local/share/wallpapers/pond-laptop.jpg
 # built-in display
 output eDP-1 resolution 2880x1920 position 0 0 scale 2
 
-# display menu: layouts, mirroring, and night light (script in ~/.bin), on F9,
-# the display key, which sends $mod+p on Framework laptops
-bindsym $mod+p exec display-menu
-
 # open sway config file in neovim floating window
-bindsym --locked XF86AudioMedia exec kitty --class sway-config sh -c 'nvim ~/.config/sway/config && swaymsg reload'
+bindsym --locked XF86AudioMedia exec kitty --class sway-config sh -c 'chezmoi edit --apply ~/.config/sway/config && swaymsg reload'
 {{- else if eq $machine "thinkpad" }}
 
 # wallpaper in the laptop display's proportions
@@ -23,6 +19,22 @@ set $wallpaper ~/.local/share/wallpapers/pond-laptop.jpg
 
 # ultrawide display, at its highest refresh rate
 output DP-3 mode 3440x1440 scale 1.25 adaptive_sync on
+
+# the Logitech POP Icon Keys' top row, whose F4 to F8 send Windows shortcuts
+# rather than F-keys, and which has no brightness keys
+# F4, its fullscreen key, sends Super+D
+bindsym Mod4+d fullscreen
+# F5, its search key, opens yazi, the file manager
+bindsym XF86Search exec kitty --class yazi yazi
+# F6 sends Super+H, the same as $mod+h (focus left), so it can't have its own
+# job
+# F7, the assistant key, opens the emoji picker
+bindsym Mod4+Shift+Ctrl+Mod1+space exec rofimoji
+# F8, Windows' snipping key, takes a screenshot of a region
+bindsym Mod4+Shift+s exec screenshot region
+# Shift with the volume keys sets the monitor's brightness (script in ~/.bin)
+bindsym --locked Shift+XF86AudioLowerVolume exec brightness down
+bindsym --locked Shift+XF86AudioRaiseVolume exec brightness up
 {{- else if not $machine }}
 {{-   fail "no machine chosen: rerun chezmoi init and choose framework, thinkpad, or desktop" }}
 {{- else }}

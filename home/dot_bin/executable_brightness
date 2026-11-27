@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+# Screen brightness up or down: a laptop's panel through brightnessctl, and an
+# external monitor, which has no backlight device, through ddcutil (DDC/CI).
+# ddcutil takes about a second per change, so a press that comes while one is
+# still running is dropped rather than queued.
+#
+# Usage: brightness up|down [PERCENT]   (5 by default)
+
+set -uo pipefail
+
+direction=${1:-}
+step=${2:-5}
+case "$direction" in
+  up) sign=+ ;;
+  down) sign=- ;;
+  *)
+    echo "usage: brightness up|down [PERCENT]" >&2
+    exit 2
+    ;;
+esac
+
+if brightnessctl --list --class=backlight 2> /dev/null | grep -q "Device '"; then
+  exec brightnessctl --quiet set "$step%$sign"
+fi
+
+exec 9> "${XDG_RUNTIME_DIR:-/tmp}/brightness.lock"
+flock --nonblock 9 || exit 0
+ddcutil --noverify setvcp 10 "$sign" "$step"
