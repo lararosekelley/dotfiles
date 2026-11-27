@@ -50,7 +50,7 @@ class SwayStartupTest(unittest.TestCase):
         self.stub_settings.chmod(0o755)
         system = self.tmp / "system"
         system.mkdir()
-        for command in ("bash", "env", "jq", "sed", "seq", "sleep"):
+        for command in ("bash", "env", "jq", "rm", "sed", "seq", "sleep"):
             (system / command).symlink_to(shutil.which(command))
         self.path = f"{self.bin}:{system}"
 
@@ -60,7 +60,12 @@ class SwayStartupTest(unittest.TestCase):
         stub.chmod(0o755)
 
     def run_script(self, *args, never=""):
-        env = {"PATH": self.path, "NEVER": never, "SWAY_STARTUP_WAIT": "3"}
+        env = {
+            "PATH": self.path,
+            "NEVER": never,
+            "SWAY_STARTUP_WAIT": "3",
+            "XDG_RUNTIME_DIR": str(self.tmp),
+        }
         return subprocess.run(
             [str(SCRIPT), *args], env=env, capture_output=True, text=True
         )
@@ -87,6 +92,24 @@ class SwayStartupTest(unittest.TestCase):
                 "-q workspace number 1",
             ],
         )
+
+    def test_it_marks_itself_running_for_autosplit_and_clears_it_after(self):
+        # the fake swaymsg's first call is while the script runs
+        marker = self.tmp / "sway-startup.pid"
+        seen = self.tmp / "seen"
+        real = self.bin / "swaymsg"
+        real.rename(self.bin / "swaymsg-real")
+        real.write_text(
+            "#!/usr/bin/env bash\n"
+            f'[ -e "{seen}" ] \\\n'
+            f'  || {{ read -r pid < "{marker}"; echo "$pid" > "{seen}"; }}\n'
+            f'exec "{self.bin}/swaymsg-real" "$@"\n'
+        )
+        real.chmod(0o755)
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertRegex(seen.read_text(), r"^[0-9]+\n$")
+        self.assertFalse(marker.exists())
 
     def test_the_wide_layout_puts_the_browser_and_a_shell_beside(self):
         result = self.run_script("wide")
