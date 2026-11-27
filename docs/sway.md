@@ -137,11 +137,11 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Lock screen
 
-[swaylock](https://github.com/swaywm/swaylock) locks the screen, styled in Callie by `~/.config/swaylock/config`. It shows the machine's wallpaper with a ring in the middle, visible before you type: pink highlights as you type, teal while checking, and red on a wrong password. chezmoi writes the config from `config.tmpl`, which picks `pond` or `pond-laptop` like the sway config does. On the laptops it leaves out `ignore-empty-password`, so pressing Enter on the empty field starts a fingerprint unlock (see [New machine](./new-machine.md#3-after-the-first-apply)). The config also sets `daemonize`, so `swaylock` returns once the screen is locked, which swayidle's `before-sleep` relies on.
+[swaylock](https://github.com/swaywm/swaylock) locks the screen, styled in Callie by `~/.config/swaylock/config`. It shows the machine's wallpaper with a ring in the middle, visible before you type: pink highlights as you type, teal while checking, and red on a wrong password. chezmoi writes the config from `config.tmpl`, which picks `pond` or `pond-laptop` like the sway config does. It leaves out `ignore-empty-password`, so pressing Enter on the empty field starts a fingerprint unlock (see [Fingerprint unlock](./new-machine.md#fingerprint-unlock)). The config also sets `daemonize`, so `swaylock` returns once the screen is locked, which swayidle's `before-sleep` relies on.
 
 ## Sleep, suspend, and resume
 
-[swayidle](https://github.com/swaywm/swayidle) reads `~/.config/swayidle/config`, which chezmoi writes from `config.tmpl`: lock after 5 minutes idle, then 5 minutes later suspend on the laptops or turn the screens off on the desktop, and lock before sleeping. The sway config only starts it. While Agent Awake holds its sleep lock, the laptops' suspend fails and they stay locked instead.
+[swayidle](https://github.com/swaywm/swayidle) reads `~/.config/swayidle/config`: on every machine, lock and turn the screens off after 5 minutes idle, suspend 5 minutes later, and lock before sleeping. The sway config only starts it. While Agent Awake holds its sleep lock, the suspend fails and the machine stays locked with its screens off instead.
 
 ## Notifications
 
