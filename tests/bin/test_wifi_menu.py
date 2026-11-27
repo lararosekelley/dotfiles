@@ -31,8 +31,11 @@ class WifiMenuTest(unittest.TestCase):
         self.answers = self.tmp / "answers"
         (self.tmp / "networks").write_text(NETWORKS)
         (self.tmp / "radio").write_text("enabled\n")
-        # nmcli: the device and network lists come from files, a saved
-        # connection named "cafe-saved" is for Cafe, and every call is logged
+        (self.tmp / "saved").write_text("uuid-cafe:802-11-wireless\n")
+        # nmcli: the device, network, and saved connection lists come from
+        # files; uuid-cafe is Cafe's saved connection and uuid-lab Lab:5G's; a
+        # passwd-file's contents are kept; "fail" makes activation fail; every
+        # call is logged
         self.stub(
             "nmcli",
             f"""echo "nmcli $*" >> "{self.log}"
@@ -41,9 +44,13 @@ case "$*" in
   "radio wifi") cat "{self.tmp}/radio" ;;
   "-t -f IN-USE,SIGNAL,SECURITY,SSID device wifi list --rescan no")
     cat "{self.tmp}/networks" ;;
-  "-t -f NAME,TYPE connection show")
-    printf 'wired:802-3-ethernet\\ncafe-saved:802-11-wireless\\n' ;;
-  "-g 802-11-wireless.ssid connection show cafe-saved") echo Cafe ;;
+  "-t -f UUID,TYPE connection show")
+    echo uuid-wired:802-3-ethernet; cat "{self.tmp}/saved" ;;
+  "-g 802-11-wireless.ssid connection show uuid uuid-cafe") echo Cafe ;;
+  "-g 802-11-wireless.ssid connection show uuid uuid-lab") echo 'Lab\\:5G' ;;
+  "connection up uuid "*" passwd-file "*)
+    cat "${{@: -1}}" > "{self.tmp}/passwd"
+    [ ! -e "{self.tmp}/fail" ] || {{ echo "Secrets were required"; exit 4; }} ;;
   "-t -f DEVICE,TYPE,STATE device") echo wlo1:wifi:connected ;;
 esac""",
         )
@@ -101,18 +108,54 @@ echo "$answer\"""",
 
     def test_a_saved_network_connects_with_its_own_password(self):
         log = self.run_menu("3")
-        self.assertIn("nmcli connection up id cafe-saved", log)
+        self.assertIn("nmcli connection up uuid uuid-cafe", log)
         self.assertNotIn("-password", log)
         self.assertIn("notify-send -t 5000 Connected Cafe", log)
 
-    def test_a_new_secured_network_asks_for_its_password(self):
+    def test_a_saved_network_with_a_colon_in_its_name_is_found(self):
+        (self.tmp / "saved").write_text("uuid-lab:802-11-wireless\n")
+        log = self.run_menu("1")
+        self.assertIn("nmcli connection up uuid uuid-lab", log)
+        self.assertNotIn("-password", log)
+
+    def test_a_new_secured_network_gets_its_password_through_a_pipe(self):
         log = self.run_menu("1", "hunter2")
         self.assertIn("rofi -dmenu -password -l 0 -p password for Lab:5G", log)
-        self.assertIn("nmcli device wifi connect Lab:5G password hunter2", log)
+        self.assertRegex(
+            log,
+            r"nmcli connection add type wifi con-name Lab:5G ssid Lab:5G "
+            r"connection.uuid \S+ wifi-sec.key-mgmt wpa-psk",
+        )
+        self.assertNotIn("hunter2", log)
+        self.assertEqual(
+            (self.tmp / "passwd").read_text(),
+            "802-11-wireless-security.psk:hunter2\n",
+        )
+        self.assertIn("Connected Lab:5G", log)
+
+    def test_a_failed_connection_removes_the_new_profile(self):
+        (self.tmp / "fail").write_text("")
+        log = self.run_menu("1", "wrong")
+        self.assertRegex(log, r"nmcli connection delete uuid \S+")
+        self.assertIn("Couldn't connect to Lab:5G", log)
 
     def test_cancelling_the_password_connects_nothing(self):
         log = self.run_menu("1")
+        self.assertNotIn("connection add", log)
         self.assertNotIn("wifi connect", log)
+
+    def test_an_enterprise_network_opens_the_settings(self):
+        (self.tmp / "networks").write_text(" :80:WPA2 802.1X:Work\n")
+        log = self.run_menu("0")
+        self.assertIn("settings", log)
+        self.assertNotIn("connection add", log)
+
+    def test_with_no_networks_the_actions_keep_their_places(self):
+        (self.tmp / "networks").write_text("")
+        log = self.run_menu("0")
+        self.assertIn("nmcli device wifi rescan", log)
+        self.assertNotIn("radio wifi off", log)
+        self.assertEqual(self.rows()[0], "rescan")
 
     def test_an_open_network_connects_without_a_password(self):
         log = self.run_menu("2")
