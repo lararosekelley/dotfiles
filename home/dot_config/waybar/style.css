@@ -36,6 +36,7 @@ tooltip label {
 #idle_inhibitor,
 #pulseaudio,
 #network,
+#bluetooth,
 #custom-hardware,
 #cpu,
 #memory,
@@ -160,6 +161,15 @@ tooltip label {
 
 #network {
     color: #82cdcd;
+}
+
+#bluetooth {
+    color: #a4beef;
+}
+
+#bluetooth.off,
+#bluetooth.disabled {
+    color: #9a8797;
 }
 
 #cpu,

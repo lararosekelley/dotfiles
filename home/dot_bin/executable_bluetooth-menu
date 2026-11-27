@@ -1,0 +1,142 @@
+#!/usr/bin/env bash
+
+# Bluetooth for sway, through rofi and bluetoothctl: the paired devices,
+# connected first, with their battery where they report it. Enter connects or
+# disconnects one, and Alt+Enter forgets it. The menu also scans for new devices
+# to pair, turns Bluetooth on or off, and opens bluetoothctl in a terminal for
+# devices that need a PIN.
+#
+# Usage: bluetooth-menu [pair]
+#
+#   pair  scan for new devices and pair the chosen one
+
+set -uo pipefail
+
+notify() { notify-send -t 5000 "$@"; }
+terminal() { kitty --class bluetoothctl bluetoothctl; }
+
+# pick PROMPT [ROFI ARGS...]: choose a line from stdin, printing its index
+pick() {
+  local prompt=$1
+  shift
+  rofi -dmenu -i -p "$prompt" -format i "$@"
+}
+
+icon() {
+  case "$1" in
+    audio-head* | audio-card) echo 󰋋 ;;
+    audio-*) echo 󰓃 ;;
+    input-gaming) echo 󰊗 ;;
+    input-keyboard) echo 󰌌 ;;
+    input-mouse | input-tablet) echo 󰍽 ;;
+    phone) echo 󰄜 ;;
+    *) echo 󰂯 ;;
+  esac
+}
+
+if ! bluetoothctl show > /dev/null 2>&1 \
+  || bluetoothctl show 2>&1 | grep -q 'No default controller'; then
+  notify "No Bluetooth" "There's no Bluetooth adapter here."
+  exit 0
+fi
+
+if ! bluetoothctl show | grep -q 'Powered: yes'; then
+  choice=$(printf '%s\n' "󰐥  turn Bluetooth on" "󰆍  open bluetoothctl" \
+    | pick bluetooth) || exit 0
+  case "$choice" in
+    0) bluetoothctl power on > /dev/null && notify "Bluetooth on" ;;
+    1) terminal ;;
+  esac
+  exit 0
+fi
+
+# scan for 10 seconds, then pair, trust, and connect the chosen device
+if [ "${1:-}" = pair ]; then
+  notify "Looking for Bluetooth devices" "Put the device in pairing mode; this takes 10 seconds."
+  bluetoothctl --timeout 10 scan on > /dev/null 2>&1
+  paired=$(bluetoothctl devices Paired)
+  macs=()
+  rows=()
+  while read -r _ mac name; do
+    grep -q "$mac" <<< "$paired" && continue
+    # devices that haven't sent a name show their address instead
+    [ "$name" = "${mac//:/-}" ] && continue
+    macs+=("$mac")
+    rows+=("󰂯  $name")
+  done < <(bluetoothctl devices)
+  if [ "${#macs[@]}" -eq 0 ]; then
+    notify "No new Bluetooth devices found" "Check that it's in pairing mode, then try again."
+    exit 0
+  fi
+  choice=$(printf '%s\n' "${rows[@]}" | pick pair) || exit 0
+  [ "$choice" -ge 0 ] 2> /dev/null || exit 0
+  mac=${macs[$choice]}
+  name=${rows[$choice]#*  }
+  if result=$(bluetoothctl pair "$mac" 2>&1) \
+    && bluetoothctl trust "$mac" > /dev/null \
+    && bluetoothctl connect "$mac" > /dev/null; then
+    notify "Paired" "$name"
+  else
+    notify -u critical "Couldn't pair $name" \
+      "$(tail -n 1 <<< "$result"). A device that asks for a PIN pairs from bluetoothctl in the menu."
+  fi
+  exit 0
+fi
+
+# the paired devices, connected ones first
+macs=()
+names=()
+connected=()
+rows=()
+while read -r _ mac name; do
+  info=$(bluetoothctl info "$mac")
+  is_connected=no
+  grep -q 'Connected: yes' <<< "$info" && is_connected=yes
+  battery=$(sed -n 's/.*Battery Percentage: .*(\([0-9]*\)).*/\1/p' <<< "$info")
+  row="$(icon "$(sed -n 's/^[[:space:]]*Icon: //p' <<< "$info")")  $name"
+  [ "$is_connected" = yes ] && row="󰄬  $name  (connected${battery:+, $battery%})"
+  macs+=("$mac")
+  names+=("$name")
+  connected+=("$is_connected")
+  rows+=("$row")
+done < <(bluetoothctl devices Paired | sort -k3)
+
+order=()
+for i in "${!macs[@]}"; do [ "${connected[$i]}" = yes ] && order+=("$i"); done
+for i in "${!macs[@]}"; do [ "${connected[$i]}" = no ] && order+=("$i"); done
+
+count=${#order[@]}
+choice=$({
+  for i in "${order[@]}"; do printf '%s\n' "${rows[$i]}"; done
+  printf '%s\n' "󰍉  pair a new device" "󰂲  turn Bluetooth off" \
+    "󰆍  open bluetoothctl"
+} | pick bluetooth -kb-custom-1 Alt+Return \
+  -mesg "Enter: connect or disconnect    Alt+Enter: forget")
+status=$?
+[ "$status" -eq 0 ] || [ "$status" -eq 10 ] || exit 0
+[ "$choice" -ge 0 ] 2> /dev/null || exit 0
+
+if [ "$choice" -ge "$count" ]; then
+  [ "$status" -eq 0 ] || exit 0
+  case $((choice - count)) in
+    0) exec "$0" pair ;;
+    1) bluetoothctl power off > /dev/null && notify "Bluetooth off" ;;
+    2) terminal ;;
+  esac
+  exit 0
+fi
+
+i=${order[$choice]}
+mac=${macs[$i]}
+name=${names[$i]}
+if [ "$status" -eq 10 ]; then
+  confirm=$(printf '%s\n' "no" "yes" | rofi -dmenu -p "forget $name?") || exit 0
+  [ "$confirm" = yes ] || exit 0
+  bluetoothctl remove "$mac" > /dev/null && notify "Forgot $name"
+elif [ "${connected[$i]}" = yes ]; then
+  bluetoothctl disconnect "$mac" > /dev/null && notify "Disconnected" "$name"
+elif result=$(bluetoothctl connect "$mac" 2>&1); then
+  notify "Connected" "$name"
+else
+  notify -u critical "Couldn't connect to $name" "$(tail -n 1 <<< "$result")"
+fi

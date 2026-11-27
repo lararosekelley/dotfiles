@@ -10,5 +10,6 @@ user      navi.service          ~/.local/bin/navi    -
 user      clip-receive.service  tailscale            -
 user      recollindex.service   recollindex          -
 system    tailscaled.service    tailscale            -
+system    bluetooth.service     bluetoothctl         -
 system    pkgfile-update.timer  pkgfile              arch
 system    jellyfin.service      jellyfin             desktop
