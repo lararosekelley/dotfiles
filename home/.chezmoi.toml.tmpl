@@ -11,3 +11,9 @@ sourceDir = {{ .chezmoi.workingTree | quote }}
 [data]
   kde = {{ $kde }}
   machine = {{ $machine | quote }}
+
+# `chezmoi merge` opens nvim's diff mode; chezmoi's default, vimdiff, isn't
+# installed
+[merge]
+  command = "nvim"
+  args = ["-d", {{ "{{ .Destination }}" | quote }}, {{ "{{ .Source }}" | quote }}, {{ "{{ .Target }}" | quote }}]
