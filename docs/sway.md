@@ -101,6 +101,8 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 
 `$mod+/` lists every key binding, with the comment above it in the config and its command. `sway-keys` in `~/.bin` builds the list from the installed config each time it opens, so it follows `machine.conf` and any binding added later. `sway-keys --print` writes the same list to a terminal. Because the comments double as the list's descriptions, write each binding's comment for someone reading the list.
 
+`autosplit` in `~/.bin`, which the sway config starts, splits each focused tiled window along its longer side: a new window opens below a tall window and beside a wide one, so windows spiral in. It leaves floating, fullscreen, stacked, and tabbed windows alone, and waits while `sway-startup` lays out the startup windows. `$mod+minus` and `$mod+|` still choose the next split by hand.
+
 `$mod+Shift+Space` and `$mod+Alt+Space` float or tile the focused window (`sway-nested` keeps only the first, since its `$mod` is Alt). `$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display. On a touchpad, swiping three fingers left or right does the same, through sway's `bindgesture`. Swiping four fingers up shows the next scratchpad window, like `$mod+x`, and four fingers down floats or tiles the focused window, like `$mod+Shift+Space`. The `$mod+/` list includes gestures too.
 
 `$mod+b` opens the default web browser, whichever `xdg-settings get default-web-browser` names. `$mod+e` opens Neovim in a terminal. `$mod+c` opens the Callie calendar's TUI (`callie tui`) and `$mod+m` the cliamp music player, each in a terminal like any other window. Callie is only installed on Fedora for now.

@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Split each focused tiled window along its longer side, so the next window
+# opens below a tall window and beside a wide one, and windows spiral inward.
+# Floating, fullscreen, and stacked or tabbed windows are left alone, as is
+# everything while sway-startup lays out the startup windows. The split keys
+# ($mod+minus, $mod+bar) still override it for the next window. The sway config
+# starts it; it runs until sway exits.
+#
+# Usage: autosplit
+
+set -uo pipefail
+
+# the focused window's parent layout, then the window's width, height, and
+# fullscreen mode; nothing for a floating window, which isn't in a parent's nodes,
+# or an empty workspace
+focused() {
+  swaymsg -t get_tree | jq -r '
+    first(.. | objects | select(.nodes? and any(.nodes[]; .focused)))
+    | .layout as $layout | .nodes[] | select(.focused and .type == "con")
+    | "\($layout) \(.rect.width) \(.rect.height) \(.fullscreen_mode)"'
+}
+
+swaymsg -t subscribe -m '["window"]' \
+  | jq --unbuffered -r 'select(.change == "focus") | .change' \
+  | while read -r _; do
+    pgrep -x sway-startup > /dev/null && continue
+    read -r layout width height fullscreen <<< "$(focused)"
+    [ -n "${layout:-}" ] && [ "${fullscreen:-0}" = 0 ] || continue
+    case "$layout" in stacked | tabbed) continue ;; esac
+    if [ "$height" -gt "$width" ]; then want=splitv; else want=splith; fi
+    [ "$layout" = "$want" ] || swaymsg -q "split ${want#split}"
+  done
