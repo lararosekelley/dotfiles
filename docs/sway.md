@@ -238,7 +238,7 @@ first time.
 window: `$mod+Shift+e` opens it, and folders that apps open, such as a
 browser's "show in folder", open in it too. That default lives in
 `~/.config/sway-mimeapps.list`, which only applies under sway, so KDE keeps
-Dolphin. yazi previews images in kitty without extra setup. Arch installs it
+Dolphin. yazi previews images in kitty without extra setup. `~/.config/yazi/theme.toml` colors it in Callie, and code previews use Callie's TextMate theme (`callie.tmTheme`, from the Callie repo's ports). Arch installs it
 from `extra`, and Fedora, which doesn't package it, from seaweed's COPR
 (`system/yum.repos.d/yazi.repo`), both through `scripts/setup/apps`.
 
