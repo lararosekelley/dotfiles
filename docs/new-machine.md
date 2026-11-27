@@ -68,8 +68,9 @@ and a step that fails runs again on the next `chezmoi apply`.
 ## 3. After the first apply
 
 - Copy over the private files the repo leaves out: `~/.environment` (including
-  `JELLYFIN_API_KEY`), `~/.config/navi/navi.env` (`chmod 600`), and the host
-  entries in `~/.ssh/config`. chezmoi only adds `AddKeysToAgent` to that file.
+  `JELLYFIN_API_KEY`, and `WEATHER_LOCATION` for waybar's weather),
+  `~/.config/navi/navi.env` (`chmod 600`), and the host entries in
+  `~/.ssh/config`. chezmoi only adds `AddKeysToAgent` to that file.
 - Join the personal tailnet, which the machines share (cliamp reaches the
   desktop's Jellyfin over it), and let `tailscale switch` run without sudo.
   Add the work account too, to switch to when needed; see

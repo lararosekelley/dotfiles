@@ -27,7 +27,7 @@ tooltip label {
 #workspaces,
 #mode,
 #scratchpad,
-#clock,
+#datetime,
 #custom-recording,
 #custom-dnd,
 #custom-notifications,
@@ -91,9 +91,24 @@ tooltip label {
     color: #2e0f20;
 }
 
-#clock {
+#datetime {
     color: #f08fb8;
     border-color: #f08fb8;
+    /* a group needs 2px more height than a module, which the bar doesn't have */
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+/* the clock and the weather inside the datetime pill */
+#clock,
+#custom-weather {
+    color: #f08fb8;
+    margin: 0;
+    padding: 0;
+}
+
+#custom-weather {
+    padding-left: 12px;
 }
 
 #custom-recording {
