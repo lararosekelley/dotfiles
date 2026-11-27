@@ -65,6 +65,12 @@ tuicr
   sh:https://tuicr.dev/install.sh@TUICR_INSTALL_YES=1
   sh:https://tuicr.dev/install.sh@TUICR_INSTALL_YES=1
 
+# yazi, the file manager under sway: seaweed's COPR build on Fedora, which
+# doesn't package it
+yazi
+  repo:yazi@system/yum.repos.d/yazi.repo
+  pacman:yazi
+
 protonvpn-app
   repo:proton-vpn-gnome-desktop@system/yum.repos.d/protonvpn-stable.repo
   pacman:proton-vpn-gtk-app

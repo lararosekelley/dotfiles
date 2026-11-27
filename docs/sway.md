@@ -104,7 +104,7 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 
 `autosplit` in `~/.bin`, which the sway config starts, splits each focused tiled window along its longer side: a new window opens below a tall window and beside a wide one, so windows spiral in. It leaves floating, fullscreen, stacked, and tabbed windows alone, and waits while `sway-startup` lays out the startup windows. `$mod+\` sends the next window the other way instead, and `$mod+|` flips the windows beside the focused one between side by side and stacked. `$mod+minus` and `$mod+=` shrink and grow the focused window in both directions without entering resize mode (`$mod+r`): by a tenth of the screen when tiled, 100px when floating.
 
-`$mod+Shift+Space` and `$mod+Alt+Space` float or tile the focused window (`sway-nested` keeps only the first, since its `$mod` is Alt). `$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display. On a touchpad, swiping three fingers left or right does the same, through sway's `bindgesture`. Swiping four fingers up shows the next scratchpad window, like `$mod+x`, and four fingers down floats or tiles the focused window, like `$mod+Shift+Space`. The `$mod+/` list includes gestures too.
+`$mod+Shift+Space`, `$mod+Shift+f`, and `$mod+Alt+Space` float or tile the focused window (`sway-nested` keeps only the first, since its `$mod` is Alt). `$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display. On a touchpad, swiping three fingers left or right does the same, through sway's `bindgesture`. Swiping four fingers up shows the next scratchpad window, like `$mod+x`, and four fingers down floats or tiles the focused window, like `$mod+Shift+Space`. The `$mod+/` list includes gestures too.
 
 `$mod+b` opens the default web browser, whichever `xdg-settings get default-web-browser` names. `$mod+e` opens Neovim in a terminal. `$mod+c` opens the Callie calendar's TUI (`callie tui`) and `$mod+m` the cliamp music player, each in a terminal like any other window. Callie is only installed on Fedora for now.
 
@@ -227,5 +227,13 @@ goes through `xdg-desktop-portal-wlr`, which asks which display to share the
 first time.
 
 ## File manager
+
+[yazi](https://yazi-rs.github.io/) is the file manager under sway, in a kitty
+window: `$mod+Shift+e` opens it, and folders that apps open, such as a
+browser's "show in folder", open in it too. That default lives in
+`~/.config/sway-mimeapps.list`, which only applies under sway, so KDE keeps
+Dolphin. yazi previews images in kitty without extra setup. Arch installs it
+from `extra`, and Fedora, which doesn't package it, from seaweed's COPR
+(`system/yum.repos.d/yazi.repo`), both through `scripts/setup/apps`.
 
 ## Hardware-specific configuration
