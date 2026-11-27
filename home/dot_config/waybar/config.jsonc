@@ -4,7 +4,14 @@
     "reload_style_on_change": true,
     "height": 34,
     "spacing": 0,
-    "modules-left": ["tray", "sway/workspaces", "custom/recording", "sway/mode", "sway/scratchpad"],
+    "modules-left": [
+        "tray",
+        "sway/workspaces",
+        "custom/recording",
+        "custom/now-playing",
+        "sway/mode",
+        "sway/scratchpad"
+    ],
     "modules-center": ["group/datetime"],
     "modules-right": [
         "custom/dnd",
@@ -51,6 +58,16 @@
         }
     },
 
+    // what's playing, from any MPRIS player (cliamp, browsers), shown only while
+    // it plays; a click pauses it and scrolling skips (script in ~/.bin)
+    "custom/now-playing": {
+        "exec": "now-playing",
+        "return-type": "json",
+        "interval": 2,
+        "on-click": "now-playing toggle",
+        "on-scroll-up": "now-playing next",
+        "on-scroll-down": "now-playing previous"
+    },
     "custom/recording": {
         "exec": "screenrecord status",
         "return-type": "json",

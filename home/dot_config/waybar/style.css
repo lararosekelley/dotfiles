@@ -29,6 +29,7 @@ tooltip label {
 #scratchpad,
 #datetime,
 #custom-recording,
+#custom-now-playing,
 #custom-dnd,
 #custom-notifications,
 #custom-night-light,
@@ -119,6 +120,10 @@ tooltip label {
 
 #custom-notifications {
     color: #a4beef;
+}
+
+#custom-now-playing {
+    color: #9dcca3;
 }
 
 #custom-dnd.off {
