@@ -5,6 +5,11 @@ desktop and the Arch laptops say so (see [Machines](../README.md#machines)).
 `chezmoi apply` does most of the work in step 2; the rest of this page is what
 it can't do.
 
+`dotfiles-doctor` (in `~/.bin`) checks the steps on this page, and the other
+docs' manual steps, on the current machine, and lists what's still left with
+the command that does each and where it's explained. Run it after setting up,
+and again after pulling changes.
+
 ## 1. Before chezmoi
 
 Install `git` and `chezmoi`.

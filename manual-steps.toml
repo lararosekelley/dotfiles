@@ -1,0 +1,253 @@
+# Every setup step the docs ask for by hand, which `chezmoi apply` can't do, and
+# how to tell it's done. `dotfiles-doctor` (in ~/.bin) runs these checks on the
+# current machine and lists what's left. Add a step here whenever the docs gain
+# one, in the order the docs give them.
+#
+# Each [[step]] has:
+#
+#   id          a short name, unique
+#   title       what to do, as an instruction
+#   needed_for  what breaks or is missing without it
+#   docs        where the docs explain it: a file under docs/, with an anchor
+#   machines    optional: the machines it applies to (desktop, framework,
+#               thinkpad); every machine when left out
+#   distro      optional: fedora or arch
+#   when        optional: a command; the step is skipped where it fails, as on
+#               a machine without the hardware
+#   check       optional: a command that succeeds once the step is done; a step
+#               without one is listed for you to confirm
+#   fix         optional: the command that does it, when it's short
+#
+# Commands run in bash from the repo's root, with MACHINE and DISTRO set, and
+# must not need sudo, change anything, or take more than a few seconds.
+
+# 1. Before chezmoi
+
+[[step]]
+id = "locale"
+title = "Generate the en_US.UTF-8 locale"
+needed_for = "Every program warns about the locale, since .exports sets LC_ALL"
+docs = "docs/new-machine.md#1-before-chezmoi"
+distro = "arch"
+check = "locale -a | grep -qix 'en_US.utf8'"
+
+[[step]]
+id = "paru"
+title = "Build the paru AUR helper"
+needed_for = "The setup skips AUR packages without it"
+docs = "docs/new-machine.md#1-before-chezmoi"
+distro = "arch"
+check = "command -v paru"
+
+[[step]]
+id = "hostname"
+title = "Name the machine after its role"
+needed_for = "chezmoi's default machine, and reaching it by name on the tailnet"
+docs = "docs/new-machine.md#1-before-chezmoi"
+check = '[ "$(hostname)" = "$MACHINE" ]'
+fix = 'sudo hostnamectl hostname "$MACHINE"'
+
+[[step]]
+id = "ssh-key"
+title = "Copy or create an SSH key, and add it to GitHub"
+needed_for = "Cloning the repo and the config repos over SSH"
+docs = "docs/new-machine.md#1-before-chezmoi"
+check = "ls ~/.ssh/id_*.pub"
+
+# 3. After the first apply
+
+[[step]]
+id = "environment"
+title = "Copy over ~/.environment, with JELLYFIN_API_KEY"
+needed_for = "Private settings, and cliamp reaching the desktop's Jellyfin"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+check = "grep -q JELLYFIN_API_KEY= ~/.environment"
+
+[[step]]
+id = "navi-env"
+title = "Copy over ~/.config/navi/navi.env, readable only by you"
+needed_for = "navi's tokens"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+check = '[ "$(stat -c %a ~/.config/navi/navi.env)" = 600 ]'
+fix = "chmod 600 ~/.config/navi/navi.env"
+
+[[step]]
+id = "tailscale"
+title = "Join the personal tailnet, with switching allowed without sudo"
+needed_for = "cliamp, Taildrop clipboard sending, and reaching the other machines"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+check = "tailscale switch --list"
+fix = "sudo tailscale up && sudo tailscale set --operator=$USER"
+
+[[step]]
+id = "resolv-conf"
+title = "Point /etc/resolv.conf at systemd-resolved's stub"
+needed_for = "Tailscale's DNS, which otherwise warns about NetworkManager"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+distro = "arch"
+when = "systemctl is-active -q systemd-resolved"
+check = '[ "$(readlink /etc/resolv.conf)" = ../run/systemd/resolve/stub-resolv.conf ]'
+
+[[step]]
+id = "pkgfile"
+title = "Build pkgfile's database"
+needed_for = "fish naming the package a missing command is in"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+distro = "arch"
+check = "compgen -G '/var/cache/pkgfile/*.files'"
+fix = "sudo pkgfile --update"
+
+[[step]]
+id = "fish-shell"
+title = "Make fish the login shell"
+needed_for = "fish in every terminal and on login"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+check = '[ "$(getent passwd "$USER" | cut -d: -f7)" = /usr/bin/fish ]'
+fix = "chsh -s /usr/bin/fish"
+
+[[step]]
+id = "standalone-binaries"
+title = "Install claude, herdr, navi, and git-stk in ~/.local/bin"
+needed_for = "The agents, herdr, navi, and stacked branches"
+docs = "docs/packages.md#self-updating-and-standalone-binaries"
+check = "command -v claude herdr navi git-stk"
+
+[[step]]
+id = "gh-extensions"
+title = "Install the gh-dash and gh-enhance gh extensions"
+needed_for = "herdr's github tab"
+docs = "docs/packages.md#self-updating-and-standalone-binaries"
+when = "command -v gh"
+check = "gh extension list | grep -q gh-dash && gh extension list | grep -q gh-enhance"
+fix = "gh extension install dlvhdr/gh-dash && gh extension install dlvhdr/gh-enhance"
+
+[[step]]
+id = "nerd-font"
+title = "Install IosevkaTerm Nerd Font"
+needed_for = "The icons in waybar, rofi, and the terminal"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+distro = "fedora"
+check = "fc-list | grep -qi 'IosevkaTerm Nerd Font'"
+
+[[step]]
+id = "cliamp"
+title = "Download cliamp into ~/.local/bin"
+needed_for = "The music player on workspace 1"
+docs = "docs/packages.md#self-updating-and-standalone-binaries"
+distro = "fedora"
+check = "command -v cliamp"
+
+[[step]]
+id = "rustup-toolchain"
+title = "Install a Rust toolchain with rustup"
+needed_for = "cargo and rustc, which rustup doesn't install at first"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+when = "command -v rustup"
+check = "rustup default"
+fix = "rustup default stable"
+
+# the desktop
+
+[[step]]
+id = "kde-apply"
+title = "Apply the KDE theme, widgets, and settings with `just kde-apply`"
+needed_for = "The KDE desktop's look and layout"
+docs = "docs/desktop-preferences.md"
+machines = ["desktop"]
+
+[[step]]
+id = "desktop-apps"
+title = "Install Callie, Jot, and sfizz"
+needed_for = "The calendar on workspace 1, notes, and sfizz's instruments"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+machines = ["desktop"]
+check = "command -v callie jot sfizz_jack"
+
+[[step]]
+id = "jellyfin-libraries"
+title = "Set up Jellyfin's libraries"
+needed_for = "Music and video served to cliamp and the other machines"
+docs = "docs/media-server.md"
+machines = ["desktop"]
+
+[[step]]
+id = "openrgb"
+title = "Install OpenRGB's profiles and services"
+needed_for = "The case lighting at boot, and turning it off for sleep"
+docs = "docs/rgb-lighting.md"
+machines = ["desktop"]
+check = "systemctl is-enabled -q openrgb.service openrgb-resume.service openrgb-sleep.service"
+
+[[step]]
+id = "sensor-drivers"
+title = "Load the board's and the SATA drive's sensor drivers at boot"
+needed_for = "Board fans and the hard drive's temperature in waybar's hardware pill"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+machines = ["desktop"]
+check = "cmp -s system/modules-load.d/sensors.conf /etc/modules-load.d/sensors.conf"
+fix = "sudo install -m 644 system/modules-load.d/sensors.conf /etc/modules-load.d/"
+
+[[step]]
+id = "fans-full"
+title = "Install fans-full and its service"
+needed_for = "Fans at full speed after every boot and sleep, keeping the coolant cool"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+machines = ["desktop"]
+check = "cmp -s system/fans-full /usr/local/sbin/fans-full && cmp -s system/fans-full.service /etc/systemd/system/fans-full.service && systemctl is-enabled -q fans-full.service"
+
+# fingerprints, on machines with a reader
+
+[[step]]
+id = "fingerprint-enrolled"
+title = "Enroll a fingerprint"
+needed_for = "Unlocking and sudo with a finger"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+when = "fprintd-list \"$USER\" 2>&1 | grep -q 'found [1-9]'"
+check = "fprintd-list \"$USER\" | grep -q ' - #'"
+fix = "fprintd-enroll"
+
+[[step]]
+id = "fingerprint-fedora"
+title = "Turn on fingerprints for every password prompt with authselect"
+needed_for = "sudo and apps' password prompts taking a finger"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+distro = "fedora"
+when = "fprintd-list \"$USER\" 2>&1 | grep -q 'found [1-9]'"
+check = "authselect current | grep -q with-fingerprint"
+fix = "sudo authselect enable-feature with-fingerprint"
+
+[[step]]
+id = "fingerprint-arch"
+title = "Add pam_fprintd to sudo's, polkit's, and login's PAM files"
+needed_for = "sudo, apps' password prompts, and ly taking a finger"
+docs = "docs/new-machine.md#3-after-the-first-apply"
+distro = "arch"
+when = "fprintd-list \"$USER\" 2>&1 | grep -q 'found [1-9]'"
+check = "grep -q pam_fprintd /etc/pam.d/sudo && grep -q pam_fprintd /etc/pam.d/polkit-1 && grep -q pam_fprintd /etc/pam.d/login"
+
+[[step]]
+id = "swaylock-pam"
+title = "Install the lock screen's PAM file"
+needed_for = "A typed password unlocking at once, and Enter with a finger"
+docs = "docs/new-machine.md#fingerprint-unlock"
+check = "cmp -s system/pam.d/swaylock /etc/pam.d/swaylock"
+fix = "sudo cp /etc/pam.d/swaylock /etc/pam.d/swaylock.orig && sudo install -m 644 system/pam.d/swaylock /etc/pam.d/swaylock"
+
+# 4. Neovim
+
+[[step]]
+id = "nvim-plugins"
+title = "Open nvim once, so lazy.nvim installs the plugins"
+needed_for = "Neovim's plugins and language servers"
+docs = "docs/new-machine.md#4-neovim"
+check = "[ -d ~/.local/share/nvim/lazy ]"
+
+# keeping it current
+
+[[step]]
+id = "chezmoi-config"
+title = "Rerun chezmoi init after its config template changes"
+needed_for = "chezmoi settings added to home/.chezmoi.toml.tmpl since the last init"
+docs = "docs/syncing.md"
+check = "! chezmoi managed 2>&1 >/dev/null | grep -q 'config file template has changed'"
+fix = "chezmoi init"
