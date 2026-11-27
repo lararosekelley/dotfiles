@@ -99,6 +99,7 @@ sensors                   lm_sensors                lm_sensors
 swappy                    swappy                    swappy
 notify-send               libnotify                 libnotify
 brightnessctl             brightnessctl             brightnessctl
+bluetoothctl              bluez                     bluez-utils
 cliphist                  cliphist                  cliphist
 rofimoji                  rofimoji                  rofimoji
 wtype                     wtype                     wtype

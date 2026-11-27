@@ -20,6 +20,7 @@
         "idle_inhibitor",
         "pulseaudio",
         "network",
+        "bluetooth",
         "custom/hardware",
         "cpu",
         "memory",
@@ -116,6 +117,21 @@
         "format-disconnected": "󰖪 offline",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
         "on-click": "wifi-menu"
+    },
+    // the adapter and what's connected; a click opens the Bluetooth menu
+    // (script in ~/.bin), and it hides where there's no adapter
+    "bluetooth": {
+        "format": "󰂯",
+        "format-off": "󰂲",
+        "format-disabled": "󰂲",
+        "format-no-controller": "",
+        "format-connected": "󰂱 {device_alias}",
+        "format-connected-battery": "󰂱 {device_alias} {device_battery_percentage}%",
+        "tooltip-format": "Bluetooth {status}",
+        "tooltip-format-connected": "{num_connections} connected:\n{device_enumerate}",
+        "tooltip-format-enumerate-connected": "{device_alias}",
+        "tooltip-format-enumerate-connected-battery": "{device_alias}: {device_battery_percentage}%",
+        "on-click": "bluetooth-menu"
     },
     "custom/hardware": {
         "exec": "hardware",
