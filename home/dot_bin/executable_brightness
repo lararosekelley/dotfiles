@@ -6,24 +6,50 @@
 # still running is dropped rather than queued.
 #
 # Usage: brightness up|down [PERCENT]   (5 by default)
+#        brightness status                 waybar's JSON: the current level
 
 set -uo pipefail
 
-direction=${1:-}
-step=${2:-5}
-case "$direction" in
+panel() { brightnessctl --list --class=backlight 2> /dev/null | grep -q "Device '"; }
+
+# waybar's brightness module updates on this signal (see its config)
+refresh_bar() { pkill -RTMIN+11 -x waybar; }
+
+# the level as a percentage: the panel's, or the monitor's over DDC/CI
+level() {
+  if panel; then
+    brightnessctl --class=backlight --machine-readable info | cut -d, -f4 | tr -d %
+  else
+    ddcutil getvcp 10 --brief 2> /dev/null \
+      | awk '$1 == "VCP" && $5 > 0 { printf "%d\n", $4 * 100 / $5 + 0.5; f = 1 } END { exit !f }'
+  fi
+}
+
+case "${1:-}" in
   up) sign=+ ;;
   down) sign=- ;;
+  status)
+    if percent=$(level); then
+      printf '{"text": "󰃠 %s%%", "tooltip": "Brightness %s%%: scroll to change"}\n' "$percent" "$percent"
+    else
+      echo '{"text": ""}'
+    fi
+    exit 0
+    ;;
   *)
-    echo "usage: brightness up|down [PERCENT]" >&2
+    echo "usage: brightness up|down [PERCENT] | status" >&2
     exit 2
     ;;
 esac
+step=${2:-5}
 
-if brightnessctl --list --class=backlight 2> /dev/null | grep -q "Device '"; then
-  exec brightnessctl --quiet set "$step%$sign"
+if panel; then
+  brightnessctl --quiet set "$step%$sign"
+  refresh_bar
+  exit 0
 fi
 
 exec 9> "${XDG_RUNTIME_DIR:-/tmp}/brightness.lock"
 flock --nonblock 9 || exit 0
 ddcutil --noverify setvcp 10 "$sign" "$step"
+refresh_bar

@@ -24,7 +24,7 @@
         "custom/hardware",
         "cpu",
         "memory",
-        "backlight",
+        "custom/brightness",
         "battery"
     ],
 
@@ -60,12 +60,14 @@
     },
 
     // what's playing, from any MPRIS player (cliamp, browsers), shown only while
-    // it plays; a click pauses it and scrolling skips (script in ~/.bin)
+    // it plays; a click jumps to its window, a right-click pauses it, and
+    // scrolling skips (script in ~/.bin)
     "custom/now-playing": {
         "exec": "now-playing",
         "return-type": "json",
         "interval": 2,
-        "on-click": "now-playing toggle",
+        "on-click": "now-playing focus",
+        "on-click-right": "now-playing toggle",
         "on-scroll-up": "now-playing next",
         "on-scroll-down": "now-playing previous"
     },
@@ -141,10 +143,15 @@
     },
     "cpu": { "format": " {usage}%", "interval": 5 },
     "memory": { "format": "󰍛 {percentage}%", "interval": 10 },
-    "backlight": {
-        "format": " {percent}%",
-        "on-scroll-up": "brightnessctl set 5%+",
-        "on-scroll-down": "brightnessctl set 5%-"
+    // the laptop panel's or the desktop monitor's brightness, hidden where
+    // there's neither; scroll to change it (script in ~/.bin)
+    "custom/brightness": {
+        "exec": "brightness status",
+        "return-type": "json",
+        "interval": 60,
+        "signal": 11,
+        "on-scroll-up": "brightness up",
+        "on-scroll-down": "brightness down"
     },
     "battery": {
         "states": { "warning": 30, "critical": 15 },

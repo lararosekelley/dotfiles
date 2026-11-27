@@ -40,7 +40,7 @@ tooltip label {
 #custom-hardware,
 #cpu,
 #memory,
-#backlight,
+#custom-brightness,
 #battery,
 #tray {
     background: #261a2a;
@@ -191,7 +191,7 @@ tooltip label {
     border-color: #e66e6d;
 }
 
-#backlight {
+#custom-brightness {
     color: #d6ba86;
 }
 

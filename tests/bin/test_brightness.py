@@ -1,6 +1,7 @@
 """home/dot_bin/executable_brightness against fake brightnessctl and ddcutil."""
 
 from pathlib import Path
+import json
 import shutil
 import subprocess
 import tempfile
@@ -18,7 +19,12 @@ class BrightnessTest(unittest.TestCase):
         self.bin.mkdir()
         self.log = self.tmp / "log"
         self.log.write_text("")
-        self.stub("ddcutil", f'echo "ddcutil $*" >> "{self.log}"')
+        self.stub(
+            "ddcutil",
+            f'echo "ddcutil $*" >> "{self.log}"\n'
+            '[ "$1" = getvcp ] && echo "VCP 10 C 15 100"',
+        )
+        self.stub("pkill", f'echo "pkill $*" >> "{self.log}"')
 
     def stub(self, name, body):
         script = self.bin / name
@@ -31,8 +37,9 @@ class BrightnessTest(unittest.TestCase):
         )
         self.stub(
             "brightnessctl",
-            f'if [ "$1" = --list ]; then {listing or "exit 1"}; '
-            f'else echo "brightnessctl $*" >> "{self.log}"; fi',
+            f'case "$*" in --list*) {listing or "exit 1"} ;; '
+            '*info) echo "amdgpu_bl1,backlight,512,50%,1023" ;; '
+            f'*) echo "brightnessctl $*" >> "{self.log}" ;; esac',
         )
 
     def run_script(self, *args):
@@ -49,7 +56,12 @@ class BrightnessTest(unittest.TestCase):
         self.run_script("down", "10")
         self.assertEqual(
             self.log.read_text().splitlines(),
-            ["brightnessctl --quiet set 5%+", "brightnessctl --quiet set 10%-"],
+            [
+                "brightnessctl --quiet set 5%+",
+                "pkill -RTMIN+11 -x waybar",
+                "brightnessctl --quiet set 10%-",
+                "pkill -RTMIN+11 -x waybar",
+            ],
         )
 
     def test_without_a_panel_the_monitor_is_set_over_ddc(self):
@@ -58,7 +70,12 @@ class BrightnessTest(unittest.TestCase):
         self.run_script("down")
         self.assertEqual(
             self.log.read_text().splitlines(),
-            ["ddcutil --noverify setvcp 10 + 5", "ddcutil --noverify setvcp 10 - 5"],
+            [
+                "ddcutil --noverify setvcp 10 + 5",
+                "pkill -RTMIN+11 -x waybar",
+                "ddcutil --noverify setvcp 10 - 5",
+                "pkill -RTMIN+11 -x waybar",
+            ],
         )
 
     def test_a_press_while_ddcutil_is_busy_is_dropped(self):
@@ -75,7 +92,21 @@ class BrightnessTest(unittest.TestCase):
         second = self.run_script("up")
         first.wait()
         self.assertEqual(second.returncode, 0)
-        self.assertEqual(len(self.log.read_text().splitlines()), 1)
+        sets = [x for x in self.log.read_text().splitlines() if "setvcp" in x]
+        self.assertEqual(len(sets), 1)
+
+    def test_status_shows_the_panels_level(self):
+        self.panel(True)
+        self.assertIn("50%", json.loads(self.run_script("status").stdout)["text"])
+
+    def test_status_shows_the_monitors_level_over_ddc(self):
+        self.panel(False)
+        self.assertIn("15%", json.loads(self.run_script("status").stdout)["text"])
+
+    def test_status_hides_with_neither(self):
+        self.panel(False)
+        self.stub("ddcutil", "exit 1")
+        self.assertEqual(json.loads(self.run_script("status").stdout)["text"], "")
 
     def test_a_bad_direction_is_an_error(self):
         result = self.run_script("sideways")
