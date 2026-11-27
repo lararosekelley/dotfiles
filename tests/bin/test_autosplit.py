@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import json
+import os
 import shutil
 import subprocess
 import tempfile
@@ -67,7 +68,6 @@ class AutosplitTest(unittest.TestCase):
   *) echo "$*" >> "{self.tmp}/commands" ;;
 esac""",
         )
-        self.stub("pgrep", f'[ -e "{self.tmp}/startup-running" ]')
         system = self.tmp / "system"
         system.mkdir()
         for command in ("bash", "env", "cat", "jq", "seq"):
@@ -84,7 +84,7 @@ esac""",
             (self.trees / f"{n}.json").write_text(json.dumps(layout_tree))
         result = subprocess.run(
             [str(SCRIPT), *args],
-            env={"PATH": self.path},
+            env={"PATH": self.path, "XDG_RUNTIME_DIR": str(self.tmp)},
             capture_output=True,
             text=True,
             timeout=20,
@@ -124,8 +124,17 @@ esac""",
         )
 
     def test_nothing_is_split_while_sway_startup_runs(self):
-        (self.tmp / "startup-running").write_text("")
+        # this test's own process stands in for a running sway-startup
+        (self.tmp / "sway-startup.pid").write_text(f"{os.getpid()}\n")
         self.assertEqual(self.commands(tree("splith", window(400, 800))), [])
+
+    def test_a_pid_file_left_by_a_finished_sway_startup_is_ignored(self):
+        finished = subprocess.Popen(["true"])
+        finished.wait()
+        (self.tmp / "sway-startup.pid").write_text(f"{finished.pid}\n")
+        self.assertEqual(
+            self.commands(tree("splith", window(400, 800))), ["-q split v"]
+        )
 
     def test_flip_toggles_the_focused_windows_container(self):
         self.assertEqual(
