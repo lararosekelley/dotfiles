@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# What's playing, for waybar: the artist and title from whichever MPRIS player
+# (cliamp, a browser) is playing, and nothing while none is. A click pauses
+# it, and scrolling skips tracks.
+#
+# Usage: now-playing [status|toggle|next|previous]
+#
+#   status  print waybar's JSON (the default)
+
+set -uo pipefail
+
+# the first player that's playing
+playing() {
+  local player
+  while IFS= read -r player; do
+    [ "$(playerctl -p "$player" status 2> /dev/null)" = Playing ] \
+      && echo "$player" && return 0
+  done < <(playerctl -l 2> /dev/null)
+  return 1
+}
+
+case "${1:-status}" in
+  status)
+    if ! player=$(playing); then
+      echo '{"text": ""}'
+      exit 0
+    fi
+    artist=$(playerctl -p "$player" metadata artist 2> /dev/null)
+    title=$(playerctl -p "$player" metadata title 2> /dev/null)
+    jq -cn --arg player "${player%%.*}" --arg artist "$artist" --arg title "$title" '
+      ([$artist, $title] | map(select(. != "")) | join(" - ")) as $now
+      | (if $now == "" then $player else $now end) as $now
+      | {
+          text: ("󰎈 " + (if ($now | length) > 40 then $now[:39] + "…" else $now end) | @html),
+          tooltip: ("\($player): \($now)" | @html),
+          class: "playing"
+        }'
+    ;;
+  toggle | next | previous)
+    player=$(playing) || exit 0
+    case "$1" in
+      toggle) playerctl -p "$player" play-pause ;;
+      *) playerctl -p "$player" "$1" ;;
+    esac
+    ;;
+  -h | --help) sed -n '3,9p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *)
+    echo "unknown argument: $1" >&2
+    exit 2
+    ;;
+esac
