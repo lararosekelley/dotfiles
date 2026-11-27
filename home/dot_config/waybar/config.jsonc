@@ -97,7 +97,8 @@
         "format-wifi": " {essid}",
         "format-ethernet": " wired",
         "format-disconnected": "󰖪 offline",
-        "tooltip-format": "{ifname}: {ipaddr}/{cidr}"
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+        "on-click": "wifi-menu"
     },
     "custom/hardware": {
         "exec": "hardware",
