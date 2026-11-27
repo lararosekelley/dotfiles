@@ -118,8 +118,8 @@ On the desktop:
 - Set up Jellyfin's libraries as in [Media server](./media-server.md), and
   OpenRGB as in [RGB lighting](./rgb-lighting.md).
 
-On an Arch laptop, set up fingerprint login. `chezmoi apply` installs fprintd;
-enroll a finger and check it matches:
+On a machine with a fingerprint reader, set up fingerprint login. `chezmoi
+apply` installs fprintd; enroll a finger and check it matches:
 
 ```bash
 fprintd-enroll
@@ -127,9 +127,10 @@ fprintd-verify
 ```
 
 If enrolling fails on the Framework, update the reader's firmware first with
-`fwupdmgr refresh && fwupdmgr update`. Then add this line before the other
-`auth` lines in each PAM file that should accept a fingerprint. A password
-still works wherever it's added:
+`fwupdmgr refresh && fwupdmgr update`. On Fedora, turn it on for every service
+that asks for a password with `sudo authselect enable-feature with-fingerprint`.
+On Arch, add this line before the other `auth` lines in each PAM file that
+should accept a fingerprint. A password still works wherever it's added:
 
 ```text
 auth  sufficient  pam_fprintd.so
@@ -138,15 +139,28 @@ auth  sufficient  pam_fprintd.so
 - `/etc/pam.d/sudo`, for `sudo`.
 - `/etc/pam.d/polkit-1`, for apps that ask for your password. Arch ships it as
   `/usr/lib/pam.d/polkit-1`; copy that to `/etc/pam.d` first.
-- `/etc/pam.d/login`, after its `pam_nologin` line. swaylock's file and ly's
-  (CachyOS's login screen, `ly@tty2`) both include it, so this covers the lock
-  screen, ly, and a text console. On the lock screen, press Enter on the empty
-  password field, then touch the reader. A fingerprint login doesn't unlock
-  the keyring, which needs the password.
+- `/etc/pam.d/login`, after its `pam_nologin` line. ly's file (CachyOS's login
+  screen, `ly@tty2`) includes it, so this covers ly and a text console.
 
-Add it to those files rather than `system-auth`, which every service shares.
+Add it to those files rather than `system-auth`, which every service shares. A
+fingerprint login doesn't unlock the keyring, which needs the password.
 
 On an Arch laptop, see [Sway](./sway.md) for the desktop.
+
+### Fingerprint unlock
+
+Fingerprint-first PAM files ignore a typed password until the reader times out,
+so the lock screen gets its own, which checks the password first. Install it on
+every machine, keeping the packaged file:
+
+```bash
+sudo cp /etc/pam.d/swaylock /etc/pam.d/swaylock.orig
+sudo install -m 644 system/pam.d/swaylock /etc/pam.d/swaylock
+```
+
+On the lock screen, type the password, or press Enter on the empty field and
+then touch the reader. After a wrong password it waits for a fingerprint for up
+to 15 seconds before showing the failure.
 
 ## 4. Neovim
 

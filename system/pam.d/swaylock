@@ -1,0 +1,12 @@
+# swaylock's PAM file, installed as /etc/pam.d/swaylock (see "Fingerprint
+# unlock" in docs/new-machine.md). A typed password is checked first, so it
+# unlocks at once; Enter on an empty field waits for a fingerprint instead.
+# Machines without fprintd skip that line.
+
+auth      sufficient  pam_unix.so nodelay
+-auth     sufficient  pam_fprintd.so timeout=15
+auth      required    pam_deny.so
+
+account   include     login
+password  include     login
+session   include     login

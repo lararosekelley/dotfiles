@@ -1,0 +1,11 @@
+# swayidle, started by the sway config with `exec swayidle -w`
+# reference: `man swayidle`
+
+# lock and turn the screens off after 5 minutes idle, and suspend 5 minutes
+# after that
+timeout 300 'swaylock'
+timeout 300 'swaymsg "output * power off"' resume 'swaymsg "output * power on"'
+timeout 600 'systemctl suspend'
+
+# lock before sleeping, so waking needs the password
+before-sleep 'swaylock'

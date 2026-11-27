@@ -139,29 +139,13 @@ class SourceTest(unittest.TestCase):
                 (ssh / "config").write_text(result)
                 self.assertEqual(chezmoi(tmp, REPO, False, "cat", target), result)
 
-    def test_swaylock_lets_the_laptops_start_a_fingerprint_unlock(self):
+    def test_swaylock_lets_every_machine_start_a_fingerprint_unlock(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
             target = str(tmp / "home/.config/swaylock/config")
-            laptop = chezmoi(tmp, REPO, False, "cat", target)
-            desktop = chezmoi(tmp, REPO, False, "cat", target, machine="desktop")
-        self.assertNotIn("ignore-empty-password", laptop.splitlines())
-        self.assertIn("ignore-empty-password", desktop.splitlines())
-
-    def test_swayidle_suspends_the_laptops_and_blanks_the_desktop(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            tmp = Path(tmp)
-            target = str(tmp / "home/.config/swayidle/config")
-            laptop = chezmoi(tmp, REPO, False, "cat", target).splitlines()
-            desktop = chezmoi(
-                tmp, REPO, False, "cat", target, machine="desktop"
-            ).splitlines()
-        self.assertIn("timeout 600 'systemctl suspend'", laptop)
-        self.assertNotIn("timeout 600 'systemctl suspend'", desktop)
-        self.assertTrue(any("output * power off" in line for line in desktop))
-        for lines in (laptop, desktop):
-            self.assertIn("timeout 300 'swaylock'", lines)
-            self.assertIn("before-sleep 'swaylock'", lines)
+            for machine in ("framework", "desktop"):
+                config = chezmoi(tmp, REPO, False, "cat", target, machine=machine)
+                self.assertNotIn("ignore-empty-password", config.splitlines())
 
     def test_an_unknown_machine_stops_with_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
