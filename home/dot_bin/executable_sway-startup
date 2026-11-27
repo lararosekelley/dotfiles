@@ -20,8 +20,6 @@
 
 set -uo pipefail
 
-wait_tenths=${SWAY_STARTUP_WAIT:-100}
-
 # autosplit leaves windows alone while this file names a running process
 running="${XDG_RUNTIME_DIR:-/tmp}/sway-startup.pid"
 echo $$ > "$running"
