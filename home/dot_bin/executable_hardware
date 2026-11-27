@@ -1,0 +1,224 @@
+#!/usr/bin/env python3
+"""Hardware sensors for waybar: CPU and GPU temperatures in the bar, and
+everything else the kernel's hwmon drivers report (cooling, fans, drives) in
+the tooltip.
+
+Chips are found by driver name, never by their hwmonN number, which can change
+from one boot to the next. A chip this doesn't know is left out, so the same
+script works on every machine. The desktop's board fans and SATA drive need the
+nct6683 and drivetemp drivers loaded (see docs/new-machine.md).
+
+Usage: hardware [status]
+"""
+
+import html
+import json
+import os
+import sys
+from pathlib import Path
+
+ROOT = Path(os.environ.get("HWMON_ROOT", "/sys/class/hwmon"))
+
+CPU_ICON = "\U000f0ee0"  # nf-md-cpu_64_bit
+GPU_ICON = "\U000f08ae"  # nf-md-expansion_card
+
+# (warm, hot) in degrees C: past warm the pill turns yellow, past hot red
+CPU_LIMITS = (85, 90)
+GPU_LIMITS = (95, 105)
+DRIVE_LIMITS = (60, 70)
+COOLANT_LIMITS = (40, 45)
+
+
+class Chip:
+    def __init__(self, path):
+        self.path = path
+        self.name = read(path / "name") or ""
+
+    def sensors(self, kind):
+        """(number, label, value) for each kind (temp, fan, power) input,
+        temperatures in degrees C and power in watts."""
+        found = []
+        for path in sorted(self.path.glob(f"{kind}*_input")) + sorted(
+            self.path.glob(f"{kind}*_average")
+        ):
+            stem, _, _ = path.name.rpartition("_")
+            number = stem[len(kind) :]
+            if not number.isdigit():
+                continue
+            raw = read(path)
+            if raw is None or not raw.lstrip("-").isdigit():
+                continue
+            value = int(raw)
+            if kind == "temp":
+                value /= 1000
+            elif kind == "power":
+                value /= 1_000_000
+            label = read(self.path / f"{stem}_label") or ""
+            found.append((int(number), label, value))
+        return sorted(found)
+
+    def temp(self, label):
+        for _, name, value in self.sensors("temp"):
+            if name == label:
+                return value
+        return None
+
+    def model(self):
+        return " ".join((read(self.path / "device/model") or "").split())
+
+
+def read(path):
+    try:
+        return path.read_text().strip()
+    except OSError:
+        return None
+
+
+def chips():
+    found = []
+    for path in sorted(ROOT.glob("hwmon*"), key=lambda p: p.name):
+        chip = Chip(path)
+        if chip.name:
+            found.append(chip)
+    return found
+
+
+def degrees(value):
+    return f"{value:.0f}°C"
+
+
+def rpm(values):
+    return ", ".join(f"{v:.0f} rpm" for v in values)
+
+
+def level(value, limits):
+    if value is None:
+        return 0
+    return 2 if value >= limits[1] else 1 if value >= limits[0] else 0
+
+
+def status():
+    # (label, value) rows for the tooltip, in groups shown in this order
+    groups = {"cpu": [], "gpu": [], "cooling": [], "drives": []}
+    worst = 0
+    cpu = gpu = None
+
+    for chip in chips():
+        if chip.name in ("k10temp", "zenpower"):
+            main = chip.temp("Tctl") or chip.temp("Tdie")
+            if main is None or cpu is not None:
+                continue
+            cpu = main
+            dies = [
+                f"CCD{label[4:]} {degrees(value)}"
+                for _, label, value in chip.sensors("temp")
+                if label.startswith("Tccd")
+            ]
+            groups["cpu"].append(("CPU", with_details(main, dies)))
+        elif chip.name == "coretemp":
+            main = chip.temp("Package id 0")
+            if main is None or cpu is not None:
+                continue
+            cpu = main
+            groups["cpu"].append(("CPU", degrees(main)))
+        elif chip.name == "amdgpu":
+            junction = chip.temp("junction")
+            edge = chip.temp("edge")
+            if junction is None:
+                # an integrated GPU, which shares the CPU's cooling
+                continue
+            gpu = junction if gpu is None else max(gpu, junction)
+            extra = [f"edge {degrees(edge)}"] if edge is not None else []
+            memory = chip.temp("mem")
+            if memory is not None:
+                extra.append(f"memory {degrees(memory)}")
+            groups["gpu"].append(("GPU", with_details(junction, extra)))
+            fans = [v for _, _, v in chip.sensors("fan")]
+            if fans:
+                groups["gpu"].append(
+                    ("GPU fan", rpm(fans) if any(fans) else "stopped (idle)")
+                )
+            power = chip.sensors("power")
+            if power:
+                groups["gpu"].append(("GPU power", f"{power[0][2]:.0f} W"))
+        elif chip.name.startswith(("z53", "kraken")):
+            coolant = chip.temp("Coolant temp")
+            if coolant is not None:
+                worst = max(worst, level(coolant, COOLANT_LIMITS))
+                groups["cooling"].append(("Coolant", degrees(coolant)))
+            for _, label, value in chip.sensors("fan"):
+                name = "Pump" if "pump" in label.lower() else "Radiator fans"
+                groups["cooling"].append((name, rpm([value])))
+        elif chip.name in ("nvme", "drivetemp"):
+            value = chip.temp("Composite") if chip.name == "nvme" else None
+            if value is None:
+                temps = chip.sensors("temp")
+                value = temps[0][2] if temps else None
+            if value is None:
+                continue
+            worst = max(worst, level(value, DRIVE_LIMITS))
+            groups["drives"].append((chip.model() or chip.name, degrees(value)))
+        else:
+            # fan hubs, the board, and laptops' fans: show the fans that spin,
+            # since a header with nothing on it reads 0
+            fans = [v for _, _, v in chip.sensors("fan") if v > 0]
+            if fans:
+                groups["cooling"].append((fan_owner(chip.name), rpm(fans)))
+
+    worst = max(worst, level(cpu, CPU_LIMITS), level(gpu, GPU_LIMITS))
+    text = []
+    if cpu is not None:
+        text.append(f"{CPU_ICON} {cpu:.0f}°")
+    if gpu is not None:
+        text.append(f"{GPU_ICON} {gpu:.0f}°")
+    rows = [row for group in groups.values() for row in group]
+    width = max((len(label) for label, _ in rows), default=0)
+    tooltip = "\n\n".join(
+        "\n".join(
+            f"{html.escape(label.ljust(width))}  {html.escape(value)}"
+            for label, value in group
+        )
+        for group in groups.values()
+        if group
+    )
+    return {
+        "text": "  ".join(text) or ("\U000f050f" if rows else ""),
+        "tooltip": f"<tt>{tooltip}</tt>" if rows else "No sensors found",
+        "class": ["normal", "warm", "hot"][worst],
+    }
+
+
+def with_details(value, details):
+    if not details:
+        return degrees(value)
+    return f"{degrees(value)} ({', '.join(details)})"
+
+
+def fan_owner(name):
+    names = {
+        "corsaircpro": "Commander Pro",
+        "nzxtsmart2": "NZXT fan hub",
+        "nct6683": "Board fans",
+        "nct6687": "Board fans",
+        "thinkpad": "Fan",
+        "cros_ec": "Fan",
+        "framework_laptop": "Fan",
+    }
+    return names.get(name, f"{name} fans")
+
+
+def main():
+    args = sys.argv[1:]
+    if args and args[0] in ("-h", "--help"):
+        print(__doc__.strip())
+        return 0
+    if args and args != ["status"]:
+        print(f"unknown argument: {args[0]}", file=sys.stderr)
+        return 2
+    sys.stdout.reconfigure(encoding="utf-8")
+    print(json.dumps(status(), ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

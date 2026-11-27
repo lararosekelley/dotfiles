@@ -35,6 +35,7 @@ tooltip label {
 #idle_inhibitor,
 #pulseaudio,
 #network,
+#custom-hardware,
 #cpu,
 #memory,
 #backlight,
@@ -144,6 +145,20 @@ tooltip label {
 #cpu,
 #memory {
     color: #e5aac1;
+}
+
+#custom-hardware {
+    color: #82cdcd;
+}
+
+#custom-hardware.warm {
+    color: #d6ba86;
+    border-color: #d6ba86;
+}
+
+#custom-hardware.hot {
+    color: #e66e6d;
+    border-color: #e66e6d;
 }
 
 #backlight {
