@@ -13,6 +13,7 @@
         "idle_inhibitor",
         "pulseaudio",
         "network",
+        "custom/hardware",
         "cpu",
         "memory",
         "backlight",
@@ -86,6 +87,12 @@
         "format-ethernet": " wired",
         "format-disconnected": "󰖪 offline",
         "tooltip-format": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "custom/hardware": {
+        "exec": "hardware",
+        "return-type": "json",
+        "interval": 5,
+        "on-click": "kitty --class hardware watch -n 2 sensors"
     },
     "cpu": { "format": " {usage}%", "interval": 5 },
     "memory": { "format": "󰍛 {percentage}%", "interval": 10 },

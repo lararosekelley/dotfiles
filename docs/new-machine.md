@@ -117,6 +117,14 @@ On the desktop:
 - Install Callie and Jot with their own install scripts, and sfizz by hand.
 - Set up Jellyfin's libraries as in [Media server](./media-server.md), and
   OpenRGB as in [RGB lighting](./rgb-lighting.md).
+- Load the drivers for the board's fan headers and the SATA drive's
+  temperature at every boot, for waybar's hardware pill (see
+  [Sway](./sway.md#status-bar)):
+
+  ```bash
+  sudo install -m 644 system/modules-load.d/sensors.conf /etc/modules-load.d/
+  sudo modprobe nct6683 drivetemp
+  ```
 
 On a machine with a fingerprint reader, set up fingerprint login. `chezmoi
 apply` installs fprintd; enroll a finger and check it matches:
