@@ -31,7 +31,9 @@ answer apps that ask for your password (KDE's on Fedora, `polkit-gnome` on
 Arch), `dex`, which starts the desktop's autostart apps such as Dropbox and
 KDE Connect, since sway doesn't, and recoll's indexer. The repo hides CachyOS
 Hello's autostart entry, which CachyOS copies into new homes, so the welcome
-screen doesn't open at every login.
+screen doesn't open at every login. It also keeps KDE's Xwayland Video Bridge
+out of sway, where it can't work and would tile as an empty window; Plasma
+still starts it.
 
 ### Startup windows
 
