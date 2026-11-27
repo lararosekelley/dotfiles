@@ -81,7 +81,7 @@ OBS Virtual Camera makes the finished scene, including its video filters, availa
 
 ### Fedora prerequisite
 
-Linux requires the **v4l2loopback** kernel module for OBS Virtual Camera. Install a package compatible with your Fedora release and running kernel, then load the module. With Secure Boot enabled, the module also needs an accepted signature.
+Linux requires the **v4l2loopback** kernel module for OBS Virtual Camera. Install a package compatible with your Fedora release and running kernel, then load the module. With Secure Boot enabled, the module also needs an accepted signature; see [Packages](./packages.md#fedora-dnf) for enrolling the key akmods signs it with.
 
 After installing and loading the module, restart OBS. If Virtual Camera is unavailable, check **Help > Log Files > View Current Log** for v4l2loopback errors.
 

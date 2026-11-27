@@ -186,6 +186,16 @@ machines = ["desktop"]
 check = "systemctl is-enabled -q openrgb.service openrgb-resume.service openrgb-sleep.service"
 
 [[step]]
+id = "akmods-key"
+title = "Enroll akmods' signing key for Secure Boot"
+needed_for = "OBS Virtual Camera's v4l2loopback module, which the kernel refuses at boot without it"
+docs = "docs/packages.md#fedora-dnf"
+distro = "fedora"
+when = "mokutil --sb-state 2>/dev/null | grep -q 'SecureBoot enabled' && rpm -q akmod-v4l2loopback"
+check = "grep -q '^v4l2loopback ' /proc/modules"
+fix = "sudo mokutil --import /etc/pki/akmods/certs/public_key.der, then reboot and choose Enroll MOK"
+
+[[step]]
 id = "sensor-drivers"
 title = "Load the board's and the SATA drive's sensor drivers at boot"
 needed_for = "Board fans and the hard drive's temperature in waybar's hardware pill"
