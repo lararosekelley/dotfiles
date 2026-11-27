@@ -1,0 +1,12 @@
+# seaweed's COPR build of yazi, the file manager under sway, for Fedora, which
+# doesn't package it. scripts/setup/apps adds it (see apps.txt).
+[copr:copr.fedorainfracloud.org:seaweed:yazi]
+name=Copr repo for yazi owned by seaweed
+baseurl=https://download.copr.fedorainfracloud.org/results/seaweed/yazi/fedora-$releasever-$basearch/
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=https://download.copr.fedorainfracloud.org/results/seaweed/yazi/pubkey.gpg
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1

@@ -1,0 +1,4 @@
+# Defaults that apply only under sway (XDG_CURRENT_DESKTOP=sway), ahead of
+# mimeapps.list, so KDE keeps its own: folders open in yazi.
+[Default Applications]
+inode/directory=yazi-kitty.desktop

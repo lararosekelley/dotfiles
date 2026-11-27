@@ -167,8 +167,8 @@ bindsym $mod+m exec $term cliamp
 # kill focused window
 bindsym $mod+q kill
 
-# exit
-bindsym $mod+shift+e exit
+# yazi, the file manager, in a terminal (log out from the power menu, $mod+Escape)
+bindsym $mod+Shift+e exec kitty --class yazi yazi
 
 # $mod+<left mouse> to drag windows, $mod+<right mouse> to resize
 floating_modifier $mod normal
@@ -244,6 +244,7 @@ bindsym $mod+f fullscreen
 # toggle the current focus between tiling and floating mode; a window that
 # floats is resized to 60% of the screen, centered, and given a title bar
 bindsym $mod+Shift+space floating toggle; [con_id=__focused__ floating] resize set 60 ppt 60 ppt, move position center, border normal 2; [con_id=__focused__ tiling] border pixel 2
+bindsym $mod+Shift+f floating toggle; [con_id=__focused__ floating] resize set 60 ppt 60 ppt, move position center, border normal 2; [con_id=__focused__ tiling] border pixel 2
 bindsym $mod+Mod1+space floating toggle; [con_id=__focused__ floating] resize set 60 ppt 60 ppt, move position center, border normal 2; [con_id=__focused__ tiling] border pixel 2
 
 # swap focus between the tiling area and the floating area
