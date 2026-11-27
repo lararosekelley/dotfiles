@@ -57,7 +57,18 @@ Callie and Jot install with their own `install.sh` scripts, which add the
 `greylocklabs` repo. An install script may leave its RPM marked as from a file,
 but `dnf upgrade` still updates it from the repo.
 
-`kmod-v4l2loopback` is built locally by akmods for each kernel and needs no action.
+`kmod-v4l2loopback`, for OBS Virtual Camera, is built locally by akmods for
+each kernel and signed with akmods' own key. With Secure Boot on, the kernel
+refuses it (`Key was rejected by service` at boot) until that key is enrolled
+once. Run this, set a one-time password, then reboot and choose **Enroll MOK**
+on the blue MOK management screen, entering the same password:
+
+```bash
+sudo mokutil --import /etc/pki/akmods/certs/public_key.der
+```
+
+`mokutil --sb-state` shows whether Secure Boot is on, and a firmware update
+can turn it back on.
 
 ```bash
 sudo dnf upgrade
