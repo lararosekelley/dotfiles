@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Install cliamp's plugins. chezmoi reruns this whenever the script, its list,
-# or its helpers change:
+# or its helpers change, and once cliamp is installed, which on Fedora is by
+# hand, after this has already run without it:
+# cliamp: {{ lookPath "cliamp" }}
 # {{ include (joinPath .chezmoi.workingTree "scripts/setup/cliamp-plugins") | sha256sum }}
 # {{ include (joinPath .chezmoi.workingTree "scripts/setup/cliamp-plugins.txt") | sha256sum }}
 # {{ include (joinPath .chezmoi.workingTree "scripts/setup/lib.sh") | sha256sum }}
