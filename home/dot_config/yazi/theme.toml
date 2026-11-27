@@ -1,0 +1,108 @@
+# yazi in the Callie theme (https://github.com/greylocklabs/themes). yazi
+# merges this over its built-in dark theme, so only what changes is set here.
+# Colors from Callie's palette: background #1c1220, surface #261a2a and
+# #33243a, border #3d2c42, text #e0d3df, muted #9a8797, accent pink #f08fb8 and
+# the dark text on it #2e0f20, rose #e5aac1, red #e66e6d, yellow #d6ba86, green
+# #9dcca3, cyan #82cdcd, blue #a4beef. Reference: https://yazi-rs.github.io/docs/configuration/theme
+
+[mgr]
+cwd = { fg = "#f08fb8", bold = true }
+
+find_keyword = { fg = "#d6ba86", bold = true, italic = true, underline = true }
+find_position = { fg = "#f08fb8", bg = "reset", bold = true, italic = true }
+
+marker_copied = { fg = "#9dcca3", bg = "#9dcca3" }
+marker_cut = { fg = "#e66e6d", bg = "#e66e6d" }
+marker_marked = { fg = "#82cdcd", bg = "#82cdcd" }
+marker_selected = { fg = "#d6ba86", bg = "#d6ba86" }
+
+count_copied = { fg = "#2e0f20", bg = "#9dcca3" }
+count_cut = { fg = "#2e0f20", bg = "#e66e6d" }
+count_selected = { fg = "#2e0f20", bg = "#d6ba86" }
+
+border_style = { fg = "#3d2c42" }
+
+# code previews, in Callie's TextMate theme
+syntect_theme = "~/.config/yazi/callie.tmTheme"
+
+[tabs]
+active = { fg = "#2e0f20", bg = "#f08fb8", bold = true }
+inactive = { fg = "#f08fb8", bg = "#261a2a" }
+
+[mode]
+normal_main = { fg = "#2e0f20", bg = "#f08fb8", bold = true }
+normal_alt = { fg = "#f08fb8", bg = "#261a2a" }
+select_main = { fg = "#2e0f20", bg = "#d6ba86", bold = true }
+select_alt = { fg = "#d6ba86", bg = "#261a2a" }
+unset_main = { fg = "#2e0f20", bg = "#e66e6d", bold = true }
+unset_alt = { fg = "#e66e6d", bg = "#261a2a" }
+
+# the highlighted file: pink in the current column, softer in the parent
+[indicator]
+parent = { fg = "#e0d3df", bg = "#33243a" }
+current = { fg = "#2e0f20", bg = "#f08fb8" }
+
+[status]
+perm_sep = { fg = "#9a8797" }
+perm_type = { fg = "#a4beef" }
+perm_read = { fg = "#d6ba86" }
+perm_write = { fg = "#e66e6d" }
+perm_exec = { fg = "#9dcca3" }
+progress_normal = { fg = "#f08fb8", bg = "#261a2a" }
+progress_error = { fg = "#e66e6d", bg = "#261a2a" }
+
+[which]
+border = { fg = "#f08fb8" }
+cand = { fg = "#82cdcd" }
+rest = { fg = "#9a8797" }
+desc = { fg = "#e5aac1" }
+separator_style = { fg = "#9a8797" }
+
+[confirm]
+border = { fg = "#f08fb8" }
+title = { fg = "#f08fb8" }
+
+[spot]
+border = { fg = "#f08fb8" }
+title = { fg = "#f08fb8" }
+tbl_col = { fg = "#f08fb8" }
+tbl_cell = { fg = "#2e0f20", bg = "#f08fb8" }
+
+[notify]
+title_info = { fg = "#9dcca3" }
+title_warn = { fg = "#d6ba86" }
+title_error = { fg = "#e66e6d" }
+
+[pick]
+border = { fg = "#f08fb8" }
+active = { fg = "#f08fb8", bold = true }
+
+[input]
+border = { fg = "#f08fb8" }
+
+[cmp]
+border = { fg = "#f08fb8" }
+
+[tasks]
+border = { fg = "#f08fb8" }
+hovered = { fg = "#f08fb8", bold = true }
+
+[help]
+border = { fg = "#f08fb8" }
+chord = { fg = "#82cdcd" }
+hovered = { fg = "#2e0f20", bg = "#f08fb8", bold = true }
+
+# file names by kind, as yazi's defaults but in Callie's colors
+[filetype]
+rules = [
+  { mime = "**/image/*", fg = "#d6ba86" },
+  { mime = "**/{audio,video}/*", fg = "#e5aac1" },
+  { mime = "**/application/{zip,rar,7z*,tar,gzip,xz,zstd,bzip*,lzma,compress,archive,cpio,arj,xar,ms-cab*}", fg = "#e66e6d" },
+  { mime = "**/application/{pdf,doc,rtf}", fg = "#82cdcd" },
+  { mime = "vfs/{absent,stale}", fg = "#9a8797" },
+  { url = "*", is = "orphan", bg = "#e66e6d" },
+  { url = "*", is = "exec", fg = "#9dcca3" },
+  { url = "*", is = "dummy", bg = "#e66e6d" },
+  { url = "*/", is = "dummy", bg = "#e66e6d" },
+  { url = "*/", fg = "#a4beef" },
+]
