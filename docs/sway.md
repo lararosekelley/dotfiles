@@ -106,12 +106,11 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 
 `$mod+Shift+Space`, `$mod+Shift+f`, and `$mod+Alt+Space` float or tile the focused window (`sway-nested` leaves out `$mod+Alt+Space`, since its `$mod` is Alt). `$mod+Tab` returns to the last workspace, and `$mod+]` and `$mod+[` step to the next and previous workspace on the current display. On a touchpad, swiping three fingers left or right does the same, through sway's `bindgesture`. Swiping four fingers up shows the next scratchpad window, like `$mod+x`, and four fingers down floats or tiles the focused window, like `$mod+Shift+Space`. The `$mod+/` list includes gestures too.
 
-`$mod+b` opens the default web browser, whichever `xdg-settings get default-web-browser` names. `$mod+e` opens Neovim in a terminal. `$mod+c` opens the Callie calendar's TUI (`callie tui`) and `$mod+m` the cliamp music player, each in a terminal like any other window. Callie is only installed on Fedora for now.
+`$mod+b` opens the default web browser, whichever `xdg-settings get default-web-browser` names. `$mod+e` opens Neovim in a terminal. `$mod+c` opens the Callie calendar's TUI (`callie tui`) and `$mod+m` the cliamp music player, each in a terminal like any other window. Callie is only installed on Fedora for now. `$mod+,` edits the sway config in a floating window with `chezmoi edit --apply`, so the change goes to the repo's copy, then reloads sway.
 
 Two scripts in `~/.bin` back the hardware keys:
 
 - `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all, then shows a notification. A press can reach it twice, or after the kernel or firmware has already toggled the radios, so it ignores a second run at the same moment and leaves a change that happens on its own in the first half second.
-- `$mod+,` edits the sway config in a floating window with `chezmoi edit --apply`, so the change goes to the repo's copy, then reloads sway.
 - `display-menu`, on `$mod+p` (F9 on the Framework, which sends it): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. Its tools come from [`scripts/setup/packages.txt`](../scripts/setup/packages.txt), with the rest of sway's.
 
 ### Auto-start programs
