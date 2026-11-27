@@ -111,7 +111,8 @@ Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a v
 Two scripts in `~/.bin` back the hardware keys:
 
 - `airplane`, on the airplane-mode key (`XF86RFKill`): blocks every radio if any is on, otherwise unblocks them all, then shows a notification. A press can reach it twice, or after the kernel or firmware has already toggled the radios, so it ignores a second run at the same moment and leaves a change that happens on its own in the first half second.
-- `display-menu`, on F9 on the Framework (it sends `$mod+p`): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. Its tools come from [`scripts/setup/packages.txt`](../scripts/setup/packages.txt), with the rest of sway's.
+- `$mod+,` edits the sway config in a floating window with `chezmoi edit --apply`, so the change goes to the repo's copy, then reloads sway.
+- `display-menu`, on `$mod+p` (F9 on the Framework, which sends it): a rofi menu of kanshi layouts, mirroring the focused screen with `wl-mirror`, and a gammastep night-light toggle. Its tools come from [`scripts/setup/packages.txt`](../scripts/setup/packages.txt), with the rest of sway's.
 
 ### Auto-start programs
 
@@ -143,7 +144,13 @@ We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewi
 
 ## Screen brightness
 
-[brightnessctl](https://github.com/Hummer12007/brightnessctl) with keys bound via Sway config will do the trick here.
+The brightness keys run `brightness` in `~/.bin`, which sets a laptop's panel
+with [brightnessctl](https://github.com/Hummer12007/brightnessctl) and, where
+there's no panel, the monitor over DDC/CI with
+[ddcutil](https://www.ddcutil.com/), in 5% steps. ddcutil's udev rule lets the
+logged-in user reach the monitor without sudo. The desktop's keyboard has no
+brightness keys, so Shift with its volume keys sets the monitor's brightness
+instead.
 
 ## Lock screen
 
@@ -237,3 +244,10 @@ from `extra`, and Fedora, which doesn't package it, from seaweed's COPR
 (`system/yum.repos.d/yazi.repo`), both through `scripts/setup/apps`.
 
 ## Hardware-specific configuration
+
+On the desktop, the Logitech POP Icon Keys' F1 to F3 switch which computer it
+types to, and F4 to F8 send Windows shortcuts rather than F-keys, so
+`machine.conf` binds those: F4, its fullscreen key, toggles fullscreen; F5
+opens yazi; F7 opens the emoji picker; and F8 takes a screenshot of a dragged
+region. F6 sends Super+H, the same keys as `$mod+h`, so it can't do anything
+else. F9 to F12 are the media keys.

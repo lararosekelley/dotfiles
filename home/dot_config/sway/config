@@ -122,6 +122,14 @@ bindsym $mod+Shift+w exec wifi-menu
 # Bluetooth menu: connect, pair, or forget devices (script in ~/.bin)
 bindsym $mod+Shift+b exec bluetooth-menu
 
+# display menu: layouts, mirroring, and night light (script in ~/.bin); the
+# Framework's display key, F9, sends $mod+p
+bindsym $mod+p exec display-menu
+
+# edit the sway config in a floating window: chezmoi edits the repo's copy and
+# installs it, then sway reloads
+bindsym $mod+comma exec kitty --class sway-config sh -c 'chezmoi edit --apply ~/.config/sway/config && swaymsg reload'
+
 # power menu: lock, log out, suspend, reboot, or shut down (script in ~/.bin)
 bindsym $mod+Escape exec power-menu
 
@@ -317,9 +325,10 @@ bindsym --locked XF86AudioPrev exec playerctl previous
 bindsym --locked XF86AudioNext exec playerctl next
 bindsym --locked XF86AudioStop exec playerctl stop
 
-# adjust brightness via brightnessctl
-bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+# adjust brightness: the laptop panel, or the desktop monitor over DDC/CI
+# (script in ~/.bin)
+bindsym --locked XF86MonBrightnessDown exec brightness down
+bindsym --locked XF86MonBrightnessUp exec brightness up
 
 # screenshots, saved to ~/Pictures/Screenshots and copied (script in ~/.bin)
 
@@ -374,8 +383,7 @@ for_window [app_id="hardware"] floating enable, resize set 900 700, move positio
 for_window [app_id=".*"] inhibit_idle fullscreen
 for_window [class=".*"] inhibit_idle fullscreen
 
-# open sway config file in neovim floating window; the key that opens it is set
-# per machine, in machine.conf
+# the sway config editor that $mod+, opens floats
 for_window [app_id="sway-config"] floating enable, resize set 800 600, move position center
 
 # airplane mode: turn every radio off, or all back on (script in ~/.bin)
