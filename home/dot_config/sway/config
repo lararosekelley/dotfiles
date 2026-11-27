@@ -215,15 +215,16 @@ bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
 # split each focused window along its longer side, so new windows spiral in
-# (script in ~/.bin); the keys below still choose the next split by hand
+# (script in ~/.bin)
 exec autosplit
 
-# make the next split go horizontal or vertical
-bindsym $mod+minus splith
-bindsym $mod+bar splitv
+# send the next window the other way: below instead of beside, or beside
+# instead of below
+bindsym $mod+backslash split toggle
 
-# switch between vertical/horizontal split for next window
-bindsym $mod+backslash layout toggle split
+# flip the windows beside the focused one between side by side and stacked
+# above each other (script in ~/.bin)
+bindsym $mod+bar exec autosplit flip
 
 # windows in container stack on top of each other 
 bindsym $mod+s layout stacking
