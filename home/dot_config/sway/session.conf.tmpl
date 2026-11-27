@@ -1,3 +1,4 @@
+{{- $wide := eq (get . "machine") "desktop" -}}
 {{- $fedora := or (eq .chezmoi.osRelease.id "fedora") (contains "fedora" (.chezmoi.osRelease.idLike | default "")) -}}
 # What sway sets up when it is the whole session, read at the end of config.
 # sway-nested, which runs sway in a window under another desktop, leaves this
@@ -26,9 +27,9 @@ exec gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 # night-light in ~/.bin toggles it
 exec gammastep
 
-# the startup windows: Callie, fastfetch, and cliamp on workspace 1, and Neovim
-# on workspace 2 (script in ~/.bin)
-exec sway-startup
+# the startup windows (script in ~/.bin), laid out for the ultrawide on the
+# desktop
+exec sway-startup{{ if $wide }} wide{{ end }}
 
 # the desktop's autostart apps, such as Dropbox and KDE Connect
 {{- if $fedora }}

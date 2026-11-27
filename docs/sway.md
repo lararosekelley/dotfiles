@@ -39,9 +39,12 @@ still starts it.
 
 When sway starts as the whole session, `session.conf` runs `sway-startup` in
 `~/.bin`, which opens kitty windows in a fixed layout: on workspace 1, the
-Callie calendar (`callie tui`) in a full-height column on the left, and on the
-right fastfetch above the cliamp music player; on workspace 2, Neovim.
-`sway-nested` leaves it out. It opens each window only once the one before it
+Callie calendar (`callie tui`) in a full-height column on the left, and beside
+it fastfetch above the cliamp music player; on workspace 2, Neovim. On a laptop
+the default browser has workspace 3 to itself. On the desktop's ultrawide
+(`sway-startup wide`), the browser takes the right third of workspace 1
+instead, and a shell the right third of workspace 2. `sway-nested` leaves it
+out. It opens each window only once the one before it
 has appeared, since sway places a new window beside the focused one. A program
 that isn't installed gets a plain shell in its place, a window stays open at a
 shell when its program exits, and a window that never appears is reported

@@ -2,24 +2,28 @@
 
 # The windows sway opens when it starts as the whole session (session.conf runs
 # this). Workspace 1 has the Callie calendar in a full-height column on the
-# left, and fastfetch above the cliamp music player on the right; workspace 2
-# has Neovim. Each is in kitty, and a program that isn't installed (Callie on
-# Arch, say) gets a plain shell in its place.
+# left, and fastfetch above the cliamp music player beside it; workspace 2 has
+# Neovim. With `wide`, for an ultrawide display, workspace 1 also has the
+# default browser in a third column, and workspace 2 a shell in the right third
+# beside Neovim; without it, the browser has workspace 3 to itself.
 #
-# sway puts a new window beside the focused one, so each is opened only once
-# the one before it has appeared. Windows stay open at a shell when their
-# program exits, so the layout holds; one that never appears is reported, and
-# the rest are still opened.
+# Terminals are kitty, and a program that isn't installed (Callie on Arch, say)
+# gets a plain shell in its place. sway puts a new window beside the focused
+# one, so each is opened only once the one before it has appeared. Windows stay
+# open at a shell when their program exits, so the layout holds; one that never
+# appears is reported, and the rest are still opened.
 #
-# Usage: sway-startup
+# Usage: sway-startup [wide]
 #
-# SWAY_STARTUP_WAIT sets how many tenths of a second to wait for each window,
-# for tests.
+# SWAY_STARTUP_WAIT sets how many tenths of a second to wait for each terminal,
+# and three times that for the browser, for tests.
 
 set -uo pipefail
 
 wait_tenths=${SWAY_STARTUP_WAIT:-100}
 missing=0
+wide=false
+[ "${1:-}" = wide ] && wide=true
 
 # open NAME [COMMAND...]: open kitty with app_id startup-NAME on the current
 # workspace, running the command if it's installed, and wait for the window
@@ -41,13 +45,51 @@ open() {
   return 1
 }
 
+# the ids of every window open now
+windows() { swaymsg -t get_tree | jq -c '[.. | objects | select(.pid?) | .id]'; }
+
+# open the default browser on the current workspace and wait for a new window;
+# its app_id varies by browser, so any window that wasn't open before counts
+browser() {
+  local before desktop
+  desktop=$(xdg-settings get default-web-browser 2> /dev/null)
+  if [ -z "$desktop" ]; then
+    echo "sway-startup: no default browser set" >&2
+    missing=$((missing + 1))
+    return 1
+  fi
+  before=$(windows)
+  swaymsg -q exec -- gtk-launch "$desktop"
+  for _ in $(seq 1 $((wait_tenths * 3))); do
+    swaymsg -t get_tree | jq -e --argjson before "$before" \
+      '[.. | objects | select(.pid?) | .id] - $before | length > 0' > /dev/null && return 0
+    sleep 0.1
+  done
+  echo "sway-startup: the browser ($desktop) never appeared" >&2
+  missing=$((missing + 1))
+  return 1
+}
+
 swaymsg -q workspace number 1
 open callie callie tui && swaymsg -q '[app_id="startup-callie"] focus, splith'
 open fastfetch fastfetch && swaymsg -q '[app_id="startup-fastfetch"] focus, splitv'
 open cliamp cliamp
+if $wide; then
+  # focus the fastfetch and cliamp column, so the browser opens beside it
+  swaymsg -q '[app_id="startup-cliamp"] focus, focus parent'
+  browser
+fi
 
 swaymsg -q workspace number 2
 open nvim nvim
+if $wide; then
+  swaymsg -q '[app_id="startup-nvim"] focus, splith'
+  open shell
+  swaymsg -q '[app_id="startup-nvim"] resize set width 66 ppt'
+else
+  swaymsg -q workspace number 3
+  browser
+fi
 
 swaymsg -q workspace number 1
 [ "$missing" -eq 0 ]
