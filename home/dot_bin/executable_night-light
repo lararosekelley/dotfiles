@@ -11,8 +11,7 @@
 # Usage: night-light [toggle|on|off|restore|status|configure]
 #
 #   toggle     turn it on or off (the default)
-#   restore    turn it on if it was on last time (the session runs this);
-#              NIGHT_LIGHT_RESTORE_DELAY sets how many seconds it waits first
+#   restore    turn it on if it was on last time (the session runs this)
 #   status     print waybar's JSON for the night-light module
 #   configure  edit the config in a terminal, then apply it
 
@@ -92,10 +91,11 @@ case "${1:-toggle}" in
     refresh_bar
     ;;
   restore)
-    # at login, a color change made while sway is still bringing up the
-    # displays doesn't take, so give them a moment first
-    sleep "${NIGHT_LIGHT_RESTORE_DELAY:-3}"
-    [ "$(cat "$state" 2> /dev/null)" = on ] && ! running && start
+    # gammastep outlives the session it started in, still holding that
+    # session's display, so replace any left over from the last one
+    pkill -x gammastep
+    for _ in $(seq 1 20); do running && sleep 0.1; done
+    [ "$(cat "$state" 2> /dev/null)" = on ] && start
     refresh_bar
     exit 0
     ;;
@@ -114,7 +114,7 @@ case "${1:-toggle}" in
     fi
     refresh_bar
     ;;
-  -h | --help) sed -n '11,17p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h | --help) sed -n '11,16p' "$0" | sed 's/^# \{0,1\}//' ;;
   *)
     echo "usage: night-light [toggle|on|off|restore|status|configure]" >&2
     exit 2

@@ -56,7 +56,6 @@ else echo "swaymsg $*" >> "{self.log}"; fi""",
                 "PATH": f"{self.bin}:/usr/bin:/bin",
                 "XDG_CONFIG_HOME": str(self.tmp / "config"),
                 "XDG_STATE_HOME": str(self.tmp / "state"),
-                "NIGHT_LIGHT_RESTORE_DELAY": "0",
             },
             capture_output=True,
             text=True,
@@ -108,6 +107,16 @@ else echo "swaymsg $*" >> "{self.log}"; fi""",
         self.run_script("restore")
         self.assertTrue(self.running.exists())
         self.assertIn("-f gammastep -O 4000", self.calls())
+
+    def test_restore_replaces_a_gammastep_left_from_the_last_session(self):
+        self.run_script("on")
+        self.log.write_text("")
+        self.run_script("restore")
+        self.assertTrue(self.running.exists())
+        self.assertEqual(
+            [c for c in self.calls() if "gammastep" in c],
+            ["pkill -x gammastep", "-f gammastep -O 4000"],
+        )
 
     def test_without_a_config_it_warms_to_3600k(self):
         (self.tmp / "config/gammastep/config.ini").unlink()
