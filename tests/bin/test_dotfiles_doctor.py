@@ -4,6 +4,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 import tomllib
 import unittest
@@ -105,10 +106,11 @@ class DoctorTest(unittest.TestCase):
         self.assertIn("[skip] Needs hardware", out)
 
     def test_an_unknown_machine_is_an_error_not_a_clean_report(self):
-        # a PATH with python but no chezmoi to ask
+        # a PATH with python but no chezmoi to ask; the running interpreter,
+        # since the python3 on PATH can be a shim (pyenv's) that needs bash
         bin = self.repo / "bin"
         bin.mkdir()
-        (bin / "python3").symlink_to(shutil.which("python3"))
+        (bin / "python3").symlink_to(sys.executable)
         result = subprocess.run(
             [str(SCRIPT), "--distro", "fedora"],
             env={"DOTFILES_REPO": str(self.repo), "PATH": str(bin)},
