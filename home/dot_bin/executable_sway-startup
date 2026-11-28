@@ -50,6 +50,17 @@ open() {
   return 1
 }
 
+# wait, as long as for a terminal, for PipeWire to have a default speaker:
+# cliamp fails without one, and at login WirePlumber may not have set it up yet
+wait_for_audio() {
+  command -v wpctl > /dev/null 2>&1 || return 0
+  for _ in $(seq 1 "$wait_tenths"); do
+    wpctl inspect @DEFAULT_AUDIO_SINK@ > /dev/null 2>&1 && return 0
+    sleep 0.1
+  done
+  echo "sway-startup: no audio output appeared; opening cliamp anyway" >&2
+}
+
 # the ids of every window open now
 windows() { swaymsg -t get_tree | jq -c '[.. | objects | select(.pid?) | .id]'; }
 
@@ -78,6 +89,7 @@ browser() {
 swaymsg -q workspace number 1
 open callie callie tui && swaymsg -q '[app_id="startup-callie"] focus, splith'
 open fastfetch fastfetch && swaymsg -q '[app_id="startup-fastfetch"] focus, splitv'
+wait_for_audio
 open cliamp cliamp
 if $wide; then
   # focus the fastfetch and cliamp column, so the browser opens beside it

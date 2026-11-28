@@ -93,6 +93,35 @@ class SwayStartupTest(unittest.TestCase):
             ],
         )
 
+    def test_cliamp_waits_for_an_audio_output(self):
+        # wpctl finds a default sink from its third call on
+        count = self.tmp / "wpctl-calls"
+        wpctl = self.bin / "wpctl"
+        wpctl.write_text(
+            "#!/usr/bin/env bash\n"
+            f'echo x >> "{count}"\n'
+            f'[ "$(wc -l < "{count}")" -ge 3 ]\n'
+        )
+        wpctl.chmod(0o755)
+        (self.tmp / "system" / "wc").symlink_to(shutil.which("wc"))
+        result = self.run_script()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(len(count.read_text().splitlines()), 3)
+        self.assertIn(
+            "-q exec -- kitty --class startup-cliamp --hold cliamp", self.calls()
+        )
+        self.assertNotIn("no audio output", result.stderr)
+
+    def test_cliamp_opens_anyway_when_no_audio_output_appears(self):
+        wpctl = self.bin / "wpctl"
+        wpctl.write_text("#!/usr/bin/env bash\nexit 1\n")
+        wpctl.chmod(0o755)
+        result = self.run_script()
+        self.assertIn("no audio output appeared", result.stderr)
+        self.assertIn(
+            "-q exec -- kitty --class startup-cliamp --hold cliamp", self.calls()
+        )
+
     def test_it_marks_itself_running_for_autosplit_and_clears_it_after(self):
         # the fake swaymsg's first call is while the script runs
         marker = self.tmp / "sway-startup.pid"
