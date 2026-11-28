@@ -32,6 +32,7 @@ rg                        ripgrep                   ripgrep
 wl-copy                   wl-clipboard              wl-clipboard
 figlet                    figlet                    figlet
 ffmpeg                    ffmpeg-free               ffmpeg
+mpv                       mpv                       mpv
 gifsicle                  gifsicle                  gifsicle
 
 # git

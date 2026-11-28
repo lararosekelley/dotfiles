@@ -1,4 +1,16 @@
 # Defaults that apply only under sway (XDG_CURRENT_DESKTOP=sway), ahead of
-# mimeapps.list, so KDE keeps its own: folders open in yazi.
+# mimeapps.list, so KDE keeps its own: folders open in yazi, and videos in
+# mpv.
 [Default Applications]
 inode/directory=yazi-kitty.desktop
+video/mp4=mpv.desktop
+video/x-matroska=mpv.desktop
+video/webm=mpv.desktop
+video/quicktime=mpv.desktop
+video/x-msvideo=mpv.desktop
+video/vnd.avi=mpv.desktop
+video/mpeg=mpv.desktop
+video/ogg=mpv.desktop
+video/x-m4v=mpv.desktop
+video/x-flv=mpv.desktop
+video/3gpp=mpv.desktop
