@@ -37,6 +37,7 @@ class NightLightTest(unittest.TestCase):
             f'echo "pkill $*" >> "{self.log}"\n'
             f'[ "${{*: -1}}" != gammastep ] || rm -f "{self.running}"',
         )
+        self.stub("waybar-refresh", f'echo "waybar-refresh $*" >> "{self.log}"')
         self.stub(
             "swaymsg",
             f"""if [ "$2" = get_outputs ]; then cat "{self.tmp}/outputs.json"

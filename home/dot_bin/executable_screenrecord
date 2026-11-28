@@ -19,7 +19,7 @@ filefile="$state.file"
 recording() { [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2> /dev/null; }
 
 # waybar's recording dot updates on this signal (see its config)
-refresh_bar() { pkill -RTMIN+10 -x waybar; }
+refresh_bar() { waybar-refresh 10; }
 
 stop() {
   local pid file

@@ -40,6 +40,7 @@ class ScreenrecordTest(unittest.TestCase):
         self.stub("pactl", "echo speakers")
         self.stub("notify-send")
         self.stub("pkill")
+        self.stub("waybar-refresh")
         self.stub("xdg-user-dir", "exit 1")
 
     def cleanup(self):
@@ -86,7 +87,7 @@ class ScreenrecordTest(unittest.TestCase):
         (video,) = self.videos()
         self.assertEqual(video.read_text(), "video\n")
         self.assertIn(f"Recording saved {video}", self.log.read_text())
-        self.assertIn("pkill -RTMIN+10 -x waybar", self.log.read_text())
+        self.assertIn("waybar-refresh 10", self.log.read_text())
 
     def test_audio_records_the_default_outputs_monitor(self):
         self.run_script("output", "--audio")

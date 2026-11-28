@@ -22,7 +22,7 @@ fi
 
 makoctl mode -t do-not-disturb > /dev/null
 # waybar's do-not-disturb pill shows the mode; this updates it now
-pkill -RTMIN+9 -x waybar
+waybar-refresh 9
 if on; then
   notify-send -u critical -t 3000 "Do not disturb" "Only critical notifications will show"
 else

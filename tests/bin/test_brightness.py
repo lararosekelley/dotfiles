@@ -24,7 +24,7 @@ class BrightnessTest(unittest.TestCase):
             f'echo "ddcutil $*" >> "{self.log}"\n'
             '[ "$1" = getvcp ] && echo "VCP 10 C 15 100"',
         )
-        self.stub("pkill", f'echo "pkill $*" >> "{self.log}"')
+        self.stub("waybar-refresh", f'echo "waybar-refresh $*" >> "{self.log}"')
 
     def stub(self, name, body):
         script = self.bin / name
@@ -58,9 +58,9 @@ class BrightnessTest(unittest.TestCase):
             self.log.read_text().splitlines(),
             [
                 "brightnessctl --quiet set 5%+",
-                "pkill -RTMIN+11 -x waybar",
+                "waybar-refresh 11",
                 "brightnessctl --quiet set 10%-",
-                "pkill -RTMIN+11 -x waybar",
+                "waybar-refresh 11",
             ],
         )
 
@@ -72,9 +72,9 @@ class BrightnessTest(unittest.TestCase):
             self.log.read_text().splitlines(),
             [
                 "ddcutil --noverify setvcp 10 + 5",
-                "pkill -RTMIN+11 -x waybar",
+                "waybar-refresh 11",
                 "ddcutil --noverify setvcp 10 - 5",
-                "pkill -RTMIN+11 -x waybar",
+                "waybar-refresh 11",
             ],
         )
 

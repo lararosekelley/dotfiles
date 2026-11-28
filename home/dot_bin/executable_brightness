@@ -13,7 +13,7 @@ set -uo pipefail
 panel() { brightnessctl --list --class=backlight 2> /dev/null | grep -q "Device '"; }
 
 # waybar's brightness module updates on this signal (see its config)
-refresh_bar() { pkill -RTMIN+11 -x waybar; }
+refresh_bar() { waybar-refresh 11; }
 
 # the level as a percentage: the panel's, or the monitor's over DDC/CI
 level() {

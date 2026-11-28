@@ -67,7 +67,7 @@ stop() {
 }
 
 # waybar's night-light module updates on this signal (see its config)
-refresh_bar() { pkill -RTMIN+8 -x waybar; }
+refresh_bar() { waybar-refresh 8; }
 
 case "${1:-toggle}" in
   toggle)

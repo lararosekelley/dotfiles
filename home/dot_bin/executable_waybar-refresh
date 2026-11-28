@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+# Ask waybar to refresh the custom modules that listen on SIGRTMIN+N. Until
+# waybar sets up its handler, that signal ends it instead, which happens at
+# login when sway starts waybar alongside scripts that signal it. So each
+# waybar is signalled only once it catches the signal, waiting up to 5 seconds.
+#
+# Usage: waybar-refresh N
+#
+# WAYBAR_REFRESH_NAME matches another process name, for tests.
+
+set -uo pipefail
+
+n=${1:?usage: waybar-refresh N}
+signal=$(($(kill -l RTMIN) + n))
+
+# whether process $1 has a handler for the signal, from its SigCgt mask
+catches() {
+  local mask
+  mask=$(awk '/^SigCgt:/ { print $2 }' "/proc/$1/status" 2> /dev/null)
+  [ -n "$mask" ] && (((0x$mask >> (signal - 1)) & 1))
+}
+
+for pid in $(pgrep -x "${WAYBAR_REFRESH_NAME:-waybar}"); do
+  for _ in $(seq 50); do
+    catches "$pid" && break
+    sleep 0.1
+  done
+  catches "$pid" && kill -s "RTMIN+$n" "$pid"
+done
+exit 0
