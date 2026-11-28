@@ -1,5 +1,10 @@
+{{- $laptop := has (get . "machine") (list "framework" "thinkpad") -}}
 // waybar for sway, in the Callie theme; icons need IosevkaTerm Nerd Font
 // reference: `man 5 waybar` and the man page for each module
+//
+// The clock sits in the middle on the desktop's wide display, and ends the
+// right side on the laptops, where that side runs too long for it to stay
+// centered.
 {
     "reload_style_on_change": true,
     "height": 34,
@@ -12,7 +17,9 @@
         "sway/mode",
         "sway/scratchpad"
     ],
+{{- if not $laptop }}
     "modules-center": ["group/datetime"],
+{{- end }}
     "modules-right": [
         "custom/dnd",
         "custom/notifications",
@@ -25,7 +32,8 @@
         "cpu",
         "memory",
         "custom/brightness",
-        "battery"
+        "battery"{{ if $laptop }},
+        "group/datetime"{{ end }}
     ],
 
     "sway/mode": { "format": "{}" },

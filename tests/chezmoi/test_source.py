@@ -147,6 +147,17 @@ class SourceTest(unittest.TestCase):
                 config = chezmoi(tmp, REPO, False, "cat", target, machine=machine)
                 self.assertNotIn("ignore-empty-password", config.splitlines())
 
+    def test_waybar_moves_the_clock_to_the_right_on_the_laptops(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp = Path(tmp)
+            target = str(tmp / "home/.config/waybar/config.jsonc")
+            laptop = chezmoi(tmp, REPO, False, "cat", target)
+            desktop = chezmoi(tmp, REPO, False, "cat", target, machine="desktop")
+        self.assertNotIn('"modules-center"', laptop)
+        self.assertRegex(laptop, r'"battery",\s*"group/datetime"\s*\]')
+        self.assertIn('"modules-center": ["group/datetime"]', desktop)
+        self.assertRegex(desktop, r'"battery"\s*\]')
+
     def test_an_unknown_machine_stops_with_a_clear_error(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp = Path(tmp)
