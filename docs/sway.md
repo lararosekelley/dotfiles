@@ -240,7 +240,7 @@ first time.
 window: `$mod+Shift+e` opens it, and folders that apps open, such as a
 browser's "show in folder", open in it too. That default lives in
 `~/.config/sway-mimeapps.list`, which only applies under sway, so KDE keeps
-Dolphin. yazi previews images in kitty without extra setup. `~/.config/yazi/theme.toml` colors it in Callie, and code previews use Callie's TextMate theme (`callie.tmTheme`, from the Callie repo's ports). Arch installs it
+Dolphin. yazi previews images in kitty without extra setup, and SVGs through ImageMagick (`yazi.toml`), since Fedora doesn't package resvg, yazi's default for them. `~/.config/yazi/theme.toml` colors it in Callie, and code previews use Callie's TextMate theme (`callie.tmTheme`, from the Callie repo's ports). Arch installs it
 from `extra`, and Fedora, which doesn't package it, from seaweed's COPR
 (`system/yum.repos.d/yazi.repo`), both through `scripts/setup/apps`.
 
@@ -255,6 +255,25 @@ keeps the window open at the end, saves screenshots to
 and `l` seek 5 seconds back and forward and `H` and `L` a minute, like Vim;
 looping, which mpv puts on `l` and `L`, moves to `Alt+l` (A-B loop) and
 `Alt+L` (loop the file).
+
+## Image viewer
+
+[swayimg](https://github.com/artemsen/swayimg), made for sway, opens images
+under sway: `sway-mimeapps.list` makes it the default for the common image
+types, so KDE keeps its own. `~/.config/swayimg/init.lua` colors it in Callie
+and adds Vim-style keys to its defaults: `h` and `l` for the previous and next
+image, `h`/`j`/`k`/`l` to move around the gallery (Enter switches between the
+image and the gallery), and `q` to quit.
+
+## PDF viewer
+
+[zathura](https://pwmt.org/projects/zathura/), with its MuPDF backend, opens
+PDFs under sway: `sway-mimeapps.list` makes it the default, so KDE keeps its
+own. It's keyboard-driven with Vim keys (`j`/`k` to scroll, `/` to search, `f`
+to follow a link), and `~/.config/zathura/zathurarc` colors it in Callie;
+`Ctrl+r` recolors the page itself for reading at night. To edit a PDF, use
+PdfCraft for organizing, combining, splitting, and securing, or Okular for
+annotations, forms, and signatures.
 
 ## Hardware-specific configuration
 

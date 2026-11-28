@@ -33,6 +33,9 @@ wl-copy                   wl-clipboard              wl-clipboard
 figlet                    figlet                    figlet
 ffmpeg                    ffmpeg-free               ffmpeg
 mpv                       mpv                       mpv
+swayimg                   swayimg                   swayimg
+zathura                   zathura                   zathura
+/usr/lib64/zathura/libpdf-mupdf.so,/usr/lib/zathura/libpdf-mupdf.so  zathura-pdf-mupdf  zathura-pdf-mupdf
 gifsicle                  gifsicle                  gifsicle
 
 # git

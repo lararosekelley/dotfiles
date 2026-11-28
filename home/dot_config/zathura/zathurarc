@@ -1,0 +1,41 @@
+# zathura, the PDF viewer, in the Callie theme
+# (https://github.com/greylocklabs/themes). Reference: `man zathurarc`.
+
+set font "IosevkaTerm Nerd Font 11"
+set selection-clipboard clipboard
+set guioptions ""
+set adjust-open "best-fit"
+set scroll-page-aware true
+set window-title-basename true
+
+set default-bg "#1c1220"
+set default-fg "#e0d3df"
+set statusbar-bg "#261a2a"
+set statusbar-fg "#e0d3df"
+set inputbar-bg "#261a2a"
+set inputbar-fg "#f08fb8"
+set notification-bg "#261a2a"
+set notification-fg "#e0d3df"
+set notification-error-bg "#261a2a"
+set notification-error-fg "#e66e6d"
+set notification-warning-bg "#261a2a"
+set notification-warning-fg "#d6ba86"
+set completion-bg "#261a2a"
+set completion-fg "#e0d3df"
+set completion-group-bg "#1c1220"
+set completion-group-fg "#9a8797"
+set completion-highlight-bg "#f08fb8"
+set completion-highlight-fg "#2e0f20"
+set highlight-color "rgba(214, 186, 134, 0.4)"
+set highlight-active-color "rgba(240, 143, 184, 0.5)"
+set index-bg "#1c1220"
+set index-fg "#e0d3df"
+set index-active-bg "#f08fb8"
+set index-active-fg "#2e0f20"
+
+# Ctrl+r recolors the page to Callie for night reading: dark background, light
+# text, with images left alone
+set recolor-lightcolor "#1c1220"
+set recolor-darkcolor "#e0d3df"
+set recolor-keephue true
+set recolor-reverse-video true
