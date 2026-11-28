@@ -30,11 +30,12 @@ exec night-light restore
 # desktop
 exec sway-startup{{ if $wide }} wide{{ end }}
 
-# the desktop's autostart apps, such as Dropbox and KDE Connect
+# the desktop's autostart apps, such as Dropbox and KDE Connect, once waybar's
+# tray is up for their icons (wait-for-tray in ~/.bin)
 {{- if $fedora }}
-exec dex-autostart --autostart --environment sway
+exec wait-for-tray dex-autostart --autostart --environment sway
 {{- else }}
-exec dex --autostart --environment sway
+exec wait-for-tray dex --autostart --environment sway
 {{- end }}
 
 # recoll's indexer, which waits for a graphical session target sway doesn't

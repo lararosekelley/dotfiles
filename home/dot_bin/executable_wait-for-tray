@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# Run a command once a system tray (waybar's) is on the session bus, so the apps
+# it starts put their icons there. At login sway starts the bar and its exec
+# commands together, and a tray app started first, such as Dropbox, finds no
+# tray and complains. Waits up to 15 seconds, then runs the command anyway.
+#
+# Usage: wait-for-tray COMMAND [ARGS...]
+#
+# WAIT_FOR_TRAY_TENTHS sets the wait in tenths of a second, for tests.
+
+set -uo pipefail
+
+[ $# -gt 0 ] || {
+  echo "usage: wait-for-tray COMMAND [ARGS...]" >&2
+  exit 2
+}
+
+for _ in $(seq 1 "${WAIT_FOR_TRAY_TENTHS:-150}"); do
+  busctl --user status org.kde.StatusNotifierWatcher > /dev/null 2>&1 && break
+  sleep 0.1
+done
+exec "$@"
