@@ -96,7 +96,7 @@ magick pond.png -alpha off \( +clone -fill '#1c1220' -colorize 100 -alpha set \
 
 ### Look
 
-Windows have 2px borders and 8px gaps (4px at the screen edges), both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons.
+Windows have 2px borders and 8px gaps (4px at the screen edges), both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons. The cursor is Breeze, at 24px, set for sway itself (`seat * xcursor_theme`) and for GTK apps (`session.conf`), so it matches everywhere.
 
 Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a video, keeps the screen from locking or blanking.
 
@@ -143,6 +143,12 @@ Waybar reapplies `style.css` as soon as it changes; `Mod-Shift-C` reloads the re
 
 We'll use [pipewire](https://www.pipewire.org) with [wireplumber](https://pipewire.pages.freedesktop.org/wireplumber/index.html) and [playerctl](https://github.com/altdesktop/playerctl), which ship with CachyOS.
 
+The volume and brightness keys show the new level in a bar near the bottom of
+the screen for a second, grey while muted. That's
+[wob](https://github.com/francma/wob), styled in Callie by
+`~/.config/wob/wob.ini`, which `osd` in `~/.bin` starts and feeds; the sway
+config starts it, one per sway session.
+
 ## Screen brightness
 
 The brightness keys run `brightness` in `~/.bin`, which sets a laptop's panel
@@ -151,7 +157,8 @@ there's no panel, the monitor over DDC/CI with
 [ddcutil](https://www.ddcutil.com/), in 5% steps. ddcutil's udev rule lets the
 logged-in user reach the monitor without sudo. The desktop's keyboard has no
 brightness keys, so Shift with its volume keys sets the monitor's brightness
-instead.
+instead. Either way, the new level shows in the on-screen bar (see
+[Audio](#audio)).
 
 ## Lock screen
 
@@ -243,6 +250,13 @@ browser's "show in folder", open in it too. That default lives in
 Dolphin. yazi previews images in kitty without extra setup, and SVGs through ImageMagick (`yazi.toml`), since Fedora doesn't package resvg, yazi's default for them. `~/.config/yazi/theme.toml` colors it in Callie, and code previews use Callie's TextMate theme (`callie.tmTheme`, from the Callie repo's ports). Arch installs it
 from `extra`, and Fedora, which doesn't package it, from seaweed's COPR
 (`system/yum.repos.d/yazi.repo`), both through `scripts/setup/apps`.
+
+## Removable drives
+
+[udiskie](https://github.com/coldfix/udiskie) mounts USB drives and other
+removable media as they're plugged in, under `/run/media/$USER`, with a
+notification. While any is mounted, its icon in waybar's tray unmounts or
+ejects them. `session.conf` starts it once the tray is up.
 
 ## Video player
 

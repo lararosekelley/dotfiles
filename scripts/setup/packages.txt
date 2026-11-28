@@ -106,6 +106,9 @@ sensors                   lm_sensors                lm_sensors
 swappy                    swappy                    swappy
 notify-send               libnotify                 libnotify
 brightnessctl             brightnessctl             brightnessctl
+wob                       wob                       wob
+udiskie                   udiskie                   udiskie
+/usr/share/icons/breeze_cursors  breeze-cursor-theme  breeze
 bluetoothctl              bluez                     bluez-utils
 cliphist                  cliphist                  cliphist
 rofimoji                  rofimoji                  rofimoji
