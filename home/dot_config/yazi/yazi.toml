@@ -1,0 +1,8 @@
+# yazi's settings, beyond its defaults. Reference:
+# https://yazi-rs.github.io/docs/configuration/yazi
+
+# Preview SVGs with ImageMagick, which renders them through librsvg, rather
+# than yazi's default of resvg, which Fedora doesn't package.
+[plugin]
+prepend_preloaders = [{ mime = "image/svg+xml", run = "magick" }]
+prepend_previewers = [{ mime = "image/svg+xml", run = "magick" }]
