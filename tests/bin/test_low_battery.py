@@ -75,6 +75,32 @@ class LowBatteryTest(unittest.TestCase):
         self.supply("BAT1", type="Battery", capacity=60, status="Discharging")
         self.assertEqual(self.check(), [])
 
+    def test_a_wireless_devices_battery_is_ignored(self):
+        self.battery(60)
+        self.supply(
+            "ps-controller-battery",
+            type="Battery",
+            scope="Device",
+            capacity=3,
+            status="Discharging",
+        )
+        self.assertEqual(self.check(), [])
+
+    def test_only_device_batteries_count_as_no_battery(self):
+        self.supply("hidpp_battery_0", type="Battery", scope="Device", capacity=2)
+        result = subprocess.run(
+            [str(SCRIPT), "check"],
+            env={
+                "PATH": f"{self.bin}:/usr/bin:/bin",
+                "POWER_SUPPLY_ROOT": str(self.root),
+                "XDG_RUNTIME_DIR": str(self.tmp),
+            },
+            capture_output=True,
+            text=True,
+        )
+        self.assertEqual(result.returncode, 0)
+        self.assertFalse(self.log.exists())
+
     def test_no_battery_exits_quietly(self):
         result = subprocess.run(
             [str(SCRIPT)],

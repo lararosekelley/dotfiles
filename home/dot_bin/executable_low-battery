@@ -15,10 +15,14 @@ state="${XDG_RUNTIME_DIR:-/tmp}/low-battery.warned"
 warn_at=15
 urgent_at=5
 
+# the machine's own batteries; wireless mice, controllers, and headsets list
+# theirs too, as scope Device
 batteries() {
   local supply
   for supply in "$root"/*; do
-    [ "$(cat "$supply/type" 2> /dev/null)" = Battery ] && echo "$supply"
+    [ "$(cat "$supply/type" 2> /dev/null)" = Battery ] || continue
+    [ "$(cat "$supply/scope" 2> /dev/null)" = Device ] && continue
+    echo "$supply"
   done
 }
 
