@@ -19,9 +19,16 @@ exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
 # Plasma themes GTK apps itself on KDE machines; elsewhere, use Adwaita's dark
 # variant for GTK 3 apps, which ignore color-scheme.
 exec gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+# the Breeze cursor for GTK apps, matching sway's (see config)
+exec gsettings set org.gnome.desktop.interface cursor-theme breeze_cursors
+exec gsettings set org.gnome.desktop.interface cursor-size 24
 {{- if not .kde }}
 exec gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 {{- end }}
+
+# mount USB drives and other removable media as they're plugged in, with a
+# notification, and a tray icon to unmount them while any are mounted
+exec wait-for-tray udiskie --automount --notify --smart-tray --appindicator
 
 # night light, back on at login if it was on before (script in ~/.bin)
 exec night-light restore

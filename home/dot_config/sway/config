@@ -68,6 +68,9 @@ client.background       #1c1220
 # wallpaper, set above or in machine.conf
 output * bg $wallpaper fill
 
+# the Breeze cursor, as apps use (session.conf sets it for GTK)
+seat * xcursor_theme breeze_cursors 24
+
 # input
 #
 # reference: `man 5 sway-input`
@@ -311,11 +314,14 @@ bindsym $mod+equal exec swaymsg resize grow width 100 px or 10 ppt; exec swaymsg
 # utility keybindings
 # --------
 
+# the on-screen bar the volume and brightness keys show (script in ~/.bin)
+exec osd daemon
+
 # adjust volume with wireplumber (wpctl), up to 100%, with the sound theme's
 # volume-change sound at the new level
-bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && canberra-gtk-play -i audio-volume-change
-bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+ && canberra-gtk-play -i audio-volume-change
+bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle && osd volume
+bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- && osd volume && canberra-gtk-play -i audio-volume-change
+bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+ && osd volume && canberra-gtk-play -i audio-volume-change
 bindsym --locked XF86AudioMicMute exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
 
 # control playback with playerctl (mpris-enabled playback utils)

@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# The on-screen bar for volume and brightness, drawn by wob (see
+# ~/.config/wob/wob.ini). The sway config starts the daemon; the volume keys
+# and ~/.bin/brightness send it the new level.
+#
+# Usage: osd daemon            run wob, reading levels from a FIFO
+#        osd volume            show the speaker's volume, grey when muted
+#        osd value PERCENT [STYLE]
+
+set -uo pipefail
+
+# one per sway instance, so sway-nested's doesn't replace the session's
+sway_id=${SWAYSOCK##*/}
+fifo="${XDG_RUNTIME_DIR:-/tmp}/wob.${sway_id:-default}.fifo"
+
+# write a line without blocking: opening the FIFO for reading and writing
+# never waits for a reader, so a missing daemon can't hang a key
+show() {
+  [ -p "$fifo" ] || return 0
+  printf '%s\n' "$*" 1<> "$fifo"
+}
+
+case "${1:-}" in
+  daemon)
+    rm -f "$fifo"
+    mkfifo "$fifo" || exit 1
+    tail -f "$fifo" | wob
+    ;;
+  volume)
+    # "Volume: 0.45" or "Volume: 0.45 [MUTED]"
+    read -r _ level muted < <(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2> /dev/null) || exit 0
+    percent=$(awk -v l="$level" 'BEGIN { printf "%d", l * 100 + 0.5 }')
+    if [ -n "${muted:-}" ]; then show "$percent muted"; else show "$percent"; fi
+    ;;
+  value)
+    [ -n "${2:-}" ] || exit 2
+    show "$2${3:+ $3}"
+    ;;
+  *)
+    echo "usage: osd daemon | volume | value PERCENT [STYLE]" >&2
+    exit 2
+    ;;
+esac

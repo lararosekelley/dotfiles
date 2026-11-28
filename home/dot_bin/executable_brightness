@@ -43,13 +43,20 @@ case "${1:-}" in
 esac
 step=${2:-5}
 
+# show the new level on screen (osd in ~/.bin), and refresh waybar
+report() {
+  local percent
+  percent=$(level) && command -v osd > /dev/null && osd value "$percent"
+  refresh_bar
+}
+
 if panel; then
   brightnessctl --quiet set "$step%$sign"
-  refresh_bar
+  report
   exit 0
 fi
 
 exec 9> "${XDG_RUNTIME_DIR:-/tmp}/brightness.lock"
 flock --nonblock 9 || exit 0
 ddcutil --noverify setvcp 10 "$sign" "$step"
-refresh_bar
+report

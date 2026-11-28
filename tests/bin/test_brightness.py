@@ -72,8 +72,10 @@ class BrightnessTest(unittest.TestCase):
             self.log.read_text().splitlines(),
             [
                 "ddcutil --noverify setvcp 10 + 5",
+                "ddcutil getvcp 10 --brief",
                 "waybar-refresh 11",
                 "ddcutil --noverify setvcp 10 - 5",
+                "ddcutil getvcp 10 --brief",
                 "waybar-refresh 11",
             ],
         )
@@ -94,6 +96,12 @@ class BrightnessTest(unittest.TestCase):
         self.assertEqual(second.returncode, 0)
         sets = [x for x in self.log.read_text().splitlines() if "setvcp" in x]
         self.assertEqual(len(sets), 1)
+
+    def test_a_change_shows_the_new_level_on_screen(self):
+        self.panel(False)
+        self.stub("osd", f'echo "osd $*" >> "{self.log}"')
+        self.run_script("up")
+        self.assertIn("osd value 15", self.log.read_text().splitlines())
 
     def test_status_shows_the_panels_level(self):
         self.panel(True)
