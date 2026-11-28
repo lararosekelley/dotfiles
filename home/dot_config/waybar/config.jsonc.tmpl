@@ -119,7 +119,9 @@
         "format-muted": "󰝟 muted",
         "format-bluetooth": " {volume}%",
         "format-icons": { "default": ["", "", ""] },
-        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
+        "on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle",
+        // pick the output or input in rofi (audio-menu in ~/.bin)
+        "on-click-right": "audio-menu"
     },
     "network": {
         "format-wifi": " {essid}",

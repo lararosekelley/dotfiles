@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+
+# Sound devices for sway, through rofi and pactl: the outputs, then the inputs,
+# with the ones in use marked. Each row is a port (Speakers, Headphones) where
+# the device has them, leaving out unplugged ones, or else the device's name.
+# Enter makes the choice the default, and WirePlumber moves what's playing or
+# recording to it. The last row opens the pavucontrol mixer, where installed.
+# Right-clicking waybar's volume pill opens this.
+#
+# Usage: audio-menu
+
+set -uo pipefail
+
+# rows KIND: a row per choice of output (sink) or input (source): kind, device
+# name, port (or empty), label, bus, and whether it's the device's active port,
+# separated by the unit separator (\x1f), since read collapses empty fields
+# between tabs
+rows() {
+  pactl -f json list "${1}s" | jq -r --arg kind "$1" '
+    .[]
+    | select(.properties["device.class"] != "monitor")
+    | . as $device
+    | [.ports[]? | select(.availability != "not available")] as $ports
+    | (if ($ports | length) > 0 then $ports[] else {} end) as $port
+    | [
+        $kind,
+        $device.name,
+        ($port.name // ""),
+        ($port.description // $device.description),
+        ($device.properties["device.bus"] // ""),
+        (($port.name // "") == ($device.active_port // ""))
+      ]
+    | map(tostring) | join("\u001f")'
+}
+
+icon() {
+  local kind=$1 port=$2 bus=$3
+  if [ "$kind" = source ]; then
+    echo 󰍬
+  elif [ "$bus" = bluetooth ]; then
+    echo 󰂯
+  else
+    case "$port" in
+      *headphone* | *headset*) echo 󰋋 ;;
+      *hdmi* | *displayport*) echo 󰡁 ;;
+      *) echo 󰓃 ;;
+    esac
+  fi
+}
+
+default_sink=$(pactl get-default-sink)
+default_source=$(pactl get-default-source)
+
+kinds=()
+names=()
+ports=()
+labels=()
+while IFS=$'\x1f' read -r kind name port label bus active; do
+  [ -n "$name" ] || continue
+  default=$default_sink
+  [ "$kind" = source ] && default=$default_source
+  mark=""
+  [ "$name" = "$default" ] && [ "$active" = true ] && mark="  (in use)"
+  kinds+=("$kind")
+  names+=("$name")
+  ports+=("$port")
+  labels+=("$(icon "$kind" "$port" "$bus")  $label$mark")
+done < <(
+  rows sink
+  rows source
+)
+
+if command -v pavucontrol > /dev/null 2>&1; then
+  labels+=("󰕾  open the mixer")
+fi
+
+[ ${#labels[@]} -gt 0 ] || exit 0
+index=$(printf '%s\n' "${labels[@]}" | rofi -dmenu -i -no-custom -format i \
+  -p sound -mesg "Enter: use it for sound out or in") || exit 0
+[ -n "$index" ] || exit 0
+
+if [ "$index" -ge ${#names[@]} ]; then
+  setsid -f pavucontrol > /dev/null 2>&1
+  exit 0
+fi
+
+kind=${kinds[index]}
+pactl "set-default-$kind" "${names[index]}"
+if [ -n "${ports[index]}" ]; then
+  pactl "set-$kind-port" "${names[index]}" "${ports[index]}"
+fi
