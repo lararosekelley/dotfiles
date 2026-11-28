@@ -96,7 +96,7 @@ magick pond.png -alpha off \( +clone -fill '#1c1220' -colorize 100 -alpha set \
 
 ### Look
 
-Windows have 2px borders and 8px gaps (4px at the screen edges), both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons. The cursor is Breeze, at 24px, set for sway itself (`seat * xcursor_theme`) and for GTK apps (`session.conf`), so it matches everywhere.
+Windows have 2px borders and 8px gaps (4px at the screen edges), both dropped when a workspace holds a single window. Colors come from the [Callie](https://github.com/greylocklabs/themes) theme: the focused window has a pink border. Titles, seen in tabbed and stacked layouts, use IosevkaTerm Nerd Font, which the status bar also needs for its icons. The cursor is Breeze, at 24px, set for sway itself (`seat * xcursor_theme`) and for GTK apps (`session.conf`), so it matches everywhere. Qt apps, such as Okular and VLC, take KDE's theme under sway on the desktop and GTK's dark Adwaita on the laptops: `~/.exports` sets `QT_QPA_PLATFORMTHEME` before sway starts.
 
 Dialogs and pop-ups float rather than tile, and a fullscreen window, such as a video, keeps the screen from locking or blanking.
 
@@ -159,6 +159,13 @@ logged-in user reach the monitor without sudo. The desktop's keyboard has no
 brightness keys, so Shift with its volume keys sets the monitor's brightness
 instead. Either way, the new level shows in the on-screen bar (see
 [Audio](#audio)).
+
+## Low battery
+
+On the laptops, `low-battery` in `~/.bin`, which `session.conf` starts, checks
+the battery every minute and sends a notification at 15% and an urgent one at
+5%, each once until the laptop is plugged in again. On the desktop it exits at
+once.
 
 ## Lock screen
 

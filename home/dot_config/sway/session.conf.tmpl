@@ -30,6 +30,10 @@ exec gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
 # notification, and a tray icon to unmount them while any are mounted
 exec wait-for-tray udiskie --automount --notify --smart-tray --appindicator
 
+# warn when a laptop's battery runs low (script in ~/.bin; it exits at once
+# without a battery)
+exec low-battery
+
 # night light, back on at login if it was on before (script in ~/.bin)
 exec night-light restore
 

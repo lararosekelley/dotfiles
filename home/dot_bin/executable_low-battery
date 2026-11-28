@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+
+# Warn when a laptop's battery runs low: a notification at 15%, and an urgent
+# one at 5%, each once per discharge. It checks every minute, and exits at once
+# on a machine without a battery. The sway session starts it.
+#
+# Usage: low-battery [check]
+#
+#   check  check once, for tests
+
+set -uo pipefail
+
+root=${POWER_SUPPLY_ROOT:-/sys/class/power_supply}
+state="${XDG_RUNTIME_DIR:-/tmp}/low-battery.warned"
+warn_at=15
+urgent_at=5
+
+batteries() {
+  local supply
+  for supply in "$root"/*; do
+    [ "$(cat "$supply/type" 2> /dev/null)" = Battery ] && echo "$supply"
+  done
+}
+
+check() {
+  local supply capacity=0 count=0 charging=false percent warned
+  while read -r supply; do
+    [ -n "$supply" ] || continue
+    capacity=$((capacity + $(cat "$supply/capacity" 2> /dev/null || echo 0)))
+    count=$((count + 1))
+    case "$(cat "$supply/status" 2> /dev/null)" in
+      Charging | Full) charging=true ;;
+    esac
+  done < <(batteries)
+  [ "$count" -gt 0 ] || return 0
+  percent=$((capacity / count))
+  warned=$(cat "$state" 2> /dev/null)
+
+  # plugging in starts the warnings over
+  if $charging; then
+    rm -f "$state"
+    return 0
+  fi
+  if [ "$percent" -le "$urgent_at" ] && [ "$warned" != urgent ]; then
+    notify-send -u critical "Battery at $percent%" "Plug in now."
+    echo urgent > "$state"
+  elif [ "$percent" -le "$warn_at" ] && [ -z "$warned" ]; then
+    notify-send "Battery low: $percent%" "Plug in soon."
+    echo warned > "$state"
+  fi
+}
+
+[ -n "$(batteries)" ] || exit 0
+case "${1:-}" in
+  check) check ;;
+  "")
+    while :; do
+      check
+      sleep 60
+    done
+    ;;
+  *)
+    echo "usage: low-battery [check]" >&2
+    exit 2
+    ;;
+esac
