@@ -244,6 +244,18 @@ Dolphin. yazi previews images in kitty without extra setup. `~/.config/yazi/them
 from `extra`, and Fedora, which doesn't package it, from seaweed's COPR
 (`system/yum.repos.d/yazi.repo`), both through `scripts/setup/apps`.
 
+## Video player
+
+[mpv](https://mpv.io/) plays video, and opens it under sway: `sway-mimeapps.list`
+makes it the default for the common video types, so KDE keeps its own. Its
+config in `~/.config/mpv` decodes on the GPU, resumes where a file was left,
+keeps the window open at the end, saves screenshots to
+`~/Pictures/Screenshots`, and draws its on-screen text in Callie's colors.
+`mpv <URL>` streams through yt-dlp, at up to 1440p. Besides mpv's own keys, `h`
+and `l` seek 5 seconds back and forward and `H` and `L` a minute, like Vim;
+looping, which mpv puts on `l` and `L`, moves to `Alt+l` (A-B loop) and
+`Alt+L` (loop the file).
+
 ## Hardware-specific configuration
 
 On the desktop, the Logitech POP Icon Keys' F1 to F3 switch which computer it
