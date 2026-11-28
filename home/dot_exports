@@ -15,6 +15,18 @@ if [ "${XDG_SESSION_TYPE:-}" = "wayland" ]; then
   unset QT_QPA_PLATFORM
 fi
 
+# Qt apps' look outside KDE, such as under sway: KDE's own theme where its
+# plugin is installed (the desktop), otherwise GTK's, which follows the dark
+# Adwaita the sway session sets. KDE sessions set it themselves.
+if [ -z "${QT_QPA_PLATFORMTHEME:-}" ]; then
+  if [ -e /usr/lib64/qt6/plugins/platformthemes/KDEPlasmaPlatformTheme6.so ] \
+    || [ -e /usr/lib/qt6/plugins/platformthemes/KDEPlasmaPlatformTheme6.so ]; then
+    export QT_QPA_PLATFORMTHEME=kde
+  else
+    export QT_QPA_PLATFORMTHEME=gtk3
+  fi
+fi
+
 # set neovim to default editor
 
 export EDITOR="nvim"
