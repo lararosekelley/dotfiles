@@ -250,6 +250,16 @@ docs = "docs/new-machine.md#fingerprint-unlock"
 check = "cmp -s system/pam.d/swaylock /etc/pam.d/swaylock"
 fix = "sudo cp /etc/pam.d/swaylock /etc/pam.d/swaylock.orig && sudo install -m 644 system/pam.d/swaylock /etc/pam.d/swaylock"
 
+[[step]]
+id = "ly-theme"
+title = "Install Ly's themed config"
+needed_for = "The Callie login screen, with its animation, clock, and greeting"
+docs = "docs/new-machine.md#login-screen"
+distro = "arch"
+when = "[ -f /etc/ly/config.ini ]"
+check = "cmp -s system/ly/config.ini /etc/ly/config.ini && cmp -s system/ly/callie-colors.sh /etc/ly/callie-colors.sh && cmp -s system/ly/callie.ini /etc/ly/lang/callie.ini"
+fix = "sudo cp /etc/ly/config.ini /etc/ly/config.ini.orig && sudo install -m 644 system/ly/config.ini /etc/ly/config.ini && sudo install -m 755 system/ly/callie-colors.sh /etc/ly/callie-colors.sh && sudo install -m 644 system/ly/callie.ini /etc/ly/lang/callie.ini"
+
 # 4. Neovim
 
 [[step]]

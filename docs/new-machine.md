@@ -187,6 +187,34 @@ On the lock screen, type the password, or press Enter on the empty field and
 then touch the reader. With a reader, a wrong password waits for a fingerprint
 for up to 15 seconds before showing the failure.
 
+### Login screen
+
+On an Arch laptop, the login screen is [Ly](https://codeberg.org/fairyglade/ly).
+`system/ly/config.ini` themes it in Callie: a color-mixing animation, a big
+clock with the date in the corner, and a greeting. The console it draws on
+can't show 24-bit color, so `callie-colors.sh` loads Callie's colors into the
+console's 16 color slots first, and `callie.ini` words the key hints and
+labels. Install them, keeping the packaged config:
+
+```bash
+sudo cp /etc/ly/config.ini /etc/ly/config.ini.orig
+sudo install -m 644 system/ly/config.ini /etc/ly/config.ini
+sudo install -m 755 system/ly/callie-colors.sh /etc/ly/callie-colors.sh
+sudo install -m 644 system/ly/callie.ini /etc/ly/lang/callie.ini
+```
+
+To preview it without logging out, start a second Ly on another console, switch
+to it with Ctrl+Alt+F3 and back with Ctrl+Alt+F2, then stop it:
+
+```bash
+sudo systemctl start ly@tty3
+sudo systemctl stop ly@tty3
+```
+
+Its config comes from Ly's packaged one with only the theme changed, so after a
+Ly update that changes the packaged file (pacman leaves a `config.ini.pacnew`),
+carry the theme settings over to the new file.
+
 ## 4. Neovim
 
 - `scripts/install-deps` ends with what it couldn't install, such as npm
