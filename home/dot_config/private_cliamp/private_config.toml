@@ -1,5 +1,6 @@
 theme = "callie"
 provider = "jellyfin"
+visualizer = "Bubbles"
 
 [ytmusic]
 enabled = true
