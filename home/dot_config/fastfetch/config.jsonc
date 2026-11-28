@@ -9,9 +9,10 @@
     "width": 18,
     "padding": { "right": 2 },
   },
-  // labels such as "OS:" in Callie's pink (#f08fb8); values keep the default
+  // labels such as "OS:" in Callie's pink (#f08fb8), and user@host in bold
+  // white; values keep the default
   "display": {
-    "color": { "keys": "38;2;240;143;184" },
+    "color": { "keys": "38;2;240;143;184", "title": "1;97" },
   },
   "modules": [
     "title",
@@ -20,7 +21,6 @@
     "host",
     "kernel",
     "uptime",
-    "packages",
     "shell",
     "wm",
     "terminal",
@@ -28,6 +28,10 @@
     "gpu",
     "memory",
     "disk",
-    "battery",
+    // charge and time left, without the charging status
+    {
+      "type": "battery",
+      "format": "{capacity}{?time-formatted} ({time-formatted} remaining){?}",
+    },
   ],
 }
